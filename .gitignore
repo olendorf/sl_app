@@ -12,7 +12,7 @@ rerun.txt
 pickle-email-*.html
 
 /.c9/*
-
+foo
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*

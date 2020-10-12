@@ -9,7 +9,7 @@ branches:
     - master
     - develop
 addons:
-  postgresql: "13.0"   # We need the more recent version of postgresbefore_script:
+  postgresql: "13"   # We need the more recent version of postgresbefore_script:
   # The installation fails to create a scripts directory or copy the elasticsearch.yml
   # or logging.yml files over. THis fixes that.
 before_script:

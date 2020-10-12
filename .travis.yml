@@ -13,5 +13,5 @@ addons:
   # The installation fails to create a scripts directory or copy the elasticsearch.yml
   # or logging.yml files over. THis fixes that.
 before_script:
-  - psql -c 'create database app_test;' -U postgres
+  - psql -c 'create database sl_app_test;' -U postgres
 script: bundle exec rspec   # we should run all the tests in CI

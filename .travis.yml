@@ -8,6 +8,12 @@ branches:
   only:
     - master
     - develop
+install:
+  - bundle install
+  - nvm install node
+  - node -v
+  - npm i -g yarn
+  - yarn install
 addons:
   postgresql: "9.6"   # We need the more recent version of postgresbefore_script:
   # The installation fails to create a scripts directory or copy the elasticsearch.yml

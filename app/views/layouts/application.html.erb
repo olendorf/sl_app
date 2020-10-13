@@ -12,6 +12,19 @@
   <body>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
+    
+    
+    <% if user_signed_in? %>
+      <li><%= link_to 'Sign Out', destroy_user_session_path, method: :delete %></li>
+    <% else %>
+      <li><%= link_to 'Sign In', new_user_session_path %></li>
+    <% end %>
+    
+    <% if current_user %>
+      <% if current_user.can_be_admin? %>
+        <li><%= link_to 'Admin', admin_root_path %></li>
+      <% end %>
+    <% end %>
     <%= yield %>
   </body>
 </html>

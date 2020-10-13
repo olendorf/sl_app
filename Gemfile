@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -12,9 +14,8 @@ gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 
-
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-# gem 'webpacker', '~> 4.0'
+gem 'webpacker', '~> 4.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -24,11 +25,19 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
-# code coverage 
+# code coverage
 gem 'coveralls', require: false
 
-# authentication and authorization
+# Decorator pattern gem
+gem 'draper'
+
+# authentication
 gem 'devise'
+# authorization
+gem 'pundit'
+
+# Admin interface with the data. Will probably use for a user interface as well
+gem 'activeadmin'
 
 # fun ways to generate data
 gem 'faker'
@@ -41,23 +50,23 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem "rspec-rails"                       # Rspec
-  gem "guard-rspec"                       # Integrate Guard with Rspec
-  gem "guard-spring"                      # Integrate Guard with Spring
-  gem "shoulda-matchers", '2.8.0'         # Really handy RSpec matchers not included with RSpec
-  gem "database_cleaner"                  # Allows isolated testing of DB interactions.
-  gem 'spring-commands-rspec', group: :development
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'database_cleaner'                  # Allows isolated testing of DB interactions.
   gem 'factory_bot_rails'
+  gem 'guard-rspec'                       # Integrate Guard with Rspec
+  gem 'guard-spring'                      # Integrate Guard with Spring
+  gem 'rspec-rails'                       # Rspec
+  gem 'shoulda-matchers'                  # Really handy RSpec matchers not included with RSpec
+  gem 'spring-commands-rspec', group: :development
 end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem 'web-console', '>= 3.3.0'
-  gem 'listen', '~> 3.2'
+  gem 'listen'
+  gem 'web-console'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'spring-watcher-listen'
 end
 
 group :test do
@@ -66,6 +75,5 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
-  gem "webmock"   # Allows mocking of web apis for instance
+  gem 'webmock'   # Allows mocking of web apis for instance
 end
-

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Installing database_cleaner:
 
 # 0. Check spec/support dir is auto-required in spec/rails_helper.rb.
@@ -8,18 +10,17 @@
 #   gem 'database_cleaner'
 # end
 
-# 2. IMPORTANT! Comment out the "config.use_transactional_fixtures = ..." line 
+# 2. IMPORTANT! Comment out the "config.use_transactional_fixtures = ..." line
 #    in spec/rails_helper.rb (we're going to configure it in this file you're
 #    reading instead).
 
 # 3. Create a file like this one you're reading in spec/support/database_cleaner.rb:
 RSpec.configure do |config|
-
   config.use_transactional_fixtures = false
-  
+
   config.before(:suite) do
     if config.use_transactional_fixtures?
-      
+
       raise(<<-MSG)
 
         Delete line `config.use_transactional_fixtures = true` from rails_helper.rb
@@ -42,7 +43,7 @@ RSpec.configure do |config|
 
     end
   end
-  
+
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
   end
@@ -56,14 +57,14 @@ RSpec.configure do |config|
     # with the specs, so we can use transaction strategy for speed.
     driver_shares_db_connection_with_specs = Capybara.current_driver == :rack_test
 
-    if driver_shares_db_connection_with_specs
-      DatabaseCleaner.strategy = :transaction
-    else
-      # Non-:rack_test driver is probably a driver for a JavaScript browser
-      # with a Rack app under test that does *not* share a database 
-      # connection with the specs, so we must use truncation strategy.
-      DatabaseCleaner.strategy = :truncation
-    end
+    DatabaseCleaner.strategy = if driver_shares_db_connection_with_specs
+                                 :transaction
+                               else
+                                 # Non-:rack_test driver is probably a driver for a JavaScript browser
+                                 # with a Rack app under test that does *not* share a database
+                                 # connection with the specs, so we must use truncation strategy.
+                                 :truncation
+                               end
   end
 
   config.before(:each) do
@@ -73,5 +74,4 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
   end
-
 end

@@ -1,0 +1,31 @@
+Style/Encoding:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 99
+  Exclude: 
+    - spec/support/database_cleaner.rb
+    - db/**/*
+    - config/**/*
+    
+Metrics/BlockLength:
+  Exclude:
+    - spec/support/database_cleaner.rb
+    - db/**/*
+    - config/**/*
+    
+Style/Documentation:
+  Exclude:
+    - db/**/*
+    
+Metrics/MethodLength:
+  Exclude:
+    - db/**/*
+  
+AllCops:
+  NewCops: enable
+  Exclude:
+    - 'bin/{rails,rake,bundle}'
+    - node_modules/**/*
+    - Gemfile
+    - Gemfile.lock

@@ -11,8 +11,10 @@ gem 'pg'
 gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
+
+
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'webpacker', '~> 4.0'
+# gem 'webpacker', '~> 4.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -24,6 +26,12 @@ gem 'jbuilder', '~> 2.7'
 
 # code coverage 
 gem 'coveralls', require: false
+
+# authentication and authorization
+gem 'devise'
+
+# fun ways to generate data
+gem 'faker'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
@@ -40,6 +48,7 @@ group :development, :test do
   gem "shoulda-matchers", '2.8.0'         # Really handy RSpec matchers not included with RSpec
   gem "database_cleaner"                  # Allows isolated testing of DB interactions.
   gem 'spring-commands-rspec', group: :development
+  gem 'factory_bot_rails'
 end
 
 group :development do

@@ -14,4 +14,5 @@ addons:
   # or logging.yml files over. THis fixes that.
 before_script:
   - psql -c 'create database sl_app_test;' -U postgres
+  - rails webpacker:install
 script: bundle exec rspec   # we should run all the tests in CI

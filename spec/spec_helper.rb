@@ -21,6 +21,7 @@ Coveralls.wear!
 
 SimpleCov.start do
   add_filter 'spec'
+  add_filter 'app/admin'
 end
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration

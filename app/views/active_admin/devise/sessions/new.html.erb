@@ -3,7 +3,7 @@
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div class="field">
     <%= f.label :avatar_name %><br />
-    <%= f.email_field :avatar_name, autofocus: true, autocomplete: "Random Resident" %>
+    <%= f.text_field :avatar_name, autofocus: true, autocomplete: "Random Resident" %>
   </div>
 
   <div class="field">

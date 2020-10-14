@@ -16,3 +16,12 @@ DatabaseCleaner.clean_with :truncation if Rails.env.development?
 FactoryBot.create :owner, avatar_name: 'Random Citizen', password: 'password'
 
 FactoryBot.create :user, avatar_name: 'User Resident', password: 'password'
+
+
+4.times do |i|
+  FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident", password: 'password'
+end
+
+100.times do
+  FactoryBot.create :user, password: 'password'
+end

@@ -15,7 +15,7 @@ ActiveAdmin.register User do
   end
   
   filter :avatar_name
-  filter :role
+  filter :role, as: :check_boxes, collection: User.roles
   filter :current_sign_in_at
   filter :sign_in_count
   filter :created_at

@@ -10,10 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_13_235741) do
+ActiveRecord::Schema.define(version: 2020_10_14_125148) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "abstract_web_objects", force: :cascade do |t|
+    t.string "object_name", null: false
+    t.string "object_key", null: false
+    t.string "description"
+    t.string "region", null: false
+    t.string "position", null: false
+    t.string "url", null: false
+    t.string "api_key", null: false
+    t.integer "user_id"
+    t.integer "actable_id"
+    t.string "actable_type"
+    t.datetime "pinged_at"
+    t.integer "major_version"
+    t.integer "minor_version"
+    t.integer "patch_version"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
@@ -27,6 +46,11 @@ ActiveRecord::Schema.define(version: 2020_10_13_235741) do
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
     t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
+  end
+
+  create_table "rezzable_web_objects", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", force: :cascade do |t|

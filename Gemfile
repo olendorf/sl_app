@@ -42,6 +42,9 @@ gem 'activeadmin'
 # fun ways to generate data
 gem 'faker'
 
+# Simulates multi table inheritance
+gem 'active_record-acts_as'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

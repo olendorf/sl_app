@@ -12,6 +12,8 @@ RSpec.describe User, type: :model do
   let(:prime) { FactoryBot.create :prime }
   let(:admin) { FactoryBot.build :admin }
   let(:owner) { FactoryBot.create :owner }
+  
+  it { should have_many :abstract_web_objects }
 
   describe 'can be' do
     User.roles.each do |role, _value|

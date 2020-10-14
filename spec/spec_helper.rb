@@ -14,7 +14,7 @@
 # the additional setup, and require it from the spec files that actually need
 # it.
 #
-
+require "active_record/acts_as/matchers"
 require 'simplecov'
 require 'coveralls'
 Coveralls.wear!

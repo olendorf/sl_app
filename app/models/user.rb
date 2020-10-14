@@ -11,6 +11,8 @@ class User < ApplicationRecord
           :timeoutable
 
   enum role: %i[user prime admin owner]
+  
+  has_many :abstract_web_objects
 
   # Creates methods to test of a user is allowed to act as a role.
   # Given ROLES = [:user, :prime, :admin, :owner], will create the methods

@@ -11,14 +11,14 @@ RSpec.feature 'Home page features', type: :feature do
       visit root_path
       expect(page).to have_link('Sign In', href: new_user_session_path)
     end
-    
+
     scenario 'user cannot visit admin pages' do
       visit admin_root_path
       expect(page).to have_current_path(new_user_session_path)
       expect(page).to have_content('You need to sign in or sign up before continuing.')
     end
   end
-  
+
   context 'admin logs in' do
     before(:each) do
       visit static_pages_home_path

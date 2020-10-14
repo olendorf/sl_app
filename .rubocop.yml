@@ -11,8 +11,10 @@ Layout/LineLength:
 Metrics/BlockLength:
   Exclude:
     - spec/support/database_cleaner.rb
+    - spec/features/**/*
     - db/**/*
     - config/**/*
+    - app/admin/**/*
     
 Style/Documentation:
   Exclude:

@@ -18,7 +18,7 @@ ActiveAdmin.register User do
     column :updated_at
     actions
   end
-  
+
   filter :avatar_name
   filter :role, as: :check_boxes, collection: User.roles
   filter :current_sign_in_at
@@ -32,7 +32,7 @@ ActiveAdmin.register User do
     end
     f.actions
   end
-  
+
   show title: :avatar_name do
     attributes_table do
       row :avatar_name
@@ -51,5 +51,4 @@ ActiveAdmin.register User do
       row :updated_at
     end
   end
-
 end

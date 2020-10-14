@@ -10,8 +10,8 @@ Rails.application.configure do
 
   # Do not eager load code on boot.
   config.eager_load = false
-  
-  # allows cloud nine 
+
+  # allows cloud nine
   config.hosts = '206f4d7c07de42f38121851623d268d6.vfs.cloud9.us-east-2.amazonaws.com'
 
   # Show full error reports.

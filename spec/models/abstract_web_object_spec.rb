@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe AbstractWebObject, type: :model do
@@ -11,8 +13,8 @@ RSpec.describe AbstractWebObject, type: :model do
   it { should validate_presence_of :region }
   it { should validate_presence_of :position }
   it { should validate_presence_of :url }
-  
+
   it { should be_actable }
-  
+
   it { should belong_to :user }
 end

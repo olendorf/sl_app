@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Base decorator class for web objects.
 class AbstractWebObjectDecorator < Draper::Decorator
   delegate_all
 
@@ -9,15 +12,15 @@ class AbstractWebObjectDecorator < Draper::Decorator
   #       object.created_at.strftime("%a %m/%d/%y")
   #     end
   #   end
+
+  # rubocop:disable Metrics/AbcSize
   def slurl
     position = JSON.parse(self.position)
-    href = 'https://maps.secondlife.com/secondlife/' +
-           region + '/' +
-           position['x'].round.to_s + '/' +
-           position['y'].round.to_s + '/' +
-           position['z'].round.to_s + '/'
+    href = "https://maps.secondlife.com/secondlife/#{region}/#{position['x'].round}/" \
+           "#{position['y'].round}/#{position['z'].round}/"
     text = "#{region} (#{position['x'].round}, " \
            "#{position['y'].round}, #{position['z'].round})"
     h.link_to(text, href)
   end
+  # rubocop:enable Metrics/AbcSize
 end

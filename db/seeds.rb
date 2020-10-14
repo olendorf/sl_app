@@ -22,6 +22,10 @@ FactoryBot.create :user, avatar_name: 'User Resident', password: 'password'
   FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident", password: 'password'
 end
 
-100.times do
-  FactoryBot.create :user, password: 'password'
+100.times do |i|
+  user = FactoryBot.create :user, avatar_name: "User_#{i} Resident", password: 'password'
+  
+  rand(0..10).times do 
+    user.abstract_web_objects << FactoryBot.build(:web_object)
+  end
 end

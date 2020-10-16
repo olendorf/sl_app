@@ -15,10 +15,10 @@ RSpec.describe Api::V1::ApiController, type: :controller do
   
   let(:user) { FactoryBot.create :user }
   let(:requesting_object) do 
-   object = FactoryBot.build :web_object, user_id: user.id
-   object.save
-   object
- end
+    object = FactoryBot.build :web_object, user_id: user.id
+    object.save
+    object
+  end
   
   describe 'create' do
     context 'with valid package' do

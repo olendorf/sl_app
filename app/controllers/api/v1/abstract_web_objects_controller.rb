@@ -1,21 +1,4 @@
 class Api::V1::AbstractWebObjectsController < Api::V1::ApiController
-  def create
-    http_x = request.headers.select do |key, value| 
-      key.to_s.match(/\AHTTP_X[a-zA-Z0-9_]*\z/)
-    end
-    pp http_x
-    # puts params
-    # puts atts
-    object_type = request.path.split('/')[2..-1].map {
-      |item| item.classify 
-    }.join('::').constantize
-    new_object = object_type.create(atts)
-    render json:  {
-                    data: {api_key: new_object.api_key}, 
-                    msg: 'Created'    
-                  }, status: :created
-  end
-  
   
   private
   
@@ -28,7 +11,7 @@ class Api::V1::AbstractWebObjectsController < Api::V1::ApiController
       user_id: User.find_by_avatar_key(
         request.headers['HTTP_X_SECONDLIFE_OWNER_KEY']).id,
       url: params['url']
-    }.merge(JSON.parse(request.raw_post))
+    }
   end
 
   def extract_region_name

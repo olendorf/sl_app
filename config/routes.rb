@@ -12,9 +12,10 @@ Rails.application.routes.draw do
   
   namespace :api, defaults: {format: 'json'} do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
-    namespace :rezzable do 
-      resources :web_objects, except: [:index, :new, :edit]
-    end
+      resources :abstract_web_objects, only: [:create]
+      namespace :rezzable do 
+        resources :web_objects, except: [:index, :new, :edit]
+      end
     end
   end 
 end

@@ -31,3 +31,7 @@
 
 en:
   hello: "Hello world"
+  
+  errors:
+    auth_time: Invalid or missing auth_time.
+    auth_digest: Invalid or missing auth_digest.

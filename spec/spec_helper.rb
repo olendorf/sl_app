@@ -22,6 +22,8 @@ Coveralls.wear!
 SimpleCov.start do
   add_filter 'spec'
   add_filter 'app/admin'
+  add_filter 'lib/api_constraints.rb'
+  add_filter 'config'
 end
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration

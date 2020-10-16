@@ -13,10 +13,15 @@ class AbstractWebObject < ApplicationRecord
   belongs_to :user
 
   after_initialize :set_pinged_at
+  after_initialize :set_api_key
 
   private
 
   def set_pinged_at
     self.pinged_at ||= Time.now
+  end
+  
+  def set_api_key
+    self.api_key ||= SecureRandom.uuid
   end
 end

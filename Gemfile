@@ -45,6 +45,9 @@ gem 'faker'
 # Simulates multi table inheritance
 gem 'active_record-acts_as'
 
+# Easy app configuration
+gem 'config'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

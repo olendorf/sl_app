@@ -8,7 +8,7 @@ class AbstractWebObject < ApplicationRecord
   validates_presence_of :position
   validates_presence_of :url
 
-  actable inverse_of: 'abstract_web_object'
+  actable  inverse_of: :rezzable
 
   belongs_to :user
 

@@ -5,7 +5,7 @@ RSpec.shared_examples 'it has an owner object policy' do |model_name|
 
   subject { described_class }
 
-  permissions :show?, :create?, :update?, :destory? do
+  permissions :show?, :create?, :update?, :destroy? do
     it 'should return true for an owner' do 
       expect(subject).to permit(owner, web_object)
     end 

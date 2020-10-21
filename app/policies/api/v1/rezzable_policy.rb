@@ -19,9 +19,9 @@ class Api::V1::RezzablePolicy < ApplicationPolicy
   
   
   
-  class Scope < Scope
-    def resolve
-      scope.all
-    end
-  end
+  # class Scope < Scope
+  #   def resolve
+  #     scope.all
+  #   end
+  # end
 end

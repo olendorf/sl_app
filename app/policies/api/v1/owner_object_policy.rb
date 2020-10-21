@@ -16,9 +16,9 @@ class Api::V1::OwnerObjectPolicy < Api::V1::RezzablePolicy
     show?
   end 
   
-  class Scope < Scope
-    def resolve
-      scope.all
-    end
-  end
+  # class Scope < Scope
+  #   def resolve
+  #     scope.all
+  #   end
+  # end
 end

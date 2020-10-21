@@ -30,4 +30,29 @@ RSpec.describe User, type: :model do
       expect(prime.can_be_admin?).to be_falsey
     end
   end
+  
+  describe 'is_active?' do
+    it 'should return true for owners' do
+      owner.expiration_date = 1.month.ago
+      expect(owner.is_active?).to be_truthy
+    end
+    
+    it 'should rturn true for active up-to-date users' do
+      user.expiration_date = 1.month.from_now
+      user.account_level = 1
+      expect(user.is_active?).to be_truthy
+    end
+    
+    it 'should return false for past due users' do
+      user.expiration_date = 1.month.ago
+      user.account_level = 1
+      expect(user.is_active?).to be_falsey
+    end
+    
+    it 'should return false for account level zero' do
+      user.expiration_date = 1.month.from_now
+      user.account_level = 0
+      expect(user.is_active?).to be_falsey
+    end
+  end
 end

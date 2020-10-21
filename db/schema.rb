@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_18_161925) do
+ActiveRecord::Schema.define(version: 2020_10_18_180548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,8 @@ ActiveRecord::Schema.define(version: 2020_10_18_161925) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "role", default: 0
+    t.integer "account_level", default: 0
+    t.datetime "expiration_date"
     t.index ["avatar_key"], name: "index_users_on_avatar_key", unique: true
     t.index ["avatar_name"], name: "index_users_on_avatar_name", unique: true
   end

@@ -1,3 +1,3 @@
 class Rezzable::Terminal < ApplicationRecord
-  acts_as :rezzable, class_name: 'AbstractWebObject'
+  acts_as :abstract_web_object
 end

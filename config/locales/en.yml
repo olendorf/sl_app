@@ -35,3 +35,12 @@ en:
   errors:
     auth_time: Invalid or missing auth_time.
     auth_digest: Invalid or missing auth_digest.
+  
+  api:
+    rezzable:
+      create:
+        success: "This object has been registered in the database."
+      update:
+        success: "This object has been updated."
+      destroy:
+        success: "This object has been deleted."

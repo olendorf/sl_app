@@ -10,22 +10,22 @@ class Api::V1::ApiController < ApplicationController
   
   after_action :verify_authorized
 
-  # def policy(record)
-  #   policies[record] ||=
-  #     "#{controller_path.classify}Policy".constantize.new(pundit_user, record)
-  # end
+  def policy(record)
+    policies[record] ||=
+      "#{controller_path.classify}Policy".constantize.new(pundit_user, record)
+  end
 
   
   private
   
-  # def pundit_user
-  #       @requesting_object&.user
-  # end
+  def pundit_user
+    User.find_by_avatar_key!(request.headers['HTTP_X_SECONDLIFE_OWNER_KEY'])
+  end
   
   def load_requesting_object
-    @requesting_object = ::AbstractWebObject.find_by_object_key(
+    @requesting_object = AbstractWebObject.find_by_object_key(
       request.headers['HTTP_X_SECONDLIFE_OBJECT_KEY']
-    )
+    ).actable
   end
   
   def validate_package

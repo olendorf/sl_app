@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :abstract_web_objects, only: [:create]
       namespace :rezzable do 
         resources :web_objects, except: [:index, :new, :edit]
+        resources :terminals, except: [:index, :new, :edit]
       end
     end
   end 

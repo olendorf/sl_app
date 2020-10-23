@@ -20,7 +20,7 @@ class AbstractWebObject < ApplicationRecord
   def set_pinged_at
     self.pinged_at ||= Time.now
   end
-  
+
   def set_api_key
     self.api_key ||= SecureRandom.uuid
   end

@@ -27,9 +27,9 @@ module Api
       rescue_from ActionController::BadRequest do |e|
         json_response({ message: e.message }, :bad_request)
       end
-      
+
       rescue_from Pundit::NotAuthorizedError do |e|
-        json_response( {message: e.message} , :forbidden)
+        json_response({ message: e.message }, :forbidden)
       end
     end
   end

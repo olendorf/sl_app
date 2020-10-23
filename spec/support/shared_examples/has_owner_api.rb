@@ -5,11 +5,11 @@ RSpec.shared_examples 'it has an owner api' do |model_name|
   let(:owner) { FactoryBot.create :owner }
   let(:user) { FactoryBot.create :active_user }
   let(:klass) { "Rezzable::#{model_name.to_s.classify}".constantize }
-  
-  describe "creating a new #{model_name}" do 
+
+  describe "creating a new #{model_name}" do
     let(:path) { send("api_rezzable_#{model_name.to_s.pluralize}_path") }
-    
-    context 'as owner' do 
+
+    context 'as owner' do
       let(:web_object) do
         FactoryBot.build model_name, user_id: owner.id
       end
@@ -22,26 +22,26 @@ RSpec.shared_examples 'it has an owner api' do |model_name|
                    )
         expect(response.status).to eq 201
       end
-      
+
       it "should create a #{model_name}" do
-        expect{
+        expect do
           post path, params: atts.to_json,
                      headers: headers(
                        web_object, api_key: Settings.default.web_object.api_key
                      )
-        }.to change{ klass.count }.by(1)
+        end.to change { klass.count }.by(1)
       end
-      
-      it 'should return a nice message' do 
+
+      it 'should return a nice message' do
         post path, params: atts.to_json,
                    headers: headers(
                      web_object, api_key: Settings.default.web_object.api_key
                    )
         expect(
           JSON.parse(response.body)['message']
-        ).to eq "This object has been registered in the database."
+        ).to eq 'This object has been registered in the database.'
       end
-      
+
       it 'should return the api key' do
         post path, params: atts.to_json,
                    headers: headers(
@@ -52,7 +52,7 @@ RSpec.shared_examples 'it has an owner api' do |model_name|
         ).to match(@uuid_regex)
       end
     end
-    
+
     context 'as active user' do
       let(:web_object) do
         FactoryBot.build model_name, user_id: user.id
@@ -66,19 +66,19 @@ RSpec.shared_examples 'it has an owner api' do |model_name|
                    )
         expect(response.status).to eq 403
       end
-      
-      it 'should not create an object' do 
-        expect{
+
+      it 'should not create an object' do
+        expect do
           post path, params: atts.to_json,
                      headers: headers(
                        web_object, api_key: Settings.default.web_object.api_key
                      )
-        }.to_not change{ AbstractWebObject.count }
+        end.to_not change { AbstractWebObject.count }
       end
     end
   end
-  
-  describe "updating a #{model_name}" do 
+
+  describe "updating a #{model_name}" do
     let(:path) { send("api_rezzable_#{model_name.to_s.pluralize}_path") }
     let(:web_object) do
       object = FactoryBot.build model_name, user_id: owner.id
@@ -86,41 +86,40 @@ RSpec.shared_examples 'it has an owner api' do |model_name|
       object
     end
     let(:atts) { { url: 'example.com' } }
-    
+
     context 'as owner' do
-    
-      it 'should return ok status' do 
+      it 'should return ok status' do
         post path, params: atts.to_json,
                    headers: headers(
                      web_object, api_key: Settings.default.web_object.api_key
                    )
         expect(response.status).to eq 200
       end
-      
+
       it 'should not change the object count' do
         existing_object = FactoryBot.build model_name, user_id: owner.id
         existing_object.save
-        expect{
+        expect do
           post path, params: atts.to_json,
                      headers: headers(
                        existing_object, api_key: Settings.default.web_object.api_key
                      )
-        }.to_not change{ AbstractWebObject.count }
+        end.to_not change { AbstractWebObject.count }
       end
-      
-      it 'should return a nice message' do 
+
+      it 'should return a nice message' do
         post path, params: atts.to_json,
                    headers: headers(
                      web_object, api_key: Settings.default.web_object.api_key
                    )
         expect(
           JSON.parse(response.body)['message']
-        ).to eq "This object has been updated."
+        ).to eq 'This object has been updated.'
       end
     end
-    
+
     context 'as active user' do
-      it 'should return forbidden status' do 
+      it 'should return forbidden status' do
         web_object.user_id = user.id
         web_object.save
         post path, params: atts.to_json,
@@ -129,8 +128,8 @@ RSpec.shared_examples 'it has an owner api' do |model_name|
                    )
         expect(response.status).to eq 403
       end
-      
-      it 'should not change the object' do 
+
+      it 'should not change the object' do
         web_object.user_id = user.id
         web_object.save
         old_url = web_object.url
@@ -142,30 +141,29 @@ RSpec.shared_examples 'it has an owner api' do |model_name|
       end
     end
   end
-  
-  describe 'getting object data' do 
+
+  describe 'getting object data' do
     let(:web_object) do
       object = FactoryBot.build model_name, user_id: owner.id
       object.save
       object
     end
-    let(:path) { send("api_rezzable_#{model_name.to_s}_path", web_object.object_key) }
-    
-    context 'as an owner' do 
-      
+    let(:path) { send("api_rezzable_#{model_name}_path", web_object.object_key) }
+
+    context 'as an owner' do
       it 'should return OK status' do
         get path, headers: headers(web_object, api_key: web_object.api_key)
         expect(response.status).to eq 200
       end
-      
-      it 'should send data' do 
+
+      it 'should send data' do
         get path, headers: headers(web_object, api_key: web_object.api_key)
         expect(JSON.parse(response.body)).to have_key('data')
       end
     end
-    
-    context 'as an active user' do 
-      it 'should return forbidden status' do 
+
+    context 'as an active user' do
+      it 'should return forbidden status' do
         web_object.user_id = user.id
         web_object.save
         get path, headers: headers(web_object, api_key: web_object.api_key)
@@ -173,49 +171,49 @@ RSpec.shared_examples 'it has an owner api' do |model_name|
       end
     end
   end
-  
-  describe 'deleting an object' do 
+
+  describe 'deleting an object' do
     let(:web_object) do
       object = FactoryBot.build model_name, user_id: owner.id
       object.save
       object
     end
     let(:path) { send("api_rezzable_#{model_name}_path", web_object.object_key) }
-    
+
     context 'as an owner' do
-      it 'should return ok status' do 
+      it 'should return ok status' do
         delete path, headers: headers(web_object)
         expect(response.status).to eq 200
       end
-      
-      it 'should delete the object' do 
+
+      it 'should delete the object' do
         delete path, headers: headers(web_object)
         expect(AbstractWebObject.find_by_object_key(web_object.object_key)).to be_nil
       end
-      
-      it 'should return a nice message' do 
+
+      it 'should return a nice message' do
         delete path, headers: headers(web_object)
-        expect(JSON.parse(response.body)['message']).to eq (
-          "This object has been deleted."
+        expect(JSON.parse(response.body)['message']).to eq(
+          'This object has been deleted.'
         )
       end
     end
-    
-    context 'as a user' do 
-      it 'should return forbidden status' do 
+
+    context 'as a user' do
+      it 'should return forbidden status' do
         web_object.user_id = user.id
         web_object.save
         delete path, headers: headers(web_object)
         expect(response.status).to eq 403
       end
-      
-      it 'should not delete an object' do 
+
+      it 'should not delete an object' do
         web_object.user_id = user.id
         web_object.save
-        
-        expect{
+
+        expect {
           delete path, headers: headers(web_object)
-        }.to_not change{ AbstractWebObject.count }
+        }.to_not change { AbstractWebObject.count }
       end
     end
   end

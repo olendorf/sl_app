@@ -4,8 +4,7 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  
-  
+
   devise  :database_authenticatable,
           :registerable,
           :rememberable,
@@ -30,14 +29,11 @@ class User < ApplicationRecord
       value <= self.class.roles[role]
     end
   end
-  
-  def is_active?
-    return true if self.can_be_owner?
-    return false if self.account_level  < 1
-    self.expiration_date >= Time.now
-  end
-  
-  private 
-  
 
+  def active?
+    return true if can_be_owner?
+    return false if account_level < 1
+
+    expiration_date >= Time.now
+  end
 end

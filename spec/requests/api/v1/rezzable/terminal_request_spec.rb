@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
+RSpec.describe 'Api::V1::Rezzable::Terminals', type: :request do
   it_behaves_like 'it has an owner api', :terminal
-  
+
   # let(:owner) { FactoryBot.create :owner }
   # let(:user) { FactoryBot.create :active_user }
-  
-  # describe 'creating a new terminal' do 
+
+  # describe 'creating a new terminal' do
   #   let(:path) { api_rezzable_terminals_path }
-    
-  #   context 'as owner' do 
+
+  #   context 'as owner' do
   #     let(:web_object) do
   #       FactoryBot.build :terminal, user_id: owner.id
   #     end
@@ -22,7 +24,7 @@ RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
   #                 )
   #       expect(response.status).to eq 201
   #     end
-      
+
   #     it 'should create a web object' do
   #       expect{
   #         post path, params: atts.to_json,
@@ -31,8 +33,8 @@ RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
   #                   )
   #       }.to change{ AbstractWebObject.count }.by(1)
   #     end
-      
-  #     it 'should return a nice message' do 
+
+  #     it 'should return a nice message' do
   #       post path, params: atts.to_json,
   #                 headers: headers(
   #                   web_object, api_key: Settings.default.web_object.api_key
@@ -41,7 +43,7 @@ RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
   #         JSON.parse(response.body)['message']
   #       ).to eq "This object has been registered in the database."
   #     end
-      
+
   #     it 'should return the api key' do
   #       post path, params: atts.to_json,
   #                 headers: headers(
@@ -52,7 +54,7 @@ RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
   #       ).to match(@uuid_regex)
   #     end
   #   end
-    
+
   #   context 'as active user' do
   #     let(:web_object) do
   #       FactoryBot.build :terminal, user_id: user.id
@@ -66,8 +68,8 @@ RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
   #                 )
   #       expect(response.status).to eq 403
   #     end
-      
-  #     it 'should not create an object' do 
+
+  #     it 'should not create an object' do
   #       expect{
   #         post path, params: atts.to_json,
   #                   headers: headers(
@@ -77,8 +79,8 @@ RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
   #     end
   #   end
   # end
-  
-  # describe 'updating a terminal' do 
+
+  # describe 'updating a terminal' do
   #   let(:path) { api_rezzable_terminals_path }
   #   let(:web_object) do
   #     object = FactoryBot.build :terminal, user_id: owner.id
@@ -86,17 +88,17 @@ RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
   #     object
   #   end
   #   let(:atts) { { url: 'example.com' } }
-    
+
   #   context 'as owner' do
-    
-  #     it 'should return ok status' do 
+
+  #     it 'should return ok status' do
   #       post path, params: atts.to_json,
   #                 headers: headers(
   #                   web_object, api_key: Settings.default.web_object.api_key
   #                 )
   #       expect(response.status).to eq 200
   #     end
-      
+
   #     it 'should not change the object count' do
   #       existing_object = FactoryBot.build :terminal, user_id: owner.id
   #       existing_object.save
@@ -107,8 +109,8 @@ RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
   #                   )
   #       }.to_not change{ AbstractWebObject.count }
   #     end
-      
-  #     it 'should return a nice message' do 
+
+  #     it 'should return a nice message' do
   #       post path, params: atts.to_json,
   #                 headers: headers(
   #                   web_object, api_key: Settings.default.web_object.api_key
@@ -118,9 +120,9 @@ RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
   #       ).to eq "This object has been updated."
   #     end
   #   end
-    
+
   #   context 'as active user' do
-  #     it 'should return forbidden status' do 
+  #     it 'should return forbidden status' do
   #       web_object.user_id = user.id
   #       web_object.save
   #       post path, params: atts.to_json,
@@ -129,8 +131,8 @@ RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
   #                 )
   #       expect(response.status).to eq 403
   #     end
-      
-  #     it 'should not change the object' do 
+
+  #     it 'should not change the object' do
   #       web_object.user_id = user.id
   #       web_object.save
   #       old_url = web_object.url
@@ -142,30 +144,30 @@ RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
   #     end
   #   end
   # end
-  
-  # describe 'getting object data' do 
+
+  # describe 'getting object data' do
   #   let(:web_object) do
   #     object = FactoryBot.build :terminal, user_id: owner.id
   #     object.save
   #     object
   #   end
   #   let(:path) { api_rezzable_terminal_path(web_object.object_key) }
-    
-  #   context 'as an owner' do 
-      
+
+  #   context 'as an owner' do
+
   #     it 'should return OK status' do
   #       get path, headers: headers(web_object, api_key: web_object.api_key)
   #       expect(response.status).to eq 200
   #     end
-      
-  #     it 'should send data' do 
+
+  #     it 'should send data' do
   #       get path, headers: headers(web_object, api_key: web_object.api_key)
   #       expect(JSON.parse(response.body)).to have_key('data')
   #     end
   #   end
-    
-  #   context 'as an active user' do 
-  #     it 'should return forbidden status' do 
+
+  #   context 'as an active user' do
+  #     it 'should return forbidden status' do
   #       web_object.user_id = user.id
   #       web_object.save
   #       get path, headers: headers(web_object, api_key: web_object.api_key)
@@ -173,51 +175,50 @@ RSpec.describe "Api::V1::Rezzable::Terminals", type: :request do
   #     end
   #   end
   # end
-  
-  # describe 'deleting an object' do 
+
+  # describe 'deleting an object' do
   #   let(:web_object) do
   #     object = FactoryBot.build :terminal, user_id: owner.id
   #     object.save
   #     object
   #   end
   #   let(:path) { api_rezzable_terminal_path(web_object.object_key) }
-    
+
   #   context 'as an owner' do
-  #     it 'should return ok status' do 
+  #     it 'should return ok status' do
   #       delete path, headers: headers(web_object)
   #       expect(response.status).to eq 200
   #     end
-      
-  #     it 'should delete the object' do 
+
+  #     it 'should delete the object' do
   #       delete path, headers: headers(web_object)
   #       expect(AbstractWebObject.find_by_object_key(web_object.object_key)).to be_nil
   #     end
-      
-  #     it 'should return a nice message' do 
+
+  #     it 'should return a nice message' do
   #       delete path, headers: headers(web_object)
   #       expect(JSON.parse(response.body)['message']).to eq (
   #         "This object has been deleted."
   #       )
   #     end
   #   end
-    
-  #   context 'as a user' do 
-  #     it 'should return forbidden status' do 
+
+  #   context 'as a user' do
+  #     it 'should return forbidden status' do
   #       web_object.user_id = user.id
   #       web_object.save
   #       delete path, headers: headers(web_object)
   #       expect(response.status).to eq 403
   #     end
-      
-  #     it 'should not delete an object' do 
+
+  #     it 'should not delete an object' do
   #       web_object.user_id = user.id
   #       web_object.save
-        
+
   #       expect{
   #         delete path, headers: headers(web_object)
   #       }.to_not change{ AbstractWebObject.count }
   #     end
   #   end
   # end
-
 end

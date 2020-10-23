@@ -47,6 +47,7 @@ end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
 private
+
 ##
 # Returns the appropriate api_key
 #

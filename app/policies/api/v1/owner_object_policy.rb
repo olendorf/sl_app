@@ -12,7 +12,7 @@ class Api::V1::OwnerObjectPolicy < Api::V1::RezzablePolicy
     show?
   end 
   
-  def destory? 
+  def destroy? 
     show?
   end 
   

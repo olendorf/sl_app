@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Api::V1::ApiController, type: :controller do
@@ -11,15 +13,14 @@ RSpec.describe Api::V1::ApiController, type: :controller do
       render json: { message: 'yay' }, status: :created
     end
   end
-  
-  
+
   let(:user) { FactoryBot.create :user }
-  let(:requesting_object) do 
+  let(:requesting_object) do
     object = FactoryBot.build :web_object, user_id: user.id
     object.save
     object
   end
-  
+
   describe 'create' do
     context 'with valid package' do
       it 'should return ok status' do
@@ -32,24 +33,21 @@ RSpec.describe Api::V1::ApiController, type: :controller do
         post :create
         expect(response.status).to eq 201
       end
-      
     end
-    
-    context 'with invalid api_key' do 
+
+    context 'with invalid api_key' do
       it 'should return bad request status' do
         time = Time.now.to_i
         @request.env['HTTP_X_AUTH_TIME'] = time
         @request.env['HTTP_X_AUTH_DIGEST'] = Digest::SHA1.hexdigest(
-          time.to_s + 'invalid'
+          "#{time}invalid"
         )
         @request.env['HTTP_X_SECONDLIFE_OBJECT_KEY'] = SecureRandom.uuid
         post :create
         expect(response.status).to eq 400
       end
-      
-      
     end
-    
+
     context 'missing time' do
       it 'should return ok status' do
         @request.env['HTTP_X_AUTH_DIGEST'] = Digest::SHA1.hexdigest(
@@ -60,9 +58,7 @@ RSpec.describe Api::V1::ApiController, type: :controller do
         expect(response.status).to eq 400
       end
     end
-    
-    
-    
+
     context 'stale time' do
       it 'should return ok status' do
         time = Time.now.to_i - 60
@@ -75,7 +71,7 @@ RSpec.describe Api::V1::ApiController, type: :controller do
         expect(response.status).to eq 400
       end
     end
-    
+
     context 'future time' do
       it 'should return ok status' do
         time = Time.now.to_i + 60
@@ -89,10 +85,10 @@ RSpec.describe Api::V1::ApiController, type: :controller do
       end
     end
   end
-  
+
   # THis and create are really the only two unique cases
   # Update, destroy and show all follow the same rules
- describe 'show' do
+  describe 'show' do
     context 'with valid package' do
       it 'should return ok status' do
         time = Time.now.to_i
@@ -174,6 +170,4 @@ RSpec.describe Api::V1::ApiController, type: :controller do
       end
     end
   end
-
-  
 end

@@ -10,8 +10,7 @@ Layout/LineLength:
     
 Metrics/BlockLength:
   Exclude:
-    - spec/support/database_cleaner.rb
-    - spec/features/**/*
+    - spec/**/*
     - db/**/*
     - config/**/*
     - app/admin/**/*
@@ -21,8 +20,23 @@ Style/Documentation:
     - db/**/*
     
 Metrics/MethodLength:
+  Max: 20
   Exclude:
     - db/**/*
+    
+Metrics/PerceivedComplexity:
+  Max: 15
+  
+Metrics/CyclomaticComplexity:
+  Max: 15
+    
+Style/BlockDelimiters:
+  Exclude:
+    - spec/**/*
+    
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - spec/**/*
   
 AllCops:
   NewCops: enable

@@ -12,7 +12,7 @@ Rails.application.configure do
   config.eager_load = false
 
   # allows cloud nine
-  config.hosts = '206f4d7c07de42f38121851623d268d6.vfs.cloud9.us-east-2.amazonaws.com'
+  config.hosts << "30ef2715f02d4d54b4b8433e66a235d0.vfs.cloud9.us-east-2.amazonaws.com"
 
   # Show full error reports.
   config.consider_all_requests_local = true
@@ -66,4 +66,7 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+  
+  config.webpacker.check_yarn_integrity = false
+  
 end

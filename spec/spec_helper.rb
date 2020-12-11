@@ -26,6 +26,7 @@ SimpleCov.start do
   add_filter 'lib/api_constraints.rb'
   add_filter 'config'
   add_filter 'app/policies/application_policy.rb'
+  add_filter 'app/controllers/concerns/active_admin/rezzable_behavior.rb'
 end
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration

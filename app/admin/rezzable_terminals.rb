@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Rezzable::Terminal do
-  # include ActiveAdmin::RezzableBehavior
+  include ActiveAdmin::RezzableBehavior
 
   menu label: 'Terminals'
 

@@ -18,6 +18,12 @@ RSpec.describe Api::V1::UserPolicy, type: :policy do
   }
 
   subject { described_class }
+  
+  permissions :create? do 
+    it 'grants permission to any user' do 
+      expect(subject).to permit nil, nil
+    end
+  end 
 
 
   permissions :show?, :update?, :destroy? do

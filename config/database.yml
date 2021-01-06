@@ -6,7 +6,7 @@ default: &default
   pool: 5
   username: <%= ENV['USERNAME'] %>
   password: <%= ENV['PASSWORD'] %>
-  host: <%= ENV['IP'] %>
+  host: slapp.cbw3mio5zyeu.us-east-2.rds.amazonaws.com
 
 development:
   <<: *default

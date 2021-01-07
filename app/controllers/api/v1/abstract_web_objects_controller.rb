@@ -47,10 +47,12 @@ module Api
       end
 
       private
-
+      
       def requesting_class
         "::Rezzable::#{controller_name.classify}".constantize
       end
+
+
 
       def atts
         {

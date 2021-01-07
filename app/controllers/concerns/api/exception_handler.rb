@@ -20,9 +20,9 @@ module Api
       #   json_response({ message: 'You are unauthorized to do that' }, :unauthorized)
       # end
 
-      # rescue_from ActiveRecord::RecordInvalid do |e|
-      #   json_response({ message: e.message }, :bad_request)
-      # end
+      rescue_from ActiveRecord::RecordInvalid do |e|
+        json_response({ message: e.message }, :unprocessable_entity)
+      end
 
       rescue_from ActionController::BadRequest do |e|
         json_response({ message: e.message }, :bad_request)

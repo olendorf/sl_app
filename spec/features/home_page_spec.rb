@@ -24,7 +24,7 @@ RSpec.feature 'Home page features', type: :feature do
       visit static_pages_home_path
       click_on('Sign In')
       fill_in('Avatar name', with: owner.avatar_name)
-      fill_in('Password', with: 'password')
+      fill_in('Password', with: 'Pa$sW0rd')
       click_on('Log in')
     end
     scenario ' and visits admin pages' do

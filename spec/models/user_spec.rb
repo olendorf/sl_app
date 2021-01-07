@@ -14,6 +14,12 @@ RSpec.describe User, type: :model do
   let(:owner) { FactoryBot.create :owner }
 
   it { should have_many :abstract_web_objects }
+  
+  describe :email_changed? do
+    it 'should be falsey' do 
+      expect(user.email_changed?).to be_falsey
+    end
+  end
 
   describe 'can be' do
     User.roles.each do |role, _value|

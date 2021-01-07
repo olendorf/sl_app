@@ -41,6 +41,9 @@ Style/BlockDelimiters:
   Exclude:
     - spec/**/*
     
+Style/LineEndConcatenation:
+  Enabled: false
+    
 Lint/AmbiguousBlockAssociation:
   Exclude:
     - spec/**/*

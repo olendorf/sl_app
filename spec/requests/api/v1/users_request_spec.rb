@@ -173,8 +173,9 @@ RSpec.describe 'Api::V1::Users', type: :request do
                        user_object,
                        api_key: Settings.default.web_object.api_key
                      )
+                     
           expect(JSON.parse(response.body)['message']).to eq(
-            'Validation failed: Password Complexity requirement not met. ' \
+            'Validation failed: Password Complexity requirement not met. ' +
             'Please use: 1 uppercase, 1 lowercase, 1 digit and 1 special character'
           )
         end

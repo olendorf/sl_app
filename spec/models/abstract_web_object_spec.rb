@@ -17,14 +17,14 @@ RSpec.describe AbstractWebObject, type: :model do
   it { should be_actable }
 
   it { should belong_to :user }
-  
+
   let(:user) { FactoryBot.create :owner }
   let(:web_object) do
-    web_object = FactoryBot.build :web_object, user_id:user.id
+    web_object = FactoryBot.build :web_object, user_id: user.id
     web_object.save
     web_object
   end
-  
+
   describe 'active?' do
     it 'returns true when object has been pinged recently' do
       expect(web_object.active?).to be_truthy

@@ -8,7 +8,7 @@ FactoryBot.define do
     end
     avatar_name { "#{first_name} #{last_name}" }
     avatar_key { SecureRandom.uuid }
-    password { 'password' }
+    password { 'Pa$sW0rd' }
 
     factory :active_user do
       account_level { 1 }

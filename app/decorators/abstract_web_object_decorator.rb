@@ -13,7 +13,6 @@ class AbstractWebObjectDecorator < Draper::Decorator
   #     end
   #   end
 
-  # rubocop:disable Metrics/AbcSize
   def slurl
     position = JSON.parse(self.position)
     href = "https://maps.secondlife.com/secondlife/#{region}/#{position['x'].round}/" \
@@ -22,5 +21,4 @@ class AbstractWebObjectDecorator < Draper::Decorator
            "#{position['y'].round}, #{position['z'].round})"
     h.link_to(text, href)
   end
-  # rubocop:enable Metrics/AbcSize
 end

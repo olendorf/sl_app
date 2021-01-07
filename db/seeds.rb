@@ -16,7 +16,7 @@ DatabaseCleaner.clean_with :truncation if Rails.env.development?
 
 owner = FactoryBot.create :owner, avatar_name: 'Random Citizen', password: 'password'
 
-rand(3..10).times do 
+rand(3..10).times do
   owner.abstract_web_objects << FactoryBot.build(:terminal)
 end
 

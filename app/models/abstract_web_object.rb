@@ -14,9 +14,9 @@ class AbstractWebObject < ApplicationRecord
 
   after_initialize :set_pinged_at
   after_initialize :set_api_key
-  
+
   def active?
-    Time.now - self.pinged_at <= Settings.default.web_object.inactive_limit
+    Time.now - pinged_at <= Settings.default.web_object.inactive_limit
   end
 
   private

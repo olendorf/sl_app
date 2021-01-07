@@ -37,6 +37,13 @@ en:
     auth_digest: Invalid or missing auth_digest.
   
   api:
+    user:
+      create:
+        success: "Your account has been created. Please visit %{url} to view your account."
+      update:
+        success: "Your password has been updated."
+      destroy:
+        success: "Your account has been deleted. Sorry to see you go!"
     rezzable:
       create:
         success: "This object has been registered in the database."

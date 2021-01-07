@@ -25,20 +25,20 @@ module ActiveAdmin
         end
 
         def derez_web_object(_resource)
-          unless Rails.env.development?
-            begin
-              RestClient::Request.execute(
-                url: resource.url,
-                method: :delete,
-                content_type: :json,
-                accept: :json,
-                verify_ssl: false,
-                headers: request_headers
-              )
-            rescue RestClient::ExceptionWithResponse => e
-              flash[:error] = t('active_admin.web_object.delete.failure',
-                                message: e.response)
-            end
+          return if Rails.env.development?
+
+          begin
+            RestClient::Request.execute(
+              url: resource.url,
+              method: :delete,
+              content_type: :json,
+              accept: :json,
+              verify_ssl: false,
+              headers: request_headers
+            )
+          rescue RestClient::ExceptionWithResponse => e
+            flash[:error] = t('active_admin.web_object.delete.failure',
+                              message: e.response)
           end
         end
 

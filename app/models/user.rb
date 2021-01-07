@@ -5,15 +5,40 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
 
+  validate :password_complexity
+
   devise  :database_authenticatable,
           :registerable,
           :rememberable,
           :trackable,
-          :timeoutable
+          :timeoutable,
+          :validatable
 
   enum role: %i[user prime admin owner]
 
   has_many :abstract_web_objects
+
+  def email_required?
+    false
+  end
+
+  def email_changed?
+    false
+  end
+
+  def will_save_change_to_email?
+    false
+  end
+
+  def password_complexity
+    if password.blank? || password =~ /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/
+      return
+    end
+
+    errors.add :password,
+               'Complexity requirement not met. Please use: 1 uppercase, ' +
+               '1 lowercase, 1 digit and 1 special character'
+  end
 
   # Creates methods to test of a user is allowed to act as a role.
   # Given ROLES = [:user, :prime, :admin, :owner], will create the methods

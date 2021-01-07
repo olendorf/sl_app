@@ -1,3 +1,4 @@
 default:
+  site_url: "http://example.com"
   web_object:
     api_key: change_me

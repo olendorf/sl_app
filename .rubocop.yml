@@ -14,15 +14,22 @@ Metrics/BlockLength:
     - db/**/*
     - config/**/*
     - app/admin/**/*
+    - app/controllers/concerns/**/*
     
 Style/Documentation:
   Exclude:
     - db/**/*
     
+Metrics/AbcSize:
+  Max: 20
+  Exclude:
+    - app/controllers/concerns/**/*
+    
 Metrics/MethodLength:
   Max: 20
   Exclude:
     - db/**/*
+    - app/controllers/concerns/**/*
     
 Metrics/PerceivedComplexity:
   Max: 15
@@ -34,14 +41,28 @@ Style/BlockDelimiters:
   Exclude:
     - spec/**/*
     
+Style/LineEndConcatenation:
+  Enabled: false
+    
 Lint/AmbiguousBlockAssociation:
   Exclude:
     - spec/**/*
+    
+Lint/EmptyBlock:
+  Exclude:
+    - app/decorators/**/*
+    
+Lint/NestedMethodDefinition:
+  Exclude:
+    - app/controllers/concerns/**/*
   
 AllCops:
+  SuggestExtensions: false
   NewCops: enable
   Exclude:
     - 'bin/{rails,rake,bundle}'
     - node_modules/**/*
     - Gemfile
     - Gemfile.lock
+    - db/schema.rb
+    - db/migrate/**/*

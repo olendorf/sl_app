@@ -1,4 +1,6 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-RSpec.describe Rezzable::TerminalDecorator do
-end
+# require 'rails_helper'
+
+# RSpec.describe Rezzable::TerminalDecorator do
+# end

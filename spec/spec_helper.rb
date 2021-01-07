@@ -28,7 +28,6 @@ SimpleCov.start do
   add_filter 'app/policies/application_policy.rb'
   add_filter 'app/controllers/concerns/active_admin/rezzable_behavior.rb'
   add_filter 'app/models/rezzable.rb'
-  
 end
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :analyzable_transaction, class: 'Analyzable::Transaction' do
     name { Faker::Resaurant.name }

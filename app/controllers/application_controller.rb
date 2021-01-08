@@ -3,7 +3,7 @@
 # Base controller class
 class ApplicationController < ActionController::Base
   include Pundit
-  
+
   before_action :set_paper_trail_whodunnit
 
   def authenticate_admin_user!

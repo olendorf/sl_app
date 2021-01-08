@@ -13,6 +13,8 @@ class User < ApplicationRecord
           :trackable,
           :timeoutable,
           :validatable
+  
+  has_paper_trail
 
   enum role: %i[user prime admin owner]
 

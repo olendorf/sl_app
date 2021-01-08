@@ -36,6 +36,9 @@ gem 'devise'
 # authorization
 gem 'pundit'
 
+# Track changes to your models, for auditing or versioning
+gem 'paper_trail'
+
 # Admin interface with the data. Will probably use for a user interface as well
 gem 'activeadmin'
 

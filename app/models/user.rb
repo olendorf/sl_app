@@ -16,7 +16,8 @@ class User < ApplicationRecord
 
   enum role: %i[user prime admin owner]
 
-  has_many :abstract_web_objects
+  has_many :abstract_web_objects, dependent: :destroy
+  has_many :splits, dependent: :destroy, class_name: "Analyzable::Transaction"
 
   def email_required?
     false

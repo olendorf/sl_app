@@ -13,7 +13,11 @@ RSpec.describe User, type: :model do
   let(:admin) { FactoryBot.build :admin }
   let(:owner) { FactoryBot.create :owner }
 
-  it { should have_many :abstract_web_objects }
+  it { should have_many(:abstract_web_objects).dependent(:destroy) }
+  
+  it { should have_many(
+                        :splits).class_name(
+                          'Analyzable::Transaction').dependent(:destroy) }
   
   describe :email_changed? do
     it 'should be falsey' do 

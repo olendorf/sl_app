@@ -14,9 +14,12 @@ class User < ApplicationRecord
           :timeoutable,
           :validatable
 
+  has_paper_trail
+
   enum role: %i[user prime admin owner]
 
-  has_many :abstract_web_objects
+  has_many :abstract_web_objects, dependent: :destroy
+  has_many :splits, dependent: :destroy, class_name: 'Analyzable::Transaction'
 
   def email_required?
     false

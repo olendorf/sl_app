@@ -19,10 +19,9 @@ class User < ApplicationRecord
   enum role: %i[user prime admin owner]
 
   has_many :web_objects, class_name: 'AbstractWebObject', dependent: :destroy
-  has_many :transactions, dependent: :destroy, 
+  has_many :transactions, dependent: :destroy,
                           class_name: 'Analyzable::Transaction',
                           before_add: :update_balance
-  
 
   def email_required?
     false
@@ -60,10 +59,11 @@ class User < ApplicationRecord
       value <= self.class.roles[role]
     end
   end
-  
+
   def balance
-    return 0 if self.transactions.size == 0
-    self.transactions.last.balance
+    return 0 if transactions.size.zero?
+
+    transactions.last.balance
   end
 
   def active?
@@ -72,14 +72,13 @@ class User < ApplicationRecord
 
     expiration_date >= Time.now
   end
-  
+
   # Updates the user's balance that results when the transaction is added.
   def update_balance(transaction)
-    
-    if self.transactions.size == 0 
-      transaction.balance = transaction.amount
-    else
-      transaction.balance = self.transactions.last.balance + transaction.amount
-    end
+    transaction.balance = if transactions.size.zero?
+                            transaction.amount
+                          else
+                            transactions.last.balance + transaction.amount
+                          end
   end
 end

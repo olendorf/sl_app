@@ -14,24 +14,26 @@ RSpec.describe User, type: :model do
   let(:owner) { FactoryBot.create :owner }
 
   it { should have_many(:web_objects).class_name('AbstractWebObject').dependent(:destroy) }
-  it { should have_many(
-                          :transactions).class_name(
-                            'Analyzable::Transaction'
-                              ).dependent(:destroy) }
-
+  it {
+    should have_many(
+      :transactions
+    ).class_name(
+      'Analyzable::Transaction'
+    ).dependent(:destroy)
+  }
 
   describe :email_changed? do
     it 'should be falsey' do
       expect(user.email_changed?).to be_falsey
     end
   end
-  
+
   describe :balance do
     it 'should be zero when the user has no transactions' do
       expect(user.balance).to eq 0
     end
-    
-    it 'should return the current balance if teh user has transactions' do 
+
+    it 'should return the current balance if teh user has transactions' do
       user.transactions << FactoryBot.build(:transaction, amount: 7)
       user.transactions << FactoryBot.build(:transaction, amount: 15)
       user.transactions << FactoryBot.build(:transaction, amount: 31)

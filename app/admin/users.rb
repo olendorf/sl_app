@@ -10,7 +10,7 @@ ActiveAdmin.register User do
       user.role.capitalize
     end
     column 'Object Count' do |user|
-      user.abstract_web_objects.size
+      user.web_objects.size
     end
     column :current_sign_in_at
     column :sign_in_count
@@ -41,7 +41,7 @@ ActiveAdmin.register User do
         user.role.capitalize
       end
       row 'Object Count' do |user|
-        user.abstract_web_objects.size
+        user.web_objects.size
       end
       row :remember_created_at
       row :sign_in_count

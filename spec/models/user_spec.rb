@@ -8,16 +8,15 @@ RSpec.describe User, type: :model do
 
   it { should define_enum_for(:role).with_values(%i[user prime admin owner]) }
 
-  let(:user)  { FactoryBot.create :user }
+  let(:user)  { FactoryBot.create :active_user }
   let(:prime) { FactoryBot.create :prime }
   let(:admin) { FactoryBot.build :admin }
   let(:owner) { FactoryBot.create :owner }
 
-  it { should have_many(:abstract_web_objects).dependent(:destroy) }
-
+  it { should have_many(:web_objects).class_name('AbstractWebObject').dependent(:destroy) }
   it {
     should have_many(
-      :splits
+      :transactions
     ).class_name(
       'Analyzable::Transaction'
     ).dependent(:destroy)
@@ -26,6 +25,19 @@ RSpec.describe User, type: :model do
   describe :email_changed? do
     it 'should be falsey' do
       expect(user.email_changed?).to be_falsey
+    end
+  end
+
+  describe :balance do
+    it 'should be zero when the user has no transactions' do
+      expect(user.balance).to eq 0
+    end
+
+    it 'should return the current balance if teh user has transactions' do
+      user.transactions << FactoryBot.build(:transaction, amount: 7)
+      user.transactions << FactoryBot.build(:transaction, amount: 15)
+      user.transactions << FactoryBot.build(:transaction, amount: 31)
+      expect(user.balance).to eq 53
     end
   end
 

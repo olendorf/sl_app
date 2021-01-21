@@ -75,10 +75,12 @@ class User < ApplicationRecord
 
   # Updates the user's balance that results when the transaction is added.
   def update_balance(transaction)
-    transaction.balance = if transactions.size.zero?
-                            transaction.amount
-                          else
-                            transactions.last.balance + transaction.amount
-                          end
+    if transactions.size.zero?
+      transaction.balance = transaction.amount
+      transaction.previous_balance = 0
+    else
+      transaction.previous_balance = transactions.last.balance
+      transaction.balance = transactions.last.balance + transaction.amount
+    end
   end
 end

@@ -6,5 +6,7 @@ module Analyzable
     has_paper_trail
 
     belongs_to :user
+
+    enum category: %i[other account tip sale tier share]
   end
 end

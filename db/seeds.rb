@@ -14,22 +14,39 @@
 
 DatabaseCleaner.clean_with :truncation if Rails.env.development?
 
-owner = FactoryBot.create :owner, avatar_name: 'Random Citizen', password: 'password'
+owner = FactoryBot.create :owner, avatar_name: 'Random Citizen'
 
 rand(3..10).times do
-  owner.abstract_web_objects << FactoryBot.build(:terminal)
+  owner.web_objects << FactoryBot.build(:terminal)
 end
 
-FactoryBot.create :user, avatar_name: 'User Resident', password: 'password'
+num = rand(10..20)
+dates = Array.new(num) { rand(1.year.ago.to_f..Time.now.to_f) }.sort
+dates.each do |date|
+  source = rand < 0.25 ? nil : owner.web_objects.sample
+  if source
+    owner.transactions << FactoryBot.build(:transaction, source_type: 'SL',
+                                                         source_key: source.object_key,
+                                                         source_name: source.object_name,
+                                                         created_at: Time.at(date))
+  else
+    owner.transactions << FactoryBot.build(:transaction, source_type: 'Web',
+                                                         source_key: owner.avatar_key,
+                                                         source_name: owner.avatar_key,
+                                                         created_at: Time.at(date))
+  end
+end
+
+FactoryBot.create :user, avatar_name: 'User Resident'
 
 4.times do |i|
-  FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident", password: 'password'
+  FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident"
 end
 
 100.times do |i|
-  user = FactoryBot.create :user, avatar_name: "User_#{i} Resident", password: 'password'
+  user = FactoryBot.create :user, avatar_name: "User_#{i} Resident"
 
   rand(0..10).times do
-    user.abstract_web_objects << FactoryBot.build(:web_object)
+    user.web_objects << FactoryBot.build(:web_object)
   end
 end

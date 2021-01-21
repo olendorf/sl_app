@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_08_184316) do
+ActiveRecord::Schema.define(version: 2021_01_20_185548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,7 +49,6 @@ ActiveRecord::Schema.define(version: 2021_01_08_184316) do
   end
 
   create_table "analyzable_transactions", force: :cascade do |t|
-    t.string "name"
     t.text "description"
     t.integer "amount"
     t.integer "balance"
@@ -59,6 +58,12 @@ ActiveRecord::Schema.define(version: 2021_01_08_184316) do
     t.string "source_name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "source_type"
+    t.string "transaction_key"
+    t.integer "category", default: 0, null: false
+    t.integer "previous_balance"
+    t.string "target_name"
+    t.string "target_key"
   end
 
   create_table "rezzable_terminals", force: :cascade do |t|

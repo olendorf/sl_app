@@ -12,7 +12,7 @@ Rails.application.configure do
   config.eager_load = false
 
   # allows cloud nine
-  config.hosts << '987e6085d3de4cb18b2744dcbc11ae8f.vfs.cloud9.us-east-2.amazonaws.com'
+  config.hosts << 'be0f165895ee4035b9be940cc9687901.vfs.cloud9.us-east-2.amazonaws.com'
 
   # Show full error reports.
   config.consider_all_requests_local = true

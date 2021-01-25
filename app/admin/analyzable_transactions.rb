@@ -10,7 +10,15 @@ ActiveAdmin.register Analyzable::Transaction do
   index title: 'Transactions' do
     selectable_column
     column :created_at
-    column 'Payer/Payee', :target_name
+    column 'Payer/Payee' do |transaction|
+      avatar = Avatar.find_by_avatar_key(transaction.target_key)
+      output = if avatar
+                 link_to(transaction.target_name, admin_avatar_path(avatar))
+               else
+                 transaction.target_name
+               end
+      output
+    end
     column :amount
     column :previous_balance
     column :balance
@@ -42,7 +50,7 @@ ActiveAdmin.register Analyzable::Transaction do
     end
   end
 
-  permit_params :description, :category, :amount, :target_name, :target_key
+  permit_params :description, :category, :amount, :target_name, :target_key, :source_type
 
   form do |f|
     f.inputs do
@@ -62,10 +70,13 @@ ActiveAdmin.register Analyzable::Transaction do
       @transaction = Analyzable::Transaction.new(
         permitted_params[:analyzable_transaction]
       )
+      @transaction.source_type = 'Web'
       current_user.transactions << @transaction
       @transaction.save!
       flash.alert = 'A new transaction has been created.'
       redirect_to admin_analyzable_transaction_path(@transaction.id)
     end
+
+    def handle_avatar; end
   end
 end

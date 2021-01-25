@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_20_185548) do
+ActiveRecord::Schema.define(version: 2021_01_25_144257) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,15 @@ ActiveRecord::Schema.define(version: 2021_01_20_185548) do
     t.integer "previous_balance"
     t.string "target_name"
     t.string "target_key"
+  end
+
+  create_table "avatars", force: :cascade do |t|
+    t.string "avatar_key"
+    t.string "avatar_name"
+    t.string "display_name"
+    t.date "rezday"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "rezzable_terminals", force: :cascade do |t|

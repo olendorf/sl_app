@@ -25,7 +25,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
   describe 'creating an account' do
     let(:path) { api_users_path }
 
-    context 'valid params' do
+    context 'valid password' do
       let(:atts) {
         {
           avatar_name: new_user.avatar_name,
@@ -66,7 +66,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
       end
     end
 
-    context 'invalid params' do
+    context 'invalid password' do
       context 'passwords do not match' do
         let(:atts) {
           {
@@ -192,6 +192,86 @@ RSpec.describe 'Api::V1::Users', type: :request do
         end
       end
     end
+    
+    context 'with no payment' do
+      let(:atts) {
+        {
+          avatar_name: new_user.avatar_name,
+          avatar_key: new_user.avatar_key,
+          password: 'Pa$sW0rd!',
+          password_confirmation: 'Pa$sW0rd!',
+          amount: 0
+        }
+      }
+      
+      it 'should return created status' do 
+        post path, params: atts.to_json,
+                   headers: headers(
+                     user_object,
+                     api_key: Settings.default.web_object.api_key
+                   )
+        expect(response.status).to eq 201
+      end
+      
+      it 'should set expiration_date to now' do 
+        post path, params: atts.to_json,
+                   headers: headers(
+                     user_object,
+                     api_key: Settings.default.web_object.api_key
+                   )
+        expect(User.last.expiration_date).to be_within(10).of(Time.now)
+      end
+      
+      it 'should have account level zero' do 
+        post path, params: atts.to_json,
+                   headers: headers(
+                     user_object,
+                     api_key: Settings.default.web_object.api_key
+                   )
+        expect(User.last.account_level).to eq 0
+      end
+      
+    end
+    
+    context 'with payment' do
+      let(:atts) {
+        {
+          avatar_name: new_user.avatar_name,
+          avatar_key: new_user.avatar_key,
+          password: 'Pa$sW0rd!',
+          password_confirmation: 'Pa$sW0rd!'
+        }
+      }
+      it 'adds one month to expiration_date for one months payment' do 
+        atts[:amount] = Settings.default.account.monthly_cost
+        post path, params: atts.to_json,
+                   headers: headers(
+                     user_object,
+                     api_key: Settings.default.web_object.api_key
+                   )
+        expect(User.last.expiration_date).to be_within(10).of(Time.now + 1.month.to_i)
+      end
+      
+      it 'correctly prorates expiration_date for other amounts' do 
+        atts[:amount] = Settings.default.account.monthly_cost * 3.7
+        post path, params: atts.to_json,
+                   headers: headers(
+                     user_object,
+                     api_key: Settings.default.web_object.api_key
+                   )
+        expect(User.last.expiration_date).to be_within(10).of(Time.now + (1.month.to_i * 3.7))
+      end
+      
+      it 'sets account level to 1' do 
+        atts[:amount] = Settings.default.account.monthly_cost
+        post path, params: atts.to_json,
+                   headers: headers(
+                     user_object,
+                     api_key: Settings.default.web_object.api_key
+                   )
+        expect(User.last.account_level).to eq 1
+      end 
+    end 
   end
 
   describe 'updating password' do

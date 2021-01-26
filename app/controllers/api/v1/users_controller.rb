@@ -13,7 +13,9 @@ module Api
           avatar_name: parsed_params['avatar_name'],
           avatar_key: parsed_params['avatar_key'],
           password: parsed_params['password'],
-          password_confirmation: parsed_params['password_confirmation']
+          password_confirmation: parsed_params['password_confirmation'],
+          expiration_date: Time.now + parsed_params['amount'].to_f/Settings.default.account.monthly_cost * 1.month.to_i,
+          account_level: parsed_params['amount'].to_i > 0 ? 1 : 0
         )
         @new_user.save!
         render json: {

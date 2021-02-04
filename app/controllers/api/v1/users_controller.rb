@@ -34,7 +34,16 @@ module Api
         handle_payment if parsed_params['amount']
         @user.update!(parsed_params.except('amount'))
         render json: {
+          message: I18n.t('api.user.update.success'),
           data: user_data
+        }, status: :ok
+      end
+      
+      def destroy
+        authorize @requesting_object
+        @user.destroy!
+        render json: {
+          message: I18n.t('api.user.destroy.success')
         }, status: :ok
       end
       

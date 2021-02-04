@@ -42,7 +42,7 @@ en:
         success: "Your account has been created. Please visit %{url} to view your account."
         exists: "You already have an account. You can use the terminal to change your password, or make a payment to active your account."
       update:
-        success: "Your password has been updated."
+        success: "Your account has been updated."
       destroy:
         success: "Your account has been deleted. Sorry to see you go!"
     rezzable:

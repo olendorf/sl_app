@@ -4,25 +4,24 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::Users', type: :request do
   let(:owner) { FactoryBot.create :owner }
-  let(:terminal) { 
-    terminal = FactoryBot.build :terminal, user_id: owner.id 
+  let(:terminal) {
+    terminal = FactoryBot.build :terminal, user_id: owner.id
     terminal.save
     terminal
   }
-  describe 'creating an account' do 
-    
+  describe 'creating an account' do
     # Users can create accounts from registrationers that cmoe
     # with a purchased package OR from a terminal. Registrationers
     # always assume that the avatar has paid and therefore gets
     # a one month account of level 1.
     context 'from a registrationer' do
       let(:registrationer) { FactoryBot.build :web_object }
-      
+
       let(:new_user) { FactoryBot.build :inactive_user }
-      
+
       let(:path) { api_users_path }
-      
-      context 'valid params' do 
+
+      context 'valid params' do
         let(:atts) {
           {
             avatar_name: new_user.avatar_name,
@@ -34,82 +33,83 @@ RSpec.describe 'Api::V1::Users', type: :request do
             account_level: 1
           }
         }
-        it 'should return created status' do 
+        it 'should return created status' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(response.status).to eq 201
-        end 
-        
+        end
+
         it 'should create a user' do
           expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        registrationer,
-                        api_key: Settings.default.web_object.api_key,
-                        avatar_key: SecureRandom.uuid
-                      )
+                       headers: headers(
+                         registrationer,
+                         api_key: Settings.default.web_object.api_key,
+                         avatar_key: SecureRandom.uuid
+                       )
           }.to change(User, :count).by(1)
-        end 
-        
-        it 'should set the parameters correctly' do 
+        end
+
+        it 'should set the parameters correctly' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(User.last.attributes.with_indifferent_access).to include(
-              avatar_name: atts[:avatar_name],
-              avatar_key: atts[:avatar_key],
-              account_level: atts[:account_level]
-            )
+            avatar_name: atts[:avatar_name],
+            avatar_key: atts[:avatar_key],
+            account_level: atts[:account_level]
+          )
           expect(User.last.expiration_date).to be_within(30).of(Time.now + 1.month.to_i)
         end
-        
-        it 'should return a nice message' do  
+
+        # rubocop:disable Style/StringConcatenation
+        it 'should return a nice message' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(JSON.parse(response.body)['message']).to eq(
-                                      "Your account has been created. Please " + 
-                                      "visit #{Settings.default.site_url} to " + 
-                                      "view your account."
-                                      )
+            'Your account has been created. Please ' +
+            "visit #{Settings.default.site_url} to " +
+            'view your account.'
+          )
         end
-        
-        it 'should return the correct data' do 
+        # rubocop:enable Style/StringConcatenation
+
+        it 'should return the correct data' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(JSON.parse(response.body)['data'].with_indifferent_access).to include(
-              monthly_cost: Settings.default.account.monthly_cost,
-              avatar_name: atts[:avatar_name],
-              avatar_key: atts[:avatar_key],
-              time_left: User.last.time_left,
-              account_level: atts[:account_level]
-            )
+            monthly_cost: Settings.default.account.monthly_cost,
+            avatar_name: atts[:avatar_name],
+            avatar_key: atts[:avatar_key],
+            time_left: User.last.time_left,
+            account_level: atts[:account_level]
+          )
         end
       end
-      
     end
-    
+
     describe 'invalid params' do
       let(:registrationer) { FactoryBot.build :web_object }
-      
+
       let(:new_user) { FactoryBot.build :inactive_user }
-      
+
       let(:path) { api_users_path }
-      context 'password is too short' do 
+      context 'password is too short' do
         let(:atts) {
           {
             avatar_name: new_user.avatar_name,
@@ -121,43 +121,42 @@ RSpec.describe 'Api::V1::Users', type: :request do
             account_level: 1
           }
         }
-        
-        
-        it 'should return unprocessable enttiy' do  
+
+        it 'should return unprocessable enttiy' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
-          expect(response.status).to eq 422  
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
+          expect(response.status).to eq 422
         end
-        
-        it 'should not create a user' do 
-          expect{
+
+        it 'should not create a user' do
+          expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        registrationer,
-                        api_key: Settings.default.web_object.api_key,
-                        avatar_key: SecureRandom.uuid
-                      )
+                       headers: headers(
+                         registrationer,
+                         api_key: Settings.default.web_object.api_key,
+                         avatar_key: SecureRandom.uuid
+                       )
           }.to_not change(User, :count)
         end
-        
-        it 'should return a nice message' do  
+
+        it 'should return a nice message' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(JSON.parse(response.body)['message']).to eq(
-            "Validation failed: Password is too short (minimum is 6 characters)"
-            ) 
+            'Validation failed: Password is too short (minimum is 6 characters)'
+          )
         end
       end
-      
-      context 'password is not complex' do 
+
+      context 'password is not complex' do
         let(:atts) {
           {
             avatar_name: new_user.avatar_name,
@@ -169,44 +168,43 @@ RSpec.describe 'Api::V1::Users', type: :request do
             account_level: 1
           }
         }
-        
-        
-        it 'should return unprocessable enttiy' do  
+
+        it 'should return unprocessable enttiy' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
-          expect(response.status).to eq 422  
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
+          expect(response.status).to eq 422
         end
-        
-        it 'should not create a user' do 
-          expect{
+
+        it 'should not create a user' do
+          expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        registrationer,
-                        api_key: Settings.default.web_object.api_key,
-                        avatar_key: SecureRandom.uuid
-                      )
+                       headers: headers(
+                         registrationer,
+                         api_key: Settings.default.web_object.api_key,
+                         avatar_key: SecureRandom.uuid
+                       )
           }.to_not change(User, :count)
         end
-        
-        it 'should return a nice message' do  
+
+        it 'should return a nice message' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(JSON.parse(response.body)['message']).to eq(
-            "Validation failed: Password Complexity requirement not met. " + 
-            "Please use: 1 uppercase, 1 lowercase, 1 digit and 1 special character"
-            ) 
+            'Validation failed: Password Complexity requirement not met. ' +
+            'Please use: 1 uppercase, 1 lowercase, 1 digit and 1 special character'
+          )
         end
       end
-      
-      context 'passwords dont match' do 
+
+      context 'passwords dont match' do
         let(:atts) {
           {
             avatar_name: new_user.avatar_name,
@@ -218,42 +216,42 @@ RSpec.describe 'Api::V1::Users', type: :request do
             account_level: 1
           }
         }
-        
-        
-        it 'should return unprocessable enttiy' do  
+
+        it 'should return unprocessable enttiy' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
-          expect(response.status).to eq 422  
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
+          expect(response.status).to eq 422
         end
-        
-        it 'should not create a user' do 
-          expect{
+
+        it 'should not create a user' do
+          expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        registrationer,
-                        api_key: Settings.default.web_object.api_key,
-                        avatar_key: SecureRandom.uuid
-                      )
+                       headers: headers(
+                         registrationer,
+                         api_key: Settings.default.web_object.api_key,
+                         avatar_key: SecureRandom.uuid
+                       )
           }.to_not change(User, :count)
         end
-        
-        it 'should return a nice message' do  
+
+        it 'should return a nice message' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(JSON.parse(response.body)['message']).to eq(
-            "Validation failed: Password confirmation doesn't match Password") 
+            "Validation failed: Password confirmation doesn't match Password"
+          )
         end
       end
-      
-      context 'user exists' do 
+
+      context 'user exists' do
         let(:existing_user) { FactoryBot.create :inactive_user }
         let(:atts) {
           {
@@ -266,44 +264,44 @@ RSpec.describe 'Api::V1::Users', type: :request do
             account_level: 1
           }
         }
-      
-        it 'should return conflict status' do   
+
+        it 'should return conflict status' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(response.status).to eq 409
         end
-        
-        it 'should not create a user' do 
+
+        it 'should not create a user' do
           existing_user
-          expect{  
+          expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        registrationer,
-                        api_key: Settings.default.web_object.api_key,
-                        avatar_key: SecureRandom.uuid
-                      )
+                       headers: headers(
+                         registrationer,
+                         api_key: Settings.default.web_object.api_key,
+                         avatar_key: SecureRandom.uuid
+                       )
           }.to_not change(User, :count)
         end
       end
     end
-    
+
     # TErminals can create users and take payments at the same time
     # allowing more flexibility in user creation.
-    context 'from a terminal' do 
+    context 'from a terminal' do
       let(:owner) { FactoryBot.create :owner }
       let(:new_user) { FactoryBot.build :inactive_user }
-      let(:terminal) { 
+      let(:terminal) {
         terminal = FactoryBot.build :terminal, user_id: owner.id
         terminal.save
         terminal
       }
       let(:path) { api_users_path }
-      
-      context 'user makes 1 month payment' do 
+
+      context 'user makes 1 month payment' do
         let(:atts) {
           {
             avatar_name: new_user.avatar_name,
@@ -315,53 +313,53 @@ RSpec.describe 'Api::V1::Users', type: :request do
             account_level: 1
           }
         }
-        
-        it 'should create a transaction for the owner' do 
-          expect{
+
+        it 'should create a transaction for the owner' do
+          expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        terminal,
-                        api_key: Settings.default.web_object.api_key
-                      )
+                       headers: headers(
+                         terminal,
+                         api_key: Settings.default.web_object.api_key
+                       )
           }.to change(owner.transactions, :count).by(1)
         end
-      
-        it 'should return created status' do 
+
+        it 'should return created status' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      terminal,
-                      api_key: Settings.default.web_object.api_key
-                    )
+                     headers: headers(
+                       terminal,
+                       api_key: Settings.default.web_object.api_key
+                     )
           expect(response.status).to eq 201
         end
-        
-        it 'should create a user' do 
+
+        it 'should create a user' do
           owner
-          expect{
+          expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        terminal,
-                        api_key: Settings.default.web_object.api_key
-                      )
+                       headers: headers(
+                         terminal,
+                         api_key: Settings.default.web_object.api_key
+                       )
           }.to change(User, :count).by(1)
         end
-        
-        it 'should set the attributes correctly' do 
+
+        it 'should set the attributes correctly' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      terminal,
-                      api_key: Settings.default.web_object.api_key
-                    )
+                     headers: headers(
+                       terminal,
+                       api_key: Settings.default.web_object.api_key
+                     )
           expect(User.last.attributes.with_indifferent_access).to include(
-              avatar_name: atts[:avatar_name],
-              avatar_key: atts[:avatar_key],
-              account_level: atts[:account_level]
-            )
+            avatar_name: atts[:avatar_name],
+            avatar_key: atts[:avatar_key],
+            account_level: atts[:account_level]
+          )
           expect(User.last.expiration_date).to be_within(30).of(Time.now + 1.month.to_i)
         end
-      end 
-      
-      context 'user wants zero level account' do 
+      end
+
+      context 'user wants zero level account' do
         let(:atts) {
           {
             avatar_name: new_user.avatar_name,
@@ -373,43 +371,43 @@ RSpec.describe 'Api::V1::Users', type: :request do
             account_level: 0
           }
         }
-        
-        it 'should return created status' do  
+
+        it 'should return created status' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      terminal,
-                      api_key: Settings.default.web_object.api_key
-                    )
+                     headers: headers(
+                       terminal,
+                       api_key: Settings.default.web_object.api_key
+                     )
           expect(response.status).to eq 201
         end
-        
-        it 'should create a user' do 
+
+        it 'should create a user' do
           owner
-          expect{
+          expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        terminal,
-                        api_key: Settings.default.web_object.api_key
-                      )
+                       headers: headers(
+                         terminal,
+                         api_key: Settings.default.web_object.api_key
+                       )
           }.to change(User, :count).by(1)
         end
-        
-        it 'should set the attributes correctly' do 
+
+        it 'should set the attributes correctly' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      terminal,
-                      api_key: Settings.default.web_object.api_key
-                    )
+                     headers: headers(
+                       terminal,
+                       api_key: Settings.default.web_object.api_key
+                     )
           expect(User.last.attributes.with_indifferent_access).to include(
-              avatar_name: atts[:avatar_name],
-              avatar_key: atts[:avatar_key],
-              account_level: 0
-            )
+            avatar_name: atts[:avatar_name],
+            avatar_key: atts[:avatar_key],
+            account_level: 0
+          )
           expect(User.last.expiration_date).to be_within(30).of(Time.now)
         end
       end
-      
-      context 'user pays for 3 months' do 
+
+      context 'user pays for 3 months' do
         let(:atts) {
           {
             avatar_name: new_user.avatar_name,
@@ -421,247 +419,241 @@ RSpec.describe 'Api::V1::Users', type: :request do
             account_level: 1
           }
         }
-        it 'should return created status' do 
+        it 'should return created status' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      terminal,
-                      api_key: Settings.default.web_object.api_key
-                    )
+                     headers: headers(
+                       terminal,
+                       api_key: Settings.default.web_object.api_key
+                     )
           expect(response.status).to eq 201
         end
-        
-        it 'should create a transaction for the owner' do 
-          expect{
+
+        it 'should create a transaction for the owner' do
+          expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        terminal,
-                        api_key: Settings.default.web_object.api_key
-                      )
+                       headers: headers(
+                         terminal,
+                         api_key: Settings.default.web_object.api_key
+                       )
           }.to change(owner.transactions, :count).by(1)
         end
-        it 'should create a user' do 
+        it 'should create a user' do
           owner
-          expect{
+          expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        terminal,
-                        api_key: Settings.default.web_object.api_key
-                      )
+                       headers: headers(
+                         terminal,
+                         api_key: Settings.default.web_object.api_key
+                       )
           }.to change(User, :count).by(1)
         end
-        
-        it 'should set the attributes correctly' do 
+
+        it 'should set the attributes correctly' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      terminal,
-                      api_key: Settings.default.web_object.api_key
-                    )
+                     headers: headers(
+                       terminal,
+                       api_key: Settings.default.web_object.api_key
+                     )
           expect(User.last.attributes.with_indifferent_access).to include(
-              avatar_name: atts[:avatar_name],
-              avatar_key: atts[:avatar_key],
-              account_level: atts[:account_level]
-            )
+            avatar_name: atts[:avatar_name],
+            avatar_key: atts[:avatar_key],
+            account_level: atts[:account_level]
+          )
           expect(User.last.expiration_date).to be_within(30).of(Time.now + 3.months.to_i)
         end
       end
-    end 
+    end
   end
-  
-  describe 'getting account data' do 
-    
+
+  describe 'getting account data' do
     context 'activer user' do
       let(:active_user) { FactoryBot.create :active_user }
       let(:path) { api_user_path(active_user.avatar_key) }
-      it 'should return ok status' do 
+      it 'should return ok status' do
         get path, headers: headers(terminal)
         expect(response.status).to eq 200
       end
-      
-      it 'should return the correct data' do 
+
+      it 'should return the correct data' do
         get path, headers: headers(terminal)
         expect(JSON.parse(response.body)['data'].with_indifferent_access).to include(
-            monthly_cost: Settings.default.account.monthly_cost,
-            avatar_name: active_user.avatar_name,
-            avatar_key: active_user.avatar_key,
-            time_left: active_user.time_left,
-            account_level: active_user.account_level
-          )
-      end 
+          monthly_cost: Settings.default.account.monthly_cost,
+          avatar_name: active_user.avatar_name,
+          avatar_key: active_user.avatar_key,
+          time_left: active_user.time_left,
+          account_level: active_user.account_level
+        )
+      end
     end
-    
-    context 'inactive_user' do 
+
+    context 'inactive_user' do
       let(:inactive_user) { FactoryBot.create :inactive_user }
       let(:path) { api_user_path(inactive_user.avatar_key) }
-      it 'should return ok status' do 
+      it 'should return ok status' do
         get path, headers: headers(terminal)
         expect(response.status).to eq 200
       end
-      
-      it 'should return the correct data' do 
+
+      it 'should return the correct data' do
         get path, headers: headers(terminal)
         expect(JSON.parse(response.body)['data'].with_indifferent_access).to include(
-            monthly_cost: Settings.default.account.monthly_cost,
-            avatar_name: inactive_user.avatar_name,
-            avatar_key: inactive_user.avatar_key,
-            time_left: 0,
-            account_level: inactive_user.account_level
-          )
-      end 
+          monthly_cost: Settings.default.account.monthly_cost,
+          avatar_name: inactive_user.avatar_name,
+          avatar_key: inactive_user.avatar_key,
+          time_left: 0,
+          account_level: inactive_user.account_level
+        )
+      end
     end
-    
+
     context 'user does not exist' do
       let(:path) { api_user_path(SecureRandom) }
-      it 'should return ok status' do 
+      it 'should return ok status' do
         get path, headers: headers(terminal)
         expect(response.status).to eq 200
       end
-      
-      it 'should return the correct data' do 
+
+      it 'should return the correct data' do
         get path, headers: headers(terminal)
         expect(JSON.parse(response.body)['data'].with_indifferent_access).to include(
-            monthly_cost: Settings.default.account.monthly_cost
-          )
-      end 
+          monthly_cost: Settings.default.account.monthly_cost
+        )
+      end
     end
   end
-  
-  describe 'updating an account' do 
-    context 'user exists' do 
+
+  describe 'updating an account' do
+    context 'user exists' do
       let(:existing_user) { FactoryBot.create :active_user }
       let(:path) { api_user_path(existing_user.avatar_key) }
-      describe 'changing passwords' do 
-        context 'valid passwords' do 
+      describe 'changing passwords' do
+        context 'valid passwords' do
           let(:atts) {
             {
               password: 'N3wPassword!',
               password_confirmation: 'N3wPassword!'
             }
           }
-        
-          it 'should return ok status' do 
+
+          it 'should return ok status' do
             put path, params: atts.to_json, headers: headers(terminal)
             expect(response.status).to eq 200
           end
-          
-          it 'should change the password' do 
+
+          it 'should change the password' do
             old_password = existing_user.encrypted_password
             put path, params: atts.to_json, headers: headers(terminal)
             expect(existing_user.reload.encrypted_password).to_not eq old_password
           end
-          
-          it 'returns the correct data' do 
+
+          it 'returns the correct data' do
             put path, params: atts.to_json, headers: headers(terminal)
             expect(JSON.parse(response.body)['data'].with_indifferent_access).to include(
-                monthly_cost: Settings.default.account.monthly_cost,
-                avatar_name: existing_user.avatar_name,
-                avatar_key: existing_user.avatar_key,
-                time_left: existing_user.time_left,
-                account_level: existing_user.account_level
-              )
-          end 
-          
-          
-          
-          it 'returns a nice message' do 
+              monthly_cost: Settings.default.account.monthly_cost,
+              avatar_name: existing_user.avatar_name,
+              avatar_key: existing_user.avatar_key,
+              time_left: existing_user.time_left,
+              account_level: existing_user.account_level
+            )
+          end
+
+          it 'returns a nice message' do
             put path, params: atts.to_json, headers: headers(terminal)
-            expect(JSON.parse(response.body)['message']).to eq "Your account has been updated."
+            expect(JSON.parse(response.body)['message']).to eq 'Your account has been updated.'
           end
         end
-        
+
         # Only check that it works over all. Extensive testing
         # done with create testing.
-        context 'invalid passwords' do 
+        context 'invalid passwords' do
           let(:atts) {
             {
               password: 'N3wPassword!',
               password_confirmation: 'foo!'
             }
           }
-        
-          it 'should return ok status' do 
+
+          it 'should return ok status' do
             put path, params: atts.to_json, headers: headers(terminal)
             expect(response.status).to eq 422
           end
-          
-          it 'should not change the password' do 
+
+          it 'should not change the password' do
             old_password = existing_user.encrypted_password
             put path, params: atts.to_json, headers: headers(terminal)
             expect(existing_user.reload.encrypted_password).to eq old_password
           end
-
         end
       end
-      
-      describe 'changing account level' do 
-        let(:atts) { {account_level: 3} }
-        
-        it 'returns ok status' do 
+
+      describe 'changing account level' do
+        let(:atts) { { account_level: 3 } }
+
+        it 'returns ok status' do
           put path, params: atts.to_json, headers: headers(terminal)
           expect(response.status).to eq 200
         end
-        
-        it 'changes the account level' do 
+
+        it 'changes the account level' do
           put path, params: atts.to_json, headers: headers(terminal)
           expect(existing_user.reload.account_level).to eq 3
         end
-        
-        it 'correctly alters time left' do 
-          expected_time = Time.now  + (
-            existing_user.expiration_date.to_i - Time.now.to_i) * (1.0/3)
+
+        it 'correctly alters time left' do
+          expected_time = Time.now + (
+            existing_user.expiration_date.to_i - Time.now.to_i) * (1.0 / 3)
           expected_time = Time.diff(expected_time, Time.now)
           put path, params: atts.to_json, headers: headers(terminal)
           expect(existing_user.reload.time_left).to eq expected_time
         end
       end
-      
-      describe 'making a payment' do 
-        let(:atts) { 
-          {amount: Settings.default.account.monthly_cost * 3 * existing_user.account_level} 
+
+      describe 'making a payment' do
+        let(:atts) {
+          { amount: Settings.default.account.monthly_cost * 3 * existing_user.account_level }
         }
-        
-        it 'returns ok status' do 
+
+        it 'returns ok status' do
           put path, params: atts.to_json, headers: headers(terminal)
           expect(response.status).to eq 200
         end
-        
-        it 'updates the expiration_date' do 
+
+        it 'updates the expiration_date' do
           expected_time = existing_user.expiration_date + 3.months
           put path, params: atts.to_json, headers: headers(terminal)
           expect(existing_user.reload.expiration_date).to be_within(10.seconds).of(expected_time)
         end
-        
-        it 'adds a transaction' do 
+
+        it 'adds a transaction' do
           expect {
             put path, params: atts.to_json, headers: headers(terminal)
           }.to change(owner.reload.transactions, :count).by(1)
         end
       end
-    end 
-    
-    context 'user does not exist' do 
     end
   end
-  
-  describe 'deleting an account' do 
+
+  describe 'deleting an account' do
     let(:existing_user) { FactoryBot.create :user }
     let(:path) { api_user_path(existing_user.avatar_key) }
-    it 'returns ok status' do 
+    it 'returns ok status' do
       delete path, headers: headers(terminal)
       expect(response.status).to eq 200
     end
-    
-    it 'deletes the user' do 
+
+    it 'deletes the user' do
       existing_user
       owner
       expect {
         delete path, headers: headers(terminal)
       }.to change(User, :count).by(-1)
     end
-    
-    it 'returns a nice message' do 
+
+    it 'returns a nice message' do
       delete path, headers: headers(terminal)
-      expect(JSON.parse(response.body)['message']).to eq "Your account has been deleted. Sorry to see you go!"
+      expect(
+        JSON.parse(response.body)['message']
+      ).to eq 'Your account has been deleted. Sorry to see you go!'
     end
   end
 end
- 

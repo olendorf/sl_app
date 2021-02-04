@@ -21,7 +21,7 @@ module Api
       end
 
       private
-      
+
       def parsed_params
         JSON.parse(request.raw_post)
       end

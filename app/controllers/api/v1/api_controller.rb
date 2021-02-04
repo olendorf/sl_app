@@ -21,6 +21,10 @@ module Api
       end
 
       private
+      
+      def parsed_params
+        JSON.parse(request.raw_post)
+      end
 
       def pundit_user
         User.find_by_avatar_key!(request.headers['HTTP_X_SECONDLIFE_OWNER_KEY'])

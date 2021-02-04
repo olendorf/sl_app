@@ -30,6 +30,10 @@ class User < ApplicationRecord
   def email_changed?
     false
   end
+  
+  def time_left
+    expiration_date.nil? ? 0 : Time.diff(expiration_date, Time.now)
+  end
 
   def will_save_change_to_email?
     false

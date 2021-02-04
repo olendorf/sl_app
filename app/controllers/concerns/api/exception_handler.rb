@@ -31,6 +31,14 @@ module Api
       rescue_from Pundit::NotAuthorizedError do |e|
         json_response({ message: e.message }, :forbidden)
       end
+      
+      rescue_from ActiveRecord::RecordNotUnique do |e|
+        if controller_name == 'users'
+          json_response({ message: I18n.t('api.user.create.exists') }, :conflict)
+        else
+          json_response({ message: e.message }, :conflict)
+        end 
+      end
     end
   end
 end

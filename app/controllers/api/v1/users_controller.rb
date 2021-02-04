@@ -4,71 +4,88 @@ module Api
   module V1
     # Controller for API requests from SL
     class UsersController < Api::V1::ApiController
-      before_action :find_user, except: :create
-
+      before_action :load_user, except: [:index, :create]
+      
       def create
+        
         authorize User
-
-        @new_user = User.new(
-          avatar_name: parsed_params['avatar_name'],
-          avatar_key: parsed_params['avatar_key'],
-          password: parsed_params['password'],
-          password_confirmation: parsed_params['password_confirmation'],
-          expiration_date: Time.now + parsed_params['amount'].to_f/Settings.default.account.monthly_cost * 1.month.to_i,
-          account_level: parsed_params['amount'].to_i > 0 ? 1 : 0
-        )
-        @new_user.save!
+        
+        @user = User.new(parsed_params.except('amount'))
+        @user.save!
+        
+        add_transaction if parsed_params['amount'] > 0
+        
         render json: {
-          message: t('api.user.create.success', url: Settings.default.site_url)
+          message: I18n.t('api.user.create.success', url: Settings.default.site_url),
+          data: user_data
         }, status: :created
       end
-
-      def update
-        authorize @requesting_object
-
-        @user.update!(parsed_params)
-
-        render json: {
-          message: t('api.user.update.success')
-        }, status: :ok
-      end
-
+      
       def show
         authorize @requesting_object
-
         render json: {
-          data: {
-            avatar_name: @user.avatar_name,
-            avatar_key: @user.avatar_key,
-            role: @user.role,
-            account_level: @user.account_level,
-            expiration_date: @user.expiration_date.strftime('%B %-d, %Y')
-          }
+          data: user_data
         }, status: :ok
       end
-
-      def destroy
+      
+      def update
         authorize @requesting_object
-
-        @user.destroy!
-
+        adjust_expiration_date if parsed_params['account_level']
+        handle_payment if parsed_params['amount']
+        @user.update!(parsed_params.except('amount'))
         render json: {
-          message: t('api.user.destroy.success')
+          data: user_data
         }, status: :ok
       end
-
+      
       private
-
-      def parsed_params
-        JSON.parse(request.raw_post)
+      
+      def handle_payment
+        more_time = (parsed_params['amount'].to_f/(
+                                  Settings.default.account.monthly_cost * @user.account_level))
+        @user.expiration_date = @user.expiration_date + more_time.to_i.months
+        @user.save!
+        add_transaction
       end
-
-      def find_user
-        @user = if action_name == 'show' || action_name == 'destroy'
-                  User.find_by_avatar_key(params['avatar_key'])
-                else
-                  User.find_by_avatar_key(parsed_params['avatar_key'])
-                end
+      
+      def adjust_expiration_date
+        @user.expiration_date = Time.now  + (
+              @user.expiration_date.to_i - Time.now.to_i
+              ) * (@user.account_level.to_f/parsed_params['account_level'])
+      end
+      
+      def load_user
+        @user = User.find_by_avatar_key(params['avatar_key'])
+      end
+      
+      def user_data 
+        return { monthly_cost: Settings.default.account.monthly_cost } unless @user
+        {
+          monthly_cost: Settings.default.account.monthly_cost,
+          avatar_name: @user.avatar_name,
+          avatar_key: @user.avatar_key,
+          time_left: @user.time_left,
+          account_level: @user.account_level
+        }
+      end
+      
+      def add_transaction
+        load_requesting_object unless @requesting_object
+        @requesting_object.user.transactions << Analyzable::Transaction.new(
+            amount: parsed_params['amount'],
+            description: "Account payment",
+            source_key: @requesting_object.object_key,
+            source_name: @requesting_object.object_name,
+            source_type: @requesting_class.class.name,
+            category: 'account',
+            target_key: parsed_params['avatar_key'],
+            target_name: parsed_params['avatar_name']
+          )
+      end 
+      
+      def pundit_user
+        return User.where(role: 'owner').first if action_name == 'create'
+        User.find_by_avatar_key!(request.headers['HTTP_X_SECONDLIFE_OWNER_KEY'])
       end
     end
   end

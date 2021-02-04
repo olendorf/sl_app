@@ -51,9 +51,18 @@ FactoryBot.create :user, avatar_name: 'User Resident'
 end
 
 100.times do |i|
-  user = FactoryBot.create :user, avatar_name: "User_#{i} Resident"
+  user = FactoryBot.create :active_user, avatar_name: "User_#{i} Resident"
 
   rand(0..10).times do
+    user.web_objects << FactoryBot.build(:web_object)
+  end
+end
+
+
+20.times do |i|
+  user = FactoryBot.create :inactive_user, avatar_name: "User_#{i + 100} Resident"
+
+  rand(0..4).times do
     user.web_objects << FactoryBot.build(:web_object)
   end
 end

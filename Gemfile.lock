@@ -371,6 +371,9 @@ GEM
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    time_diff (0.3.0)
+      activesupport
+      i18n
     tins (1.26.0)
       sync
     turbolinks (5.2.1)
@@ -437,6 +440,7 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   spring-watcher-listen
+  time_diff
   turbolinks (~> 5)
   web-console
   webdrivers

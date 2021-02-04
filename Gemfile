@@ -51,6 +51,9 @@ gem 'active_record-acts_as'
 # Easy app configuration
 gem 'config'
 
+# Nice display of time differences
+gem 'time_diff'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

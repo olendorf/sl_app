@@ -43,6 +43,8 @@ en:
         exists: "You already have an account. You can use the terminal to change your password, or make a payment to active your account."
       update:
         success: "Your account has been updated."
+        account_level:
+          inactive_account: 'A payment is required to activate this account.'
       destroy:
         success: "Your account has been deleted. Sorry to see you go!"
     rezzable:

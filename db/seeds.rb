@@ -58,7 +58,6 @@ end
   end
 end
 
-
 20.times do |i|
   user = FactoryBot.create :inactive_user, avatar_name: "User_#{i + 100} Resident"
 

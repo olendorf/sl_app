@@ -6,8 +6,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
 
   validate :password_complexity
-  
-  
+
   validate :account_level_not_zero, on: :update, if: :will_save_change_to_account_level?
 
   devise  :database_authenticatable,
@@ -16,10 +15,10 @@ class User < ApplicationRecord
           :trackable,
           :timeoutable,
           :validatable
-          
+
   before_update :handle_account_payment, if: :account_payment
   before_update :adjust_expiration_date, if: :will_save_change_to_account_level?
-          
+
   attr_accessor :account_payment
 
   has_paper_trail
@@ -84,28 +83,34 @@ class User < ApplicationRecord
 
     expiration_date >= Time.now
   end
-  
+
+  # rubocop:disable Style/GuardClause
   def account_level_not_zero
-    raise ArgumentError, I18n.t(
-      'api.user.update.account_level.inactive_account') if account_level_was.zero?
-  end 
-  
+    if account_level_was.zero?
+      raise ArgumentError, I18n.t(
+        'api.user.update.account_level.inactive_account'
+      )
+    end
+  end
+  # rubocop:enable Style/GuardClause
+
   def adjust_expiration_date
     update_column(:expiration_date, Time.now) and return if account_level.zero?
+
     update_column(:expiration_date,
-              Time.now + (expiration_date - Time.now) *
-              (account_level_was.to_f / account_level))
+                  Time.now + (expiration_date - Time.now) *
+                  (account_level_was.to_f / account_level))
   end
-  
+
   def handle_account_payment
     return if account_payment <= 0
-    update_column(:account_level,  1) if self.account_level.zero? 
-    added_time = self.account_payment.to_f/(
-                        self.account_level * Settings.default.account.monthly_cost)
-    self.expiration_date = Time.now if(
-      self.expiration_date.nil? || self.expiration_date < Time.now) 
-    self.expiration_date = self.expiration_date + (1.month.to_i * added_time)
-                      
+
+    update_column(:account_level, 1) if account_level.zero?
+    added_time = account_payment.to_f / (
+                        account_level * Settings.default.account.monthly_cost)
+    self.expiration_date = Time.now if
+      expiration_date.nil? || expiration_date < Time.now
+    self.expiration_date = expiration_date + (1.month.to_i * added_time)
   end
 
   # Updates the user's balance that results when the transaction is added.

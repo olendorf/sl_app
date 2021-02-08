@@ -48,20 +48,6 @@ module Api
 
       private
 
-      # def handle_payment
-      #   more_time = (parsed_params['amount'].to_f / (
-      #                             Settings.default.account.monthly_cost * @user.account_level))
-      #   @user.expiration_date = @user.expiration_date + more_time.to_i.months
-      #   @user.save!
-      #   add_transaction
-      # end
-
-      # def adjust_expiration_date
-      #   @user.expiration_date = Time.now + (
-      #         @user.expiration_date.to_i - Time.now.to_i
-      #       ) * (@user.account_level.to_f / parsed_params['account_level'])
-      # end
-
       def load_user
         @user = User.find_by_avatar_key(params['avatar_key'])
       end

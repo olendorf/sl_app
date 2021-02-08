@@ -28,41 +28,40 @@ RSpec.describe User, type: :model do
       expect(user.email_changed?).to be_falsey
     end
   end
-  
-  describe 'when a account_payment is received' do 
-    
-    context 'for active user' do 
+
+  describe 'when a account_payment is received' do
+    context 'for active user' do
       let(:active_user) { FactoryBot.create :active_user, account_level: 3 }
-      
-      it 'should correctly update expiration_date' do 
+
+      it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 3 * 2
         expected_expiration_date = active_user.expiration_date + 2.months.to_i
         active_user.update(account_payment: amount)
-        expect(active_user.reload.expiration_date).to be_within(1.second).of(expected_expiration_date)
+        expect(
+          active_user.reload.expiration_date
+        ).to be_within(1.second).of(expected_expiration_date)
       end
     end
-    
-    context 'for inactive_user' do 
-      
-      let(:inactive_user) { 
-        FactoryBot.create :inactive_user, account_level: 2, 
-        expiration_date: 1.month.ago 
+
+    context 'for inactive_user' do
+      let(:inactive_user) {
+        FactoryBot.create :inactive_user, account_level: 2,
+                                          expiration_date: 1.month.ago
       }
-      
-      it 'should correctly update expiration_date' do 
+
+      it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 2 * 2.25
         expected_expiration_date = Time.now + 1.month.to_i * 2.25
         inactive_user.update(account_payment: amount)
         expect(inactive_user.expiration_date).to be_within(1.second).of(expected_expiration_date)
       end
     end
-    
-    context 'and account level is zero' do  
-      
-      let(:user) { 
+
+    context 'and account level is zero' do
+      let(:user) {
         FactoryBot.create :user, account_level: 0
       }
-      it 'should correctly update expiration_date' do 
+      it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 1 * 2.35
         expected_expiration_date = Time.now + 1.month.to_i * 2.35
         user.update(account_payment: amount)
@@ -70,42 +69,42 @@ RSpec.describe User, type: :model do
       end
     end
   end
-  
-  describe 'updating the account_level' do 
-    context 'account level is greater than zero' do 
-      context 'and account level is increased' do 
+
+  describe 'updating the account_level' do
+    context 'account level is greater than zero' do
+      context 'and account level is increased' do
         let(:user) { FactoryBot.create :active_user, account_level: 1 }
-        
-        it 'should adjust the expiration_date correctly' do 
-          expected_expiration_date = Time.now + (user.expiration_date - Time.now)/2
+
+        it 'should adjust the expiration_date correctly' do
+          expected_expiration_date = Time.now + (user.expiration_date - Time.now) / 2
           user.update(account_level: 2)
           expect(user.expiration_date).to be_within(1.second).of(expected_expiration_date)
         end
       end
-      
+
       context 'and account level is decreased' do
-        context 'to greater than zero' do 
+        context 'to greater than zero' do
           let(:user) { FactoryBot.create :active_user, account_level: 3 }
-          it 'should adjust the expiration_date correctly' do 
-            expected_expiration_date = Time.now + (user.expiration_date - Time.now) * (3.to_f/2)
+          it 'should adjust the expiration_date correctly' do
+            expected_expiration_date = Time.now + (user.expiration_date - Time.now) * (3.to_f / 2)
             user.update(account_level: 2)
             expect(user.expiration_date).to be_within(1.second).of(expected_expiration_date)
           end
-        end 
-        context 'to zero' do 
+        end
+        context 'to zero' do
           let(:user) { FactoryBot.create :active_user, account_level: 3 }
-          it 'should adjust the expiration_date correctly' do 
-            expected_expiration_date = Time.now + (user.expiration_date - Time.now) * (0.to_f/2)
+          it 'should adjust the expiration_date correctly' do
+            expected_expiration_date = Time.now + (user.expiration_date - Time.now) * (0.to_f / 2)
             user.update(account_level: 0)
             expect(user.expiration_date).to be_within(1.second).of(expected_expiration_date)
           end
         end
-      end 
+      end
     end
-    
-    context 'account level is zero' do 
+
+    context 'account level is zero' do
       let(:user) { FactoryBot.create :active_user, account_level: 0 }
-      it 'should raise an error and not change the account level' do 
+      it 'should raise an error and not change the account level' do
         expect {
           user.update(account_level: 1)
         }.to raise_error(ArgumentError)

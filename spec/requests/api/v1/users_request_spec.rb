@@ -610,7 +610,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
       describe 'making a payment' do
         let(:atts) {
-          { account_payment: Settings.default.account.monthly_cost * 3 * existing_user.account_level }
+          { account_payment: Settings.default.account.monthly_cost *
+            3 * existing_user.account_level }
         }
 
         it 'returns ok status' do
@@ -619,10 +620,10 @@ RSpec.describe 'Api::V1::Users', type: :request do
         end
 
         it 'updates the expiration_date' do
-          expected_time = existing_user.expiration_date + 
-                            (atts[:account_payment].to_f/(
-                              existing_user.account_level * Settings.default.account.monthly_cost
-                              ) * 1.month.to_i)
+          expected_time = existing_user.expiration_date +
+                          (atts[:account_payment].to_f / (
+                            existing_user.account_level * Settings.default.account.monthly_cost
+                          ) * 1.month.to_i)
           put path, params: atts.to_json, headers: headers(terminal)
           expect(existing_user.reload.expiration_date).to be_within(10.seconds).of(expected_time)
         end

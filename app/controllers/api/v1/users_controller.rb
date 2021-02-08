@@ -29,8 +29,8 @@ module Api
 
       def update
         authorize @requesting_object
-        adjust_expiration_date if parsed_params['account_level']
-        handle_payment if parsed_params['amount']
+        # adjust_expiration_date if parsed_params['account_level']
+        add_transaction if parsed_params['account_payment']
         @user.update!(parsed_params.except('amount'))
         render json: {
           message: I18n.t('api.user.update.success'),
@@ -48,19 +48,19 @@ module Api
 
       private
 
-      def handle_payment
-        more_time = (parsed_params['amount'].to_f / (
-                                  Settings.default.account.monthly_cost * @user.account_level))
-        @user.expiration_date = @user.expiration_date + more_time.to_i.months
-        @user.save!
-        add_transaction
-      end
+      # def handle_payment
+      #   more_time = (parsed_params['amount'].to_f / (
+      #                             Settings.default.account.monthly_cost * @user.account_level))
+      #   @user.expiration_date = @user.expiration_date + more_time.to_i.months
+      #   @user.save!
+      #   add_transaction
+      # end
 
-      def adjust_expiration_date
-        @user.expiration_date = Time.now + (
-              @user.expiration_date.to_i - Time.now.to_i
-            ) * (@user.account_level.to_f / parsed_params['account_level'])
-      end
+      # def adjust_expiration_date
+      #   @user.expiration_date = Time.now + (
+      #         @user.expiration_date.to_i - Time.now.to_i
+      #       ) * (@user.account_level.to_f / parsed_params['account_level'])
+      # end
 
       def load_user
         @user = User.find_by_avatar_key(params['avatar_key'])

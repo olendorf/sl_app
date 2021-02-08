@@ -9,9 +9,11 @@ ActiveAdmin.register User do
     column :role do |user|
       user.role.capitalize
     end
+    column :account_level
     column 'Object Count' do |user|
       user.web_objects.size
     end
+    column :expiration_date
     column :current_sign_in_at
     column :sign_in_count
     column :created_at

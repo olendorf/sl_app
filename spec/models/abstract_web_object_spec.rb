@@ -18,6 +18,8 @@ RSpec.describe AbstractWebObject, type: :model do
 
   it { should belong_to :user }
 
+  it { should have_many(:splits).dependent(:destroy) }
+
   let(:user) { FactoryBot.create :owner }
   let(:web_object) do
     web_object = FactoryBot.build :web_object, user_id: user.id

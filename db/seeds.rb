@@ -20,6 +20,21 @@ avatars = FactoryBot.create_list(:avatar, 1000)
 
 rand(3..10).times do
   owner.web_objects << FactoryBot.build(:terminal)
+
+  total = 100
+
+  rand(0..3).times do
+    percent = rand(1..total * 0.75)
+    total -= percent
+    owner.web_objects.last.splits << FactoryBot.build(:split, percent: percent)
+  end
+end
+
+total = 100
+rand(1..3).times do
+  percent = rand(1..total * 0.75)
+  total -= percent
+  owner.splits << FactoryBot.build(:split, percent: percent)
 end
 
 num = rand(10..20)
@@ -53,8 +68,21 @@ end
 100.times do |i|
   user = FactoryBot.create :active_user, avatar_name: "User_#{i} Resident"
 
+  total = 100
+  rand(0..3).times do
+    percent = rand(1..total * 0.75)
+    total -= percent
+    user.splits << FactoryBot.build(:split, percent: percent)
+  end
+
   rand(0..10).times do
     user.web_objects << FactoryBot.build(:web_object)
+    total = 100
+    rand(0..3).times do
+      percent = rand(1..total * 0.75)
+      total -= percent
+      user.web_objects.last.splits << FactoryBot.build(:split, percent: percent)
+    end
   end
 end
 

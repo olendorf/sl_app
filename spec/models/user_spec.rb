@@ -7,6 +7,8 @@ RSpec.describe User, type: :model do
   it { should respond_to :avatar_key }
   it { should respond_to :account_payment }
 
+  it { should validate_numericality_of(:account_level).is_greater_than_or_equal_to(0) }
+
   it { should define_enum_for(:role).with_values(%i[user prime admin owner]) }
 
   let(:user)  { FactoryBot.create :active_user }
@@ -22,6 +24,8 @@ RSpec.describe User, type: :model do
       'Analyzable::Transaction'
     ).dependent(:destroy)
   }
+
+  it { should have_many(:splits).dependent(:destroy) }
 
   describe :email_changed? do
     it 'should be falsey' do

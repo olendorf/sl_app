@@ -12,6 +12,8 @@ class AbstractWebObject < ApplicationRecord
 
   belongs_to :user
 
+  has_many :splits, dependent: :destroy, as: :splittable
+
   after_initialize :set_pinged_at
   after_initialize :set_api_key
 

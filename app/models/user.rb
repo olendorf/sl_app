@@ -19,6 +19,8 @@ class User < ApplicationRecord
   before_update :handle_account_payment, if: :account_payment
   before_update :adjust_expiration_date, if: :will_save_change_to_account_level?
 
+  validates_numericality_of :account_level, greater_than_or_equal_to: 0
+
   attr_accessor :account_payment
 
   has_paper_trail
@@ -29,6 +31,7 @@ class User < ApplicationRecord
   has_many :transactions, dependent: :destroy,
                           class_name: 'Analyzable::Transaction',
                           before_add: :update_balance
+  has_many :splits, dependent: :destroy, as: :splittable
 
   def email_required?
     false

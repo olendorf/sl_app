@@ -24,6 +24,7 @@ Coveralls.wear!
 SimpleCov.start do
   add_filter 'spec'
   add_filter 'app/admin'
+  add_filter 'app/my'
   add_filter 'lib/api_constraints.rb'
   add_filter 'config'
   add_filter 'app/policies/application_policy.rb'

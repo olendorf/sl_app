@@ -88,18 +88,6 @@ class User < ApplicationRecord
     expiration_date >= Time.now
   end
 
-  # rubocop:disable Style/GuardClause
-  # def account_level_not_zero
-  #   return if admin_update.positive?
-
-  #   if account_level_was.zero?
-  #     raise ArgumentError, I18n.t(
-  #       'api.user.update.account_level.inactive_account'
-  #     )
-  #   end
-  # end
-  # rubocop:enable Style/GuardClause
-
   def adjust_expiration_date
     
     return if will_save_change_to_expiration_date?

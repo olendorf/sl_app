@@ -14,6 +14,7 @@ Metrics/BlockLength:
     - db/**/*
     - config/**/*
     - app/admin/**/*
+    - app/my/**/*
     - app/controllers/concerns/**/*
     
 Style/Documentation:

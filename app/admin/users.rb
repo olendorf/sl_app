@@ -1,19 +1,20 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register User do
-  permit_params :role
-
   index do
     selectable_column
-    column :avatar_name
+    column :avatar_name do |user|
+      link_to user.avatar_name, admin_user_path(user)
+    end
     column :role do |user|
       user.role.capitalize
     end
     column :account_level
+    column :expiration_date
     column 'Object Count' do |user|
       user.web_objects.size
     end
-    column :expiration_date
+    column 'Split Percent', &:split_percent
     column :current_sign_in_at
     column :sign_in_count
     column :created_at
@@ -28,9 +29,14 @@ ActiveAdmin.register User do
   filter :created_at
   filter :updated_at
 
+  permit_params :role, :expiration_date, :account_level, :admin_update
+
   form do |f|
     f.inputs do
       f.input :role, include_blank: false
+      f.input :account_level
+      f.input :expiration_date
+      f.input :admin_update, input_html: { value: 1 }, as: :hidden
     end
     f.actions
   end
@@ -42,9 +48,12 @@ ActiveAdmin.register User do
       row 'Role' do |user|
         user.role.capitalize
       end
+      row :account_level
+      row :expiration_date
       row 'Object Count' do |user|
         user.web_objects.size
       end
+      row 'Split Percent', &:split_percent
       row :remember_created_at
       row :sign_in_count
       row :current_sign_in_at

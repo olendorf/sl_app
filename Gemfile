@@ -42,6 +42,10 @@ gem 'paper_trail'
 # Admin interface with the data. Will probably use for a user interface as well
 gem 'activeadmin'
 
+# Theme for active admin
+# gem 'active_admin_flat_skin'
+gem "active_material", github: "vigetlabs/active_material"
+
 # fun ways to generate data
 gem 'faker'
 

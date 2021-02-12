@@ -106,15 +106,15 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context 'account level is zero' do
-      let(:user) { FactoryBot.create :active_user, account_level: 0 }
-      it 'should raise an error and not change the account level' do
-        expect {
-          user.update(account_level: 1)
-        }.to raise_error(ArgumentError)
-        expect(user.reload.account_level).to eq 0
-      end
-    end
+    # context 'account level is zero' do
+    #   let(:user) { FactoryBot.create :active_user, account_level: 0 }
+    #   it 'should raise an error and not change the account level' do
+    #     expect {
+    #       user.update(account_level: 1)
+    #     }.to raise_error(ArgumentError)
+    #     expect(user.reload.account_level).to eq 0
+    #   end
+    # end
   end
 
   describe :balance do
@@ -143,6 +143,15 @@ RSpec.describe User, type: :model do
       expect(prime.can_be_user?).to be_truthy
       expect(prime.can_be_prime?).to be_truthy
       expect(prime.can_be_admin?).to be_falsey
+    end
+  end
+
+  describe 'split_percent' do
+    it 'should return the total user splits' do
+      user.splits << FactoryBot.build(:split, percent: 5)
+      user.splits << FactoryBot.build(:split, percent: 10)
+      user.splits << FactoryBot.build(:split, percent: 25)
+      expect(user.split_percent).to eq 40
     end
   end
 

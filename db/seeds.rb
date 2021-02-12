@@ -23,10 +23,13 @@ rand(3..10).times do
 
   total = 100
 
-  rand(0..3).times do
+  rand(1..3).times do
     percent = rand(1..total * 0.75)
     total -= percent
-    owner.web_objects.last.splits << FactoryBot.build(:split, percent: percent)
+    avatar = avatars.sample
+    owner.web_objects.last.splits << FactoryBot.build(
+      :split, percent: percent, target_name: avatar.avatar_name, target_key: avatar.avatar_key
+    )
   end
 end
 
@@ -34,7 +37,10 @@ total = 100
 rand(1..3).times do
   percent = rand(1..total * 0.75)
   total -= percent
-  owner.splits << FactoryBot.build(:split, percent: percent)
+  avatar = avatars.sample
+  owner.splits << FactoryBot.build(
+    :split, percent: percent, target_name: avatar.avatar_name, target_key: avatar.avatar_key
+  )
 end
 
 num = rand(10..20)
@@ -72,7 +78,10 @@ end
   rand(0..3).times do
     percent = rand(1..total * 0.75)
     total -= percent
-    user.splits << FactoryBot.build(:split, percent: percent)
+    avatar = avatars.sample
+    user.splits << FactoryBot.build(
+      :split, percent: percent, target_name: avatar.avatar_name, target_key: avatar.avatar_key
+    )
   end
 
   rand(0..10).times do
@@ -81,7 +90,10 @@ end
     rand(0..3).times do
       percent = rand(1..total * 0.75)
       total -= percent
-      user.web_objects.last.splits << FactoryBot.build(:split, percent: percent)
+      avatar = avatars.sample
+      user.web_objects.last.splits << FactoryBot.build(
+        :split, percent: percent, target_name: avatar.avatar_name, target_key: avatar.avatar_key
+      )
     end
   end
 end

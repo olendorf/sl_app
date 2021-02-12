@@ -7,7 +7,7 @@ class User < ApplicationRecord
 
   validate :password_complexity
 
-  validate :account_level_not_zero, on: :update, if: :will_save_change_to_account_level?
+  # validate :account_level_not_zero, on: :update, if: :will_save_change_to_account_level?
 
   devise  :database_authenticatable,
           :registerable,
@@ -17,11 +17,11 @@ class User < ApplicationRecord
           :validatable
 
   before_update :handle_account_payment, if: :account_payment
-  before_update :adjust_expiration_date, if: :will_save_change_to_account_level?
+  before_update :adjust_expiration_date, if: :will_save_change_to_account_level? 
 
   validates_numericality_of :account_level, greater_than_or_equal_to: 0
 
-  attr_accessor :account_payment
+  attr_accessor :account_payment, :admin_update
 
   has_paper_trail
 
@@ -32,6 +32,7 @@ class User < ApplicationRecord
                           class_name: 'Analyzable::Transaction',
                           before_add: :update_balance
   has_many :splits, dependent: :destroy, as: :splittable
+  accepts_nested_attributes_for :splits, allow_destroy: true
 
   def email_required?
     false
@@ -87,17 +88,9 @@ class User < ApplicationRecord
     expiration_date >= Time.now
   end
 
-  # rubocop:disable Style/GuardClause
-  def account_level_not_zero
-    if account_level_was.zero?
-      raise ArgumentError, I18n.t(
-        'api.user.update.account_level.inactive_account'
-      )
-    end
-  end
-  # rubocop:enable Style/GuardClause
-
   def adjust_expiration_date
+    
+    return if will_save_change_to_expiration_date?
     update_column(:expiration_date, Time.now) and return if account_level.zero?
 
     update_column(:expiration_date,
@@ -105,9 +98,11 @@ class User < ApplicationRecord
                   (account_level_was.to_f / account_level))
   end
 
-  def handle_account_payment
-    return if account_payment <= 0
+  def split_percent
+    splits.inject(0) { |sum, split| sum + split.percent }
+  end
 
+  def handle_account_payment
     update_column(:account_level, 1) if account_level.zero?
     added_time = account_payment.to_f / (
                         account_level * Settings.default.account.monthly_cost)

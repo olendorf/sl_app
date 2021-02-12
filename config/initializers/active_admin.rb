@@ -6,7 +6,12 @@ ActiveAdmin.setup do |config|
   # Set the title that is displayed on the main layout
   # for each of the active admin pages.
   #
-  config.site_title = 'Sl App'
+  config.site_title = 'Slapp Data'
+
+  config.load_paths = [
+    File.expand_path('app/admin', Rails.root),
+    File.expand_path('app/my', Rails.root)
+  ]
 
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
@@ -44,6 +49,9 @@ ActiveAdmin.setup do |config|
   #   config.namespace :admin do |admin|
   #     admin.site_title = "Custom Admin Title"
   #   end
+  config.namespace :admin do |admin|
+    admin.site_title = 'Slapp Data Admin'
+  end
   #
   # This will ONLY change the title for the admin section. Other
   # namespaces will continue to use the main "site_title" configuration.
@@ -246,6 +254,36 @@ ActiveAdmin.setup do |config|
   #       menu.add label: "My Great Website", url: "http://www.mygreatwebsite.com", html_options: { target: :blank }
   #     end
   #   end
+
+  config.namespace :admin do |admin|
+    admin.authentication_method = :authenticate_admin_user!
+    admin.build_menu :utility_navigation do |menu|
+      menu.add label: -> { current_user.avatar_name },
+               url: -> { my_dashboard_path },
+               # html_options: ->{ :style => 'float:left;' },
+               id: 'current_user'
+      admin.add_logout_button_to_menu menu
+    end
+    admin.build_menu do |menu|
+      menu.add label: 'Objects', priority: 3
+      menu.add label: 'Data', priority: 4
+    end
+  end
+
+  config.namespace :my do |my|
+    my.authentication_method = :authenticate_user!
+    my.build_menu :utility_navigation do |menu|
+      menu.add label: -> { current_user.avatar_name },
+               url: -> { my_dashboard_path },
+               # html_options: ->{ :style => 'float:left;' },
+               id: 'current_user'
+      my.add_logout_button_to_menu menu
+    end
+    my.build_menu do |menu|
+      menu.add label: 'Objects', priority: 3
+      menu.add label: 'Data', priority: 4
+    end
+  end
 
   # == Download Links
   #

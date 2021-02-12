@@ -14,7 +14,7 @@ ActiveAdmin.register User do
     column 'Object Count' do |user|
       user.web_objects.size
     end
-    column 'Split Percent', &:split_percent
+    column :split_percent
     column :current_sign_in_at
     column :sign_in_count
     column :created_at
@@ -29,16 +29,39 @@ ActiveAdmin.register User do
   filter :created_at
   filter :updated_at
 
-  permit_params :role, :expiration_date, :account_level, :admin_update
+  permit_params :role,
+                :expiration_date,
+                :account_level,
+                :admin_update,
+                splits_attributes: %i[id target_name target_key percent _destroy]
 
   form do |f|
     f.inputs do
       f.input :role, include_blank: false
       f.input :account_level
-      f.input :expiration_date
+      f.input :expiration_date, as: :datetime_picker
       f.input :admin_update, input_html: { value: 1 }, as: :hidden
+
+      f.has_many :splits, heading: 'Splits',
+                          allow_destroy: true do |s|
+        s.input :target_name, label: 'Avatar Name'
+        s.input :target_key, label: 'Avatar Key'
+        s.input :percent
+      end
     end
     f.actions
+  end
+
+  sidebar :splits, only: %i[show edit] do
+    total = 0
+    ul class: 'row' do
+      resource.splits.each do |split|
+        total += split.percent
+        li "#{split.target_name}: #{split.percent}%"
+      end
+      hr
+      li "Total: #{total}%"
+    end
   end
 
   show title: :avatar_name do

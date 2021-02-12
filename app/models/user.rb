@@ -17,7 +17,7 @@ class User < ApplicationRecord
           :validatable
 
   before_update :handle_account_payment, if: :account_payment
-  before_update :adjust_expiration_date, if: :will_save_change_to_account_level? 
+  before_update :adjust_expiration_date, if: :will_save_change_to_account_level?
 
   validates_numericality_of :account_level, greater_than_or_equal_to: 0
 
@@ -89,7 +89,6 @@ class User < ApplicationRecord
   end
 
   def adjust_expiration_date
-    
     return if will_save_change_to_expiration_date?
     update_column(:expiration_date, Time.now) and return if account_level.zero?
 

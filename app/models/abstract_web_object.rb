@@ -13,9 +13,14 @@ class AbstractWebObject < ApplicationRecord
   belongs_to :user
 
   has_many :splits, dependent: :destroy, as: :splittable
+  accepts_nested_attributes_for :splits, allow_destroy: true
 
   after_initialize :set_pinged_at
   after_initialize :set_api_key
+
+  def split_percent
+    splits.inject(0) { |sum, split| sum + split.percent } + user.split_percent
+  end
 
   def active?
     Time.now - pinged_at <= Settings.default.web_object.inactive_limit

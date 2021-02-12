@@ -24,14 +24,13 @@ ActiveAdmin.register User, namespace: :my do
 
   sidebar :splits, only: %i[show edit] do
     total = 0
-    dl class: 'row' do
+    ul class: 'row' do
       resource.splits.each do |split|
         total += split.percent
-        dt split.target_name
-        dd "#{split.percent}%"
+        li "#{split.target_name}: #{split.percent}%"
       end
-      dt 'Total'
-      dd "#{total}%"
+      hr
+      li "Total: #{total}%"
     end
   end
 

@@ -25,7 +25,9 @@ ActiveAdmin.register AbstractWebObject do
 
   index title: 'Rezzed Objects' do
     selectable_column
-    column :object_name
+    column 'Object Name', sortable: :sortable do |web_object|
+      link_to web_object.object_name, admin_abstract_web_object_path(web_object)
+    end
     column 'Description', sortable: :sortable do |web_object|
       web_object.description.truncate(20, separator: ' ')
     end
@@ -37,6 +39,7 @@ ActiveAdmin.register AbstractWebObject do
         'Orphan'
       end
     end
+    column :split_percent
     column :actable_type
     column :pinged_at
     column :created_at
@@ -49,6 +52,30 @@ ActiveAdmin.register AbstractWebObject do
   filter :actable_type
   filter :pinged_at
   filter :created_at
+
+  sidebar :splits, only: %i[show edit] do
+    total = 0
+    ul class: 'row' do
+      li 'User Splits' do
+        ul class: 'row' do
+          resource.user.splits.each do |split|
+            total += split.percent
+            li "#{split.target_name}: #{split.percent}%"
+          end
+        end
+      end
+      li 'Object Splits' do
+        ul class: 'row' do
+          resource.splits.each do |split|
+            total += split.percent
+            li "#{split.target_name}: #{split.percent}%"
+          end
+        end
+      end
+      hr
+      li "Total: #{total}%"
+    end
+  end
 
   show title: :object_name do
     attributes_table do
@@ -72,10 +99,18 @@ ActiveAdmin.register AbstractWebObject do
     end
   end
 
+  permit_params :object_name, :description, splits_attributes: %i[id target_name
+                                                                  target_key percent _destroy]
   form title: proc { "Edit #{resource.object_name}" } do |f|
     f.inputs do
       f.input :object_name
       f.input :description
+      f.has_many :splits, heading: 'Splits',
+                          allow_destroy: true do |s|
+        s.input :target_name, label: 'Avatar Name'
+        s.input :target_key, label: 'Avatar Key'
+        s.input :percent
+      end
     end
     f.actions
   end

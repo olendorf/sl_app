@@ -66,12 +66,7 @@ module Api
 
       def handle_payment
         load_requesting_object unless @requesting_object
-        @user.expiration_date = Time.now unless @user.expiration_date
-        @user.expiration_date += 
-                          (parsed_params['account_payment'].to_f / (
-                            @user.account_level * Settings.default.account.monthly_cost
-                          ) * 1.month.to_i)
-        @user.save
+        set_expiration_date
         @requesting_object.user.transactions << Analyzable::Transaction.new(
           amount: parsed_params['account_payment'],
           description: 'Account payment',
@@ -85,42 +80,48 @@ module Api
         handle_splits
         handle_user_payment
       end
-      
+
+      def set_expiration_date
+        @user.expiration_date = Time.now unless @user.expiration_date
+        @user.expiration_date +=
+          (parsed_params['account_payment'].to_f / (
+            @user.account_level * Settings.default.account.monthly_cost
+          ) * 1.month.to_i)
+        @user.save
+      end
+
       def handle_user_payment
         @user.transactions << Analyzable::Transaction.new(
-            amount: -1 * parsed_params['account_payment'],
-            description: 'Account payment',
-            source_key: @requesting_object.object_key,
-            source_name: @requesting_object.object_name,
-            source_type: @requesting_class.class.name,
-            category: 'account',
-            target_key: @requesting_object.user.avatar_key,
-            target_name: @requesting_object.user.avatar_name
-          )
+          amount: -1 * parsed_params['account_payment'],
+          description: 'Account payment',
+          source_key: @requesting_object.object_key,
+          source_name: @requesting_object.object_name,
+          source_type: @requesting_class.class.name,
+          category: 'account',
+          target_key: @requesting_object.user.avatar_key,
+          target_name: @requesting_object.user.avatar_name
+        )
       end
-      
+
       def handle_splits
         load_requesting_object unless @requesting_object
         @requesting_object.user.splits.each do |split|
           @requesting_object.user.transactions << Analyzable::Transaction.new(
-            amount: -1 * (parsed_params['account_payment'] * split.percent.to_f/100).to_i,
+            amount: -1 * (parsed_params['account_payment'] * split.percent.to_f / 100).to_i,
             description: 'Split',
             source_type: 'System',
             category: 'account',
             target_key: split.target_key,
             target_name: split.target_name
           )
-          
         end
       end
-      
 
       def pundit_user
         return User.where(role: 'owner').first if action_name == 'create'
 
         User.find_by_avatar_key!(request.headers['HTTP_X_SECONDLIFE_OWNER_KEY'])
       end
-      
     end
   end
 end

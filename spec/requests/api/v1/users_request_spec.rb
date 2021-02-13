@@ -633,35 +633,34 @@ RSpec.describe 'Api::V1::Users', type: :request do
             put path, params: atts.to_json, headers: headers(terminal)
           }.to change(owner.reload.transactions, :count).by(1)
         end
-        
-        it 'adds the transaction to the user' do 
+
+        it 'adds the transaction to the user' do
           expect {
             put path, params: atts.to_json, headers: headers(terminal)
           }.to change(existing_user.transactions, :count).by(1)
         end
-        
-        it 'updates the users balance' do 
+
+        it 'updates the users balance' do
           expected_balance = existing_user.balance - atts[:account_payment]
           put path, params: atts.to_json, headers: headers(terminal)
           expect(existing_user.reload.balance).to eq expected_balance
-          
         end
-        
-        context 'there are splits' do 
+
+        context 'there are splits' do
           before(:each) do
             owner.splits << FactoryBot.build(:split, percent: 10)
             owner.splits << FactoryBot.build(:split, percent: 5)
           end
-          it 'adds the transactions' do 
-            expect{
+          it 'adds the transactions' do
+            expect {
               put path, params: atts.to_json, headers: headers(terminal)
-            }.to change(owner.transactions, :count).by(3)  #Two splits and one payment
+            }.to change(owner.transactions, :count).by(3)  # Two splits and one payment
           end
-          
+
           it 'has the correct balance' do
-            expected_balance = owner.balance + atts[:account_payment] - 
-                                atts[:account_payment] * 0.1 - 
-                                atts[:account_payment] * 0.05
+            expected_balance = owner.balance + atts[:account_payment] -
+                               atts[:account_payment] * 0.1 -
+                               atts[:account_payment] * 0.05
             put path, params: atts.to_json, headers: headers(terminal)
 
             expect(owner.reload.balance).to eq expected_balance.to_i

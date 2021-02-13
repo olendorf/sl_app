@@ -9,10 +9,10 @@ module Api
       def create
         authorize User
 
-        @user = User.new(parsed_params.except('amount'))
+        @user = User.new(parsed_params.except('account_payment'))
         @user.save!
 
-        add_transaction if parsed_params['amount'].positive?
+        handle_payment if parsed_params['account_payment'].positive?
 
         render json: {
           message: I18n.t('api.user.create.success', url: Settings.default.site_url),
@@ -30,8 +30,8 @@ module Api
       def update
         authorize @requesting_object
         # adjust_expiration_date if parsed_params['account_level']
-        add_transaction if parsed_params['account_payment']
-        @user.update!(parsed_params.except('amount'))
+        handle_payment if parsed_params['account_payment']
+        @user.update!(parsed_params.except('account_payment'))
         render json: {
           message: I18n.t('api.user.update.success'),
           data: user_data
@@ -64,10 +64,16 @@ module Api
         }
       end
 
-      def add_transaction
+      def handle_payment
         load_requesting_object unless @requesting_object
+        @user.expiration_date = Time.now unless @user.expiration_date
+        @user.expiration_date += 
+                          (parsed_params['account_payment'].to_f / (
+                            @user.account_level * Settings.default.account.monthly_cost
+                          ) * 1.month.to_i)
+        @user.save
         @requesting_object.user.transactions << Analyzable::Transaction.new(
-          amount: parsed_params['amount'],
+          amount: parsed_params['account_payment'],
           description: 'Account payment',
           source_key: @requesting_object.object_key,
           source_name: @requesting_object.object_name,
@@ -76,13 +82,45 @@ module Api
           target_key: parsed_params['avatar_key'],
           target_name: parsed_params['avatar_name']
         )
+        handle_splits
+        handle_user_payment
       end
+      
+      def handle_user_payment
+        @user.transactions << Analyzable::Transaction.new(
+            amount: -1 * parsed_params['account_payment'],
+            description: 'Account payment',
+            source_key: @requesting_object.object_key,
+            source_name: @requesting_object.object_name,
+            source_type: @requesting_class.class.name,
+            category: 'account',
+            target_key: @requesting_object.user.avatar_key,
+            target_name: @requesting_object.user.avatar_name
+          )
+      end
+      
+      def handle_splits
+        load_requesting_object unless @requesting_object
+        @requesting_object.user.splits.each do |split|
+          @requesting_object.user.transactions << Analyzable::Transaction.new(
+            amount: -1 * (parsed_params['account_payment'] * split.percent.to_f/100).to_i,
+            description: 'Split',
+            source_type: 'System',
+            category: 'account',
+            target_key: split.target_key,
+            target_name: split.target_name
+          )
+          
+        end
+      end
+      
 
       def pundit_user
         return User.where(role: 'owner').first if action_name == 'create'
 
         User.find_by_avatar_key!(request.headers['HTTP_X_SECONDLIFE_OWNER_KEY'])
       end
+      
     end
   end
 end

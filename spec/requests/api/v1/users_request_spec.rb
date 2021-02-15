@@ -29,7 +29,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
             amount: 0,
-            expiration_date: Time.now + 1.month.to_i,
+            # expiration_date: Time.now + 1.month.to_i,
+            added_time: 1,
             account_level: 1
           }
         }
@@ -117,7 +118,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
             password: 'P0rd!',
             password_confirmation: 'P0rd!',
             amount: 0,
-            expiration_date: Time.now + 1.month.to_i,
+            added_time: 1,
             account_level: 1
           }
         }
@@ -164,7 +165,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
             password: 'password1',
             password_confirmation: 'password1',
             amount: 0,
-            expiration_date: Time.now + 1.month.to_i,
+            # expiration_date: Time.now + 1.month.to_i,
+            added_time: 1,
             account_level: 1
           }
         }
@@ -212,7 +214,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
             password: 'Pa$sW0rd',
             password_confirmation: 'Pa$sW0rt',
             amount: 0,
-            expiration_date: Time.now + 1.month.to_i,
+            # expiration_date: Time.now + 1.month.to_i,
+            added_time: 1,
             account_level: 1
           }
         }
@@ -260,7 +263,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
             amount: 0,
-            expiration_date: Time.now + 1.month.to_i,
+            # expiration_date: Time.now + 1.month.to_i,
+            added_time: 1,
             account_level: 1
           }
         }
@@ -309,7 +313,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
             amount: Settings.default.account.monthly_cost,
-            expiration_date: Time.now + 1.month.to_i,
+            # expiration_date: Time.now + 1.month.to_i,
+            added_time: 1,
             account_level: 1
           }
         }
@@ -367,7 +372,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
             amount: 0,
-            expiration_date: Time.now,
+            added_time: 0,
             account_level: 0
           }
         }
@@ -415,7 +420,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
             amount: Settings.default.account.monthly_cost,
-            expiration_date: Time.now + 3.months.to_i,
+            added_time: 3,
             account_level: 1
           }
         }

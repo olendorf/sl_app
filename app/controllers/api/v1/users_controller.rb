@@ -9,7 +9,10 @@ module Api
       def create
         authorize User
 
-        @user = User.new(parsed_params.except('amount'))
+        @user = User.new(
+          parsed_params.except('amount', 'added_time') .merge(
+          expiration_date: Time.now + parsed_params['added_time'].months.to_i)
+        )
         @user.save!
 
         add_transaction if parsed_params['amount'].positive?

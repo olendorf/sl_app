@@ -28,7 +28,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
-            amount: 0,
+            account_payment: 0,
             # expiration_date: Time.now + 1.month.to_i,
             added_time: 1,
             account_level: 1
@@ -36,32 +36,32 @@ RSpec.describe 'Api::V1::Users', type: :request do
         }
         it 'should return created status' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
+                    headers: headers(
+                      registrationer,
+                      api_key: Settings.default.web_object.api_key,
+                      avatar_key: SecureRandom.uuid
+                    )
           expect(response.status).to eq 201
         end
 
         it 'should create a user' do
           expect {
             post path, params: atts.to_json,
-                       headers: headers(
-                         registrationer,
-                         api_key: Settings.default.web_object.api_key,
-                         avatar_key: SecureRandom.uuid
-                       )
+                      headers: headers(
+                        registrationer,
+                        api_key: Settings.default.web_object.api_key,
+                        avatar_key: SecureRandom.uuid
+                      )
           }.to change(User, :count).by(1)
         end
 
         it 'should set the parameters correctly' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
+                    headers: headers(
+                      registrationer,
+                      api_key: Settings.default.web_object.api_key,
+                      avatar_key: SecureRandom.uuid
+                    )
           expect(User.last.attributes.with_indifferent_access).to include(
             avatar_name: atts[:avatar_name],
             avatar_key: atts[:avatar_key],
@@ -73,11 +73,11 @@ RSpec.describe 'Api::V1::Users', type: :request do
         # rubocop:disable Style/StringConcatenation
         it 'should return a nice message' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
+                    headers: headers(
+                      registrationer,
+                      api_key: Settings.default.web_object.api_key,
+                      avatar_key: SecureRandom.uuid
+                    )
           expect(JSON.parse(response.body)['message']).to eq(
             'Your account has been created. Please ' +
             "visit #{Settings.default.site_url} to " +
@@ -88,11 +88,11 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
         it 'should return the correct data' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
+                    headers: headers(
+                      registrationer,
+                      api_key: Settings.default.web_object.api_key,
+                      avatar_key: SecureRandom.uuid
+                    )
           expect(JSON.parse(response.body)['data'].with_indifferent_access).to include(
             monthly_cost: Settings.default.account.monthly_cost,
             avatar_name: atts[:avatar_name],
@@ -117,7 +117,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'P0rd!',
             password_confirmation: 'P0rd!',
-            amount: 0,
+            account_payment: 0,
             added_time: 1,
             account_level: 1
           }
@@ -164,7 +164,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'password1',
             password_confirmation: 'password1',
-            amount: 0,
+            account_payment: 0,
             # expiration_date: Time.now + 1.month.to_i,
             added_time: 1,
             account_level: 1
@@ -213,7 +213,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'Pa$sW0rd',
             password_confirmation: 'Pa$sW0rt',
-            amount: 0,
+            account_payment: 0,
             # expiration_date: Time.now + 1.month.to_i,
             added_time: 1,
             account_level: 1
@@ -262,7 +262,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: existing_user.avatar_key,
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
-            amount: 0,
+            account_payment: 0,
             # expiration_date: Time.now + 1.month.to_i,
             added_time: 1,
             account_level: 1
@@ -312,7 +312,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
-            amount: Settings.default.account.monthly_cost,
+            account_payment: Settings.default.account.monthly_cost,
             # expiration_date: Time.now + 1.month.to_i,
             added_time: 1,
             account_level: 1
@@ -322,19 +322,19 @@ RSpec.describe 'Api::V1::Users', type: :request do
         it 'should create a transaction for the owner' do
           expect {
             post path, params: atts.to_json,
-                       headers: headers(
-                         terminal,
-                         api_key: Settings.default.web_object.api_key
-                       )
+                      headers: headers(
+                        terminal,
+                        api_key: Settings.default.web_object.api_key
+                      )
           }.to change(owner.transactions, :count).by(1)
         end
 
         it 'should return created status' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       terminal,
-                       api_key: Settings.default.web_object.api_key
-                     )
+                    headers: headers(
+                      terminal,
+                      api_key: Settings.default.web_object.api_key
+                    )
           expect(response.status).to eq 201
         end
 
@@ -342,19 +342,19 @@ RSpec.describe 'Api::V1::Users', type: :request do
           owner
           expect {
             post path, params: atts.to_json,
-                       headers: headers(
-                         terminal,
-                         api_key: Settings.default.web_object.api_key
-                       )
+                      headers: headers(
+                        terminal,
+                        api_key: Settings.default.web_object.api_key
+                      )
           }.to change(User, :count).by(1)
         end
 
         it 'should set the attributes correctly' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       terminal,
-                       api_key: Settings.default.web_object.api_key
-                     )
+                    headers: headers(
+                      terminal,
+                      api_key: Settings.default.web_object.api_key
+                    )
           expect(User.last.attributes.with_indifferent_access).to include(
             avatar_name: atts[:avatar_name],
             avatar_key: atts[:avatar_key],
@@ -371,7 +371,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
-            amount: 0,
+            account_payment: 0,
             added_time: 0,
             account_level: 0
           }
@@ -379,10 +379,10 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
         it 'should return created status' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       terminal,
-                       api_key: Settings.default.web_object.api_key
-                     )
+                    headers: headers(
+                      terminal,
+                      api_key: Settings.default.web_object.api_key
+                    )
           expect(response.status).to eq 201
         end
 
@@ -390,19 +390,19 @@ RSpec.describe 'Api::V1::Users', type: :request do
           owner
           expect {
             post path, params: atts.to_json,
-                       headers: headers(
-                         terminal,
-                         api_key: Settings.default.web_object.api_key
-                       )
+                      headers: headers(
+                        terminal,
+                        api_key: Settings.default.web_object.api_key
+                      )
           }.to change(User, :count).by(1)
         end
 
         it 'should set the attributes correctly' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       terminal,
-                       api_key: Settings.default.web_object.api_key
-                     )
+                    headers: headers(
+                      terminal,
+                      api_key: Settings.default.web_object.api_key
+                    )
           expect(User.last.attributes.with_indifferent_access).to include(
             avatar_name: atts[:avatar_name],
             avatar_key: atts[:avatar_key],
@@ -419,52 +419,52 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
-            amount: Settings.default.account.monthly_cost,
+            account_payment: 3 * Settings.default.account.monthly_cost,
             added_time: 3,
             account_level: 1
           }
         }
         it 'should return created status' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       terminal,
-                       api_key: Settings.default.web_object.api_key
-                     )
+                    headers: headers(
+                      terminal,
+                      api_key: Settings.default.web_object.api_key
+                    )
           expect(response.status).to eq 201
         end
 
         it 'should create a transaction for the owner' do
           expect {
             post path, params: atts.to_json,
-                       headers: headers(
-                         terminal,
-                         api_key: Settings.default.web_object.api_key
-                       )
+                      headers: headers(
+                        terminal,
+                        api_key: Settings.default.web_object.api_key
+                      )
           }.to change(owner.transactions, :count).by(1)
         end
         it 'should create a user' do
           owner
           expect {
             post path, params: atts.to_json,
-                       headers: headers(
-                         terminal,
-                         api_key: Settings.default.web_object.api_key
-                       )
+                      headers: headers(
+                        terminal,
+                        api_key: Settings.default.web_object.api_key
+                      )
           }.to change(User, :count).by(1)
         end
 
         it 'should set the attributes correctly' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       terminal,
-                       api_key: Settings.default.web_object.api_key
-                     )
+                    headers: headers(
+                      terminal,
+                      api_key: Settings.default.web_object.api_key
+                    )
           expect(User.last.attributes.with_indifferent_access).to include(
             avatar_name: atts[:avatar_name],
             avatar_key: atts[:avatar_key],
             account_level: atts[:account_level]
           )
-          expect(User.last.expiration_date).to be_within(30).of(Time.now + 3.months.to_i)
+          expect(User.last.expiration_date).to be_within(10.seconds).of(Time.now + 3.months.to_i)
         end
       end
     end
@@ -615,8 +615,11 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
       describe 'making a payment' do
         let(:atts) {
-          { account_payment: Settings.default.account.monthly_cost *
-            3 * existing_user.account_level }
+          { 
+            # added_time: 3,
+            account_payment: Settings.default.account.monthly_cost *
+                                3 * existing_user.account_level 
+          }
         }
 
         it 'returns ok status' do
@@ -625,6 +628,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
         end
 
         it 'updates the expiration_date' do
+          puts atts
           expected_time = existing_user.expiration_date +
                           (atts[:account_payment].to_f / (
                             existing_user.account_level * Settings.default.account.monthly_cost

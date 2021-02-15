@@ -105,16 +105,6 @@ RSpec.describe User, type: :model do
         end
       end
     end
-
-    # context 'account level is zero' do
-    #   let(:user) { FactoryBot.create :active_user, account_level: 0 }
-    #   it 'should raise an error and not change the account level' do
-    #     expect {
-    #       user.update(account_level: 1)
-    #     }.to raise_error(ArgumentError)
-    #     expect(user.reload.account_level).to eq 0
-    #   end
-    # end
   end
 
   describe :balance do

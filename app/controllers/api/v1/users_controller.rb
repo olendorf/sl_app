@@ -10,12 +10,11 @@ module Api
         authorize User
 
         @user = User.new(
-          parsed_params.except('amount', 'added_time') .merge(
-          expiration_date: Time.now + parsed_params['added_time'].months.to_i)
+          parsed_params.except('account_payment')
         )
         @user.save!
 
-        add_transaction if parsed_params['amount'].positive?
+        add_transaction if parsed_params['account_payment'].positive?
 
         render json: {
           message: I18n.t('api.user.create.success', url: Settings.default.site_url),
@@ -34,7 +33,8 @@ module Api
         authorize @requesting_object
         # adjust_expiration_date if parsed_params['account_level']
         add_transaction if parsed_params['account_payment']
-        @user.update!(parsed_params.except('amount'))
+        @user.update!(parsed_params)
+        
         render json: {
           message: I18n.t('api.user.update.success'),
           data: user_data
@@ -70,7 +70,7 @@ module Api
       def add_transaction
         load_requesting_object unless @requesting_object
         @requesting_object.user.transactions << Analyzable::Transaction.new(
-          amount: parsed_params['amount'],
+          amount: parsed_params['account_payment'],
           description: 'Account payment',
           source_key: @requesting_object.object_key,
           source_name: @requesting_object.object_name,

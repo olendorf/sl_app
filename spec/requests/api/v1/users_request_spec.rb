@@ -28,8 +28,9 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
-            amount: 0,
-            expiration_date: Time.now + 1.month.to_i,
+            account_payment: 0,
+            # expiration_date: Time.now + 1.month.to_i,
+            added_time: 1,
             account_level: 1
           }
         }
@@ -116,8 +117,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'P0rd!',
             password_confirmation: 'P0rd!',
-            amount: 0,
-            expiration_date: Time.now + 1.month.to_i,
+            account_payment: 0,
+            added_time: 1,
             account_level: 1
           }
         }
@@ -163,8 +164,9 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'password1',
             password_confirmation: 'password1',
-            amount: 0,
-            expiration_date: Time.now + 1.month.to_i,
+            account_payment: 0,
+            # expiration_date: Time.now + 1.month.to_i,
+            added_time: 1,
             account_level: 1
           }
         }
@@ -211,8 +213,9 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'Pa$sW0rd',
             password_confirmation: 'Pa$sW0rt',
-            amount: 0,
-            expiration_date: Time.now + 1.month.to_i,
+            account_payment: 0,
+            # expiration_date: Time.now + 1.month.to_i,
+            added_time: 1,
             account_level: 1
           }
         }
@@ -259,8 +262,9 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: existing_user.avatar_key,
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
-            amount: 0,
-            expiration_date: Time.now + 1.month.to_i,
+            account_payment: 0,
+            # expiration_date: Time.now + 1.month.to_i,
+            added_time: 1,
             account_level: 1
           }
         }
@@ -308,8 +312,9 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
-            amount: Settings.default.account.monthly_cost,
-            expiration_date: Time.now + 1.month.to_i,
+            account_payment: Settings.default.account.monthly_cost,
+            # expiration_date: Time.now + 1.month.to_i,
+            added_time: 1,
             account_level: 1
           }
         }
@@ -366,8 +371,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
-            amount: 0,
-            expiration_date: Time.now,
+            account_payment: 0,
+            added_time: 0,
             account_level: 0
           }
         }
@@ -414,8 +419,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: new_user.avatar_key,
             password: 'Pa$sW0rd!',
             password_confirmation: 'Pa$sW0rd!',
-            amount: Settings.default.account.monthly_cost,
-            expiration_date: Time.now + 3.months.to_i,
+            account_payment: 3 * Settings.default.account.monthly_cost,
+            added_time: 3,
             account_level: 1
           }
         }
@@ -437,6 +442,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
                        )
           }.to change(owner.transactions, :count).by(1)
         end
+
         it 'should create a user' do
           owner
           expect {
@@ -459,7 +465,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
             avatar_key: atts[:avatar_key],
             account_level: atts[:account_level]
           )
-          expect(User.last.expiration_date).to be_within(30).of(Time.now + 3.months.to_i)
+          expect(User.last.expiration_date).to be_within(10.seconds).of(Time.now + 3.months.to_i)
         end
       end
     end
@@ -610,8 +616,11 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
       describe 'making a payment' do
         let(:atts) {
-          { account_payment: Settings.default.account.monthly_cost *
-            3 * existing_user.account_level }
+          {
+            # added_time: 3,
+            account_payment: Settings.default.account.monthly_cost *
+              3 * existing_user.account_level
+          }
         }
 
         it 'returns ok status' do
@@ -632,6 +641,41 @@ RSpec.describe 'Api::V1::Users', type: :request do
           expect {
             put path, params: atts.to_json, headers: headers(terminal)
           }.to change(owner.reload.transactions, :count).by(1)
+        end
+
+        describe 'and there are user splits' do
+          let(:target_user) { FactoryBot.create :active_user }
+          before(:each) do
+            owner.splits << FactoryBot.build(:split, percent: 5)
+            owner.splits << FactoryBot.build(:split, percent: 10,
+                                                     target_key: target_user.avatar_key,
+                                                     target_name: target_user.avatar_name)
+            terminal.splits << FactoryBot.build(:split, percent: 7)
+          end
+          it 'adds transactions to the owners account' do
+            expect {
+              put path, params: atts.to_json, headers: headers(terminal)
+            }.to change(owner.reload.transactions, :count).by(4)
+          end
+
+          it 'updates the owners balance correctl' do
+            expected_balance = atts[:account_payment] - atts[:account_payment] * 0.05 -
+                               atts[:account_payment] * 0.1 -
+                               atts[:account_payment] * 0.07
+            put path, params: atts.to_json, headers: headers(terminal)
+            expect(owner.reload.balance).to eq expected_balance
+          end
+
+          it 'adds transactions to the existing sharees' do
+            expect {
+              put path, params: atts.to_json, headers: headers(terminal)
+            }.to change(target_user.transactions, :count).by(1)
+          end
+
+          it 'updates the sharees balance' do
+            put path, params: atts.to_json, headers: headers(terminal)
+            expect(target_user.balance).to eq(atts[:account_payment] * 0.1)
+          end
         end
       end
     end

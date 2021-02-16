@@ -18,10 +18,11 @@ class User < ApplicationRecord
 
   before_update :handle_account_payment, if: :account_payment
   before_update :adjust_expiration_date, if: :will_save_change_to_account_level?
+  after_create :add_time, if: :added_time
 
   validates_numericality_of :account_level, greater_than_or_equal_to: 0
 
-  attr_accessor :account_payment, :admin_update
+  attr_accessor :account_payment, :admin_update, :added_time
 
   has_paper_trail
 
@@ -40,6 +41,14 @@ class User < ApplicationRecord
 
   def email_changed?
     false
+  end
+
+  def splittable_key
+    avatar_key
+  end
+
+  def splittable_name
+    avatar_name
   end
 
   def time_left
@@ -95,6 +104,12 @@ class User < ApplicationRecord
     update_column(:expiration_date,
                   Time.now + (expiration_date - Time.now) *
                   (account_level_was.to_f / account_level))
+  end
+
+  def add_time
+    self.expiration_date = Time.now unless expiration_date
+    self.expiration_date += 1.month.to_i * added_time
+    save
   end
 
   def split_percent

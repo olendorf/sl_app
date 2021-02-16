@@ -4,15 +4,19 @@ module Api
   module V1
     # Controller for API requests from SL
     class UsersController < Api::V1::ApiController
+      include Api::TransactionHandler
+
       before_action :load_user, except: %i[index create]
 
       def create
         authorize User
 
-        @user = User.new(parsed_params.except('amount'))
+        @user = User.new(
+          parsed_params.except('account_payment')
+        )
         @user.save!
 
-        add_transaction if parsed_params['amount'].positive?
+        handle_transactions if parsed_params['account_payment'].positive?
 
         render json: {
           message: I18n.t('api.user.create.success', url: Settings.default.site_url),
@@ -30,8 +34,9 @@ module Api
       def update
         authorize @requesting_object
         # adjust_expiration_date if parsed_params['account_level']
-        add_transaction if parsed_params['account_payment']
-        @user.update!(parsed_params.except('amount'))
+        handle_transactions if parsed_params['account_payment']
+        @user.update!(parsed_params)
+
         render json: {
           message: I18n.t('api.user.update.success'),
           data: user_data
@@ -62,20 +67,6 @@ module Api
           time_left: @user.time_left,
           account_level: @user.account_level
         }
-      end
-
-      def add_transaction
-        load_requesting_object unless @requesting_object
-        @requesting_object.user.transactions << Analyzable::Transaction.new(
-          amount: parsed_params['amount'],
-          description: 'Account payment',
-          source_key: @requesting_object.object_key,
-          source_name: @requesting_object.object_name,
-          source_type: @requesting_class.class.name,
-          category: 'account',
-          target_key: parsed_params['avatar_key'],
-          target_name: parsed_params['avatar_name']
-        )
       end
 
       def pundit_user

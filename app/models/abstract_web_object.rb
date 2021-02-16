@@ -25,11 +25,11 @@ class AbstractWebObject < ApplicationRecord
   def active?
     Time.now - pinged_at <= Settings.default.web_object.inactive_limit
   end
-  
+
   def splittable_key
     object_key
   end
-  
+
   def splittable_name
     object_name
   end

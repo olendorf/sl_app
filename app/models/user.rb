@@ -42,11 +42,11 @@ class User < ApplicationRecord
   def email_changed?
     false
   end
-  
+
   def splittable_key
     avatar_key
   end
-  
+
   def splittable_name
     avatar_name
   end
@@ -105,7 +105,7 @@ class User < ApplicationRecord
                   Time.now + (expiration_date - Time.now) *
                   (account_level_was.to_f / account_level))
   end
-  
+
   def add_time
     self.expiration_date = Time.now unless expiration_date
     self.expiration_date += 1.month.to_i * added_time

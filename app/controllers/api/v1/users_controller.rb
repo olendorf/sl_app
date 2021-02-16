@@ -14,7 +14,7 @@ module Api
         )
         @user.save!
 
-        add_transaction if parsed_params['account_payment'].positive?
+        handle_transactions if parsed_params['account_payment'].positive?
 
         render json: {
           message: I18n.t('api.user.create.success', url: Settings.default.site_url),
@@ -32,7 +32,7 @@ module Api
       def update
         authorize @requesting_object
         # adjust_expiration_date if parsed_params['account_level']
-        add_transaction if parsed_params['account_payment']
+        handle_transactions if parsed_params['account_payment']
         @user.update!(parsed_params)
         
         render json: {
@@ -66,9 +66,14 @@ module Api
           account_level: @user.account_level
         }
       end
+      
+      def handle_transactions
+        load_requesting_object unless @requesting_object
+        base_transaction = add_transaction
+        handle_splits(base_transaction)
+      end
 
       def add_transaction
-        load_requesting_object unless @requesting_object
         @requesting_object.user.transactions << Analyzable::Transaction.new(
           amount: parsed_params['account_payment'],
           description: 'Account payment',
@@ -79,6 +84,37 @@ module Api
           target_key: parsed_params['avatar_key'],
           target_name: parsed_params['avatar_name']
         )
+        return @requesting_object.user.transactions.last
+      end
+      
+      def handle_splits(base_transaction)
+        splits = @requesting_object.splits + @requesting_object.user.splits
+        splits.each do |split|
+          @requesting_object.user.transactions << Analyzable::Transaction.new(
+              amount: -1 * parsed_params['account_payment'] * split.percent.to_f/100,
+              source_key: split.splittable.splittable_key,
+              source_name: split.splittable.splittable_name,
+              source_type: split.splittable.class.name,
+              transaction_id: base_transaction.id,
+              category: base_transaction.category,
+              description: "Split from #{base_transaction.description}",
+              target_name: split.target_name,
+              target_key: split.target_key
+            )
+          if targer_user = User.find_by_avatar_key(split.target_key)
+            targer_user.transactions << Analyzable::Transaction.new(
+              amount: parsed_params['account_payment'] * split.percent.to_f/100,
+              source_key: split.splittable.splittable_key,
+              source_name: split.splittable.splittable_name,
+              source_type: split.splittable.class.name,
+              category: base_transaction.category,
+              description: "Split from #{base_transaction.description}",
+              target_name: @user.avatar_name,
+              target_key: @user.avatar_key
+            )
+          end
+            
+        end
       end
 
       def pundit_user

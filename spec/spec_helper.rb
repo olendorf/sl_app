@@ -17,6 +17,7 @@
 require 'pundit/rspec'
 require 'active_record/acts_as/matchers'
 require 'paper_trail/frameworks/rspec'
+require 'webmock/rspec'
 require 'simplecov'
 require 'coveralls'
 Coveralls.wear!

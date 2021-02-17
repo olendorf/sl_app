@@ -622,6 +622,27 @@ RSpec.describe 'Api::V1::Users', type: :request do
               3 * existing_user.account_level
           }
         }
+      
+        let(:give_regex) do
+          %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}/payment\?
+             auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
+        end
+        
+        before(:each) do
+          @stub = stub_request(:post, give_regex).
+                   with(
+                    # body: /\{\\"amount\\"\:[\d]+,\\"target_key\\"\:\\"([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\\"\}/,
+                    body: //,
+                    headers: {
+                    'Accept'=>'application/json',
+                    'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                    'Content-Type'=>'application/json',
+                    'Host'=>'sim3015.aditi.lindenlab.com:12043',
+                    'User-Agent'=>'rest-client/2.1.0 (linux-gnu x86_64) ruby/2.6.3p62',
+                    'Verify-Ssl'=>'false',
+                     }).
+                   to_return(status: 200, body: "", headers: {})
+        end
 
         it 'returns ok status' do
           put path, params: atts.to_json, headers: headers(terminal)
@@ -675,6 +696,12 @@ RSpec.describe 'Api::V1::Users', type: :request do
           it 'updates the sharees balance' do
             put path, params: atts.to_json, headers: headers(terminal)
             expect(target_user.balance).to eq(atts[:account_payment] * 0.1)
+          end
+          
+          it 'should send a requests to pay the splittees' do 
+                     
+            put path, params: atts.to_json, headers: headers(terminal)
+            expect(@stub).to have_been_requested.times(3)
           end
         end
       end

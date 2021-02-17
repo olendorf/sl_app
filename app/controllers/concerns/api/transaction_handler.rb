@@ -47,26 +47,26 @@ module Api
           add_split_to_target(split, target_user, base_transaction) if target_user
         end
       end
-      
+
       def send_payment(split, amount)
-        unless Rails.env.development?
-          begin
-            RestClient::Request.execute(
-                  url: "#{@requesting_object.url}/payment",
-                  method: :post,
-                  content_type: :json,
-                  accept: :json,
-                  verify_ssl: false,
-                  headers: request_headers,
-                  payload: {
-                              amount: (split.percent.to_f/100 * amount).round, 
-                              target_key: split.target_key
-                  }.to_json
-                )
-          rescue RestClient::ExceptionWithResponse => e
-            flash[:error] = t('api.pay_avatar.failure',
-                                message: e.response)
-          end
+        return if Rails.env.development?
+
+        begin
+          RestClient::Request.execute(
+            url: "#{@requesting_object.url}/payment",
+            method: :post,
+            content_type: :json,
+            accept: :json,
+            verify_ssl: false,
+            headers: request_headers,
+            payload: {
+              amount: (split.percent.to_f / 100 * amount).round,
+              target_key: split.target_key
+            }.to_json
+          )
+        rescue RestClient::ExceptionWithResponse => e
+          flash[:error] = t('api.pay_avatar.failure',
+                            message: e.response)
         end
       end
 
@@ -82,7 +82,7 @@ module Api
           target_key: @user.avatar_key
         )
       end
-      
+
       def request_headers
         # auth_time = Time.now.to_i
         {

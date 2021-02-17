@@ -46,7 +46,7 @@ module Api
           add_split_to_target(split, target_user, base_transaction) if target_user
         end
       end
-
+# some stuff
       def add_split_to_target(split, target_user, base_transaction)
         target_user.transactions << Analyzable::Transaction.new(
           amount: parsed_params['account_payment'] * split.percent.to_f / 100,

@@ -613,6 +613,12 @@ RSpec.describe 'Api::V1::Users', type: :request do
           expect(existing_user.reload.time_left).to eq expected_time
         end
       end
+      
+      describe 'foo' do 
+        it 'tests foo' do 
+          expect(1 + 2).to eq 3
+        end
+      end
 
       describe 'making a payment' do
         let(:atts) {

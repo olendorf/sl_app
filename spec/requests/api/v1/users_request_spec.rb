@@ -616,7 +616,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
       
       describe 'foo' do 
         it 'tests foo' do 
-          expect(1 + 2).to eq 3
+          expect(2 + 2).to eq 4
         end
       end
 

@@ -82,7 +82,7 @@ module Api
           target_key: @user.avatar_key
         )
       end
-
+ 
       def request_headers
         # auth_time = Time.now.to_i
         {

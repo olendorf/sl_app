@@ -9,6 +9,13 @@ RSpec.describe 'Api::V1::Users', type: :request do
     terminal.save
     terminal
   }
+
+  let(:uri_regex) do
+    %r{
+        \Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}
+        \?auth_digest=[a-f0-9]+&auth_time=[0-9]+\z
+    }x
+  end
   describe 'creating an account' do
     # Users can create accounts from registrationers that cmoe
     # with a purchased package OR from a terminal. Registrationers
@@ -615,6 +622,10 @@ RSpec.describe 'Api::V1::Users', type: :request do
       end
 
       describe 'making a payment' do
+        before(:each) do
+          @stub = stub_request(:put, uri_regex)
+        end
+
         let(:atts) {
           {
             # added_time: 3,
@@ -659,9 +670,9 @@ RSpec.describe 'Api::V1::Users', type: :request do
           end
 
           it 'updates the owners balance correctl' do
-            expected_balance = atts[:account_payment] - atts[:account_payment] * 0.05 -
-                               atts[:account_payment] * 0.1 -
-                               atts[:account_payment] * 0.07
+            expected_balance = atts[:account_payment] - (atts[:account_payment] * 0.05).round -
+                               (atts[:account_payment] * 0.1).round -
+                               (atts[:account_payment] * 0.07).round
             put path, params: atts.to_json, headers: headers(terminal)
             expect(owner.reload.balance).to eq expected_balance
           end
@@ -674,7 +685,12 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
           it 'updates the sharees balance' do
             put path, params: atts.to_json, headers: headers(terminal)
-            expect(target_user.balance).to eq(atts[:account_payment] * 0.1)
+            expect(target_user.balance).to eq((atts[:account_payment] * 0.1).round)
+          end
+
+          it 'sends the payment to the payee' do
+            put path, params: atts.to_json, headers: headers(terminal)
+            expect(@stub).to have_been_requested.times(3)
           end
         end
       end

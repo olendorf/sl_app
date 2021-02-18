@@ -58,6 +58,9 @@ gem 'config'
 # Nice display of time differences
 gem 'time_diff'
 
+# Makes external http requests
+gem 'rest-client'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

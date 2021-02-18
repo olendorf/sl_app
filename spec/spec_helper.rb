@@ -15,6 +15,7 @@
 # it.
 #
 require 'pundit/rspec'
+require 'webmock/rspec'
 require 'active_record/acts_as/matchers'
 require 'paper_trail/frameworks/rspec'
 require 'simplecov'

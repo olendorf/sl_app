@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples 'it has a rezzable policy' do |model_name|
-   let(:active_user) { FactoryBot.create :active_user }
+  let(:active_user) { FactoryBot.create :active_user }
 
   let(:inactive_user) { FactoryBot.create :inactive_user }
 

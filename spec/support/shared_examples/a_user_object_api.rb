@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples 'a user object API' do |model_name|
   let(:owner) { FactoryBot.create :owner }
   let(:user) { FactoryBot.create :active_user }
@@ -44,7 +46,7 @@ RSpec.shared_examples 'a user object API' do |model_name|
                    )
         expect(
           JSON.parse(response.body)['message']
-        ).to eq("This object has been registered in the database.")
+        ).to eq('This object has been registered in the database.')
       end
 
       it 'returns the data' do
@@ -72,12 +74,12 @@ RSpec.shared_examples 'a user object API' do |model_name|
     end
 
     context 'when the object exists' do
-      let(:existing_object) { 
-        web_object = FactoryBot.build model_name, user_id: user.id 
+      let(:existing_object) {
+        web_object = FactoryBot.build model_name, user_id: user.id
         web_object.save
         web_object
       }
-      
+
       let(:new_object) do
         FactoryBot.build model_name, user_id: user.id,
                                      object_name: existing_object.object_name,
@@ -115,8 +117,8 @@ RSpec.shared_examples 'a user object API' do |model_name|
     let(:path) { send("api_rezzable_#{model_name}_path", web_object.object_key) }
 
     context 'user exists' do
-      let(:web_object) { 
-        web_object = FactoryBot.build model_name, user_id: owner.id 
+      let(:web_object) {
+        web_object = FactoryBot.build model_name, user_id: owner.id
         web_object.save
         web_object
       }
@@ -134,8 +136,8 @@ RSpec.shared_examples 'a user object API' do |model_name|
     end
 
     context 'user does not exists' do
-      let(:web_object) { 
-        web_object = FactoryBot.build model_name 
+      let(:web_object) {
+        web_object = FactoryBot.build model_name
         web_object.save
         web_object
       }
@@ -150,7 +152,7 @@ RSpec.shared_examples 'a user object API' do |model_name|
     let(:path) { send("api_rezzable_#{model_name}_path", web_object.object_key) }
     context 'owner exists' do
       let(:web_object) {
-        web_object = FactoryBot.build model_name, user_id: owner.id 
+        web_object = FactoryBot.build model_name, user_id: owner.id
         web_object.save
         web_object
       }
@@ -165,7 +167,7 @@ RSpec.shared_examples 'a user object API' do |model_name|
         it 'returns a nice message' do
           expect(
             JSON.parse(response.body)['message']
-          ).to eq "This object has been updated."
+          ).to eq 'This object has been updated.'
         end
 
         it "updates the #{model_name}" do
@@ -175,7 +177,7 @@ RSpec.shared_examples 'a user object API' do |model_name|
       end
 
       context 'invalid data' do
-        let(:atts) { { description: 'some new idea', url: ''} }
+        let(:atts) { { description: 'some new idea', url: '' } }
         before(:each) { put path, params: atts.to_json, headers: headers(web_object) }
         it 'returns BAD REQUEST status' do
           expect(response.status).to eq 422
@@ -194,8 +196,8 @@ RSpec.shared_examples 'a user object API' do |model_name|
     end
 
     context 'user does not exist' do
-      let(:web_object) { 
-        web_object = FactoryBot.build model_name 
+      let(:web_object) {
+        web_object = FactoryBot.build model_name
         web_object.save
         web_object
       }
@@ -209,8 +211,8 @@ RSpec.shared_examples 'a user object API' do |model_name|
   end
 
   describe 'destroying' do
-    let(:web_object) { 
-      web_object = FactoryBot.build model_name, user_id: owner.id 
+    let(:web_object) {
+      web_object = FactoryBot.build model_name, user_id: owner.id
       web_object.save
       web_object
     }
@@ -225,7 +227,7 @@ RSpec.shared_examples 'a user object API' do |model_name|
       delete path, headers: headers(web_object)
       expect(
         JSON.parse(response.body)['message']
-      ).to eq "This object has been deleted."
+      ).to eq 'This object has been deleted.'
     end
 
     it 'should delete the object' do

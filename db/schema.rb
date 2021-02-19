@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_18_201135) do
+ActiveRecord::Schema.define(version: 2021_02_19_144448) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 2021_02_18_201135) do
     t.integer "patch_version"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "server_id"
     t.index ["description"], name: "index_abstract_web_objects_on_description"
     t.index ["object_key"], name: "index_abstract_web_objects_on_object_key"
     t.index ["object_name"], name: "index_abstract_web_objects_on_object_name"
@@ -69,6 +70,7 @@ ActiveRecord::Schema.define(version: 2021_02_18_201135) do
     t.integer "previous_balance"
     t.string "target_name"
     t.string "target_key"
+    t.integer "web_object_id"
     t.index ["amount"], name: "index_analyzable_transactions_on_amount"
     t.index ["category"], name: "index_analyzable_transactions_on_category"
     t.index ["description"], name: "index_analyzable_transactions_on_description"

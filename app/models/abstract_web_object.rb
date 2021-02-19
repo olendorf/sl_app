@@ -11,10 +11,11 @@ class AbstractWebObject < ApplicationRecord
   actable
 
   belongs_to :user, optional: true
-  
+
   belongs_to :server, class_name: 'Rezzable::Server', optional: true
-  
-  has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify, foreign_key: :web_object_id
+
+  has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify,
+                          foreign_key: :web_object_id
 
   has_many :splits, dependent: :destroy, as: :splittable
   accepts_nested_attributes_for :splits, allow_destroy: true

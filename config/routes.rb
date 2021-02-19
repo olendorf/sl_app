@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       namespace :rezzable do
         resources :web_objects, except: %i[index new edit]
         resources :terminals, except: %i[index new edit]
+        resources :servers, except: %i[new edit]
       end
     end
   end

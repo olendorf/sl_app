@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_08_181612) do
+ActiveRecord::Schema.define(version: 2021_02_19_144448) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,12 @@ ActiveRecord::Schema.define(version: 2021_02_08_181612) do
     t.integer "patch_version"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "server_id"
+    t.index ["description"], name: "index_abstract_web_objects_on_description"
+    t.index ["object_key"], name: "index_abstract_web_objects_on_object_key"
+    t.index ["object_name"], name: "index_abstract_web_objects_on_object_name"
+    t.index ["region"], name: "index_abstract_web_objects_on_region"
+    t.index ["user_id"], name: "index_abstract_web_objects_on_user_id"
   end
 
   create_table "active_admin_comments", force: :cascade do |t|
@@ -64,6 +70,17 @@ ActiveRecord::Schema.define(version: 2021_02_08_181612) do
     t.integer "previous_balance"
     t.string "target_name"
     t.string "target_key"
+    t.integer "web_object_id"
+    t.index ["amount"], name: "index_analyzable_transactions_on_amount"
+    t.index ["category"], name: "index_analyzable_transactions_on_category"
+    t.index ["description"], name: "index_analyzable_transactions_on_description"
+    t.index ["source_key"], name: "index_analyzable_transactions_on_source_key"
+    t.index ["source_name"], name: "index_analyzable_transactions_on_source_name"
+    t.index ["source_type"], name: "index_analyzable_transactions_on_source_type"
+    t.index ["target_key"], name: "index_analyzable_transactions_on_target_key"
+    t.index ["target_name"], name: "index_analyzable_transactions_on_target_name"
+    t.index ["transaction_key"], name: "index_analyzable_transactions_on_transaction_key"
+    t.index ["user_id"], name: "index_analyzable_transactions_on_user_id"
   end
 
   create_table "avatars", force: :cascade do |t|
@@ -73,6 +90,12 @@ ActiveRecord::Schema.define(version: 2021_02_08_181612) do
     t.date "rezday"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["avatar_key"], name: "index_avatars_on_avatar_key"
+    t.index ["avatar_name"], name: "index_avatars_on_avatar_name"
+    t.index ["display_name"], name: "index_avatars_on_display_name"
+  end
+
+  create_table "rezzable_servers", force: :cascade do |t|
   end
 
   create_table "rezzable_terminals", force: :cascade do |t|
@@ -91,6 +114,9 @@ ActiveRecord::Schema.define(version: 2021_02_08_181612) do
     t.string "target_key"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["percent"], name: "index_splits_on_percent"
+    t.index ["target_key"], name: "index_splits_on_target_key"
+    t.index ["target_name"], name: "index_splits_on_target_name"
   end
 
   create_table "users", force: :cascade do |t|
@@ -108,8 +134,11 @@ ActiveRecord::Schema.define(version: 2021_02_08_181612) do
     t.integer "role", default: 0
     t.integer "account_level", default: 0
     t.datetime "expiration_date"
+    t.index ["account_level"], name: "index_users_on_account_level"
     t.index ["avatar_key"], name: "index_users_on_avatar_key", unique: true
     t.index ["avatar_name"], name: "index_users_on_avatar_name", unique: true
+    t.index ["expiration_date"], name: "index_users_on_expiration_date"
+    t.index ["role"], name: "index_users_on_role"
   end
 
   create_table "versions", force: :cascade do |t|

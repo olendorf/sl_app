@@ -1,18 +1,20 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Rezzable::Terminal do
+ActiveAdmin.register Rezzable::Terminal, namespace: :my do
   include ActiveAdmin::RezzableBehavior
 
   menu label: 'Terminals'
 
   actions :all, except: %i[new create]
 
+  scope_to :current_user, association_method: :terminals
+
   decorate_with Rezzable::TerminalDecorator
 
   index title: 'Terminals' do
     selectable_column
     column 'Object Name', sortable: :object_name do |terminal|
-      link_to terminal.object_name, admin_rezzable_terminal_path(terminal)
+      link_to terminal.object_name, my_rezzable_terminal_path(terminal)
     end
     column 'Description' do |terminal|
       truncate(terminal.description, length: 10, separator: ' ')
@@ -20,7 +22,7 @@ ActiveAdmin.register Rezzable::Terminal do
     column 'Location', sortable: :region, &:slurl
     column 'Owner', sortable: 'users.avatar_name' do |terminal|
       if terminal.user
-        link_to terminal.user.avatar_name, admin_user_path(terminal.user)
+        link_to terminal.user.avatar_name, my_user_path(terminal.user)
       else
         'Orphan'
       end
@@ -46,13 +48,13 @@ ActiveAdmin.register Rezzable::Terminal do
   show title: :object_name do
     attributes_table do
       row :object_name do |terminal|
-        link_to terminal.user.avatar_name, admin_user_path(terminal.user)
+        link_to terminal.user.avatar_name, my_user_path(terminal.user)
       end
       row :object_key
       row :description
       row 'Owner', sortable: 'users.avatar_name' do |terminal|
         if terminal.user
-          link_to terminal.user.avatar_name, admin_user_path(terminal.user)
+          link_to terminal.user.avatar_name, my_user_path(terminal.user)
         else
           'Orphan'
         end
@@ -60,7 +62,7 @@ ActiveAdmin.register Rezzable::Terminal do
       row :location, &:slurl
       row 'Server' do |terminal|
         if terminal.server
-          link_to terminal.server.object_name, admin_rezzable_server_path(terminal.server)
+          link_to terminal.server.object_name, my_rezzable_server_path(terminal.server)
         else
           ''
         end

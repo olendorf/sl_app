@@ -12,7 +12,7 @@ class AbstractWebObject < ApplicationRecord
 
   belongs_to :user, optional: true
 
-  belongs_to :server, class_name: 'Rezzable::Server', optional: true
+  belongs_to :server, class_name: 'Rezzable::Server', optional: true, inverse_of: :clients
 
   has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify,
                           foreign_key: :web_object_id
@@ -22,6 +22,10 @@ class AbstractWebObject < ApplicationRecord
 
   after_initialize :set_pinged_at
   after_initialize :set_api_key
+
+  # def server
+  #   Rezzable::Server.find server_id
+  # end
 
   def split_percent
     splits.inject(0) { |sum, split| sum + split.percent } + user.split_percent

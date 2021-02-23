@@ -4,14 +4,14 @@ require 'rails_helper'
 
 RSpec.feature 'Terminal management', type: :feature do
   let(:owner) { FactoryBot.create :owner }
-  let(:terminal) { 
+  let(:terminal) {
     terminal = FactoryBot.build :terminal, user_id: owner.id
     terminal.save
     terminal
   }
 
   let(:uri_regex) do
-    %r{\Ahttps:\/\/sim3015.aditi.lindenlab.com:12043\/cap\/[-a-f0-9]{36}\?
+    %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}\?
        auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
 

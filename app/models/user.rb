@@ -43,13 +43,13 @@ class User < ApplicationRecord
   def email_changed?
     false
   end
-  
+
   #############
-  
+
   def servers
     Rezzable::Server.where(user_id: id)
   end
-  
+
   def terminals
     Rezzable::Terminal.where(user_id: id)
   end

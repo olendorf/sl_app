@@ -6,8 +6,8 @@ ActiveAdmin.register Rezzable::Terminal, namespace: :my do
   menu label: 'Terminals'
 
   actions :all, except: %i[new create]
-  
-   scope_to :current_user, association_method: :terminals
+
+  scope_to :current_user, association_method: :terminals
 
   decorate_with Rezzable::TerminalDecorator
 
@@ -98,7 +98,9 @@ ActiveAdmin.register Rezzable::Terminal, namespace: :my do
     f.inputs do
       f.input :object_name
       f.input :description
-      f.input :server_id, as: :select, collection: resource.user.servers.map { |s| [s.object_name, s.actable.id] }
+      f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
+                                                     [s.object_name, s.actable.id]
+                                                   }
     end
     # f.has_many :splits, heading: 'Splits',
     #                     allow_destroy: true do |s|

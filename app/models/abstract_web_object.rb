@@ -12,7 +12,7 @@ class AbstractWebObject < ApplicationRecord
 
   belongs_to :user, optional: true
 
-  belongs_to :server, class_name: 'Rezzable::Server', optional: true, :inverse_of => :clients
+  belongs_to :server, class_name: 'Rezzable::Server', optional: true, inverse_of: :clients
 
   has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify,
                           foreign_key: :web_object_id
@@ -22,8 +22,8 @@ class AbstractWebObject < ApplicationRecord
 
   after_initialize :set_pinged_at
   after_initialize :set_api_key
-  
-  # def server 
+
+  # def server
   #   Rezzable::Server.find server_id
   # end
 

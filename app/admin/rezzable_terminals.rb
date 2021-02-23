@@ -96,7 +96,9 @@ ActiveAdmin.register Rezzable::Terminal do
     f.inputs do
       f.input :object_name
       f.input :description
-      f.input :server_id, as: :select, collection: resource.user.servers.map { |s| [s.object_name, s.actable.id] }
+      f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
+                                                     [s.object_name, s.actable.id]
+                                                   }
     end
     # f.has_many :splits, heading: 'Splits',
     #                     allow_destroy: true do |s|

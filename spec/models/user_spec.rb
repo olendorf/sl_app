@@ -37,6 +37,16 @@ RSpec.describe User, type: :model do
       expect(user.servers.size).to eq 3
     end
   end
+  
+  describe 'terminal' do
+    it 'should return the servers and nothing else' do
+      owner.web_objects << FactoryBot.build(:web_object)
+      owner.web_objects << FactoryBot.build(:terminal)
+      owner.web_objects << FactoryBot.build(:terminal)
+
+      expect(owner.terminals.size).to eq 2
+    end
+  end
 
   describe :email_changed? do
     it 'should be falsey' do

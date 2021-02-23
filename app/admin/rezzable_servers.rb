@@ -1,21 +1,21 @@
-# frozen_string_literal: true
+ActiveAdmin.register Rezzable::Server do
 
-ActiveAdmin.register Rezzable::Terminal do
-  include ActiveAdmin::RezzableBehavior
-
-  menu label: 'Terminals'
+  menu label: 'Servers'
 
   actions :all, except: %i[new create]
 
-  decorate_with Rezzable::TerminalDecorator
-
-  index title: 'Terminals' do
+  decorate_with Rezzable::ServerDecorator
+  
+  index title: 'Servers' do
     selectable_column
     column 'Object Name', sortable: :object_name do |terminal|
       link_to terminal.object_name, admin_rezzable_terminal_path(terminal)
     end
     column 'Description' do |terminal|
       truncate(terminal.description, length: 10, separator: ' ')
+    end
+    column 'Clients' do |server|
+      server.clients.count
     end
     column 'Location', sortable: :region, &:slurl
     column 'Owner', sortable: 'users.avatar_name' do |terminal|
@@ -35,36 +35,29 @@ ActiveAdmin.register Rezzable::Terminal do
     column :created_at, sortable: :created_at
     actions
   end
-
+  
   filter :abstract_web_object_object_name, as: :string, label: 'Object Name'
   filter :abstract_web_object_description, as: :string, label: 'Description'
   filter :abstract_web_object_user_avatar_name, as: :string, label: 'Owner'
   filter :abstract_web_object_region, as: :string, label: 'Region'
   # filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :abstract_web_object_create_at, as: :date_range
-
+  
   show title: :object_name do
     attributes_table do
-      row :object_name do |terminal|
-        link_to terminal.user.avatar_name, admin_user_path(terminal.user)
+      row :object_name do |server|
+        link_to server.user.avatar_name, admin_user_path(server.user)
       end
       row :object_key
       row :description
-      row 'Owner', sortable: 'users.avatar_name' do |terminal|
-        if terminal.user
-          link_to terminal.user.avatar_name, admin_user_path(terminal.user)
+      row 'Owner', sortable: 'users.avatar_name' do |server|
+        if server.user
+          link_to server.user.avatar_name, admin_user_path(server.user)
         else
           'Orphan'
         end
       end
       row :location, &:slurl
-      row 'Server' do |terminal|
-        if terminal.server
-          link_to terminal.server.object_name, admin_rezzable_server_path(terminal.server)
-        else
-          ''
-        end
-      end
       row :created_at
       row :updated_at
       row :pinged_at
@@ -77,39 +70,40 @@ ActiveAdmin.register Rezzable::Terminal do
       #   end
       # end
     end
-  end
-
-  # sidebar :splits, only: %i[show edit] do
-  #   dl class: 'row' do
-  #     resource.splits.each do |split|
-  #       dt split.target_name
-  #       dd "#{number_with_precision(split.percent, precision: 2)}%"
-  #     end
-  #   end
-  # end
-
-  permit_params :object_name, :description, :server_id,
-                splits_attributes: %i[id target_name
-                                      target_key percent _destroy]
-
-  form title: proc { "Edit #{resource.object_name}" } do |f|
-    f.inputs do
-      f.input :object_name
-      f.input :description
-      f.input :server_id, as: :select, collection: resource.user.servers.map { |s| [s.object_name, s.actable.id] }
+    
+    panel 'Clients' do 
+      paginated_collection(
+        resource.clients.page(
+          params[:client_page]
+          ).per(20), param_name: 'client_page'
+      ) do 
+        table_for collection.decorate do
+          column 'Object Name' do |client|
+            path = "admin_#{client.model.actable.model_name.route_key.singularize}_path"
+            link_to client.object_name, send(path, client.model.actable.id)
+          end
+          column 'Temp' do |client|
+            client.model.actable.class.name.split('::').last
+          end
+          column :location, &:slurl
+        end
+      end
     end
-    # f.has_many :splits, heading: 'Splits',
-    #                     allow_destroy: true do |s|
-    #   s.input :target_name, label: 'Avatar Name'
-    #   s.input :target_key, label: 'Avatar Key'
-    #   s.input :percent
-    # end
-    f.actions
   end
 
-  # controller do
-  #   # def scoped_collection
-  #   #   super.includes :user
-  #   # end
+  # See permitted parameters documentation:
+  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
+  #
+  # Uncomment all parameters which should be permitted for assignment
+  #
+  # permit_params :object_name, :object_key, :description, :region, :position, :url, :api_key, :user_id, :pinged_at, :major_version, :minor_version, :patch_version, :server_id
+  #
+  # or
+  #
+  # permit_params do
+  #   permitted = [:object_name, :object_key, :description, :region, :position, :url, :api_key, :user_id, :pinged_at, :major_version, :minor_version, :patch_version, :server_id]
+  #   permitted << :other if params[:action] == 'create' && current_user.admin?
+  #   permitted
   # end
+  
 end

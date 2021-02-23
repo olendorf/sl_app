@@ -26,6 +26,17 @@ RSpec.describe User, type: :model do
   }
 
   it { should have_many(:splits).dependent(:destroy) }
+  
+  describe 'servers' do 
+    it 'should return the servers and nothing else' do 
+      user.web_objects << FactoryBot.build(:web_object)
+      user.web_objects << FactoryBot.build(:server)
+      user.web_objects << FactoryBot.build(:server)
+      user.web_objects << FactoryBot.build(:server)
+      
+      expect(user.servers.size).to eq 3
+    end
+  end
 
   describe :email_changed? do
     it 'should be falsey' do

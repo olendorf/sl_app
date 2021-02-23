@@ -35,12 +35,23 @@ class User < ApplicationRecord
   has_many :splits, dependent: :destroy, as: :splittable
   accepts_nested_attributes_for :splits, allow_destroy: true
 
+  # THese two methods need to be overridden to deal with Devise's need for emails.
   def email_required?
     false
   end
 
   def email_changed?
     false
+  end
+  
+  #############
+  
+  def servers
+    Rezzable::Server.where(user_id: id)
+  end
+  
+  def terminals
+    Rezzable::Terminal.where(user_id: id)
   end
 
   def splittable_key

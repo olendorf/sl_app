@@ -16,12 +16,13 @@ module ActiveAdmin
       end
       base.controller do
         def auth_digest(auth_time)
-          if resource.actable_type
-            Digest::SHA1.hexdigest(auth_time.to_s +
-                                                   resource.web_object.api_key)
-          else
-            Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
-          end
+          Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
+          # if resource.actable_type
+          #   Digest::SHA1.hexdigest(auth_time.to_s +
+          #                                         resource.web_object.api_key)
+          # else
+          #   Digest::SHA1.hexdigest(auth_time.to_s + resource.api_key)
+          # end
         end
 
         def derez_web_object(_resource)

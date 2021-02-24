@@ -5,7 +5,8 @@ module Rezzable
   class Server < ApplicationRecord
     acts_as :abstract_web_object
 
-    has_many :clients, class_name: 'AbstractWebObject', inverse_of: :server
+    has_many :clients, class_name: 'AbstractWebObject', dependent: :nullify
+    has_many :inventories, class_name: 'Analyzable::Inventory', dependent: :destroy
 
     # rubocop:disable Style/RedundantSelf
     def response_data

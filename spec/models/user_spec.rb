@@ -24,8 +24,8 @@ RSpec.describe User, type: :model do
       'Analyzable::Transaction'
     ).dependent(:destroy)
   }
-
   it { should have_many(:splits).dependent(:destroy) }
+  it { should have_many(:inventories).class_name('Analyzable::Inventory') }
 
   describe 'servers' do
     it 'should return the servers and nothing else' do

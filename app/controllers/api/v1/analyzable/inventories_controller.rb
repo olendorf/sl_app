@@ -59,7 +59,7 @@ class Api::V1::Analyzable::InventoriesController < Api::V1::AnalyzableController
     }
   end
   
-  def load_inventory
-    @inventory = @requesting_object.inventories.find_by_inventory_name! atts['inventory_name']
-  end
+  # def load_inventory
+  #   @inventory = @requesting_object.inventories.find_by_inventory_name! atts['inventory_name']
+  # end
 end 

@@ -9,19 +9,22 @@ ActiveAdmin.register Rezzable::Server do
 
   index title: 'Servers' do
     selectable_column
-    column 'Object Name', sortable: :object_name do |terminal|
-      link_to terminal.object_name, admin_rezzable_terminal_path(terminal)
+    column 'Object Name', sortable: :object_name do |server|
+      link_to server.object_name, admin_rezzable_server_path(server)
     end
-    column 'Description' do |terminal|
-      truncate(terminal.description, length: 10, separator: ' ')
+    column 'Description' do |server|
+      truncate(server.description, length: 10, separator: ' ')
     end
     column 'Clients' do |server|
       server.clients.count
     end
+    column 'Inventories' do |server|
+      server.inventories.count
+    end
     column 'Location', sortable: :region, &:slurl
-    column 'Owner', sortable: 'users.avatar_name' do |terminal|
-      if terminal.user
-        link_to terminal.user.avatar_name, admin_user_path(terminal.user)
+    column 'Owner', sortable: 'users.avatar_name' do |server|
+      if server.user
+        link_to server.user.avatar_name, admin_user_path(server.user)
       else
         'Orphan'
       end
@@ -87,6 +90,39 @@ ActiveAdmin.register Rezzable::Server do
             client.model.actable.class.name.split('::').last
           end
           column :location, &:slurl
+        end
+      end
+    end
+    
+    panel 'Inventory' do
+      paginated_collection(
+        resource.inventories.page(
+          params[:inventory_page]
+        ).per(20), param_name: 'inventory_page'
+      ) do
+        table_for collection.decorate do
+          column 'Name' do |inventory|
+            link_to inventory.inventory_name, admin_analyzable_inventory_path(inventory)
+          end
+          column 'Type', :inventory_type
+          column 'Owner Perms' do |inventory|
+            inventory.pretty_perms(:owner)
+          end
+          column 'Next Perms' do |inventory|
+            inventory.pretty_perms(:next)
+          end
+          column '' do |inventory|
+            span class: 'table_actions' do
+              "#{link_to('View', admin_analyzable_inventory_path(inventory),
+                         class: 'view_link member_link')}
+              #{link_to('Edit', edit_admin_analyzable_inventory_path(inventory),
+                        class: 'edit_link member_link')}
+              #{link_to('Delete', admin_analyzable_inventory_path(inventory),
+                        class: 'delete_link member_link',
+                        method: :delete,
+                        confirm: 'Are you sure you want to delete this?')}".html_safe
+            end
+          end
         end
       end
     end

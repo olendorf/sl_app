@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Rezzable::Server do
+  include ActiveAdmin::RezzableBehavior
+  
   menu label: 'Servers'
 
   actions :all, except: %i[new create]
@@ -126,5 +128,21 @@ ActiveAdmin.register Rezzable::Server do
         end
       end
     end
+  end
+  
+  permit_params :object_name, :description
+
+  form title: proc { "Edit #{resource.object_name}" } do |f|
+    f.inputs do
+      f.input :object_name, label: 'Server name'
+      f.input :description
+    end
+    # f.has_many :splits, heading: 'Splits',
+    #                     allow_destroy: true do |s|
+    #   s.input :target_name, label: 'Avatar Name'
+    #   s.input :target_key, label: 'Avatar Key'
+    #   s.input :percent
+    # end
+    f.actions
   end
 end

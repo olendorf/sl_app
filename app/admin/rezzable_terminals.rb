@@ -94,7 +94,7 @@ ActiveAdmin.register Rezzable::Terminal do
 
   form title: proc { "Edit #{resource.object_name}" } do |f|
     f.inputs do
-      f.input :object_name
+      f.input :object_name, label: 'Terminal name'
       f.input :description
       f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
                                                      [s.object_name, s.actable.id]

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Analyzable::Inventory do
+ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
   include ActiveAdmin::InventoryBehavior
 
   menu label: 'Inventory'
@@ -11,14 +11,14 @@ ActiveAdmin.register Analyzable::Inventory do
   
   index titles: 'Inventory' do 
     column 'Name' do |inventory|
-      link_to inventory.inventory_name, admin_analyzable_inventory_path(inventory)
+      link_to inventory.inventory_name, admin_inventory_path(inventory)
     end
     column 'Description' do |inventory|
       truncate(inventory.inventory_description, length: 10, separator: ' ')
     end
     column :price
     column 'Server' do |inventory|
-      link_to inventory.server.object_name, admin_rezzable_server_path(inventory.server_id)
+      link_to inventory.server.object_name, admin_server_path(inventory.server_id)
     end
     column 'User' do |inventory|
       link_to inventory.user.avatar_name, admin_user_path(inventory.user_id)
@@ -59,7 +59,7 @@ ActiveAdmin.register Analyzable::Inventory do
         inventory.pretty_perms(:next)
       end
       row 'Server' do |inventory|
-        link_to inventory.server.object_name, admin_rezzable_server_path(inventory.server)
+        link_to inventory.server.object_name, admin_server_path(inventory.server)
       end
       row :created_at
     end

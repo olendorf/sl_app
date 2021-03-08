@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Analyzable::Transaction do
+ActiveAdmin.register Analyzable::Transaction, as: 'Transaction' do
   menu label: 'Transactions'
 
-  actions :all
+  actions :all, except: %i[destroy7]
 
   config.sort_order = 'created_at_desc'
 
@@ -31,6 +31,13 @@ ActiveAdmin.register Analyzable::Transaction do
     column :category
     actions
   end
+  
+  filter :target_name, label: 'Avatar Name'
+  filter :amount
+  filter :created_at
+  filter :user_avatar_name, as: :string, Label: 'User Name'
+  filter :description
+  filter :category, as: :check_boxes, collection: Analyzable::Transaction.categories
 
   show do
     attributes_table do

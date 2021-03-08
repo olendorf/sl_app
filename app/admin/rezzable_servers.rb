@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Rezzable::Server do
+ActiveAdmin.register Rezzable::Server, as: 'Server' do
   include ActiveAdmin::RezzableBehavior
   
   menu label: 'Servers'
@@ -12,7 +12,7 @@ ActiveAdmin.register Rezzable::Server do
   index title: 'Servers' do
     selectable_column
     column 'Object Name', sortable: :object_name do |server|
-      link_to server.object_name, admin_rezzable_server_path(server)
+      link_to server.object_name, admin_server_path(server)
     end
     column 'Description' do |server|
       truncate(server.description, length: 10, separator: ' ')
@@ -51,10 +51,8 @@ ActiveAdmin.register Rezzable::Server do
 
   show title: :object_name do
     attributes_table do
-      row :object_name do |server|
-        link_to server.user.avatar_name, admin_user_path(server.user)
-      end
-      row :object_key
+      row :server_name, &:object_name
+      row :server_key, &:object_key
       row :description
       row 'Owner', sortable: 'users.avatar_name' do |server|
         if server.user
@@ -85,7 +83,7 @@ ActiveAdmin.register Rezzable::Server do
       ) do
         table_for collection.decorate do
           column 'Object Name' do |client|
-            path = "admin_#{client.model.actable.model_name.route_key.singularize}_path"
+            path = "admin_#{client.model.actable.model_name.route_key.split('_').last.singularize}_path"
             link_to client.object_name, send(path, client.model.actable.id)
           end
           column 'Temp' do |client|
@@ -104,7 +102,7 @@ ActiveAdmin.register Rezzable::Server do
       ) do
         table_for collection.decorate do
           column 'Name' do |inventory|
-            link_to inventory.inventory_name, admin_analyzable_inventory_path(inventory)
+            link_to inventory.inventory_name, admin_inventory_path(inventory)
           end
           column 'Type', :inventory_type
           column 'Owner Perms' do |inventory|
@@ -115,11 +113,11 @@ ActiveAdmin.register Rezzable::Server do
           end
           column '' do |inventory|
             span class: 'table_actions' do
-              "#{link_to('View', admin_analyzable_inventory_path(inventory),
+              "#{link_to('View', admin_inventory_path(inventory),
                          class: 'view_link member_link')}
-              #{link_to('Edit', edit_admin_analyzable_inventory_path(inventory),
+              #{link_to('Edit', edit_admin_inventory_path(inventory),
                         class: 'edit_link member_link')}
-              #{link_to('Delete', admin_analyzable_inventory_path(inventory),
+              #{link_to('Delete', admin_inventory_path(inventory),
                         class: 'delete_link member_link',
                         method: :delete,
                         confirm: 'Are you sure you want to delete this?')}".html_safe

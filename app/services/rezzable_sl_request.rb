@@ -20,7 +20,7 @@ class RezzableSlRequest
       RestClient::Request.execute(
         url: resource.url,
         method: :put,
-        payload: params[resource.class.name.underscore.gsub('/', '_')].to_json,
+        payload: params.to_json,
         verify_ssl: false,
         headers: request_headers(resource)
       )

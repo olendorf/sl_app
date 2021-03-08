@@ -10,7 +10,10 @@ module ActiveAdmin
       base.controller do
         
         def update
-          RezzableSlRequest.update_web_object!(resource, params)
+          RezzableSlRequest.update_web_object!(
+            resource, 
+            params[resource.class.name.underscore.gsub('/', '_')]
+          )
           super
         end
         

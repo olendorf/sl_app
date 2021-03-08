@@ -1,9 +1,9 @@
 RSpec.shared_examples 'it has a rezzable SL request behavior' do |model_name|
   let(:owner) { FactoryBot.create :owner }
   let(:web_object) {
-    terminal = FactoryBot.build model_name.to_sym, user_id: owner.id
-    terminal.save
-    terminal
+    web_object = FactoryBot.build model_name.to_sym, user_id: owner.id
+    web_object.save
+    web_object
   }
 
   let(:uri_regex) do
@@ -26,7 +26,7 @@ RSpec.shared_examples 'it has a rezzable SL request behavior' do |model_name|
   end
 
   scenario 'User updates the object' do
-    stub_request(:put, uri_regex)
+    stub = stub_request(:put, uri_regex)
       .with(body: /{\"object_name\":\"foo\",\"description\":\"bar\"(,\"server_id\":\"\")?}/)
       .to_return(status: 200, body: '', headers: {})
 
@@ -36,6 +36,7 @@ RSpec.shared_examples 'it has a rezzable SL request behavior' do |model_name|
     fill_in 'Description', with: 'bar'
     click_on "Update #{model_name.to_s.titleize}"
     expect(page).to have_text("#{model_name.to_s.titleize} was successfully updated.")
+    expect(stub).to have_been_requested
   end
   
 end

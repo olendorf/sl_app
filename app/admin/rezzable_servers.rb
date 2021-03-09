@@ -65,7 +65,7 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
       row :created_at
       row :updated_at
       row :pinged_at
-      # row :version, &:semantic_version
+      row :version, &:semantic_version
       # row :status do |terminal|
       #   if terminal.active?
       #     status_tag 'active', label: 'Active'
@@ -83,7 +83,7 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
       ) do
         table_for collection.decorate do
           column 'Object Name' do |client|
-            path = "admin_#{client.model.actable.model_name.route_key.split('_').last.singularize}_path"
+            path = "admin_#{client.model.actable.model_name.route_key}_path"
             link_to client.object_name, send(path, client.model.actable.id)
           end
           column 'Temp' do |client|

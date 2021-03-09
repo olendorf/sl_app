@@ -17,5 +17,8 @@ FactoryBot.define do
     end
     api_key { SecureRandom.uuid }
     url { "https://sim3015.aditi.lindenlab.com:12043/cap/#{object_key}" }
+    major_version { rand(0..2) }
+    minor_version { rand(0..12) }
+    patch_version { rand(0..100) }
   end
 end

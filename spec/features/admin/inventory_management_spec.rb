@@ -16,6 +16,8 @@ RSpec.feature 'Inventory management', type: :feature do
     server.save
     server.inventories << FactoryBot.build(:inventory)
     server.inventories << FactoryBot.build(:inventory)
+    server.inventories << FactoryBot.build(:inventory)
+    server.inventories << FactoryBot.build(:inventory)
     server
   }
   # let(:uri_regex) do
@@ -44,4 +46,23 @@ RSpec.feature 'Inventory management', type: :feature do
 
     expect(stub).to have_been_requested
   end
+  
+  
+  # scenario 'User deletes batch action inventories' do 
+    
+  #   stub = stub_request(:delete, uri_regex)
+  #   server
+  #   visit(admin_inventories_path)
+    
+  #   check("batch_action_item_#{server.inventories.first.id}")
+  #   check("batch_action_item_#{server.inventories.last.id}")
+  #   click_on("Batch Actions")
+  #   click_on("Delete Selected")
+  #   sleep 5
+  #   puts page.body
+  #   click_on("OK")
+  #   expect(stub).to have_been_requested.times(2)
+  # end
+  
+  
 end

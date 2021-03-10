@@ -92,7 +92,17 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
   # end
   controller do
     def destroy 
+      # puts "deleteing #{resource.inventory_name}"
       InventorySlRequest.delete_inventory(resource)
+      super
+    end
+    
+    def batch_action
+      puts "bactch action called"
+      puts params
+      InventorySlRequest.batch_destroy(
+        params['collection_selection']
+        ) if params['batch_action'] == 'destroy'
       super
     end
   end

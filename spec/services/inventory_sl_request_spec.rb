@@ -25,4 +25,13 @@ RSpec.describe InventorySlRequest do
       end
     end
   end
+  
+  describe '.batch_destroy' do 
+    it 'should make the request for each item' do 
+      stub = stub_request(:delete, uri_regex)
+      ids = server.inventories.sample(3).collect { |inventory| inventory.id }
+      InventorySlRequest.batch_destroy(ids)
+      expect(stub).to have_been_requested.times(3)
+    end
+  end
 end

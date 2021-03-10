@@ -20,6 +20,11 @@ RSpec.feature 'Inventory management', type: :feature do
     server.inventories << FactoryBot.build(:inventory)
     server
   }
+  let(:server_2) {
+    server = FactoryBot.build :server, user_id: owner.id
+    server.save
+    server
+  }
   # let(:uri_regex) do
   #   %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}\?
   #     auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
@@ -27,6 +32,11 @@ RSpec.feature 'Inventory management', type: :feature do
   let(:uri_regex) do 
     %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/
     inventory/[a-zA-Z\s%0-9]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+}x
+  end
+  
+  let(:server_regex) do 
+    %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}\?
+       auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
 
   before(:each) do
@@ -47,22 +57,37 @@ RSpec.feature 'Inventory management', type: :feature do
     expect(stub).to have_been_requested
   end
   
+  scenario 'User moves inventory to a different server' do 
+    server
+    server_2
+    
+    stub = stub_request(:put, uri_regex).with(
+      body: "{\"server_key\":\"#{server_2.object_key}\"}")
+    
+    visit(edit_admin_inventory_path(server.inventories.first))
+    select server_2.object_name, from: 'analyzable_inventory_server_id'
+    click_on('Update Inventory')
+    expect(stub).to have_been_requested
+  end
   
-  # scenario 'User deletes batch action inventories' do 
-    
-  #   stub = stub_request(:delete, uri_regex)
-  #   server
-  #   visit(admin_inventories_path)
-    
-  #   check("batch_action_item_#{server.inventories.first.id}")
-  #   check("batch_action_item_#{server.inventories.last.id}")
-  #   click_on("Batch Actions")
-  #   click_on("Delete Selected")
-  #   sleep 5
-  #   puts page.body
-  #   click_on("OK")
-  #   expect(stub).to have_been_requested.times(2)
-  # end
+  scenario 'User deletes inventory from server show page' do 
+    stub = stub_request(:delete, uri_regex)
+    server
+    visit(admin_server_path(server))
+    first('.delete_link').click
+    expect(stub).to have_been_requested
+  end
+  
+  scenario 'Deletes inventories from server edit page' do 
+    stub = stub_request(:delete, uri_regex)
+    stub_request(:put, server_regex)
+    server
+    visit(edit_admin_server_path(server))
+    check("rezzable_server_inventories_attributes_0__destroy")
+    check("rezzable_server_inventories_attributes_1__destroy")
+    click_on('Update Server')
+    expect(stub).to have_been_requested.times(2)
+  end
   
   
 end

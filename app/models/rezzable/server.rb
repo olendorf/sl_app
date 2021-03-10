@@ -6,8 +6,10 @@ module Rezzable
     acts_as :abstract_web_object
 
     has_many :clients, class_name: 'AbstractWebObject', dependent: :nullify
-    has_many :inventories, class_name: 'Analyzable::Inventory', dependent: :destroy, 
-      before_add: :set_user
+    has_many :inventories, class_name: 'Analyzable::Inventory', 
+                           dependent: :destroy, 
+                           before_add: :set_user
+    accepts_nested_attributes_for :inventories, allow_destroy: true
 
     # rubocop:disable Style/RedundantSelf
     def response_data

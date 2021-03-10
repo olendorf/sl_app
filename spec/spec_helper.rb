@@ -34,6 +34,9 @@ SimpleCov.start do
   add_filter 'app/controllers/concerns/api/exception_handler.rb'
 end
 
+
+WebMock.disable_net_connect!(allow_localhost: true)
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.before(:example) { @uuid_regex = /\A[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f{0-9}]{12}\z/ }

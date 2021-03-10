@@ -32,7 +32,7 @@ class AbstractWebObject < ApplicationRecord
   end
 
   def active?
-    Time.now - pinged_at <= Settings.default.web_object.inactive_limit
+    Time.now - pinged_at <= Settings.default.web_object.inactive_limit.minutes
   end
 
   def splittable_key
@@ -46,7 +46,7 @@ class AbstractWebObject < ApplicationRecord
   private
 
   def set_pinged_at
-    self.pinged_at ||= Time.now
+    self.pinged_at = Time.now
   end
 
   def set_api_key

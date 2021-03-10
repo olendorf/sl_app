@@ -32,6 +32,8 @@ ActiveAdmin.register Rezzable::Terminal, as: 'Terminal' do
         'Orphan'
       end
     end
+    column 'Version', &:semantic_version
+    column :sttus, &:pretty_active
     # column 'Last Ping', sortable: :pinged_at do |terminal|
     #   if terminal.active?
     #     status_tag 'active', label: time_ago_in_words(terminal.pinged_at)
@@ -73,7 +75,8 @@ ActiveAdmin.register Rezzable::Terminal, as: 'Terminal' do
       row :created_at
       row :updated_at
       row :pinged_at
-      # row :version, &:semantic_version
+      row :version, &:semantic_version
+      row :status, &:pretty_active
       # row :status do |terminal|
       #   if terminal.active?
       #     status_tag 'active', label: 'Active'

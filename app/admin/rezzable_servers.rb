@@ -31,13 +31,8 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
         'Orphan'
       end
     end
-    # column 'Last Ping', sortable: :pinged_at do |terminal|
-    #   if terminal.active?
-    #     status_tag 'active', label: time_ago_in_words(terminal.pinged_at)
-    #   else
-    #     status_tag 'inactive', label: time_ago_in_words(terminal.pinged_at)
-    #   end
-    # end
+    column 'Version', &:semantic_version
+    column :status, &:pretty_active
     column :created_at, sortable: :created_at
     actions
   end
@@ -46,7 +41,7 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
   filter :abstract_web_object_description, as: :string, label: 'Description'
   filter :abstract_web_object_user_avatar_name, as: :string, label: 'Owner'
   filter :abstract_web_object_region, as: :string, label: 'Region'
-  # filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
+  filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :abstract_web_object_create_at, as: :date_range
 
   show title: :object_name do
@@ -66,13 +61,7 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
       row :updated_at
       row :pinged_at
       row :version, &:semantic_version
-      # row :status do |terminal|
-      #   if terminal.active?
-      #     status_tag 'active', label: 'Active'
-      #   else
-      #     status_tag 'inactive', label: 'Inactive'
-      #   end
-      # end
+      row :status, &:pretty_active
     end
 
     panel 'Clients' do

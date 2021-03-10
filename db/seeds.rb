@@ -27,27 +27,24 @@ def give_splits(target, avatars)
 end
 
 def give_terminals(user, avatars)
-
   rand(3..10).times do
     terminal = FactoryBot.build(:terminal)
     user.web_objects << terminal
     give_splits(terminal, avatars)
     if rand > 0.1 && user.servers.size > 0
       terminal.server_id = user.servers.sample.id
+      terminal.save
     end
   end
-
 end
 
 def give_servers_to_user(user)
   rand(1..10).times do
-    server = FactoryBot.build(:server)
-    user.web_objects << server
+    server = FactoryBot.create(:server, user_id: user.id)
     rand(1..50).times do 
-      server.inventories << FactoryBot.build(:inventory, user_id: user.id)
+      server.inventories << FactoryBot.build(:inventory)
     end
   end
-  
 end
 
 def give_transactions_to_user(user, avatars)

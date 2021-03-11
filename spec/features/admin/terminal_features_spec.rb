@@ -3,5 +3,5 @@
 require 'rails_helper'
 
 RSpec.feature 'Terminal management', type: :feature do
-  it_behaves_like 'it has a rezzable SL request behavior', :terminal
+  it_behaves_like 'it has an owner rezzable SL request behavior', :terminal
 end

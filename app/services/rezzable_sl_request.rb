@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+# Handles requests to object in SL
 class RezzableSlRequest
   include SlRequestHelper
+
+  # rubocop:disable Style/GuardClause
   def self.derez_web_object!(resource)
     unless Rails.env.development?
       begin
@@ -36,4 +39,6 @@ class RezzableSlRequest
       end
     end
   end
+
+  # rubocop:enable Style/GuardClause
 end

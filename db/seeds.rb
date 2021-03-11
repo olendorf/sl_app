@@ -47,6 +47,7 @@ def give_servers_to_user(user)
   end
 end
 
+# rubocop:disable Metrics/AbcSize
 def give_transactions_to_user(user, avatars)
   num = rand(10..20)
   dates = Array.new(num) { rand(1.year.ago.to_f..Time.now.to_f) }.sort
@@ -70,6 +71,7 @@ def give_transactions_to_user(user, avatars)
     end
   end
 end
+# rubocop:enable Metrics/AbcSize
 
 owner = FactoryBot.create :owner, avatar_name: 'Random Citizen'
 

@@ -61,7 +61,8 @@ ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
       ) do
         table_for collection.decorate do
           column 'Object Name' do |client|
-            path = "my_#{client.model.actable.model_name.route_key.split('_').last.singularize}_path"
+            path = "my_#{
+              client.model.actable.model_name.route_key.split('_').last.singularize}_path"
             link_to client.object_name, send(path, client.model.actable.id)
           end
           column :location, &:slurl

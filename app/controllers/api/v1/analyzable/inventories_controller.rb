@@ -3,12 +3,14 @@
 module Api
   module V1
     module Analyzable
+      # Handles requests to the Inventory API
       class InventoriesController < Api::V1::AnalyzableController
         def create
           authorize @requesting_object
-          
+
           begin
-            @inventory = @requesting_object.actable.inventories.find_by_inventory_name!(atts['inventory_name'])
+            @inventory = @requesting_object.actable.inventories
+                                           .find_by_inventory_name!(atts['inventory_name'])
             update
           rescue ActiveRecord::RecordNotFound
             @requesting_object.inventories << ::Analyzable::Inventory.new(atts)
@@ -62,10 +64,6 @@ module Api
             total_pages: page.total_pages
           }
         end
-
-        # def load_inventory
-        #   @inventory = @requesting_object.inventories.find_by_inventory_name! atts['inventory_name']
-        # end
       end
     end
   end

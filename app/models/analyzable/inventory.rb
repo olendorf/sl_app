@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Analyzable
+  # Model of Inventory in SL
   class Inventory < ApplicationRecord
     validates_presence_of :inventory_name
     validates :inventory_name, uniqueness: { scope: :server_id }

@@ -3,6 +3,7 @@
 module Api
   module V1
     module Analyzable
+      # Authorization for Inventory API requests
       class InventoryPolicy < ApplicationPolicy
         def create?
           @user.active?

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Analyzable
+  # Decorator for the Analyzable::Inventory class
   class InventoryDecorator < Draper::Decorator
     delegate_all
 

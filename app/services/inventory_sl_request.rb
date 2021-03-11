@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
+# Handles requests into SL to manage server inventory.
 class InventorySlRequest
   include SlRequestHelper
 
   def self.delete_inventory(inventory)
     server = inventory.server
+    # rubocop:disable Style/GuardClause
     unless Rails.env.development?
       begin
         RestClient::Request.execute(
-          url: "#{server.url}/inventory/#{URI.encode(inventory.inventory_name)}",
+          url: "#{server.url}/inventory/#{ERB::Util.url_encode(inventory.inventory_name)}",
           method: :delete,
           content_type: :json,
           accept: :json,
@@ -33,7 +35,7 @@ class InventorySlRequest
     unless Rails.env.development?
       begin
         RestClient::Request.execute(
-          url: "#{server.url}/inventory/#{URI.encode(inventory.inventory_name)}",
+          url: "#{server.url}/inventory/#{ERB::Util.url_encode(inventory.inventory_name)}",
           method: :put,
           content_type: :json,
           accept: :json,
@@ -47,4 +49,5 @@ class InventorySlRequest
       end
     end
   end
+  # rubocop:enable Style/GuardClause
 end

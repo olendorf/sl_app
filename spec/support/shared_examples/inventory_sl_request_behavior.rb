@@ -12,7 +12,7 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     server.inventories << FactoryBot.build(:inventory)
     server
   }
-  let(:server_2) {
+  let(:server_two) {
     server = FactoryBot.build :server, user_id: user.id
     server.save
     server
@@ -48,14 +48,14 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
 
   scenario 'User moves inventory to a different server' do
     server
-    server_2
+    server_two
 
     stub = stub_request(:put, uri_regex).with(
-      body: "{\"server_key\":\"#{server_2.object_key}\"}"
+      body: "{\"server_key\":\"#{server_two.object_key}\"}"
     )
 
     visit(send("edit_#{namespace}_inventory_path", server.inventories.first))
-    select server_2.object_name, from: 'analyzable_inventory_server_id'
+    select server_two.object_name, from: 'analyzable_inventory_server_id'
     click_on('Update Inventory')
     expect(stub).to have_been_requested
   end

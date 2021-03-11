@@ -3,10 +3,10 @@
 ActiveAdmin.register Rezzable::Terminal, as: 'Terminal', namespace: :my do
   include ActiveAdmin::RezzableBehavior
 
-  menu false 
+  menu false
 
   actions :all, except: %i[new create index]
-  
+
   scope_to :current_user, association_method: :terminals
 
   decorate_with Rezzable::TerminalDecorator
@@ -106,9 +106,11 @@ ActiveAdmin.register Rezzable::Terminal, as: 'Terminal', namespace: :my do
     f.inputs do
       f.input :object_name, label: 'Terminal name'
       f.input :description
-      f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
-                                                     [s.object_name, s.actable.id]
-                                                   } if resource.user
+      if resource.user
+        f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
+                                                       [s.object_name, s.actable.id]
+                                                     }
+      end
     end
     # f.has_many :splits, heading: 'Splits',
     #                     allow_destroy: true do |s|

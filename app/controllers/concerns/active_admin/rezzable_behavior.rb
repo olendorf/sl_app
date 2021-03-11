@@ -8,15 +8,14 @@ module ActiveAdmin
 
     def self.included(base)
       base.controller do
-        
         def update
           RezzableSlRequest.update_web_object!(
-            resource, 
+            resource,
             params[resource.class.name.underscore.gsub('/', '_')]
           )
           super
         end
-        
+
         def destroy
           RezzableSlRequest.derez_web_object!(resource)
           super

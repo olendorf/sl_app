@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
-  
   include ActiveAdmin::InventoryBehavior
 
   menu label: 'Inventory'
 
   decorate_with Analyzable::InventoryDecorator
 
-  actions :all, except: %i[new create ]
-  
-  index titles: 'Inventory' do 
+  actions :all, except: %i[new create]
+
+  index titles: 'Inventory' do
     selectable_column
     column 'Name' do |inventory|
       link_to inventory.inventory_name, admin_inventory_path(inventory)
@@ -24,7 +23,7 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
     end
     column 'User' do |inventory|
       link_to inventory.user.avatar_name, admin_user_path(inventory.user_id)
-    end 
+    end
     column 'Inventory Type' do |inventory|
       inventory.inventory_type.titlecase
     end
@@ -38,7 +37,7 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
     column :updated_at
     actions
   end
-  
+
   filter :inventory_name
   filter :inventory_description, label: 'Description'
   filter :user_avatar_name, as: :string, label: 'Object Name'
@@ -91,25 +90,27 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
   #   redirect_back notice: "Given!"
   # end
   controller do
-    def destroy 
+    def destroy
       InventorySlRequest.delete_inventory(resource)
       super
     end
-    
+
     def update
-      InventorySlRequest.move_inventory(
-        resource, params['analyzable_inventory']['server_id']
-        ) if params['analyzable_inventory']['server_id']
+      if params['analyzable_inventory']['server_id']
+        InventorySlRequest.move_inventory(
+          resource, params['analyzable_inventory']['server_id']
+        )
+      end
       super
     end
-    
+
     def batch_action
-      InventorySlRequest.batch_destroy(
-        params['collection_selection']
-        ) if params['batch_action'] == 'destroy'
+      if params['batch_action'] == 'destroy'
+        InventorySlRequest.batch_destroy(
+          params['collection_selection']
+        )
+      end
       super
     end
   end
 end
-
-

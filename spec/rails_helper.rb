@@ -33,7 +33,6 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 
-
 # Capybara.default_driver = :selenium
 
 RSpec.configure do |config|

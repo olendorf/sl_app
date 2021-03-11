@@ -19,11 +19,7 @@ ActiveAdmin.register Rezzable::Terminal, as: 'Terminal' do
     end
     column 'Location', sortable: :region, &:slurl
     column 'Server', sortable: 'server.object_name' do |terminal|
-      if terminal.server
-        link_to terminal.server.object_name, admin_server_path(terminal.server)
-      else
-        nil
-      end
+      link_to terminal.server.object_name, admin_server_path(terminal.server) if terminal.server
     end
     column 'Owner', sortable: 'users.avatar_name' do |terminal|
       if terminal.user
@@ -104,9 +100,11 @@ ActiveAdmin.register Rezzable::Terminal, as: 'Terminal' do
     f.inputs do
       f.input :object_name, label: 'Terminal name'
       f.input :description
-      f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
-                                                     [s.object_name, s.actable.id]
-                                                   } if resource.user
+      if resource.user
+        f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
+                                                       [s.object_name, s.actable.id]
+                                                     }
+      end
     end
     # f.has_many :splits, heading: 'Splits',
     #                     allow_destroy: true do |s|

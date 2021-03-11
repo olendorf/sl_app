@@ -31,7 +31,7 @@ ActiveAdmin.register Analyzable::Transaction, as: 'Transaction' do
     column :category
     actions
   end
-  
+
   filter :target_name, label: 'Avatar Name'
   filter :amount
   filter :created_at

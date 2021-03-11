@@ -2,7 +2,7 @@
 
 ActiveAdmin.register Rezzable::Server, as: 'Server' do
   include ActiveAdmin::RezzableBehavior
-  
+
   menu label: 'Servers'
 
   actions :all, except: %i[new create]
@@ -82,7 +82,7 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
         end
       end
     end
-    
+
     panel 'Inventory' do
       paginated_collection(
         resource.inventories.page(
@@ -116,7 +116,7 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
       end
     end
   end
-  
+
   permit_params :object_name, :description,
                 inventories_attributes: %i[id _destroy]
 
@@ -125,9 +125,9 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
       f.input :object_name, label: 'Server name'
       f.input :description
       f.has_many :inventories, heading: 'Inventory',
-                         new_record: false,
-                         allow_destroy: true do |i|
-          i.input :inventory_name, input_html: { disabled: true }
+                               new_record: false,
+                               allow_destroy: true do |i|
+        i.input :inventory_name, input_html: { disabled: true }
       end
     end
     # f.has_many :splits, heading: 'Splits',
@@ -138,22 +138,23 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
     # end
     f.actions
   end
-  
-  controller do 
-    
+
+  controller do
     def update
-      InventorySlRequest.batch_destroy(
-        extract_deleted_inventories(params.to_unsafe_h)
-        ) if params['rezzable_server']['inventories_attributes']
+      if params['rezzable_server']['inventories_attributes']
+        InventorySlRequest.batch_destroy(
+          extract_deleted_inventories(params.to_unsafe_h)
+        )
+      end
       RezzableSlRequest.update_web_object!(
-        resource, 
+        resource,
         params[resource.class.name.underscore.gsub('/', '_')]
       )
       super
     end
-    
+
     def extract_deleted_inventories(params)
-      data = params['rezzable_server']['inventories_attributes'].collect{ |key, value| value}
+      data = params['rezzable_server']['inventories_attributes'].collect { |_key, value| value }
       ids = []
       data.each do |inv|
         ids << inv['id'].to_i if inv['_destroy'] == '1'

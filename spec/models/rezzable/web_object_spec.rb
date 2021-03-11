@@ -11,14 +11,14 @@ RSpec.describe Rezzable::WebObject, type: :model do
     object.save
     object
   }
-  
-  describe :active? do 
-    it 'should return true if the object has been pinged recently' do 
+
+  describe :active? do
+    it 'should return true if the object has been pinged recently' do
       object.pinged_at = Time.now
       expect(object.active?).to be_truthy
     end
-    
-    it 'should return false if the object has not been pinged recently' do 
+
+    it 'should return false if the object has not been pinged recently' do
       object.pinged_at = 2.hours.ago
       expect(object.active?).to be_falsey
     end

@@ -31,7 +31,7 @@ def give_terminals(user, avatars)
     terminal = FactoryBot.build(:terminal)
     user.web_objects << terminal
     give_splits(terminal, avatars)
-    if rand > 0.1 && user.servers.size > 0
+    if rand > 0.1 && user.servers.size.positive?
       terminal.server_id = user.servers.sample.id
       terminal.save
     end
@@ -41,7 +41,7 @@ end
 def give_servers_to_user(user)
   rand(1..10).times do
     server = FactoryBot.create(:server, user_id: user.id)
-    rand(1..50).times do 
+    rand(1..50).times do
       server.inventories << FactoryBot.build(:inventory)
     end
   end
@@ -50,26 +50,25 @@ end
 def give_transactions_to_user(user, avatars)
   num = rand(10..20)
   dates = Array.new(num) { rand(1.year.ago.to_f..Time.now.to_f) }.sort
-  
+
   dates.each do |date|
     target = avatars.sample
     source = rand < 0.25 ? nil : user.web_objects.sample
     if source
       user.transactions << FactoryBot.build(:transaction, source_type: 'SL',
-                                                           source_key: source.object_key,
-                                                           source_name: source.object_name,
-                                                           target_key: target.avatar_key,
-                                                           target_name: target.avatar_name,
-                                                           created_at: Time.at(date))
+                                                          source_key: source.object_key,
+                                                          source_name: source.object_name,
+                                                          target_key: target.avatar_key,
+                                                          target_name: target.avatar_name,
+                                                          created_at: Time.at(date))
     else
       user.transactions << FactoryBot.build(:transaction, source_type: 'Web',
-                                                           source_key: user.avatar_key,
-                                                           source_name: user.avatar_key,
-                                                           target_name: target.avatar_name,
-                                                           created_at: Time.at(date))
+                                                          source_key: user.avatar_key,
+                                                          source_name: user.avatar_key,
+                                                          target_name: target.avatar_name,
+                                                          created_at: Time.at(date))
     end
   end
-  
 end
 
 owner = FactoryBot.create :owner, avatar_name: 'Random Citizen'
@@ -84,19 +83,17 @@ give_terminals(owner, avatars)
 
 give_transactions_to_user(owner, avatars)
 
-
-
 4.times do |i|
   FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident"
 end
 
 100.times do |i|
   user = FactoryBot.create :active_user, avatar_name: "User_#{i} Resident"
-  
+
   give_splits(user, avatars)
 
   give_servers_to_user(user)
-  
+
   give_transactions_to_user(user, avatars)
 end
 

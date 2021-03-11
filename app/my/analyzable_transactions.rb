@@ -6,7 +6,7 @@ ActiveAdmin.register Analyzable::Transaction, as: 'Transaction', namespace: :my 
   actions :all, except: %i[destroy7]
 
   config.sort_order = 'created_at_desc'
-  
+
   scope_to :current_user, association_method: :transactions
 
   index title: 'Transactions' do
@@ -21,20 +21,18 @@ ActiveAdmin.register Analyzable::Transaction, as: 'Transaction', namespace: :my 
     #           end
     #   output
     # end
-    column 'Payer/Paee' do  |transaction|
-      transaction.target_name
-    end
+    column 'Payer/Paee', &:target_name
     column :amount
     column :previous_balance
     column :balance
- 
+
     column 'Description' do |transaction|
       truncate(transaction.description, length: 20, separator: ' ')
     end
     column :category
     actions
   end
-  
+
   filter :target_name, label: 'Avatar Name'
   filter :amount
   filter :created_at

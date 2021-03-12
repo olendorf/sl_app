@@ -37,7 +37,7 @@ RSpec.describe User, type: :model do
       expect(user.servers.size).to eq 3
     end
   end
-  
+
   describe 'terminal' do
     it 'should return the servers and nothing else' do
       owner.web_objects << FactoryBot.build(:web_object)

@@ -1,30 +1,31 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Analyzable::Transaction, as: 'Transaction' do
+ActiveAdmin.register Analyzable::Transaction, as: 'Transaction', namespace: :my do
   menu label: 'Transactions'
 
   actions :all, except: %i[destroy7]
 
   config.sort_order = 'created_at_desc'
 
+  scope_to :current_user, association_method: :transactions
+
   index title: 'Transactions' do
     selectable_column
     column :created_at
-    column 'Payer/Payee' do |transaction|
-      avatar = Avatar.find_by_avatar_key(transaction.target_key)
-      output = if avatar
-                 link_to(transaction.target_name, admin_avatar_path(avatar))
-               else
-                 transaction.target_name
-               end
-      output
-    end
+    # column 'Payer/Payee' do |transaction|
+    #   avatar = Avatar.find_by_avatar_key(transaction.target_key)
+    #   output = if avatar
+    #             link_to(transaction.target_name, my_avatar_path(avatar))
+    #           else
+    #             transaction.target_name
+    #           end
+    #   output
+    # end
+    column 'Payer/Paee', &:target_name
     column :amount
     column :previous_balance
     column :balance
-    column 'User' do |transaction|
-      link_to transaction.user.avatar_name, admin_user_path(transaction.user)
-    end
+
     column 'Description' do |transaction|
       truncate(transaction.description, length: 20, separator: ' ')
     end
@@ -52,7 +53,7 @@ ActiveAdmin.register Analyzable::Transaction, as: 'Transaction' do
       row :source_key
       row :source_name
       row 'User' do |transaction|
-        link_to transaction.user.avatar_name, admin_user_path(transaction.user)
+        link_to transaction.user.avatar_name, my_user_path(transaction.user)
       end
     end
   end
@@ -81,7 +82,7 @@ ActiveAdmin.register Analyzable::Transaction, as: 'Transaction' do
       current_user.transactions << @transaction
       @transaction.save!
       flash.alert = 'A new transaction has been created.'
-      redirect_to admin_analyzable_transaction_path(@transaction.id)
+      redirect_to my_analyzable_transaction_path(@transaction.id)
     end
 
     def handle_avatar; end

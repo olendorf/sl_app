@@ -20,10 +20,8 @@ module Api
           "#{controller_path.classify}Policy".constantize.new(pundit_user, record)
       end
 
-
       private
-      
-            
+
       def api_key
         return Settings.default.web_object.api_key if action_name.downcase == 'create'
 
@@ -48,8 +46,7 @@ module Api
         # puts auth_digest
         # puts create_digest
         # puts api_key
-        
-        
+
         unless (Time.now.to_i - auth_time).abs < 30
           raise(
             ActionController::BadRequest, I18n.t('errors.auth_time')
@@ -64,8 +61,6 @@ module Api
         end
         # rubocop:enable Style/GuardClause
       end
-
-
 
       def auth_digest
         request.headers['HTTP_X_AUTH_DIGEST']

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Rezzable::Terminal do
+ActiveAdmin.register Rezzable::Terminal, as: 'Terminal' do
   include ActiveAdmin::RezzableBehavior
 
   menu label: 'Terminals'
@@ -12,12 +12,15 @@ ActiveAdmin.register Rezzable::Terminal do
   index title: 'Terminals' do
     selectable_column
     column 'Object Name', sortable: :object_name do |terminal|
-      link_to terminal.object_name, admin_rezzable_terminal_path(terminal)
+      link_to terminal.object_name, admin_terminal_path(terminal)
     end
     column 'Description' do |terminal|
       truncate(terminal.description, length: 10, separator: ' ')
     end
     column 'Location', sortable: :region, &:slurl
+    column 'Server', sortable: 'server.object_name' do |terminal|
+      link_to terminal.server.object_name, admin_server_path(terminal.server) if terminal.server
+    end
     column 'Owner', sortable: 'users.avatar_name' do |terminal|
       if terminal.user
         link_to terminal.user.avatar_name, admin_user_path(terminal.user)
@@ -25,6 +28,8 @@ ActiveAdmin.register Rezzable::Terminal do
         'Orphan'
       end
     end
+    column 'Version', &:semantic_version
+    column :sttus, &:pretty_active
     # column 'Last Ping', sortable: :pinged_at do |terminal|
     #   if terminal.active?
     #     status_tag 'active', label: time_ago_in_words(terminal.pinged_at)
@@ -45,10 +50,8 @@ ActiveAdmin.register Rezzable::Terminal do
 
   show title: :object_name do
     attributes_table do
-      row :object_name do |terminal|
-        link_to terminal.user.avatar_name, admin_user_path(terminal.user)
-      end
-      row :object_key
+      row :terminal_name, &:object_name
+      row :terminal_key, &:object_key
       row :description
       row 'Owner', sortable: 'users.avatar_name' do |terminal|
         if terminal.user
@@ -60,7 +63,7 @@ ActiveAdmin.register Rezzable::Terminal do
       row :location, &:slurl
       row 'Server' do |terminal|
         if terminal.server
-          link_to terminal.server.object_name, admin_rezzable_server_path(terminal.server)
+          link_to terminal.server.object_name, admin_server_path(terminal.server)
         else
           ''
         end
@@ -68,7 +71,8 @@ ActiveAdmin.register Rezzable::Terminal do
       row :created_at
       row :updated_at
       row :pinged_at
-      # row :version, &:semantic_version
+      row :version, &:semantic_version
+      row :status, &:pretty_active
       # row :status do |terminal|
       #   if terminal.active?
       #     status_tag 'active', label: 'Active'
@@ -94,11 +98,13 @@ ActiveAdmin.register Rezzable::Terminal do
 
   form title: proc { "Edit #{resource.object_name}" } do |f|
     f.inputs do
-      f.input :object_name
+      f.input :object_name, label: 'Terminal name'
       f.input :description
-      f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
-                                                     [s.object_name, s.actable.id]
-                                                   }
+      if resource.user
+        f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
+                                                       [s.object_name, s.actable.id]
+                                                     }
+      end
     end
     # f.has_many :splits, heading: 'Splits',
     #                     allow_destroy: true do |s|

@@ -20,7 +20,7 @@ Rails.application.routes.draw do
         resources :terminals, except: %i[index new edit]
         resources :servers, except: %i[new edit]
       end
-      namespace :analyzable do 
+      namespace :analyzable do
         resources :inventories, except: %i[new edit]
       end
     end

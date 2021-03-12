@@ -95,4 +95,5 @@ group :test do
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
   gem 'webmock'   # Allows mocking of web apis for instance
+  gem 'chromedriver-helper'
 end

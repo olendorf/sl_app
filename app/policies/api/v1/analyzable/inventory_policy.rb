@@ -1,21 +1,30 @@
-class Api::V1::Analyzable::InventoryPolicy < ApplicationPolicy
-  def create?
-    @user.active?
-  end 
-  
-  def show?
-    create?
-  end 
-  
-  def update? 
-    create?
-  end 
-  
-  def index?
-    create?
-  end 
-  
-  def destroy?
-    create?
+# frozen_string_literal: true
+
+module Api
+  module V1
+    module Analyzable
+      # Authorization for Inventory API requests
+      class InventoryPolicy < ApplicationPolicy
+        def create?
+          @user.active?
+        end
+
+        def show?
+          create?
+        end
+
+        def update?
+          create?
+        end
+
+        def index?
+          create?
+        end
+
+        def destroy?
+          create?
+        end
+      end
+    end
   end
 end

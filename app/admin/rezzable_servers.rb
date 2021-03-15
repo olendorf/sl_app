@@ -43,6 +43,8 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
   filter :abstract_web_object_region, as: :string, label: 'Region'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :abstract_web_object_create_at, as: :date_range
+  
+  
 
   show title: :object_name do
     attributes_table do

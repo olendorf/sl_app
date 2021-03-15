@@ -37,6 +37,11 @@ en:
     auth_digest: Invalid or missing auth_digest.
   
   active_admin:
+    server: 
+      give_money: 
+        success:  '%{amount} lindens given to %{avatar}'
+        failure:  'Unable to send money to %{avatar}: %{message}'
+        
     inventory:
       delete:
         failure: 'There was an error deleting the inventory: %{message}'

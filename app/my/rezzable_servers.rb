@@ -39,6 +39,9 @@ ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
   filter :abstract_web_object_region, as: :string, label: 'Region'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :abstract_web_object_create_at, as: :date_range
+  
+  
+  sidebar :give_money, partial: 'give_money_form', only: %i[show]
 
   show title: :object_name do
     attributes_table do
@@ -124,6 +127,26 @@ ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
     #   s.input :percent
     # end
     f.actions
+  end
+  
+  member_action :give_money, method: :post do
+    begin
+      response = ServerSlRequest.send_money(resource, params['avatar_name'], params['amount'])
+      resource.user.transactions << Analyzable::Transaction.new(
+                                                  description: 'Payment from web interface',
+                                                  amount: params['amount'],
+                                                  target_name: params['avatar_name'],
+                                                  target_key: JSON.parse(response)['avatar_key']
+                                                )
+      flash.notice = t('active_admin.server.give_money.success', 
+                                amount: params['amount'], 
+                                avatar: params['avatar_name'])
+    rescue RestClient::ExceptionWithResponse => e
+      flash[:error] = t('active_admin.server.give_money.failure', 
+                                avatar: params['avatar_name'], 
+                                message: e.response)
+    end
+    redirect_back(fallback_location: my_servers_path)
   end
 
   controller do

@@ -47,7 +47,7 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
   filter :created_at, as: :date_range
   filter :updated_at, as: :date_range
   
-   sidebar :give_inventory, partial: 'give_inventory_form', only: %i[show edit]
+  sidebar :give_inventory, partial: 'give_inventory_form', only: %i[show edit]
 
   show title: :inventory_name do
     attributes_table do

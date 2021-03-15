@@ -30,6 +30,12 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}\?
        auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
+  
+  
+  let(:give_regex) do 
+    %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/
+    inventory/give/[a-zA-Z\s%0-9]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+}x
+  end
 
   before(:each) do
     login_as(owner, scope: :user) if namespace == 'admin'
@@ -102,7 +108,61 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     expect(stub).to have_been_requested.times(2)
   end
   
-  scenario 'User gives inventory to an avatar' do 
+  scenario 'User gives copy inventory to an avatar' do 
+    inventory = server.inventories.sample
+    inventory.owner_perms = Analyzable::Inventory::PERMS[:transfer] + 
+                            Analyzable::Inventory::PERMS[:copy]
+    inventory.save
+    stub = stub_request(:post, give_regex).
+                with(body: '{"avatar_name":"Random Citizen"}')
+    server 
+    
+    visit(send("#{namespace}_inventory_path", inventory))
+    fill_in('give_inventory-avatar_name', with: 'Random Citizen')
+    click_on 'Give Inventory'
+    expect(page).to have_text('Inventory given to Random Citizen')
+    expect(stub).to have_been_requested
+    
+    expect(Analyzable::Inventory.find(inventory.id)).to_not be_nil
+  end
+  
+  scenario "User gives no-copy inventory" do 
+    inventory = server.inventories.sample
+    inventory.owner_perms = Analyzable::Inventory::PERMS[:transfer]
+    inventory.save
+    
+    stub = stub_request(:post, give_regex).
+                with(body: '{"avatar_name":"Random Citizen"}')
+                
+    visit(send("#{namespace}_inventory_path", inventory))
+    fill_in('give_inventory-avatar_name', with: 'Random Citizen')
+    click_on 'Give Inventory'
+    expect(page).to have_text('Inventory given to Random Citizen')
+    expect(stub).to have_been_requested
+    
+    expect(Analyzable::Inventory.where(id: inventory.id)).to_not exist
+    
     
   end
+  
+  scenario 'User gives inventory and gets error' do 
+    inventory = server.inventories.sample
+    inventory.owner_perms = Analyzable::Inventory::PERMS[:transfer]
+    inventory.save
+    
+    stub_request(:post, give_regex).
+                with(body: '{"avatar_name":"Random Citizen"}').
+                to_return(body: "foo", status: 400)
+                
+    visit(send("#{namespace}_inventory_path", inventory))
+    fill_in('give_inventory-avatar_name', with: 'Random Citizen')
+    click_on 'Give Inventory'
+    expect(page).to have_text('Unable to give inventory: foo')
+    
+    expect(Analyzable::Inventory.where(id: inventory.id)).to exist
+  end
+  
+  
+  
+  
 end

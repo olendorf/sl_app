@@ -42,6 +42,8 @@ en:
         failure: 'There was an error deleting the inventory: %{message}'
       move:
         failure: 'There was an error moving the inventory: %{message}'
+      give: 
+        failure: 'Unable to give inventory: %{message}'
   
   api:
     user:

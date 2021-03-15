@@ -6,17 +6,15 @@ class InventorySlRequest
 
   def self.delete_inventory(inventory)
     server = inventory.server
-    # rubocop:disable Style/GuardClause
-    unless Rails.env.development?
-        RestClient::Request.execute(
-          url: "#{server.url}/inventory/#{ERB::Util.url_encode(inventory.inventory_name)}",
-          method: :delete,
-          content_type: :json,
-          accept: :json,
-          verify_ssl: false,
-          headers: request_headers(server)
-        )
-    end
+    
+    RestClient::Request.execute(
+      url: "#{server.url}/inventory/#{ERB::Util.url_encode(inventory.inventory_name)}",
+      method: :delete,
+      content_type: :json,
+      accept: :json,
+      verify_ssl: false,
+      headers: request_headers(server)
+    ) unless Rails.env.development?
   end
 
   def self.batch_destroy(*ids)
@@ -26,18 +24,32 @@ class InventorySlRequest
   end
 
   def self.move_inventory(inventory, server_id)
-    server = Rezzable::Server.find(server_id)
-    unless Rails.env.development?
-      RestClient::Request.execute(
-        url: "#{server.url}/inventory/#{ERB::Util.url_encode(inventory.inventory_name)}",
-        method: :put,
-        content_type: :json,
-        accept: :json,
-        payload: { server_key: server.object_key }.to_json,
-        verify_ssl: false,
-        headers: request_headers(server)
-      )
-    end
+    server = inventory.server
+    target_server = Rezzable::Server.find(server_id)
+    RestClient::Request.execute(
+      url: "#{server.url}/inventory/#{ERB::Util.url_encode(inventory.inventory_name)}",
+      method: :put,
+      content_type: :json,
+      accept: :json,
+      payload: { server_key: target_server.object_key }.to_json,
+      verify_ssl: false,
+      headers: request_headers(server)
+    ) unless Rails.env.development?
   end
-  # rubocop:enable Style/GuardClause
+  
+  def self.give_inventory(inventory, avatar_name)
+    server = inventory.server
+    RestClient::Request.execute(
+      url: "#{server.url}/inventory/give/#{ERB::Util.url_encode(inventory.inventory_name)}",
+      method: :post,
+      content_type: :json,
+      accept: :json,
+      payload: { avatar_name: avatar_name }.to_json,
+      verify_ssl: false,
+      headers: request_headers(server)
+    ) unless Rails.env.development?
+    
+  end
+  
+  
 end

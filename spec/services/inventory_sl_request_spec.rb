@@ -15,6 +15,10 @@ RSpec.describe InventorySlRequest do
     %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/
     inventory/[a-zA-Z\s%0-9]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+}x
   end
+  let(:give_regex) do 
+    %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/
+    inventory/give/[a-zA-Z\s%0-9]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+}x
+  end
 
   describe '.delete_inventory' do
     context 'deleting one inventory' do
@@ -47,7 +51,8 @@ RSpec.describe InventorySlRequest do
   describe '.move_inventory' do 
     let(:server_two) { FactoryBot.create :server }
     it 'should send the request ' do 
-      stub = stub_request(:put, uri_regex)
+      body_regex = /{"server_key":"[-a-f0-9]+"}/
+      stub = stub_request(:put, uri_regex).with(body: body_regex)
       InventorySlRequest.move_inventory(server.inventories.sample, server.id)
       expect(stub).to have_been_requested
     end
@@ -64,7 +69,21 @@ RSpec.describe InventorySlRequest do
   
   describe '.give' do 
     it 'should make the request' do 
-      
+      stub = stub_request(:post, give_regex).
+                with(body: '{"avatar_name":"Random Citizen"}')
+      InventorySlRequest.give_inventory(
+        server.inventories.sample, "Random Citizen")
+      expect(stub).to have_been_requested
+    end
+    
+    context 'error occurs' do 
+      it 'should raise an error' do 
+        stub_request(:post, give_regex).to_return(body: 'abc', status: 400)
+        expect{
+          InventorySlRequest.give_inventory(
+            server.inventories.sample, "Random Citizen")
+        }.to raise_error(RestClient::ExceptionWithResponse)
+      end
     end
   end
 end

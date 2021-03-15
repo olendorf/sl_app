@@ -26,8 +26,8 @@ RSpec.describe InventorySlRequest do
     end
     
     context 'error occurs' do 
-      it 'should render a flash message' do 
-        stub_request(:delete, uri_regex). to_return(body: "abc", status: 400)
+      it 'should raise an error' do 
+        stub_request(:delete, uri_regex).to_return(body: "abc", status: 400)
         expect{
           InventorySlRequest.delete_inventory(server.inventories.sample)
           }.to raise_error(RestClient::ExceptionWithResponse)
@@ -41,6 +41,24 @@ RSpec.describe InventorySlRequest do
       ids = server.inventories.sample(3).collect(&:id)
       InventorySlRequest.batch_destroy(ids)
       expect(stub).to have_been_requested.times(3)
+    end
+  end
+  
+  describe '.move_inventory' do 
+    let(:server_two) { FactoryBot.create :server }
+    it 'should send the request ' do 
+      stub = stub_request(:put, uri_regex)
+      InventorySlRequest.move_inventory(server.inventories.sample, server.id)
+      expect(stub).to have_been_requested
+    end
+    
+    context 'error occurs' do 
+      it 'should raise an error' do 
+        stub_request(:put, uri_regex).to_return(body: "abc", status: 400)
+        expect{
+          InventorySlRequest.move_inventory(server.inventories.sample, server_two.id)
+          }.to raise_error(RestClient::ExceptionWithResponse)
+      end
     end
   end
   

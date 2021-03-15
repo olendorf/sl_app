@@ -98,9 +98,14 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
 
     def update
       if params['analyzable_inventory']['server_id']
-        InventorySlRequest.move_inventory(
-          resource, params['analyzable_inventory']['server_id']
-        )
+        begin
+          InventorySlRequest.move_inventory(
+            resource, params['analyzable_inventory']['server_id']
+          )
+        rescue RestClient::ExceptionWithResponse => e
+          flash[:error] = t('active_admin.inventory.move.failure',
+                            message: e.response)
+        end
       end
       super
     end

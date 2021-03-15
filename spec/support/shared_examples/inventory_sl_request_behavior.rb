@@ -57,7 +57,6 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
 
   scenario 'User moves inventory to a different server' do
     server
-    server_two
 
     stub = stub_request(:put, uri_regex).with(
       body: "{\"server_key\":\"#{server_two.object_key}\"}"
@@ -68,6 +67,21 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     click_on('Update Inventory')
     expect(stub).to have_been_requested
   end
+  
+  scenario 'User moves inventory but there is an error' do 
+    server
+
+    stub_request(:put, uri_regex).with(
+      body: "{\"server_key\":\"#{server_two.object_key}\"}"
+    ).to_return(body: 'foo', status: 400)
+
+    visit(send("edit_#{namespace}_inventory_path", server.inventories.first))
+    select server_two.object_name, from: 'analyzable_inventory_server_id'
+    click_on('Update Inventory')
+    expect(page).to have_text('There was an error moving the inventory: foo')
+    
+  end
+  
 
   scenario 'User deletes inventory from server show page' do
     stub = stub_request(:delete, uri_regex)

@@ -45,6 +45,15 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
 
     expect(stub).to have_been_requested
   end
+  
+  scenario 'There is an error when the user tries do delete the inventory' do
+    stub_request(:delete, uri_regex).to_return(body: "foo", status: 400)
+    server
+    visit(send("#{namespace}_inventory_path", server.inventories.first))
+
+    click_on('Delete Inventory')
+    expect(page).to have_text('There was an error deleting the inventory: foo')
+  end
 
   scenario 'User moves inventory to a different server' do
     server
@@ -77,5 +86,9 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     check('rezzable_server_inventories_attributes_1__destroy')
     click_on('Update Server')
     expect(stub).to have_been_requested.times(2)
+  end
+  
+  scenario 'User gives inventory to an avatar' do 
+    
   end
 end

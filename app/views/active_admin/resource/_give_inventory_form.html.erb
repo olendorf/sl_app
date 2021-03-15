@@ -1,0 +1,10 @@
+<%= form_tag("/#{params['controller'].split('/').first}/analyzable_inventories/#{resource.id}/give", html: {class: 'give_inventory'}) do %>
+  <%= content_tag :ol do %>
+    <%= content_tag :li, class: 'string input required stringish', id: 'avatar_name_input' do %>
+      <%= label_tag(:avatar_name, "Avatar Name:", class: 'label') %>
+      <%= text_field_tag(:avatar_name, nil, placeholder: 'Random Resident', class: 'string input required stringish', id: 'give_inventory-avatar_name') %>
+    <% end %>
+    <%= content_tag :br %>
+    <%= submit_tag("Give Inventory") %>
+  <% end %>
+<% end %>

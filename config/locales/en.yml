@@ -36,6 +36,11 @@ en:
     auth_time: Invalid or missing auth_time.
     auth_digest: Invalid or missing auth_digest.
   
+  active_admin:
+    inventory:
+      delete:
+        failure: 'There was an error deleting the inventory: %{message}'
+  
   api:
     user:
       create:

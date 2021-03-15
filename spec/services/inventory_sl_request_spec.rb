@@ -24,6 +24,15 @@ RSpec.describe InventorySlRequest do
         expect(stub).to have_been_requested
       end
     end
+    
+    context 'error occurs' do 
+      it 'should render a flash message' do 
+        stub_request(:delete, uri_regex). to_return(body: "abc", status: 400)
+        expect{
+          InventorySlRequest.delete_inventory(server.inventories.sample)
+          }.to raise_error(RestClient::ExceptionWithResponse)
+      end
+    end
   end
 
   describe '.batch_destroy' do
@@ -32,6 +41,12 @@ RSpec.describe InventorySlRequest do
       ids = server.inventories.sample(3).collect(&:id)
       InventorySlRequest.batch_destroy(ids)
       expect(stub).to have_been_requested.times(3)
+    end
+  end
+  
+  describe '.give' do 
+    it 'should make the request' do 
+      
     end
   end
 end

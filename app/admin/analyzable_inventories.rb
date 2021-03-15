@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
+  
   include ActiveAdmin::InventoryBehavior
 
   menu label: 'Inventory'
@@ -45,6 +46,8 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
   filter :inventory_type, as: :select, collection: Analyzable::Inventory.inventory_types
   filter :created_at, as: :date_range
   filter :updated_at, as: :date_range
+  
+   sidebar :give_inventory, partial: 'give_inventory_form', only: %i[show edit]
 
   show title: :inventory_name do
     attributes_table do
@@ -91,7 +94,12 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
   # end
   controller do
     def destroy
-      InventorySlRequest.delete_inventory(resource)
+      begin 
+        InventorySlRequest.delete_inventory(resource)
+      rescue RestClient::ExceptionWithResponse => e
+        flash[:error] = t('active_admin.inventory.delete.failure',
+                          message: e.response)
+      end
       super
     end
 

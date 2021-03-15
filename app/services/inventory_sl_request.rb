@@ -8,7 +8,6 @@ class InventorySlRequest
     server = inventory.server
     # rubocop:disable Style/GuardClause
     unless Rails.env.development?
-      begin
         RestClient::Request.execute(
           url: "#{server.url}/inventory/#{ERB::Util.url_encode(inventory.inventory_name)}",
           method: :delete,
@@ -17,10 +16,6 @@ class InventorySlRequest
           verify_ssl: false,
           headers: request_headers(server)
         )
-      rescue RestClient::ExceptionWithResponse => e
-        flash[:error] = t('active_admin.inventory.delete.failure',
-                          message: e.response)
-      end
     end
   end
 

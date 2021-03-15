@@ -87,7 +87,12 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
   # end
   controller do
     def destroy
-      InventorySlRequest.delete_inventory(resource)
+      begin 
+        InventorySlRequest.delete_inventory(resource)
+      rescue RestClient::ExceptionWithResponse => e
+        flash[:error] = t('active_admin.inventory.delete.failure',
+                          message: e.response)
+      end
       super
     end
 

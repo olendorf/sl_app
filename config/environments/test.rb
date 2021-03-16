@@ -10,14 +10,14 @@ Rails.application.configure do
     Bullet.enable        = true
     Bullet.bullet_logger = true
     Bullet.raise         = true # raise an error if n+1 query occurs
-    Bullet.add_whitelist type: :unused_eager_loading, 
-                         class_name: 'Rezzable::Terminal', 
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Rezzable::Terminal',
                          association: :abstract_web_object
-    Bullet.add_whitelist type: :unused_eager_loading, 
-                         class_name: 'Rezzable::Server', 
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Rezzable::Server',
                          association: :abstract_web_object
-    Bullet.add_whitelist type: :unused_eager_loading, 
-                         class_name: 'Analyzable::Inventory', 
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Analyzable::Inventory',
                          association: :user
   end
 

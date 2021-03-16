@@ -46,6 +46,8 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
   filter :created_at, as: :date_range
   filter :updated_at, as: :date_range
 
+  sidebar :give_inventory, partial: 'give_inventory_form', only: %i[show edit]
+
   show title: :inventory_name do
     attributes_table do
       row 'Name', &:inventory_name
@@ -91,15 +93,25 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
   # end
   controller do
     def destroy
-      InventorySlRequest.delete_inventory(resource)
+      begin
+        InventorySlRequest.delete_inventory(resource)
+      rescue RestClient::ExceptionWithResponse => e
+        flash[:error] = t('active_admin.inventory.delete.failure',
+                          message: e.response)
+      end
       super
     end
 
     def update
       if params['analyzable_inventory']['server_id']
-        InventorySlRequest.move_inventory(
-          resource, params['analyzable_inventory']['server_id']
-        )
+        begin
+          InventorySlRequest.move_inventory(
+            resource, params['analyzable_inventory']['server_id']
+          )
+        rescue RestClient::ExceptionWithResponse => e
+          flash[:error] = t('active_admin.inventory.move.failure',
+                            message: e.response)
+        end
       end
       super
     end

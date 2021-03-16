@@ -6,6 +6,21 @@
 # and recreated between test runs. Don't rely on the data there!
 
 Rails.application.configure do
+  config.after_initialize do
+    Bullet.enable        = true
+    Bullet.bullet_logger = true
+    Bullet.raise         = true # raise an error if n+1 query occurs
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Rezzable::Terminal',
+                         association: :abstract_web_object
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Rezzable::Server',
+                         association: :abstract_web_object
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Analyzable::Inventory',
+                         association: :user
+  end
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   config.cache_classes = false

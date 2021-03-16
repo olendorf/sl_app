@@ -8,7 +8,7 @@ RSpec.describe Analyzable::Transaction, type: :model do
   it { should belong_to :user }
 
   it {
-    should define_enum_for(:category).with_values(%i[other account tip sale tier share])
+    should define_enum_for(:category).with_values(%i[other account donation tip sale tier share])
   }
 
   describe 'balance' do

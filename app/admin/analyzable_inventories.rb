@@ -92,6 +92,10 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
   #   redirect_back notice: "Given!"
   # end
   controller do
+    def scoped_collection
+      super.includes(%i[server user])
+    end
+
     def destroy
       begin
         InventorySlRequest.delete_inventory(resource)

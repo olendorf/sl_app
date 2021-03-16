@@ -96,4 +96,5 @@ group :test do
   gem 'webdrivers'
   gem 'webmock'   # Allows mocking of web apis for instance
   gem 'chromedriver-helper'
+  gem 'bullet'
 end

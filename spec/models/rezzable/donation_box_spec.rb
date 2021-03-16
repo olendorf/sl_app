@@ -33,7 +33,7 @@ RSpec.describe Rezzable::DonationBox, type: :model do
 
   describe '#largest_donation' do
     it 'should return the largest donation' do
-      target = FactoryBot.build(:avatar)
+      target = FactoryBot.create(:avatar)
       donation_box.transactions << FactoryBot.build(:transaction,
                                                     target_name: target.avatar_name,
                                                     target_key: target.avatar_key,
@@ -47,15 +47,43 @@ RSpec.describe Rezzable::DonationBox, type: :model do
                                                     amount: 100,
                                                     created_at: 1.months.ago)
       donation_box.transactions << FactoryBot.build(:transaction, amount: 200,
-                                                                  created_at: 1.months.ago)
+                                                                  created_at: 3.months.ago)
       donation_box.transactions << FactoryBot.build(:transaction,
                                                     target_name: target.avatar_name,
                                                     target_key: target.avatar_key,
-                                                    amount: 200,
+                                                    amount: 300,
                                                     created_at: 1.months.ago)
 
-      expect(donation_box.largest_donation.amount).to eq 200
+      expect(donation_box.largest_donation.amount).to eq 300
       expect(donation_box.largest_donation.target_name).to eq target.avatar_name
+    end
+    
+    context 'equal sized donations' do 
+      it 'should return the most recent' do 
+        target = FactoryBot.create(:avatar)
+        donation_box.transactions << FactoryBot.build(:transaction,
+                                                      target_name: target.avatar_name,
+                                                      target_key: target.avatar_key,
+                                                      amount: 50,
+                                                      created_at: 3.months.ago)
+        donation_box.transactions << FactoryBot.build(:transaction, amount: 100,
+                                                                    created_at: 2.month.ago)
+        donation_box.transactions << FactoryBot.build(:transaction,
+                                                      target_name: target.avatar_name,
+                                                      target_key: target.avatar_key,
+                                                      amount: 100,
+                                                      created_at: 1.months.ago)
+        donation_box.transactions << FactoryBot.build(:transaction, amount: 300,
+                                                                    created_at: 3.months.ago)
+        donation_box.transactions << FactoryBot.build(:transaction,
+                                                      target_name: target.avatar_name,
+                                                      target_key: target.avatar_key,
+                                                      amount: 300,
+                                                      created_at: 1.months.ago)
+  
+        expect(donation_box.largest_donation.amount).to eq 300
+        expect(donation_box.largest_donation.target_name).to eq target.avatar_name
+      end
     end
   end
 

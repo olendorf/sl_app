@@ -15,7 +15,7 @@ module Rezzable
     end
 
     def largest_donation
-      transactions.to_ary.max_by(&:amount)
+      transactions.to_ary.sort_by(&:created_at).reverse.max_by(&:amount)
     end
 
     def biggest_donor

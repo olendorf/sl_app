@@ -36,6 +36,25 @@ en:
     auth_time: Invalid or missing auth_time.
     auth_digest: Invalid or missing auth_digest.
   
+  active_admin:
+    web_object:
+      update:
+        failure: 'There was an error updating the inworld object: %{message}'
+      destroy:
+        failure: 'There was an error deleting the inworld object: %{message}'
+    server: 
+      give_money: 
+        success:  '%{amount} lindens given to %{avatar}'
+        failure:  'Unable to send money to %{avatar}: %{message}'
+        
+    inventory:
+      delete:
+        failure: 'There was an error deleting the inventory: %{message}'
+      move:
+        failure: 'There was an error moving the inventory: %{message}'
+      give: 
+        failure: 'Unable to give inventory: %{message}'
+  
   api:
     user:
       create:

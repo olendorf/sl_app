@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
-  include ActiveAdmin::RezzableBehavior
+  include ActiveAdmin::ServerBehavior
 
   menu label: 'Servers'
 
@@ -39,6 +39,8 @@ ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
   filter :abstract_web_object_region, as: :string, label: 'Region'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :abstract_web_object_create_at, as: :date_range
+
+  sidebar :give_money, partial: 'give_money_form', only: %i[show]
 
   show title: :object_name do
     attributes_table do
@@ -126,27 +128,23 @@ ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
     f.actions
   end
 
-  controller do
-    def update
-      if params['rezzable_server']['inventories_attributes']
-        InventorySlRequest.batch_destroy(
-          extract_deleted_inventories(params.to_unsafe_h)
-        )
-      end
-      RezzableSlRequest.update_web_object!(
-        resource,
-        params[resource.class.name.underscore.gsub('/', '_')]
+  member_action :give_money, method: :post do
+    begin
+      response = ServerSlRequest.send_money(resource, params['avatar_name'], params['amount'])
+      resource.user.transactions << Analyzable::Transaction.new(
+        description: 'Payment from web interface',
+        amount: params['amount'],
+        target_name: params['avatar_name'],
+        target_key: JSON.parse(response)['avatar_key']
       )
-      super
+      flash.notice = t('active_admin.server.give_money.success',
+                       amount: params['amount'],
+                       avatar: params['avatar_name'])
+    rescue RestClient::ExceptionWithResponse => e
+      flash[:error] = t('active_admin.server.give_money.failure',
+                        avatar: params['avatar_name'],
+                        message: e.response)
     end
-
-    def extract_deleted_inventories(params)
-      data = params['rezzable_server']['inventories_attributes'].collect { |_key, value| value }
-      ids = []
-      data.each do |inv|
-        ids << inv['id'].to_i if inv['_destroy'] == '1'
-      end
-      ids
-    end
+    redirect_back(fallback_location: my_servers_path)
   end
 end

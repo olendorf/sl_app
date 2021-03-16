@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Rezzable::Server, as: 'Server' do
-  include ActiveAdmin::RezzableBehavior
+  include ActiveAdmin::ServerBehavior
 
   menu label: 'Servers'
 
@@ -43,8 +43,6 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
   filter :abstract_web_object_region, as: :string, label: 'Region'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :abstract_web_object_create_at, as: :date_range
-  
-  
 
   show title: :object_name do
     attributes_table do
@@ -139,29 +137,5 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
     #   s.input :percent
     # end
     f.actions
-  end
-
-  controller do
-    def update
-      if params['rezzable_server']['inventories_attributes']
-        InventorySlRequest.batch_destroy(
-          extract_deleted_inventories(params.to_unsafe_h)
-        )
-      end
-      RezzableSlRequest.update_web_object!(
-        resource,
-        params[resource.class.name.underscore.gsub('/', '_')]
-      )
-      super
-    end
-
-    def extract_deleted_inventories(params)
-      data = params['rezzable_server']['inventories_attributes'].collect { |_key, value| value }
-      ids = []
-      data.each do |inv|
-        ids << inv['id'].to_i if inv['_destroy'] == '1'
-      end
-      ids
-    end
   end
 end

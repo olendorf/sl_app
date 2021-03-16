@@ -6,7 +6,7 @@ class InventorySlRequest
 
   def self.delete_inventory(inventory)
     server = inventory.server
-    
+
     RestClient::Request.execute(
       url: "#{server.url}/inventory/#{ERB::Util.url_encode(inventory.inventory_name)}",
       method: :delete,
@@ -26,6 +26,7 @@ class InventorySlRequest
   def self.move_inventory(inventory, server_id)
     server = inventory.server
     target_server = Rezzable::Server.find(server_id)
+
     RestClient::Request.execute(
       url: "#{server.url}/inventory/#{ERB::Util.url_encode(inventory.inventory_name)}",
       method: :put,
@@ -36,9 +37,10 @@ class InventorySlRequest
       headers: request_headers(server)
     ) unless Rails.env.development?
   end
-  
+
   def self.give_inventory(inventory, avatar_name)
     server = inventory.server
+
     RestClient::Request.execute(
       url: "#{server.url}/inventory/give/#{ERB::Util.url_encode(inventory.inventory_name)}",
       method: :post,
@@ -48,8 +50,5 @@ class InventorySlRequest
       verify_ssl: false,
       headers: request_headers(server)
     ) unless Rails.env.development?
-    
   end
-  
-  
 end

@@ -29,6 +29,14 @@ RSpec.shared_examples 'it has a rezzable SL request behavior' do |model_name, na
     expect(stub).to have_been_requested
   end
 
+  scenario 'User deletes a the object but there is an error' do
+    stub_request(:delete, uri_regex).to_return(body: 'foo', status: 400)
+
+    visit send("#{namespace}_#{model_name}_path", web_object)
+    click_on "Delete #{model_name.to_s.titleize}"
+    expect(page).to have_text('There was an error deleting the inworld object: foo')
+  end
+
   scenario 'User updates the object' do
     stub = stub_request(:put, uri_regex)
            .with(body: /{"object_name":"foo","description":"bar"(,"server_id":"")?}/)
@@ -40,5 +48,17 @@ RSpec.shared_examples 'it has a rezzable SL request behavior' do |model_name, na
     click_on "Update #{model_name.to_s.titleize}"
     expect(page).to have_text("#{model_name.to_s.titleize} was successfully updated.")
     expect(stub).to have_been_requested
+  end
+
+  scenario 'User updates the object and there is an error' do
+    stub_request(:put, uri_regex)
+      .with(body: /{"object_name":"foo","description":"bar"(,"server_id":"")?}/)
+      .to_return(body: 'foo', status: 400)
+
+    visit send("edit_#{namespace}_#{model_name}_path", web_object)
+    fill_in "#{model_name.to_s.titleize} name", with: 'foo'
+    fill_in 'Description', with: 'bar'
+    click_on "Update #{model_name.to_s.titleize}"
+    expect(page).to have_text('There was an error updating the inworld object: foo')
   end
 end

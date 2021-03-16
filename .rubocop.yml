@@ -1,12 +1,34 @@
-Style/Encoding:
-  Enabled: false
 
+
+AllCops:
+  SuggestExtensions: false
+  NewCops: enable
+  Exclude:
+    - 'bin/{rails,rake,bundle}'
+    - node_modules/**/*
+    - Gemfile
+    - Gemfile.lock
+    - db/schema.rb
+    - db/migrate/**/*
+    
 Layout/LineLength:
   Max: 99
   Exclude: 
     - spec/support/database_cleaner.rb
     - db/**/*
     - config/**/*
+        
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - spec/**/*
+    
+Lint/EmptyBlock:
+  Exclude:
+    - app/decorators/**/*
+    
+Lint/NestedMethodDefinition:
+  Exclude:
+    - app/controllers/concerns/**/*
     
 Metrics/BlockLength:
   Exclude:
@@ -16,10 +38,6 @@ Metrics/BlockLength:
     - app/admin/**/*
     - app/my/**/*
     - app/controllers/concerns/**/*
-    
-Style/Documentation:
-  Exclude:
-    - db/**/*
     
 Metrics/AbcSize:
   Max: 25
@@ -42,28 +60,16 @@ Style/BlockDelimiters:
   Exclude:
     - spec/**/*
     
+Style/Documentation:
+  Exclude:
+    - db/**/*
+    
+Style/Encoding:
+  Enabled: false
+
 Style/LineEndConcatenation:
   Enabled: false
-    
-Lint/AmbiguousBlockAssociation:
-  Exclude:
-    - spec/**/*
-    
-Lint/EmptyBlock:
-  Exclude:
-    - app/decorators/**/*
-    
-Lint/NestedMethodDefinition:
-  Exclude:
-    - app/controllers/concerns/**/*
   
-AllCops:
-  SuggestExtensions: false
-  NewCops: enable
-  Exclude:
-    - 'bin/{rails,rake,bundle}'
-    - node_modules/**/*
-    - Gemfile
-    - Gemfile.lock
-    - db/schema.rb
-    - db/migrate/**/*
+Style/MultilineIfModifier:
+  Enabled: false
+

@@ -9,6 +9,6 @@ module Analyzable
 
     belongs_to :web_object, optional: true
 
-    enum category: %i[other account tip sale tier share]
+    enum category: %i[other account donation tip sale tier share]
   end
 end

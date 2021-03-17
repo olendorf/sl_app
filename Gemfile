@@ -77,6 +77,7 @@ group :development, :test do
   gem 'rspec-rails'                       # Rspec
   gem 'shoulda-matchers'                  # Really handy RSpec matchers not included with RSpec
   gem 'spring-commands-rspec', group: :development
+  gem 'bullet'
 end
 
 group :development do
@@ -96,5 +97,4 @@ group :test do
   gem 'webdrivers'
   gem 'webmock'   # Allows mocking of web apis for instance
   gem 'chromedriver-helper'
-  gem 'bullet'
 end

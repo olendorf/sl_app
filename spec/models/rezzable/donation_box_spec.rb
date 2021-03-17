@@ -57,9 +57,9 @@ RSpec.describe Rezzable::DonationBox, type: :model do
       expect(donation_box.largest_donation.amount).to eq 300
       expect(donation_box.largest_donation.target_name).to eq target.avatar_name
     end
-    
-    context 'equal sized donations' do 
-      it 'should return the most recent' do 
+
+    context 'equal sized donations' do
+      it 'should return the most recent' do
         target = FactoryBot.create(:avatar)
         donation_box.transactions << FactoryBot.build(:transaction,
                                                       target_name: target.avatar_name,
@@ -80,7 +80,7 @@ RSpec.describe Rezzable::DonationBox, type: :model do
                                                       target_key: target.avatar_key,
                                                       amount: 300,
                                                       created_at: 1.months.ago)
-  
+
         expect(donation_box.largest_donation.amount).to eq 300
         expect(donation_box.largest_donation.target_name).to eq target.avatar_name
       end

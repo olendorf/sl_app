@@ -3,6 +3,7 @@
 module Api
   module V1
     module Rezzable
+      # Controller for servers
       class ServersController < Api::V1::AbstractWebObjectsController
       end
     end

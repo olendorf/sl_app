@@ -37,6 +37,7 @@ module Rezzable
           show_last_donor: show_last_donor,
           show_total: show_total,
           show_largest_donation: show_largest_donation,
+          show_biggest_donor: show_biggest_donor,
           goal: goal,
           dead_line: dead_line
         },
@@ -44,7 +45,7 @@ module Rezzable
           last_donation: last_donation,
           total_donations: total_donations,
           largest_donation: largest_donation,
-          # biggest_donor: biggest_donor
+          biggest_donor: biggest_donor
         }
       }
     end

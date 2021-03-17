@@ -5,6 +5,7 @@ class CreateRezzableDonationBoxes < ActiveRecord::Migration[6.0]
       t.boolean           :show_last_donor,       default: false
       t.boolean           :show_total ,           default: true    
       t.boolean           :show_largest_donation, default: false
+      t.boolean           :show_biggest_donor,     default: false
       t.integer           :total,                 default: 0
       t.integer           :goal
       t.datetime          :dead_line

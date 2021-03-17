@@ -1,3 +1,10 @@
-class Api::V1::Rezzable::DonationBoxPolicy< Api::V1::RezzablePolicy
+# frozen_string_literal: true
 
+module Api
+  module V1
+    module Rezzable
+      class DonationBoxPolicy < Api::V1::RezzablePolicy
+      end
+    end
+  end
 end

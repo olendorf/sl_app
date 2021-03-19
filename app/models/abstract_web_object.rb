@@ -17,7 +17,8 @@ class AbstractWebObject < ApplicationRecord
   has_many :transactions, class_name: 'Analyzable::Transaction',
                           dependent: :nullify,
                           foreign_key: :web_object_id,
-                          before_add: :assign_user_to_transaction
+                          before_add: :assign_user_to_transaction,
+                          after_add: :handle_splits
   accepts_nested_attributes_for :transactions
 
   has_many :splits, dependent: :destroy, as: :splittable
@@ -55,6 +56,9 @@ class AbstractWebObject < ApplicationRecord
   def assign_user_to_transaction(transaction)
     user.transactions << transaction
   end
+  
+  def handle_splits(transaction)
+  end 
 
   def set_pinged_at
     self.pinged_at = Time.now

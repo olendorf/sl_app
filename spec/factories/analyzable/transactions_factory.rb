@@ -6,6 +6,8 @@ FactoryBot.define do
       first_name { Faker::Name.first_name }
       last_name { rand < 0.5 ? 'Resident' : Faker::Name.last_name }
     end
+    target_name { "#{first_name} #{last_name}" }
+    target_key { SecureRandom.uuid }
     description { Faker::Restaurant.description }
     amount { rand(-1000..1000) }
     transaction_key { rand < 0.25 ? SecureRandom.uuid : nil }

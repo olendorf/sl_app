@@ -190,4 +190,52 @@ RSpec.describe User, type: :model do
       expect(user.active?).to be_falsey
     end
   end
+  
+  describe 'adding transactions with splits' do
+    let(:target_one) { FactoryBot.create :user }
+    let(:target_two) { FactoryBot.create :avatar }
+    let(:uri_regex) do
+        %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/give_money\?
+           auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
+    end
+    it 'should split the transaction from the user' do 
+      stub_request(:post, uri_regex)
+      user.web_objects << FactoryBot.build(:server)
+      user.splits << FactoryBot.build(:split, percent: 5, 
+                                              target_name: target_one.avatar_name, 
+                                              target_key: target_one.avatar_key)
+      user.splits << FactoryBot.build(:split, percent: 10, 
+                                              target_name: target_two.avatar_name, 
+                                              target_key: target_two.avatar_key)
+      user.transactions << FactoryBot.build(:transaction, amount: 100)
+      expect(user.transactions.size).to eq 3
+    end
+    
+    it 'should send the requests to send money' do 
+      stub = stub_request(:post, uri_regex)
+      user.web_objects << FactoryBot.build(:server)
+      user.splits << FactoryBot.build(:split, percent: 5, 
+                                              target_name: target_one.avatar_name, 
+                                              target_key: target_one.avatar_key)
+      user.splits << FactoryBot.build(:split, percent: 10, 
+                                              target_name: target_two.avatar_name, 
+                                              target_key: target_two.avatar_key)
+      user.transactions << FactoryBot.build(:transaction, amount: 100)
+      expect(stub).to have_been_requested.times(2)
+    end
+    
+    it 'should add the transction to the user if it exists' do 
+      
+      stub_request(:post, uri_regex)
+      user.web_objects << FactoryBot.build(:server)
+      user.splits << FactoryBot.build(:split, percent: 5, 
+                                              target_name: target_one.avatar_name, 
+                                              target_key: target_one.avatar_key)
+      user.splits << FactoryBot.build(:split, percent: 10, 
+                                              target_name: target_two.avatar_name, 
+                                              target_key: target_two.avatar_key)
+      user.transactions << FactoryBot.build(:transaction, amount: 100)
+      expect(target_one.transactions.size).to eq 1
+    end
+  end
 end

@@ -12,36 +12,33 @@ RSpec.describe Rezzable::DonationBox, type: :model do
   describe '#last_donation' do
     before(:each) do
       donation_box.transactions << FactoryBot.build(:transaction, created_at: 3.months.ago)
-      donation_box.transactions << FactoryBot.build(:transaction, 
-                                                        created_at: 1.month.ago,
-                                                        target_key: target.avatar_key,
-                                                        target_name: target.avatar_name,
-                                                        amount: 200
-                                                    )
+      donation_box.transactions << FactoryBot.build(:transaction,
+                                                    created_at: 1.month.ago,
+                                                    target_key: target.avatar_key,
+                                                    target_name: target.avatar_name,
+                                                    amount: 200)
       donation_box.transactions << FactoryBot.build(:transaction, created_at: 2.months.ago)
     end
     it 'should return the most recent donation' do
-
       expect(donation_box.last_donation['created_at']).to be_within(5.seconds).of(1.month.ago)
     end
-    
-    it 'should return the correct data' do 
+
+    it 'should return the correct data' do
       expect(donation_box.last_donation).to include(
-          'target_name' => target.avatar_name,
-          'target_key' => target.avatar_key,
-          'amount' => 200
-        )
-      
+        'target_name' => target.avatar_name,
+        'target_key' => target.avatar_key,
+        'amount' => 200
+      )
     end
-    
-    it 'should return nil values when there is no transactions' do 
+
+    it 'should return nil values when there is no transactions' do
       empty_box = FactoryBot.create(:donation_box)
       expect(empty_box.last_donation).to include(
-          'target_name' => nil,
-          'target_key' => nil,
-          'amount' => nil,
-          'created_at' => nil
-        )
+        'target_name' => nil,
+        'target_key' => nil,
+        'amount' => nil,
+        'created_at' => nil
+      )
     end
   end
 
@@ -87,14 +84,14 @@ RSpec.describe Rezzable::DonationBox, type: :model do
                                                     amount: 300,
                                                     created_at: 1.months.ago)
       expect(donation_box.largest_donation).to include(
-          'target_name' => target.avatar_name,
-          'target_key' => target.avatar_key,
-          'amount' => 300
+        'target_name' => target.avatar_name,
+        'target_key' => target.avatar_key,
+        'amount' => 300
       )
     end
-    
-    context 'equal sized donations' do 
-      it 'should return the most recent' do 
+
+    context 'equal sized donations' do
+      it 'should return the most recent' do
         # target = FactoryBot.create(:avatar)
         donation_box.transactions << FactoryBot.build(:transaction,
                                                       target_name: target.avatar_name,
@@ -115,18 +112,17 @@ RSpec.describe Rezzable::DonationBox, type: :model do
                                                       target_key: target.avatar_key,
                                                       amount: 300,
                                                       created_at: 1.months.ago)
-  
-         expect(donation_box.largest_donation).to include(
+
+        expect(donation_box.largest_donation).to include(
           'target_name' => target.avatar_name,
           'target_key' => target.avatar_key,
           'amount' => 300
         )
       end
     end
-      
-    context 'no donations' do 
-      it 'should return nil values' do 
-  
+
+    context 'no donations' do
+      it 'should return nil values' do
         expect(donation_box.largest_donation).to include(
           'target_name' => nil,
           'target_key' => nil,
@@ -177,9 +173,9 @@ RSpec.describe Rezzable::DonationBox, type: :model do
         amount: 350
       )
     end
-    
-    context 'no donations' do 
-      it 'should return nil values' do 
+
+    context 'no donations' do
+      it 'should return nil values' do
         expect(donation_box.biggest_donor).to include(
           avatar_key: nil,
           avatar_name: nil,

@@ -14,7 +14,7 @@ class AbstractWebObject < ApplicationRecord
 
   belongs_to :server, class_name: 'Rezzable::Server', optional: true, inverse_of: :clients
 
-  has_many :transactions, class_name: 'Analyzable::Transaction', 
+  has_many :transactions, class_name: 'Analyzable::Transaction',
                           dependent: :nullify,
                           foreign_key: :web_object_id,
                           before_add: :assign_user_to_transaction
@@ -31,7 +31,7 @@ class AbstractWebObject < ApplicationRecord
   # end
 
   def response_data
-    { api_key: self.api_key }
+    { api_key: api_key }
   end
 
   def split_percent
@@ -51,10 +51,10 @@ class AbstractWebObject < ApplicationRecord
   end
 
   private
-  
-    def assign_user_to_transaction(transaction)
-      user.transactions << transaction
-    end
+
+  def assign_user_to_transaction(transaction)
+    user.transactions << transaction
+  end
 
   def set_pinged_at
     self.pinged_at = Time.now

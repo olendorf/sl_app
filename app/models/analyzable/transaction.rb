@@ -4,7 +4,7 @@ module Analyzable
   # Records monetary transactions
   class Transaction < ApplicationRecord
     has_paper_trail
-    
+
     validates_presence_of :target_name
     validates_presence_of :target_key
     validates_numericality_of :amount, only_integer: true

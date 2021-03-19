@@ -4,7 +4,7 @@ module Api
   module V1
     # Parent controll for all rezzable objects
     class AbstractWebObjectsController < Api::V1::ApiController
-      before_action :process_atts, only: [:create, :update]
+      before_action :process_atts, only: %i[create update]
       def create
         if AbstractWebObject.find_by_object_key(@atts[:object_key])
           load_requesting_object
@@ -24,7 +24,7 @@ module Api
         @message ||= I18n.t('api.rezzable.update.success')
         load_requesting_object
         authorize @requesting_object
-        
+
         @requesting_object.update! @atts
 
         render json: {
@@ -49,7 +49,6 @@ module Api
       end
 
       private
-      
 
       def requesting_class
         "::Rezzable::#{controller_name.classify}".constantize

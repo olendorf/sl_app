@@ -23,14 +23,15 @@ module Rezzable
     end
 
     def biggest_donor
-      return {avatar_key: nil, avatar_name: nil, amount: nil} if transactions.size.zero?
+      return { avatar_key: nil, avatar_name: nil, amount: nil } if transactions.size.zero?
+
       data = transactions.group(:target_key, :target_name).sum(:amount).max_by { |_k, v| v }
       { avatar_key: data.first.first, avatar_name: data.first.second, amount: data.last }
     end
-    
+
     # rubocop:disable Style/RedundantSelf
     def response_data
-      { 
+      {
         api_key: self.api_key,
         settings: {
           show_last_donation: show_last_donation,

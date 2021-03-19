@@ -4,30 +4,32 @@ module Api
   module V1
     # Parent controll for all rezzable objects
     class AbstractWebObjectsController < Api::V1::ApiController
+      before_action :process_atts, only: [:create, :update]
       def create
-        if AbstractWebObject.find_by_object_key(atts[:object_key])
+        if AbstractWebObject.find_by_object_key(@atts[:object_key])
           load_requesting_object
           update
         else
           authorize requesting_class
-          @web_object = requesting_class.new(atts)
+          @web_object = requesting_class.new(@atts)
           @web_object.save!
           render json: {
             message: I18n.t('api.rezzable.create.success'),
-            data: { api_key: @web_object.api_key }
+            data: @web_object.response_data
           }, status: :created
         end
       end
 
       def update
+        @message ||= I18n.t('api.rezzable.update.success')
         load_requesting_object
         authorize @requesting_object
-
-        @requesting_object.abstract_web_object.update! atts
+        
+        @requesting_object.update! @atts
 
         render json: {
-          message: I18n.t('api.rezzable.update.success'),
-          data: { api_key: @requesting_object.api_key }
+          message: @message,
+          data: @requesting_object.response_data
         }, status: :ok
       end
 
@@ -47,13 +49,14 @@ module Api
       end
 
       private
+      
 
       def requesting_class
         "::Rezzable::#{controller_name.classify}".constantize
       end
 
-      def atts
-        {
+      def process_atts
+        @atts = {
           object_key: request.headers['HTTP_X_SECONDLIFE_OBJECT_KEY'],
           object_name: request.headers['HTTP_X_SECONDLIFE_OBJECT_NAME'],
           region: extract_region_name,

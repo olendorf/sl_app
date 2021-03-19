@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(version: 2021_03_16_162243) do
     t.integer "total", default: 0
     t.integer "goal"
     t.datetime "dead_line"
+    t.string "response"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

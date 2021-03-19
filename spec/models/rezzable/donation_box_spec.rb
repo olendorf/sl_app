@@ -48,10 +48,16 @@ RSpec.describe Rezzable::DonationBox, type: :model do
   describe '#total_donations' do
     it 'should return the correct value' do
       donation_box.transactions << FactoryBot.build(:transaction, amount: 50,
+                                                                  target_name: 'foo',
+                                                                  target_key: 'bar',
                                                                   created_at: 3.months.ago)
       donation_box.transactions << FactoryBot.build(:transaction, amount: 100,
+                                                                  target_name: 'foo',
+                                                                  target_key: 'bar',
                                                                   created_at: 2.month.ago)
       donation_box.transactions << FactoryBot.build(:transaction, amount: 200,
+                                                                  target_name: 'foo',
+                                                                  target_key: 'bar',
                                                                   created_at: 1.months.ago)
 
       expect(donation_box.total_donations).to eq 350

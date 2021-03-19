@@ -56,6 +56,9 @@ en:
         failure: 'Unable to give inventory: %{message}'
   
   api:
+    terminal:
+      payment:
+        success: 'Thank you for your payment. Your new expiration date is %{expiration}'
     user:
       create:
         success: "Your account has been created. Please visit %{url} to view your account."

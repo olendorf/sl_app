@@ -112,9 +112,12 @@ ActiveRecord::Schema.define(version: 2021_03_16_162243) do
     t.boolean "show_last_donation", default: false
     t.boolean "show_last_donor", default: false
     t.boolean "show_total", default: true
+    t.boolean "show_largest_donation", default: false
+    t.boolean "show_biggest_donor", default: false
     t.integer "total", default: 0
     t.integer "goal"
     t.datetime "dead_line"
+    t.string "response"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

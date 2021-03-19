@@ -19,6 +19,7 @@ Rails.application.routes.draw do
         resources :web_objects, except: %i[index new edit]
         resources :terminals, except: %i[index new edit]
         resources :servers, except: %i[new edit]
+        resources :donation_boxes, except: %i[index new edit]
       end
       namespace :analyzable do
         resources :inventories, except: %i[new edit]

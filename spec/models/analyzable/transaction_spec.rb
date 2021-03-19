@@ -7,6 +7,10 @@ RSpec.describe Analyzable::Transaction, type: :model do
 
   it { should belong_to :user }
 
+  it { should validate_presence_of :target_name }
+  it { should validate_presence_of :target_name }
+  it { should validate_numericality_of(:amount).only_integer }
+
   it {
     should define_enum_for(:category).with_values(%i[other account donation tip sale tier share])
   }

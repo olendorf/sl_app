@@ -9,7 +9,18 @@ Rails.application.configure do
     # Bullet.growl         = true
     Bullet.rails_logger  = true
     Bullet.add_footer    = true
-    Bullet.add_whitelist type: :unused_eager_loading, class_name: 'Rezzable::Terminal', association: :abstract_web_object
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Rezzable::Terminal',
+                         association: :abstract_web_object
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Rezzable::Server',
+                         association: :abstract_web_object
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Rezzable::DonationBox',
+                         association: :abstract_web_object
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Analyzable::Inventory',
+                         association: :user
   end
 
   # Settings specified here will take precedence over those in config/application.rb.

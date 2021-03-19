@@ -8,7 +8,7 @@ module Rezzable
     has_many :clients, class_name: 'AbstractWebObject', dependent: :nullify
     has_many :inventories, class_name: 'Analyzable::Inventory',
                            dependent: :destroy,
-                           before_add: :assign_user
+                           before_add: :assign_user_to_inventory
     accepts_nested_attributes_for :inventories, allow_destroy: true
 
     # rubocop:disable Style/RedundantSelf
@@ -19,7 +19,7 @@ module Rezzable
 
     private
 
-    def assign_user(inventory)
+    def assign_user_to_inventory(inventory)
       # puts "assigning user"
       inventory.user_id = user.id
     end

@@ -7,24 +7,54 @@ RSpec.describe Rezzable::DonationBox, type: :model do
 
   let(:user) { FactoryBot.create :active_user }
   let(:donation_box) { FactoryBot.create :donation_box, user_id: user.id }
+  let(:target) { FactoryBot.create :avatar }
 
   describe '#last_donation' do
-    it 'should return the most recent donation' do
+    before(:each) do
       donation_box.transactions << FactoryBot.build(:transaction, created_at: 3.months.ago)
-      donation_box.transactions << FactoryBot.build(:transaction, created_at: 1.month.ago)
+      donation_box.transactions << FactoryBot.build(:transaction,
+                                                    created_at: 1.month.ago,
+                                                    target_key: target.avatar_key,
+                                                    target_name: target.avatar_name,
+                                                    amount: 200)
       donation_box.transactions << FactoryBot.build(:transaction, created_at: 2.months.ago)
+    end
+    it 'should return the most recent donation' do
+      expect(donation_box.last_donation['created_at']).to be_within(5.seconds).of(1.month.ago)
+    end
 
-      expect(donation_box.last_donation.created_at).to be_within(5.seconds).of(1.month.ago)
+    it 'should return the correct data' do
+      expect(donation_box.last_donation).to include(
+        'target_name' => target.avatar_name,
+        'target_key' => target.avatar_key,
+        'amount' => 200
+      )
+    end
+
+    it 'should return nil values when there is no transactions' do
+      empty_box = FactoryBot.create(:donation_box)
+      expect(empty_box.last_donation).to include(
+        'target_name' => nil,
+        'target_key' => nil,
+        'amount' => nil,
+        'created_at' => nil
+      )
     end
   end
 
   describe '#total_donations' do
     it 'should return the correct value' do
       donation_box.transactions << FactoryBot.build(:transaction, amount: 50,
+                                                                  target_name: 'foo',
+                                                                  target_key: 'bar',
                                                                   created_at: 3.months.ago)
       donation_box.transactions << FactoryBot.build(:transaction, amount: 100,
+                                                                  target_name: 'foo',
+                                                                  target_key: 'bar',
                                                                   created_at: 2.month.ago)
       donation_box.transactions << FactoryBot.build(:transaction, amount: 200,
+                                                                  target_name: 'foo',
+                                                                  target_key: 'bar',
                                                                   created_at: 1.months.ago)
 
       expect(donation_box.total_donations).to eq 350
@@ -33,7 +63,7 @@ RSpec.describe Rezzable::DonationBox, type: :model do
 
   describe '#largest_donation' do
     it 'should return the largest donation' do
-      target = FactoryBot.create(:avatar)
+      # target = FactoryBot.create(:avatar)
       donation_box.transactions << FactoryBot.build(:transaction,
                                                     target_name: target.avatar_name,
                                                     target_key: target.avatar_key,
@@ -53,14 +83,16 @@ RSpec.describe Rezzable::DonationBox, type: :model do
                                                     target_key: target.avatar_key,
                                                     amount: 300,
                                                     created_at: 1.months.ago)
-
-      expect(donation_box.largest_donation.amount).to eq 300
-      expect(donation_box.largest_donation.target_name).to eq target.avatar_name
+      expect(donation_box.largest_donation).to include(
+        'target_name' => target.avatar_name,
+        'target_key' => target.avatar_key,
+        'amount' => 300
+      )
     end
 
     context 'equal sized donations' do
       it 'should return the most recent' do
-        target = FactoryBot.create(:avatar)
+        # target = FactoryBot.create(:avatar)
         donation_box.transactions << FactoryBot.build(:transaction,
                                                       target_name: target.avatar_name,
                                                       target_key: target.avatar_key,
@@ -81,8 +113,22 @@ RSpec.describe Rezzable::DonationBox, type: :model do
                                                       amount: 300,
                                                       created_at: 1.months.ago)
 
-        expect(donation_box.largest_donation.amount).to eq 300
-        expect(donation_box.largest_donation.target_name).to eq target.avatar_name
+        expect(donation_box.largest_donation).to include(
+          'target_name' => target.avatar_name,
+          'target_key' => target.avatar_key,
+          'amount' => 300
+        )
+      end
+    end
+
+    context 'no donations' do
+      it 'should return nil values' do
+        expect(donation_box.largest_donation).to include(
+          'target_name' => nil,
+          'target_key' => nil,
+          'amount' => nil,
+          'created_at' => nil
+        )
       end
     end
   end
@@ -126,6 +172,16 @@ RSpec.describe Rezzable::DonationBox, type: :model do
         avatar_name: target.avatar_name,
         amount: 350
       )
+    end
+
+    context 'no donations' do
+      it 'should return nil values' do
+        expect(donation_box.biggest_donor).to include(
+          avatar_key: nil,
+          avatar_name: nil,
+          amount: nil
+        )
+      end
     end
   end
 end

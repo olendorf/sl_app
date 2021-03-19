@@ -14,8 +14,11 @@ class AbstractWebObject < ApplicationRecord
 
   belongs_to :server, class_name: 'Rezzable::Server', optional: true, inverse_of: :clients
 
-  has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify,
-                          foreign_key: :web_object_id
+  has_many :transactions, class_name: 'Analyzable::Transaction',
+                          dependent: :nullify,
+                          foreign_key: :web_object_id,
+                          before_add: :assign_user_to_transaction
+  accepts_nested_attributes_for :transactions
 
   has_many :splits, dependent: :destroy, as: :splittable
   accepts_nested_attributes_for :splits, allow_destroy: true
@@ -26,6 +29,10 @@ class AbstractWebObject < ApplicationRecord
   # def server
   #   Rezzable::Server.find server_id
   # end
+
+  def response_data
+    { api_key: api_key }
+  end
 
   def split_percent
     splits.inject(0) { |sum, split| sum + split.percent } + user.split_percent
@@ -44,6 +51,10 @@ class AbstractWebObject < ApplicationRecord
   end
 
   private
+
+  def assign_user_to_transaction(transaction)
+    user.transactions << transaction
+  end
 
   def set_pinged_at
     self.pinged_at = Time.now

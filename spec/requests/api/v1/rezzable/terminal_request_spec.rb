@@ -32,6 +32,12 @@ RSpec.describe 'Api::V1::Rezzable::Terminals', type: :request do
           put path, params: atts.to_json, headers: headers(terminal)
         }.to change(owner.transactions, :count).by(1)
       end
+      
+      it 'should extend the targets expiration date' do 
+        expected = active_user.expiration_date + 3.months.seconds
+        put path, params: atts.to_json, headers: headers(terminal)
+        expect(active_user.reload.expiration_date).to be_within(2.seconds).of(expected)
+      end
 
       it 'should add a transaction to the user' do
         expect {

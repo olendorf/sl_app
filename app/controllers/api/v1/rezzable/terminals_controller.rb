@@ -6,12 +6,27 @@ module Api
       # Controllre for request for in world Rezzable Terminals
       class TerminalsController < Api::V1::AbstractWebObjectsController
         def update
-          add_transaction_to_user if @atts['transactions_attributes']
-          enrich_atts if @atts['transactions_attributes']
+          if @atts['transactions_attributes']
+            target_user = target_user = User.find_by_avatar_key(
+              @atts['transactions_attributes'][0]['target_key']
+            )
+            add_transaction_to_user(target_user)
+            extend_user_expiration_date(target_user)
+            enrich_atts
+          end
           super
         end
 
         private
+        
+        def extend_user_expiration_date(target_user)
+          target_user.expiration_date = target_user.expiration_date + (
+              @atts['transactions_attributes'][0]['amount']/(
+                Settings.default.account.monthly_cost * target_user.account_level
+                ).to_f
+            ) * 1.month.seconds
+          target_user.save
+        end
 
         def enrich_atts
           @message = I18n.t('api.terminal.payment.success')
@@ -28,10 +43,8 @@ module Api
                                 "#{@atts['transactions_attributes'][0]['target_name']}."
         end
 
-        def add_transaction_to_user
-          target_user = User.find_by_avatar_key(
-            @atts['transactions_attributes'][0]['target_key']
-          )
+        def add_transaction_to_user(target_user)
+
           target_user.transactions << ::Analyzable::Transaction.new(
             amount: @atts['transactions_attributes'][0]['amount'] * -1,
             target_key: @requesting_object.user.avatar_key,

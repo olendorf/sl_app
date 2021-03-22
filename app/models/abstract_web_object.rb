@@ -61,6 +61,9 @@ class AbstractWebObject < ApplicationRecord
     splits.each do |share|
       user.handle_split(transaction, share)
     end
+    self.server.splits.each do |share|
+      user.handle_split(transaction, share)
+    end if self.server
   end 
 
   def set_pinged_at

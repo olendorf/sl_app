@@ -138,37 +138,75 @@ class User < ApplicationRecord
     self.expiration_date = expiration_date + (1.month.to_i * added_time)
   end
   
+  def handle_split(transaction, share)
+    server = servers.sample
+    return unless server
+    amount =  (share.percent/100.0 * transaction.amount).round
+    ServerSlRequest.send_money(server, 
+                               share.target_name, 
+                               amount
+      )
+    transactions << Analyzable::Transaction.new(
+      description: "Split from transaction #{transaction.id}",
+      amount: amount * -1,
+      source_type: 'system',
+      category: 'share',
+      target_name: share.target_name,
+      target_key: share.target_key,
+      transaction_id: transaction.id
+      )
+    target = User.find_by_avatar_key(share.target_key)
+    if target 
+      balance = target.balance + amount
+      Analyzable::Transaction.new(
+        user_id: target.id,
+        description: "Split from transaction with #{avatar_name}",
+        amount: amount,
+        source_type: 'system',
+        category: 'share',
+        target_name: avatar_name,
+        target_key: avatar_key,
+        balance: balance
+        ).save 
+    end
+  end
+  
   private
   
     def handle_splits(transaction)
       return if transaction.amount <= 0
       splits.each do |share|
-        server = servers.sample
-        return unless server
-        amount =  (share.percent/100.0 * transaction.amount).round
-        ServerSlRequest.send_money(server, 
-                                   share.target_name, 
-                                   amount
-          )
-        transactions << Analyzable::Transaction.new(
-          description: "Split from transaction #{transaction.id}",
-          amount: amount * -1,
-          source_type: 'system',
-          category: 'share',
-          target_name: share.target_name,
-          target_key: share.target_key,
-          transaction_id: transaction.id
-          )
-        target = User.find_by_avatar_key(share.target_key)
-        Analyzable::Transaction.new(
-          user_id: target.id,
-          description: "Split from transaction with #{avatar_name}",
-          amount: amount,
-          source_type: 'system',
-          category: 'share',
-          target_name: avatar_name,
-          target_key: avatar_key
-          ).save if target
+        handle_split(transaction, share)
+        # server = servers.sample
+        # return unless server
+        # amount =  (share.percent/100.0 * transaction.amount).round
+        # ServerSlRequest.send_money(server, 
+        #                           share.target_name, 
+        #                           amount
+        #   )
+        # transactions << Analyzable::Transaction.new(
+        #   description: "Split from transaction #{transaction.id}",
+        #   amount: amount * -1,
+        #   source_type: 'system',
+        #   category: 'share',
+        #   target_name: share.target_name,
+        #   target_key: share.target_key,
+        #   transaction_id: transaction.id
+        #   )
+        # target = User.find_by_avatar_key(share.target_key)
+        # if target 
+        #   balance = target.balance + amount
+        #   Analyzable::Transaction.new(
+        #     user_id: target.id,
+        #     description: "Split from transaction with #{avatar_name}",
+        #     amount: amount,
+        #     source_type: 'system',
+        #     category: 'share',
+        #     target_name: avatar_name,
+        #     target_key: avatar_key,
+        #     balance: balance
+        #     ).save 
+        # end
         
       end
     end

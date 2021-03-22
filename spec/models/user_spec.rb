@@ -237,5 +237,19 @@ RSpec.describe User, type: :model do
       user.transactions << FactoryBot.build(:transaction, amount: 100)
       expect(target_one.transactions.size).to eq 1
     end
+    
+    it 'should update the balance of the exisiting user' do 
+      
+      stub_request(:post, uri_regex)
+      user.web_objects << FactoryBot.build(:server)
+      user.splits << FactoryBot.build(:split, percent: 5, 
+                                              target_name: target_one.avatar_name, 
+                                              target_key: target_one.avatar_key)
+      user.splits << FactoryBot.build(:split, percent: 10, 
+                                              target_name: target_two.avatar_name, 
+                                              target_key: target_two.avatar_key)
+      user.transactions << FactoryBot.build(:transaction, amount: 100)
+      expect(target_one.balance).to eq 5
+    end
   end
 end

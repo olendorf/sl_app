@@ -43,7 +43,7 @@ RSpec.describe AbstractWebObject, type: :model do
     
     context 'no splits' do 
       it 'should add the transaction to the user' do 
-        web_object.transactions << FactoryBot.build(:transaction)
+        web_object.transactions << FactoryBot.build(:transaction, amount: 100)
         expect(user.transactions.size).to eq 1
       end
     end 

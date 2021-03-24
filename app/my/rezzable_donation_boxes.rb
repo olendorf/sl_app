@@ -1,4 +1,4 @@
-ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
+ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' do
   
   include ActiveAdmin::RezzableBehavior
   
@@ -8,9 +8,8 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
   
   decorate_with Rezzable::DonationBoxDecorator
   
-  filter :abstract_web_object_object_name, as: :string, label: 'Object Name'  
+  filter :abstract_web_object_object_name, as: :string, label: 'Object Name'
   filter :abstract_web_object_description, as: :string, label: 'Description'
-  filter :abstract_web_object_user_avatar_name, as: :string, label: 'Owner'
   filter :abstract_web_object_region, as: :string, label: 'Region'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :abstract_web_object_create_at, as: :date_range
@@ -33,13 +32,6 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
     column 'Location', sortable: :region, &:slurl
     column 'Server', sortable: 'server.object_name' do |donation_box|
       link_to donation_box.server.object_name, admin_server_path(donation_box.server) if donation_box.server
-    end
-    column 'Owner', sortable: 'users.avatar_name' do |donation_box|
-      if donation_box.user
-        link_to donation_box.user.avatar_name, admin_user_path(donation_box.user)
-      else
-        'Orphan'
-      end
     end
     column 'Total Donations', &:total_donations
     column :goal
@@ -68,13 +60,6 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
       row :server_name, &:object_name
       row :server_key, &:object_key
       row :description
-      row 'Owner', sortable: 'users.avatar_name' do |server|
-        if server.user
-          link_to server.user.avatar_name, admin_user_path(server.user)
-        else
-          'Orphan'
-        end
-      end
       row :location, &:slurl
       row :total_donations
       row 'Largest Donation' do |db|

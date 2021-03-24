@@ -22,6 +22,12 @@ Rails.application.configure do
     Bullet.add_whitelist type: :unused_eager_loading,
                          class_name: 'Analyzable::Inventory',
                          association: :user
+    Bullet.add_whitelist type: :n_plus_one_query,
+                         class_name: 'AbstractWebObject',
+                         association: :user
+    Bullet.add_whitelist type: :n_plus_one_query,
+                         class_name: 'AbstractWebObject',
+                         association: :server
   end
 
   # Settings specified here will take precedence over those in config/application.rb.

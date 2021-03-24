@@ -31,7 +31,8 @@ class User < ApplicationRecord
   has_many :web_objects, class_name: 'AbstractWebObject', dependent: :destroy
   has_many :transactions, dependent: :destroy,
                           class_name: 'Analyzable::Transaction',
-                          before_add: :update_balance
+                          before_add: :update_balance,
+                          after_add: :handle_splits
   has_many :splits, dependent: :destroy, as: :splittable
   accepts_nested_attributes_for :splits, allow_destroy: true
   has_many :inventories, class_name: 'Analyzable::Inventory'
@@ -135,6 +136,55 @@ class User < ApplicationRecord
     self.expiration_date = Time.now if
       expiration_date.nil? || expiration_date < Time.now
     self.expiration_date = expiration_date + (1.month.to_i * added_time)
+  end
+
+  def handle_split(transaction, share)
+    server = servers.sample
+    return unless server
+
+    amount = (share.percent / 100.0 * transaction.amount).round
+    ServerSlRequest.send_money(server,
+                               share.target_name,
+                               amount)
+    add_transaction_to_user(transaction, amount, share)
+    target = User.find_by_avatar_key(share.target_key)
+    add_transaction_to_target(target, amount) if target
+  end
+
+  private
+
+  def add_transaction_to_user(transaction, amount, share)
+    transactions << Analyzable::Transaction.new(
+      description: "Split from transaction #{transaction.id}",
+      amount: amount * -1,
+      source_type: 'system',
+      category: 'share',
+      target_name: share.target_name,
+      target_key: share.target_key,
+      transaction_id: transaction.id
+    )
+  end
+
+  def add_transaction_to_target(target, amount)
+    balance = target.balance + amount
+    Analyzable::Transaction.new(
+      user_id: target.id,
+      description: "Split from transaction with #{avatar_name}",
+      amount: amount,
+      source_type: 'system',
+      category: 'share',
+      target_name: avatar_name,
+      target_key: avatar_key,
+      balance: balance
+    ).save
+  end
+
+  def handle_splits(transaction)
+    return if transaction.amount <= 0
+
+    splits.each do |share|
+      handle_split(transaction, share)
+    end
   end
 
   # Updates the user's balance that results when the transaction is added.

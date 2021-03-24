@@ -25,7 +25,7 @@ RSpec.shared_examples 'it has a rezzable SL request behavior' do |model_name, na
 
     visit send("#{namespace}_#{model_name}_path", web_object)
     click_on "Delete #{model_name.to_s.titleize}"
-    expect(page).to have_text("#{model_name.to_s.titleize} was successfully destroyed.")
+    expect(page).to have_text(/#{model_name.to_s.titleize} was successfully destroyed\./i)
     expect(stub).to have_been_requested
   end
 
@@ -39,26 +39,30 @@ RSpec.shared_examples 'it has a rezzable SL request behavior' do |model_name, na
 
   scenario 'User updates the object' do
     stub = stub_request(:put, uri_regex)
-           .with(body: /{"object_name":"foo","description":"bar"(,"server_id":"")?}/)
+           .with(body: /{"object_name":"foo","description":"bar"(,"server_id":"")?.*}/)
            .to_return(status: 200, body: '', headers: {})
 
     visit send("edit_#{namespace}_#{model_name}_path", web_object)
     fill_in "#{model_name.to_s.titleize} name", with: 'foo'
     fill_in 'Description', with: 'bar'
-    click_on "Update #{model_name.to_s.titleize}"
-    expect(page).to have_text("#{model_name.to_s.titleize} was successfully updated.")
+    button_name = model_name.to_s.split('_').join(' ')
+    button_name[0] = button_name[0].capitalize
+    click_on "Update #{button_name}"
+    expect(page).to have_text(/#{model_name.to_s.titleize} was successfully updated\./i)
     expect(stub).to have_been_requested
   end
 
   scenario 'User updates the object and there is an error' do
     stub_request(:put, uri_regex)
-      .with(body: /{"object_name":"foo","description":"bar"(,"server_id":"")?}/)
+      .with(body: /{"object_name":"foo","description":"bar"(,"server_id":"")?.*}/)
       .to_return(body: 'foo', status: 400)
 
     visit send("edit_#{namespace}_#{model_name}_path", web_object)
     fill_in "#{model_name.to_s.titleize} name", with: 'foo'
     fill_in 'Description', with: 'bar'
-    click_on "Update #{model_name.to_s.titleize}"
+    button_name = model_name.to_s.split('_').join(' ')
+    button_name[0] = button_name[0].capitalize
+    click_on "Update #{button_name}"
     expect(page).to have_text('There was an error updating the inworld object: foo')
   end
 end

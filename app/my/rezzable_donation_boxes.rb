@@ -110,7 +110,7 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
   form title: proc { "Edit #{resource.object_name}" } do |f|
     f.inputs do 
       if resource.user
-        f.input :object_name, label: 'Donation Box Name'
+        f.input :object_name, label: 'Donation Box name'
         f.input :description
         f.input :server_id, as: :select, collection: resource.user.servers.map{ |s|
           [s.object_name, s.actable.id]

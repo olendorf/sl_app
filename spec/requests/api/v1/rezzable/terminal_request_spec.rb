@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::Rezzable::Terminals', type: :request do
   it_behaves_like 'it has an owner api', :terminal
-  
+
   it_behaves_like 'it takes payments', :terminal, :owner, 900
 
   describe 'making a payment' do
@@ -24,8 +24,8 @@ RSpec.describe 'Api::V1::Rezzable::Terminals', type: :request do
           }]
         }
       }
-      
-      it 'should extend the targets expiration date' do 
+
+      it 'should extend the targets expiration date' do
         expected = active_user.expiration_date + 3.months.seconds
         put path, params: atts.to_json, headers: headers(terminal)
         expect(active_user.reload.expiration_date).to be_within(2.seconds).of(expected)

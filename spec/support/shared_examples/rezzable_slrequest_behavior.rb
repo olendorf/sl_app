@@ -44,7 +44,7 @@ RSpec.shared_examples 'it has a rezzable SL request behavior' do |model_name, na
 
     visit send("edit_#{namespace}_#{model_name}_path", web_object)
     fill_in "#{model_name.to_s.titleize} name", with: 'foo'
-    fill_in 'Description', with: 'bar'    
+    fill_in 'Description', with: 'bar'
     button_name = model_name.to_s.split('_').join(' ')
     button_name[0] = button_name[0].capitalize
     click_on "Update #{button_name}"

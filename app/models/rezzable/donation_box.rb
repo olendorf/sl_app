@@ -13,7 +13,7 @@ module Rezzable
     end
 
     def total_donations
-      transactions.collect { |t| t.amount }.sum
+      transactions.collect(&:amount).sum
     end
 
     def largest_donation

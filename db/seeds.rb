@@ -79,39 +79,36 @@ def give_donation_boxes_to_user(user, avatars)
     rand(1..50).times do
       target = avatars.sample
       donation_box.transactions << FactoryBot.build(
-                  :donation, target_key: target.avatar_key, 
-                             target_name: target.avatar_name)
+        :donation, target_key: target.avatar_key,
+                   target_name: target.avatar_name
+      )
     end
   end
 end
 
-
-puts "creating owner"
+puts 'creating owner'
 owner = FactoryBot.create :owner, avatar_name: 'Random Citizen'
 
 avatars = FactoryBot.create_list(:avatar, 1000)
 
-puts "giving splits to owner"
+puts 'giving splits to owner'
 give_splits(owner, avatars)
 
-puts "giving servers to owner"
+puts 'giving servers to owner'
 give_servers_to_user(owner)
 
-puts "giving terminals to owner"
+puts 'giving terminals to owner'
 give_terminals(owner, avatars)
 
-
-puts "giving transactions to owner"
+puts 'giving transactions to owner'
 give_transactions_to_user(owner, avatars)
 
 4.times do |i|
   FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident"
 end
 
-
-puts "creating users"
+puts 'creating users'
 100.times do |i|
-  
   puts "creating user #{i}"
   user = FactoryBot.create :active_user, avatar_name: "User_#{i} Resident"
 
@@ -120,7 +117,7 @@ puts "creating users"
 
   puts "giving servers to user #{i}"
   give_servers_to_user(user)
-  
+
   puts "giving donation_boxes to user #{i}"
   give_donation_boxes_to_user(user, avatars)
 

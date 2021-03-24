@@ -7,7 +7,7 @@ module Api
       class TerminalsController < Api::V1::AbstractWebObjectsController
         def update
           if @atts['transactions_attributes']
-            target_user = target_user = User.find_by_avatar_key(
+            target_user = User.find_by_avatar_key(
               @atts['transactions_attributes'][0]['target_key']
             )
             add_transaction_to_user(target_user)
@@ -18,12 +18,12 @@ module Api
         end
 
         private
-        
+
         def extend_user_expiration_date(target_user)
           target_user.expiration_date = target_user.expiration_date + (
-              @atts['transactions_attributes'][0]['amount']/(
+              @atts['transactions_attributes'][0]['amount'] / (
                 Settings.default.account.monthly_cost * target_user.account_level
-                ).to_f
+              ).to_f
             ) * 1.month.seconds
           target_user.save
         end
@@ -44,7 +44,6 @@ module Api
         end
 
         def add_transaction_to_user(target_user)
-
           target_user.transactions << ::Analyzable::Transaction.new(
             amount: @atts['transactions_attributes'][0]['amount'] * -1,
             target_key: @requesting_object.user.avatar_key,

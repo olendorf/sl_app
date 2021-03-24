@@ -10,6 +10,4 @@ RSpec.feature 'Server management', type: :feature do
   context 'my namespace' do
     it_behaves_like 'it has a rezzable SL request behavior', :donation_box, 'my'
   end
-
-
 end

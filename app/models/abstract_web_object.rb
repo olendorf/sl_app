@@ -56,15 +56,15 @@ class AbstractWebObject < ApplicationRecord
   def assign_user_to_transaction(transaction)
     user.transactions << transaction
   end
-  
+
   def handle_splits(transaction)
     splits.each do |share|
       user.handle_split(transaction, share)
     end
-    self.server.splits.each do |share|
+    server&.splits&.each do |share|
       user.handle_split(transaction, share)
-    end if self.server
-  end 
+    end
+  end
 
   def set_pinged_at
     self.pinged_at = Time.now

@@ -30,6 +30,11 @@ Lint/NestedMethodDefinition:
   Exclude:
     - app/controllers/concerns/**/*
     
+Metrics/AbcSize:
+  Max: 25
+  Exclude:
+    - app/controllers/concerns/**/*
+    
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
@@ -38,11 +43,10 @@ Metrics/BlockLength:
     - app/admin/**/*
     - app/my/**/*
     - app/controllers/concerns/**/*
-    
-Metrics/AbcSize:
-  Max: 25
+
+MethodLength/ClassLength:
   Exclude:
-    - app/controllers/concerns/**/*
+    - app/models/user.rb
     
 Metrics/MethodLength:
   Max: 20

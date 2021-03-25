@@ -41,6 +41,13 @@ RSpec.describe AbstractWebObject, type: :model do
     end
   end
   
+  describe '#response_data' do 
+    it 'should return the api key' do 
+      expect(web_object.response_data).to include :api_key
+    end
+  end
+
+  
 
   describe 'adding transactions' do
     context 'no splits' do

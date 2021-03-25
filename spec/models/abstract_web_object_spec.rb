@@ -20,6 +20,8 @@ RSpec.describe AbstractWebObject, type: :model do
   it { should belong_to(:server).class_name('Rezzable::Server').optional(true) }
 
   it { should have_many(:splits).dependent(:destroy) }
+  
+  it { should respond_to :response_data }
 
   let(:user) { FactoryBot.create :owner }
   let(:web_object) do
@@ -38,6 +40,7 @@ RSpec.describe AbstractWebObject, type: :model do
       expect(web_object.active?).to be_falsey
     end
   end
+  
 
   describe 'adding transactions' do
     context 'no splits' do

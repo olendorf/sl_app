@@ -44,7 +44,7 @@ Metrics/BlockLength:
     - app/my/**/*
     - app/controllers/concerns/**/*
 
-MethodLength/ClassLength:
+Metrics/ClassLength:
   Exclude:
     - app/models/user.rb
     

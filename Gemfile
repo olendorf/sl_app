@@ -42,6 +42,9 @@ gem 'paper_trail'
 # Admin interface with the data. Will probably use for a user interface as well
 gem 'activeadmin'
 
+# Nice and relatively simple charts and graphs
+gem "highcharts-rails"
+
 # Theme for active admin
 # gem 'active_admin_flat_skin'
 gem "active_material", github: "vigetlabs/active_material"

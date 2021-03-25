@@ -34,7 +34,7 @@ module Api
       def update
         authorize @requesting_object
         # adjust_expiration_date if parsed_params['account_level']
-        # handle_transactions if parsed_params['account_payment']
+        handle_transactions if parsed_params['account_payment']
         @user.update!(parsed_params)
 
         render json: {

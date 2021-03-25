@@ -49,8 +49,6 @@ module Api
       end
 
       def send_payment(split, amount)
-        return if Rails.env.development?
-
         RestClient::Request.execute(
           url: @requesting_object.url,
           method: :put,
@@ -60,7 +58,7 @@ module Api
           }.to_json,
           verify_ssl: false,
           headers: request_headers
-        )
+        ) unless Rails.env.development?
       end
 
       def request_headers

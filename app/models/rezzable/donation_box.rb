@@ -61,14 +61,6 @@ module Rezzable
       "Donation from #{transaction.target_name}."
     end
     
-    private 
   end
 
-    # def transaction_category
-    #   'donation'
-    # end 
-    
-    # def description(transaction)
-    #   "Donation from #{transaction.target_name}."
-    # end
 end

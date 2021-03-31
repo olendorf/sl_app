@@ -28,21 +28,6 @@ module Api
           target_user.save
         end
 
-        # def enrich_atts
-        #   @message = I18n.t('api.terminal.payment.success')
-        #   @atts['transactions_attributes'][
-        #     0]['category'] = 'account'
-        #   @atts['transactions_attributes'][
-        #     0]['source_key'] = @requesting_object.object_key
-        #   @atts['transactions_attributes'][
-        #     0]['source_name'] = @requesting_object.object_name
-        #   @atts['transactions_attributes'][
-        #     0]['source_type'] = 'terminal'
-        #   @atts['transactions_attributes'][
-        #     0]['description'] = 'Account payment from '\
-        #                         "#{@atts['transactions_attributes'][0]['target_name']}."
-        # end
-
         def add_transaction_to_user(target_user)
           target_user.transactions << ::Analyzable::Transaction.new(
             amount: @atts['transactions_attributes'][0]['amount'] * -1,

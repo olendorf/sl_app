@@ -1,29 +1,75 @@
 
-<div id="container" style="width:100%; height:400px;"></div>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-      const chart = Highcharts.chart('container', {
-          chart: {
-              type: 'bar'
-          },
-          title: {
-              text: 'Fruit Consumption'
-          },
-          xAxis: {
-              categories: ['Apples', 'Bananas', 'Oranges']
-          },
-          yAxis: {
-              title: {
-                  text: 'Fruit eaten'
-              }
-          },
-          series: [{
-              name: 'Jane',
-              data: [1, 0, 4]
-          }, {
-              name: 'John',
-              data: [5, 7, 3]
-          }]
-      });
-  });
+<div id="container" style="width:70%; height:600;" %>></div>
+
+<script type="text/javascript">
+
+        $(function () {
+                var processed_json = new Array();   
+                $.getJSON('/async/donations?chart=donation_histogram', function(data) {
+                    // Populate series
+                    for (i = 0; i < data.length; i++){
+                        processed_json.push([data[i].key, data[i].value]);
+                    }
+                 
+                    // draw chart
+                     $('#container').highcharts({ 
+                    
+                        title: {
+                            text: 'Frequency of Donation Amounts'
+                        },
+                    
+                        xAxis: [{
+                            alignTicks: false,
+                            visible: false
+                        }, {
+                            title: { text: 'Donation Amount($L)' },
+                            alignTicks: false
+                        }],
+                    
+                        yAxis: [{
+                            visible: false
+                        }, {
+                            title: { text: 'Count' }
+                        }],
+                    
+                        plotOptions: {
+                            histogram: {
+                                accessibility: {
+                                    pointDescriptionFormatter: function (point) {
+                                        var ix = point.index + 1,
+                                            x1 = point.x.toFixed(3),
+                                            x2 = point.x2.toFixed(3),
+                                            val = point.y;
+                                        return ix + '. ' + x1 + ' to ' + x2 + ', ' + val + '.';
+                                    }
+                                }
+                            }
+                        },
+                        
+                        legend: {
+                        	enabled: false
+                        },
+                    
+                        series: [{
+                            name: 'Donations',
+                            type: 'histogram',
+                            xAxis: 1,
+                            yAxis: 1,
+                            baseSeries: 's1',
+                            zIndex: -1
+                        }, {
+                            name: 'Data',
+                            visible: false,
+                            type: 'scatter',
+                            data: data,
+                            id: 's1',
+                            marker: {
+                                radius: 1.5
+                            }
+                        }]
+                    }); 
+                });
+            });
+
+
 </script>

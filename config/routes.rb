@@ -10,6 +10,12 @@ Rails.application.routes.draw do
   root to: 'static_pages#home'
 
   get 'static_pages/home' => 'static_pages#home'
+  
+  # get 'async/donations' => 'async/donations#get'
+  
+  namespace :async, defaults: { format: 'json' } do 
+    resources :donations, only: [:index]
+  end
 
   namespace :api, defaults: { format: 'json' } do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do

@@ -225,7 +225,14 @@ ActiveAdmin.setup do |config|
   #
   # To load a javascript file:
   config.register_javascript 'highcharts.js'
-  config.register_javascript 'highcharts/highcharts-more.js'
+  config.register_javascript 'highcharts/highcharts-more.js' 
+  config.register_javascript 'highcharts/modules/no-data-to-display'
+  config.register_javascript 'highcharts/modules/histogram-bellcurve'
+  # config.register_javascript 'highcharts/themes/sunset'
+  config.register_javascript 'highcharts/themes/dark-unica'
+  # config.register_javascript 'highcharts/themes/grid'
+  # config.register_javascript 'highcharts/themes/skies'
+
 
   # == CSV options
   #
@@ -284,6 +291,7 @@ ActiveAdmin.setup do |config|
       menu.add label: 'Objects', priority: 3
       menu.add label: 'Data', priority: 4
     end
+    my.comments = false
   end
 
   # == Download Links

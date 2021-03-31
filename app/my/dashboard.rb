@@ -10,6 +10,11 @@ ActiveAdmin.register_page 'Dashboard', namespace: :my do
         small I18n.t('active_admin.dashboard_welcome.call_to_action')
       end
     end
+    
+    ids = current_user.donation_boxes.collect { |db| db.abstract_web_object.id }
+    @data = current_user.transactions.where(web_object_id: ids).
+        group(:target_name).sum(:amount).collect { |k, v| v }
+    render partial: 'dashboard_test', locals: {amounts: @data}
 
     # Here is an example of a simple dashboard with columns and panels.
     #

@@ -3,11 +3,14 @@
 ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' do
   include ActiveAdmin::RezzableBehavior
 
-  menu label: 'Donation Boxes'
+  menu parent: 'Objects', label: 'Donation Boxes', if: proc{ current_user.donation_boxes.size > 0 }
 
   actions :all, except: %i[new create]
 
   decorate_with Rezzable::DonationBoxDecorator
+  
+  
+  scope_to :current_user, association_method: :donation_boxes
 
   filter :abstract_web_object_object_name, as: :string, label: 'Object Name'
   filter :abstract_web_object_description, as: :string, label: 'Description'
@@ -25,7 +28,7 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
   index title: 'Donation Boxes' do
     selectable_column
     column 'Object Name', sortable: :object_name do |donation_box|
-      link_to donation_box.object_name, admin_donation_box_path(donation_box)
+      link_to donation_box.object_name, my_donation_box_path(donation_box)
     end
     column 'Description' do |donation_box|
       truncate(donation_box.description, length: 10, separator: ' ')
@@ -33,13 +36,13 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
     column 'Location', sortable: :region, &:slurl
     column 'Server', sortable: 'server.object_name' do |donation_box|
       link_to donation_box.server.object_name,
-              admin_server_path(donation_box.server) if donation_box.server
+              my_server_path(donation_box.server) if donation_box.server
     end
     column 'Total Donations', &:total_donations
     column :goal
     column :dead_line
     column 'Version', &:semantic_version
-    column :sttus, &:pretty_active
+    column :status, &:pretty_active
 
     column :created_at, sortable: :created_at
     actions
@@ -59,10 +62,15 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
 
   show title: :object_name do
     attributes_table do
-      row :server_name, &:object_name
-      row :server_key, &:object_key
+      row :donation_box_name, &:object_name
+      row :object_key
       row :description
       row :location, &:slurl
+      row 'Server' do |donation_box|
+        
+        link_to donation_box.server.object_name,
+                my_server_path(donation_box.server) if donation_box.server
+      end
       row :total_donations
       row 'Largest Donation' do |db|
         donation = db.largest_donation
@@ -79,28 +87,34 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
       row :status, &:pretty_active
     end
 
-    panel 'Donations' do
-      paginated_collection(
-        resource.transactions.page(
-          params[:donation_page]
-        ).per(20), param_name: 'donation_page'
-      ) do
-        table_for collection.order(created_at: :desc).decorate do
-          column :created_at
-          column 'Payer/Payee' do |donation|
-            avatar = Avatar.find_by_avatar_key(donation.target_key)
-            output = if avatar
-                       link_to(donation.target_name, admin_avatar_path(avatar))
-                     else
-                       donation.target_name
-                     end
-            output
-          end
-          column :amount
-          column 'Description' do |donation|
-            truncate(donation.description, length: 20, separator: ' ')
-          end
+    panel 'Top 10 Donors For This Box' do
+      counts = resource.transactions.group(:target_name).count
+      sums = resource.transactions.group(:target_name).order('sum_amount DESC').sum(:amount)
+      data = sums.collect { |k,v| {donor: k, amount: v, count: counts[k]} }
+      paginated_data = Kaminari.paginate_array(data).page(params[:donor_page]).per(10)
+      
+      table_for paginated_data do 
+        column :donor
+        column :amount
+        column('Donations') do |item|
+          item[:count]
         end
+      end
+    end
+  end
+  
+  sidebar :donations, only: :show do 
+    paginated_collection(
+      resource.transactions.page(
+        params[:donation_page]
+      ).per(10), param_name: 'donation_page'
+    ) do
+      table_for collection.order(created_at: :desc).decorate, download_links: false do
+        column :created_at
+        column 'Payer/Payee' do |donation|
+          donation.target_name
+        end
+        column :amount
       end
     end
   end
@@ -134,8 +148,8 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
   end
 
   controller do
-    def scoped_collection
-      super.includes(%i[server user transactions])
-    end
+  #   def scoped_collection
+  #     # super.includes(%i[user transactions])
+  #   end
   end
 end

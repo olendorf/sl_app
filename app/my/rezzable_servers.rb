@@ -3,7 +3,7 @@
 ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
   include ActiveAdmin::ServerBehavior
 
-  menu label: 'Servers'
+  menu parent: 'Objects', label: 'Servers', if: proc{ current_user.servers.size > 0 }
 
   actions :all, except: %i[new create]
 
@@ -64,8 +64,11 @@ ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
         table_for collection.decorate do
           column 'Object Name' do |client|
             path = "my_#{
-              client.model.actable.model_name.route_key.split('_').last.singularize}_path"
+              client.model.actable.model_name.route_key.split('_')[1..-1].join('_').singularize}_path"
             link_to client.object_name, send(path, client.model.actable.id)
+          end
+          column 'Object Type' do |client|
+            client.model.actable.model_name.route_key.split('_')[1..-1].join('_').singularize.humanize
           end
           column :location, &:slurl
         end
@@ -146,5 +149,11 @@ ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
                         message: e.response)
     end
     redirect_back(fallback_location: my_servers_path)
+  end
+  
+  controller do
+    # def scoped_collection
+      # super.includes :actable
+    # end
   end
 end

@@ -27,7 +27,7 @@ RSpec.describe User, type: :model do
   it { should have_many(:splits).dependent(:destroy) }
   it { should have_many(:inventories).class_name('Analyzable::Inventory') }
 
-  describe 'servers' do
+  describe '#servers' do
     it 'should return the servers and nothing else' do
       user.web_objects << FactoryBot.build(:web_object)
       user.web_objects << FactoryBot.build(:server)
@@ -38,13 +38,35 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'terminal' do
-    it 'should return the servers and nothing else' do
+  describe '#terminals' do
+    it 'should return the terminals and nothing else' do
       owner.web_objects << FactoryBot.build(:web_object)
       owner.web_objects << FactoryBot.build(:terminal)
       owner.web_objects << FactoryBot.build(:terminal)
 
       expect(owner.terminals.size).to eq 2
+    end
+  end
+  
+  describe '#donation_boxes' do
+    it 'should return the terminals and nothing else' do
+      owner.web_objects << FactoryBot.build(:web_object)
+      owner.web_objects << FactoryBot.build(:donation_box)
+      owner.web_objects << FactoryBot.build(:donation_box)
+
+      expect(owner.donation_boxes.size).to eq 2
+    end
+  end
+  
+  describe '#donations' do 
+    it 'should return the users donations' do 
+      owner.web_objects << FactoryBot.create(:donation_box)
+      owner.web_objects << FactoryBot.create(:donation_box)
+      5.times do 
+        owner.web_objects.first.transactions << FactoryBot.build(:donation)
+        owner.web_objects.last.transactions << FactoryBot.build(:donation)
+      end
+      expect(owner.donations.size).to eq 10
     end
   end
 

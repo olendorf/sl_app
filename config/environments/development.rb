@@ -30,6 +30,9 @@ Rails.application.configure do
     Bullet.add_whitelist type: :unused_eager_loading,
                          class_name: 'Rezzable::DonationBox',
                          association: :transactions
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Analyzable::Transaction',
+                         association: :web_object
     Bullet.add_whitelist type: :n_plus_one_query,
                          class_name: 'AbstractWebObject',
                          association: :user
@@ -38,7 +41,10 @@ Rails.application.configure do
                          association: :server
     Bullet.add_whitelist type: :n_plus_one_query,
                          class_name: 'AbstractWebObject',
-                         association: :transactions
+                         association: :transactionsUSE 
+    Bullet.add_whitelist type: :n_plus_one_query,
+                         class_name: 'AbstractWebObject',
+                         association: :actable 
   end
 
   # Settings specified here will take precedence over those in config/application.rb.

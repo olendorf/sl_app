@@ -20,7 +20,6 @@ module Rezzable
     private
 
     def assign_user_to_inventory(inventory)
-      # puts "assigning user"
       inventory.user_id = user.id
     end
   end

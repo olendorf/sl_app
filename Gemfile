@@ -48,6 +48,7 @@ gem "highcharts-rails"
 # Theme for active admin
 # gem 'active_admin_flat_skin'
 gem "active_material", github: "vigetlabs/active_material"
+gem 'jquery-rails'
 
 # fun ways to generate data
 gem 'faker'

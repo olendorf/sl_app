@@ -33,10 +33,10 @@ RSpec.feature 'Server management', type: :feature do
 
       expect(page).to have_text('200 lindens given to Random Citizen')
       expect(stub).to have_been_requested
-      expect(user.transactions.size).to eq 1
+      expect(user.reload.transactions.size).to eq 1
     end
 
-    scenario 'User gives money with errod' do
+    scenario 'User gives money with error' do
       stub = stub_request(:post, uri_regex)
              .with(body: '{"avatar_name":"Random Citizen","amount":"200"}')
              .to_return(status: 400, body: 'foo')

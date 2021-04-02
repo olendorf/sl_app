@@ -51,5 +51,13 @@ module Rezzable
       }
     end
     # rubocop:enable Style/RedundantSelf
+
+    def transaction_category
+      'donation'
+    end
+
+    def transaction_description(transaction)
+      "Donation from #{transaction.target_name}."
+    end
   end
 end

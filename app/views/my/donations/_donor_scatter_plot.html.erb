@@ -1,0 +1,77 @@
+
+<div id="donor_scatter_plot_container" style="width: 1000; height:400px;" %>></div>
+
+
+<script type="text/javascript">
+
+        $(function () {
+                var processed_json = new Array();   
+                $.getJSON('/async/donations?chart=donor_scatter_plot', function(data) {
+                    // Populate series
+                    // for (i = 0; i < data.length; i++){
+                    //     processed_json.push([data[i].key, data[i].value]);
+                    // }
+                 
+                    // draw chart
+                     $('#donor_scatter_plot_container').highcharts({ 
+                        chart: {
+                            type: 'scatter',
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: 'Amount Donated by Number of Donations by Donor'
+                        },
+                        xAxis: {
+                            title: {
+                                enabled: true,
+                                text: 'Donations'
+                            },
+                            startOnTick: true,
+                            endOnTick: true,
+                            showLastLabel: true,
+                            tickInterval: 1,
+                            min: 1
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Total Donated ($L)'
+                            },
+                            gridLineWidth:0
+                        },
+                        legend: {
+                        		enabled: false
+                        },
+                        plotOptions: {
+                            scatter: {
+                                marker: {
+                                    radius: 5,
+                                    states: {
+                                        hover: {
+                                            enabled: true,
+                                            lineColor: 'rgb(100,100,100)'
+                                        }
+                                    }
+                                },
+                                states: {
+                                    hover: {
+                                        marker: {
+                                            enabled: false
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    headerFormat: '<b>{point.point.key}</b><br>',
+                                    pointFormat: '{point.x} donations, {point.y} $L'
+                                }
+                            }
+                        },
+                        series: [{
+                            name: 'Donor',
+                            data: data
+                        }]
+                    }); 
+                });
+            });
+
+
+</script>

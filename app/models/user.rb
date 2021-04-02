@@ -56,6 +56,15 @@ class User < ApplicationRecord
     Rezzable::Terminal.where(user_id: id)
   end
 
+  def donation_boxes
+    Rezzable::DonationBox.where(user_id: id)
+  end
+
+  def donations
+    ids = donation_boxes.collect { |box| box.abstract_web_object.id }
+    transactions.where(web_object_id: ids)
+  end
+
   # def splittable_key
   #   avatar_key
   # end

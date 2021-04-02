@@ -9,7 +9,7 @@ RSpec.describe 'Api::V1::Rezzable::Terminals', type: :request do
 
   describe 'making a payment' do
     let(:owner) do
-      owner = FactoryBot.create :owner 
+      owner = FactoryBot.create :owner
       owner.web_objects << FactoryBot.build(:server)
       owner
     end
@@ -17,8 +17,10 @@ RSpec.describe 'Api::V1::Rezzable::Terminals', type: :request do
     let(:terminal) { FactoryBot.create :terminal, user_id: owner.id }
     let(:path) { api_rezzable_terminal_path(owner) }
     let(:amount) { Settings.default.account.monthly_cost * 3 * active_user.account_level }
-    let(:uri_regex) { %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/give_money\?
-                          auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x}
+    let(:uri_regex) {
+      %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/give_money\?
+                          auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
+    }
     context 'valid params' do
       let(:atts) {
         {
@@ -48,42 +50,42 @@ RSpec.describe 'Api::V1::Rezzable::Terminals', type: :request do
           'Thank you for your payment. Your new expiration date is'
         )
       end
-      
-      context 'and there are user splits' do 
+
+      context 'and there are user splits' do
         let(:split_user) { FactoryBot.create :user }
         before(:each) do
           owner.splits << FactoryBot.build(
-                                :split, percent: 5, 
-                                        target_name: split_user.avatar_name,
-                                        target_key: split_user.avatar_key
-                                        )
+            :split, percent: 5,
+                    target_name: split_user.avatar_name,
+                    target_key: split_user.avatar_key
+          )
           owner.splits << FactoryBot.build(:split, percent: 10)
           owner.splits << FactoryBot.build(:split, percent: 7)
-          body_regex = %r{\"avatar_name\":\"[a-zA-Z' ]+\",\"amount\":[0-9]+}
+          body_regex = /"avatar_name":"[a-zA-Z' ]+","amount":[0-9]+/
           @stub = stub_request(:post, uri_regex).with(body: body_regex)
         end
-        
+
         it 'adds transactions to the owners account' do
           expect {
             put path, params: atts.to_json, headers: headers(terminal)
           }.to change(owner.reload.transactions, :count).by(4)
         end
-        
+
         it 'updates the owners balance correctl' do
           trans_atts = atts[:transactions_attributes][0]
           expected_balance = trans_atts[:amount] - (trans_atts[:amount] * 0.05).round -
-                            (trans_atts[:amount] * 0.1).round -
-                            (trans_atts[:amount] * 0.07).round
+                             (trans_atts[:amount] * 0.1).round -
+                             (trans_atts[:amount] * 0.07).round
           put path, params: atts.to_json, headers: headers(terminal)
           expect(owner.reload.balance).to eq expected_balance
         end
-        
+
         it 'adds transactions to the existing sharees' do
           expect {
             put path, params: atts.to_json, headers: headers(terminal)
           }.to change(split_user.transactions, :count).by(1)
         end
-        
+
         it 'updates the sharees balance' do
           trans_atts = atts[:transactions_attributes][0]
           put path, params: atts.to_json, headers: headers(terminal)

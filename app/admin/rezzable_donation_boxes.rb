@@ -47,7 +47,7 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
     column :goal
     column :dead_line
     column 'Version', &:semantic_version
-    column :sttus, &:pretty_active
+    column :status, &:pretty_active
 
     column :created_at, sortable: :created_at
     actions
@@ -94,28 +94,32 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
       row :status, &:pretty_active
     end
 
-    panel 'Donations' do
-      paginated_collection(
-        resource.transactions.page(
-          params[:donation_page]
-        ).per(20), param_name: 'donation_page'
-      ) do
-        table_for collection.order(created_at: :desc).decorate do
-          column :created_at
-          column 'Payer/Payee' do |donation|
-            avatar = Avatar.find_by_avatar_key(donation.target_key)
-            output = if avatar
-                       link_to(donation.target_name, admin_avatar_path(avatar))
-                     else
-                       donation.target_name
-                     end
-            output
-          end
-          column :amount
-          column 'Description' do |donation|
-            truncate(donation.description, length: 20, separator: ' ')
-          end
+    panel 'Top 10 Donors For This Box' do
+      counts = resource.transactions.group(:target_name).count
+      sums = resource.transactions.group(:target_name).order('sum_amount DESC').sum(:amount)
+      data = sums.collect { |k, v| { donor: k, amount: v, count: counts[k] } }
+      paginated_data = Kaminari.paginate_array(data).page(params[:donor_page]).per(10)
+
+      table_for paginated_data do
+        column :donor
+        column :amount
+        column('Donations') do |item|
+          item[:count]
         end
+      end
+    end
+  end
+
+  sidebar :donations, only: :show do
+    paginated_collection(
+      resource.transactions.page(
+        params[:donation_page]
+      ).per(10), param_name: 'donation_page'
+    ) do
+      table_for collection.order(created_at: :desc).decorate, download_links: false do
+        column :created_at
+        column 'Payer/Payee', &:target_name
+        column :amount
       end
     end
   end

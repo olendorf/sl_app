@@ -12,5 +12,10 @@ FactoryBot.define do
     amount { rand(-1000..1000) }
     transaction_key { rand < 0.25 ? SecureRandom.uuid : nil }
     category { Analyzable::Transaction.categories.keys.sample }
+
+    factory :donation do
+      category { 'donation' }
+      amount { rand(1..1000) }
+    end
   end
 end

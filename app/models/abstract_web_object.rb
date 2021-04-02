@@ -17,7 +17,7 @@ class AbstractWebObject < ApplicationRecord
   has_many :transactions, class_name: 'Analyzable::Transaction',
                           dependent: :nullify,
                           foreign_key: :web_object_id,
-                          before_add: :assign_user_to_transaction,
+                          before_add: :handle_attributes,
                           after_add: :handle_splits
   accepts_nested_attributes_for :transactions
 
@@ -51,7 +51,35 @@ class AbstractWebObject < ApplicationRecord
   #   object_name
   # end
 
+  def transaction_category
+    return 'other' unless actable
+
+    actable.transaction_category
+  end
+
+  def transaction_description(transaction)
+    return nil unless actable
+
+    actable.transaction_description(transaction)
+  end
+
   private
+
+  def source_type
+    return 'Web object' if actable.nil?
+
+    actable.model_name.route_key.singularize.split('_')[1..].join('_').humanize
+  end
+
+  def handle_attributes(transaction)
+    assign_user_to_transaction(transaction)
+    transaction.description = transaction_description(transaction)
+    transaction.category = transaction_category
+    transaction.source_key = object_key
+    transaction.source_name = object_name
+    transaction.source_type = source_type
+    transaction.save
+  end
 
   def assign_user_to_transaction(transaction)
     user.transactions << transaction

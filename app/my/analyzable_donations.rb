@@ -1,49 +1,71 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Analyzable::Transaction, as: 'Donation', namespace: :my do
+ActiveAdmin.register_page 'Donations', namespace: :my do
   menu parent: 'Data', label: 'Donations', priority: 1, if: proc{ current_user.transactions.size > 0 }
 
-  actions :all, except: %i[destroy show edit update]
-
-  config.sort_order = 'created_at_desc'
-
-  scope_to :current_user, association_method: :donations
-
-  index title: 'Donations' do
-    column :created_at
-    # column 'Payer/Payee' do |transaction|
-    #   avatar = Avatar.find_by_avatar_key(transaction.target_key)
-    #   output = if avatar
-    #             link_to(transaction.target_name, my_avatar_path(avatar))
-    #           else
-    #             transaction.target_name
-    #           end
-    #   output
-    # end
-    column 'Donor', sortable: :target_name do |donation|
-      donation.target_name
+  content title: proc { I18n.t('active_admin.dashboard') } do
+    panel '' do
+      donations = current_user.donations.order('created_at DESC')
+      
+      div class: 'column md' do 
+        paginated_collection( donations.page(params[:donation_page]).per(10
+          ), param_name: 'donation_page', entry_name: 'Donations', 
+                                          download_links: false) do 
+          table_for collection do 
+            column 'Date/Time', &:created_at
+            column 'Name', &:target_name
+            column :amount
+          end
+        end
+      end
+      div class: 'column md' do 
+        amounts = current_user.donations.group(:target_name).sum(:amount).sort_by {|_key, value| -value}.to_h
+        counts = current_user.donations.group(:target_name).count
+        data = Kaminari.paginate_array(
+          amounts.collect { |k, v| {avatar: k, amount: v, count: counts[k] } }
+          ).page(params[:donor_page]).per(10)
+        paginated_collection(data, param_name: 'donor_page', 
+                                   entry_name: 'Donors', 
+                                   download_links: false,) do 
+          table_for data do 
+            column 'Donor' do |item|
+              item[:avatar]
+            end
+            column 'Donations' do |item|
+              item[:count]
+            end
+            column 'Total $L' do |item|
+              item[:amount]
+            end
+          end
+        end
+        # div id: 'donor_footer' do 
+        #   paginate data, param_name: 'donor_page'
+        # end
+      end
     end
-    column 'Donation Box', sortable: 'abstract_web_objects.object_name' do |donation|
-      donation_box = AbstractWebObject.find(donation.web_object_id).actable
-      link_to donation_box.object_name, my_donation_box_path(donation_box)
+    panel '' do
+      div class: 'column md' do 
+        render partial: 'donations_histogram'
+        
+      end
+      div class: 'column md' do 
+        render partial: 'donors_histogram'
+      end
     end
-    actions defaults: false do |donation|
-      link_to('View', my_transaction_path(donation))+
-      link_to('Edit', edit_my_transaction_path(donation))
+    panel '' do 
+      div class: 'column lg' do
+        render partial: 'donor_scatter_plot'
+      end
     end
-  end
-  
-  index
 
-  filter :target_name, label: 'Donor'
-  filter :amount
-  filter :created_at
-  filter :web_object_id, as: :select, collection: proc{ current_user.donation_boxes.collect { |box| [box.object_name, box.abstract_web_object.id]} }
-  
-  controller do
-    def scoped_collection
-      super.includes :web_object # prevents N+1 queries to your database
-    end
+
+    # div class: 'blank_slate_container', id: 'dashboard_default_message' do
+    #   span class: 'blank_slate' do
+    #     span I18n.t('active_admin.dashboard_welcome.welcome')
+    #     small I18n.t('active_admin.dashboard_welcome.call_to_action')
+    #   end
+    # ed
   end
 
  

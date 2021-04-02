@@ -10,8 +10,9 @@
 // Active Admin's got SASS!
 @import "active_admin/mixins";
 // @import "active_admin/base";
-@import "active_material";
 
+@import "active_material";
+// @import "active_bootstrap_skin";
 
 // @import "active_admin_flat_skin";
 
@@ -22,3 +23,22 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+
+
+.panel {
+  
+  width: 70%;
+  margin: auto;
+  
+  .column.md {
+    width: 40%;
+    display: inline-block;
+    margin: 20px 50px;
+  }
+  .column.lg {
+    width: 80%;
+    display: inline-block;
+    margin: 20px 50px;
+  }
+  
+}

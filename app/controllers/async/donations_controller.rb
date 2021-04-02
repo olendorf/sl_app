@@ -9,13 +9,19 @@ class Async::DonationsController < AsyncController
   private
   
   def donation_histogram
-    ids = current_user.donation_boxes.collect { |box| box.abstract_web_object.id }
-    current_user.transactions.where(web_object_id: ids).collect { |d| d.amount }
+    current_user.donations.collect { |d| d.amount }
   end
   
   def donor_amount_histogram
-    ids = current_user.donation_boxes.collect { |box| box.abstract_web_object.id }
-    current_user.transactions.where(web_object_id: ids).
-      group(:target_name).sum(:amount).collect { |k, v| v }
+    current_user.donations.group(:target_name).sum(:amount).collect { |k, v| v }
+  end
+  
+  def donor_scatter_plot
+    amounts = current_user.donations.group(:target_name).sum(:amount).sort_by {|_key, value| -value}.to_h
+    counts = current_user.donations.group(:target_name).count
+    
+    data = amounts.collect { |k, v| {key: k, x: counts[k], y: v } }   
+    puts data.to_json
+    data
   end
 end 

@@ -45,5 +45,18 @@ RSpec.describe "Async::Donations", type: :request do
         expect(JSON.parse(response.body).size).to eq 21
       end
     end
+    
+    context 'asking for donation scatter plot data' do 
+      it 'should return ok status' do 
+        get path, params: {chart: 'donor_scatter_plot'}
+        expect(response.status).to eq 200
+      end 
+      
+            
+      it 'should return the data' do 
+        get path, params: {chart: 'donor_scatter_plot'}
+        expect(JSON.parse(response.body).size).to eq 21
+      end
+    end
   end
 end

@@ -1,28 +1,29 @@
 
-<div id="container" style="width:70%; height:600;" %>></div>
+<div id="donor_container" style="width: 600px; height:400px;" %>></div>
+
 
 <script type="text/javascript">
 
         $(function () {
                 var processed_json = new Array();   
-                $.getJSON('/async/donations?chart=donation_histogram', function(data) {
+                $.getJSON('/async/donations?chart=donor_amount_histogram', function(data) {
                     // Populate series
-                    for (i = 0; i < data.length; i++){
-                        processed_json.push([data[i].key, data[i].value]);
-                    }
+                    // for (i = 0; i < data.length; i++){
+                    //     processed_json.push([data[i].key, data[i].value]);
+                    // }
                  
                     // draw chart
-                     $('#container').highcharts({ 
+                     $('#donor_container').highcharts({ 
                     
                         title: {
-                            text: 'Frequency of Donation Amounts'
+                            text: 'Frequency of Total Donations by Donor'
                         },
                     
                         xAxis: [{
                             alignTicks: false,
                             visible: false
                         }, {
-                            title: { text: 'Donation Amount($L)' },
+                            title: { text: 'Amount Donated by Donor ($L)' },
                             alignTicks: false
                         }],
                     
@@ -53,6 +54,7 @@
                         series: [{
                             name: 'Donations',
                             type: 'histogram',
+                            binsNumber: 'rice',
                             xAxis: 1,
                             yAxis: 1,
                             baseSeries: 's1',

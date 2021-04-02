@@ -3,13 +3,14 @@
 ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' do
   include ActiveAdmin::RezzableBehavior
 
-  menu parent: 'Objects', label: 'Donation Boxes', if: proc{ current_user.donation_boxes.size > 0 }
+  menu parent: 'Objects', label: 'Donation Boxes', if: proc {
+                                                         current_user.donation_boxes.size.positive?
+                                                       }
 
   actions :all, except: %i[new create]
 
   decorate_with Rezzable::DonationBoxDecorator
-  
-  
+
   scope_to :current_user, association_method: :donation_boxes
 
   filter :abstract_web_object_object_name, as: :string, label: 'Object Name'
@@ -67,7 +68,6 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
       row :description
       row :location, &:slurl
       row 'Server' do |donation_box|
-        
         link_to donation_box.server.object_name,
                 my_server_path(donation_box.server) if donation_box.server
       end
@@ -90,40 +90,36 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
     panel 'Donors For This Box' do
       counts = resource.transactions.group(:target_name).count
       sums = resource.transactions.group(:target_name).order('sum_amount DESC').sum(:amount)
-      data = sums.collect { |k,v| {donor: k, amount: v, count: counts[k]} }
+      data = sums.collect { |k, v| { donor: k, amount: v, count: counts[k] } }
       paginated_data = Kaminari.paginate_array(data).page(params[:donor_page]).per(10)
-      
-      table_for paginated_data, sortable: true do 
+
+      table_for paginated_data, sortable: true do
         column :donor
         column :amount
         column('Donations') do |item|
           item[:count]
         end
       end
-      
-      div id: 'donors-footer' do 
+
+      div id: 'donors-footer' do
         paginate paginated_data, param_name: :donor_page
       end
-      
-      div class: 'pagination-information' do 
+
+      div class: 'pagination-information' do
         page_entries_info paginated_data, entry_name: 'donation'
       end
     end
   end
-  
-  sidebar :donations, only: :show do 
+
+  sidebar :donations, only: :show do
     paginated_collection(
       resource.transactions.page(
         params[:donation_page]
       ).per(10), param_name: 'donation_page'
     ) do
       table_for collection.order('created_at DESC').decorate, download_links: false do
-        column 'Date/time' do |donation|
-          donation.created_at
-        end
-        column 'Payer/Payee' do |donation|
-          donation.target_name
-        end
+        column 'Date/time', &:created_at
+        column 'Payer/Payee', &:target_name
         column :amount
       end
     end
@@ -159,7 +155,7 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
 
   controller do
     # def scoped_collection
-      # super.includes(%i[transactions])
+    # super.includes(%i[transactions])
     # end
   end
 end

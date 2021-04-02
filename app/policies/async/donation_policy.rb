@@ -1,7 +1,7 @@
-class Async::DonationPolicy < ApplicationPolicy
-  class Scope < Scope
-    def resolve
-      scope.all
-    end
+# frozen_string_literal: true
+
+module Async
+  # Authorization for AJAX donation requests.
+  class DonationPolicy < ApplicationPolicy
   end
 end

@@ -44,7 +44,7 @@ Rails.application.configure do
                          association: :transactions
     Bullet.add_whitelist type: :n_plus_one_query,
                          class_name: 'AbstractWebObject',
-                         association: :actable 
+                         association: :actable
   end
 
   # Settings specified here will take precedence over those in config/application.rb.

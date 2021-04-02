@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Analyzable::Transaction, as: 'Transaction', namespace: :my do
-  menu label: 'Transactions', priority: 1, if: proc{ current_user.transactions.size > 0 }
+  menu label: 'Transactions', priority: 1, if: proc { current_user.transactions.size.positive? }
 
   actions :all, except: %i[destroy7]
 

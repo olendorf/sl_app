@@ -97,10 +97,10 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
     panel 'Top 10 Donors For This Box' do
       counts = resource.transactions.group(:target_name).count
       sums = resource.transactions.group(:target_name).order('sum_amount DESC').sum(:amount)
-      data = sums.collect { |k,v| {donor: k, amount: v, count: counts[k]} }
+      data = sums.collect { |k, v| { donor: k, amount: v, count: counts[k] } }
       paginated_data = Kaminari.paginate_array(data).page(params[:donor_page]).per(10)
-      
-      table_for paginated_data do 
+
+      table_for paginated_data do
         column :donor
         column :amount
         column('Donations') do |item|
@@ -109,8 +109,8 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
       end
     end
   end
-  
-  sidebar :donations, only: :show do 
+
+  sidebar :donations, only: :show do
     paginated_collection(
       resource.transactions.page(
         params[:donation_page]
@@ -118,9 +118,7 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
     ) do
       table_for collection.order(created_at: :desc).decorate, download_links: false do
         column :created_at
-        column 'Payer/Payee' do |donation|
-          donation.target_name
-        end
+        column 'Payer/Payee', &:target_name
         column :amount
       end
     end

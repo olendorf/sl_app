@@ -10,12 +10,11 @@ module Rezzable
       { api_key: self.api_key }
     end
     # rubocop:enable Style/RedundantSelf
-    
-          
+
     def transaction_category
       'account'
-    end 
-    
+    end
+
     def transaction_description(transaction)
       "Account payment from #{transaction.target_name}."
     end

@@ -50,26 +50,27 @@ class AbstractWebObject < ApplicationRecord
   # def splittable_name
   #   object_name
   # end
-  
+
   def transaction_category
     return 'other' unless actable
+
     actable.transaction_category
   end
-  
+
   def transaction_description(transaction)
     return nil unless actable
+
     actable.transaction_description(transaction)
   end
 
   private
-  
 
-  
   def source_type
     return 'Web object' if actable.nil?
-    actable.model_name.route_key.singularize.split('_')[1..-1].join('_').humanize
+
+    actable.model_name.route_key.singularize.split('_')[1..].join('_').humanize
   end
-  
+
   def handle_attributes(transaction)
     assign_user_to_transaction(transaction)
     transaction.description = transaction_description(transaction)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe AsyncPolicy, type: :policy do
@@ -5,11 +7,9 @@ RSpec.describe AsyncPolicy, type: :policy do
 
   subject { described_class }
 
-
   permissions :index? do
-    it 'should allow an active user' do 
+    it 'should allow an active user' do
       expect(subject).to permit active_user, :async
     end
   end
-
 end

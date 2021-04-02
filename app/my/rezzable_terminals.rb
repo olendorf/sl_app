@@ -3,7 +3,7 @@
 ActiveAdmin.register Rezzable::Terminal, as: 'Terminal', namespace: :my do
   include ActiveAdmin::RezzableBehavior
 
-  menu parent: 'Objects', lablel: 'Terminals', if: proc{ current_user.terminals.size > 0}
+  menu parent: 'Objects', lablel: 'Terminals', if: proc { current_user.terminals.size.positive? }
 
   actions :all, except: %i[new create]
 
@@ -21,11 +21,7 @@ ActiveAdmin.register Rezzable::Terminal, as: 'Terminal', namespace: :my do
     end
     column 'Location', sortable: :region, &:slurl
     column 'Server', sortable: 'server.object_name' do |terminal|
-      if terminal.server
-        link_to terminal.server.object_name, my_server_path(terminal.server)
-      else
-        nil
-      end
+      link_to terminal.server.object_name, my_server_path(terminal.server) if terminal.server
     end
     column 'Version', &:semantic_version
     column :sttus, &:pretty_active

@@ -9,7 +9,6 @@ module Api
           @message = @requesting_object.response if @atts['transactions_attributes']
           super
         end
-
       end
     end
   end

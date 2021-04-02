@@ -10,10 +10,10 @@ Rails.application.routes.draw do
   root to: 'static_pages#home'
 
   get 'static_pages/home' => 'static_pages#home'
-  
+
   # get 'async/donations' => 'async/donations#get'
-  
-  namespace :async, defaults: { format: 'json' } do 
+
+  namespace :async, defaults: { format: 'json' } do
     resources :donations, only: [:index]
   end
 

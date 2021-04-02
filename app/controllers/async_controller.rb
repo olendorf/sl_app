@@ -1,11 +1,11 @@
+# frozen_string_literal: true
+
 class AsyncController < ApplicationController
   include Pundit
-  
 
   after_action :verify_authorized
-  
-  private 
-    # def pundit_user
-    #   current_user
-    # end
+
+  # def pundit_user
+  #   current_user
+  # end
 end

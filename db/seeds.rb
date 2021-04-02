@@ -49,25 +49,34 @@ end
 
 # rubocop:disable Metrics/AbcSize
 def give_transactions_to_user(user, avatars)
-  num = rand(10..20)
+  num = rand(10..100)
   dates = Array.new(num) { rand(1.year.ago.to_f..Time.now.to_f) }.sort
+
+  sources = %i[donation_boxes web]
+  sources += [:terminals] if user.can_be_owner?
 
   dates.each do |date|
     target = avatars.sample
-    source = rand < 0.25 ? nil : user.web_objects.sample
-    if source
-      user.transactions << FactoryBot.build(:transaction, source_type: 'SL',
-                                                          source_key: source.object_key,
-                                                          source_name: source.object_name,
-                                                          target_key: target.avatar_key,
-                                                          target_name: target.avatar_name,
-                                                          created_at: Time.at(date))
-    else
+    source_type = sources.sample
+    case source_type
+    when :web
       user.transactions << FactoryBot.build(:transaction, source_type: 'Web',
                                                           source_key: user.avatar_key,
                                                           source_name: user.avatar_key,
                                                           target_name: target.avatar_name,
                                                           created_at: Time.at(date))
+    when :donation_boxes
+      source = user.send(source_type).sample
+      source.transactions << FactoryBot.build(:donation, target_key: target.avatar_key,
+                                                         target_name: target.avatar_name,
+                                                         created_at: Time.at(date))
+    when :terminals
+      source = user.send(source_type).sample
+      amount = rand(1..6) * 300
+      source.transactions << FactoryBot.build(:transaction, amount: amount,
+                                                            target_key: target.avatar_key,
+                                                            target_name: target.avatar_name,
+                                                            created_at: Time.at(date))
     end
   end
 end
@@ -99,6 +108,9 @@ give_servers_to_user(owner)
 
 puts 'giving terminals to owner'
 give_terminals(owner, avatars)
+
+puts 'giving donation_boxes to owner'
+give_donation_boxes_to_user(owner, avatars)
 
 puts 'giving transactions to owner'
 give_transactions_to_user(owner, avatars)

@@ -9,9 +9,4 @@ AsyncPolicy = Struct.new(:user, :async) do
   def index?
     @user.active?
   end
-  # class Scope < Scope
-  #   def resolve
-  #     scope.all
-  #   end
-  # end
 end

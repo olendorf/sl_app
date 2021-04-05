@@ -24,10 +24,7 @@ module Async
         -value
       end.to_h
       counts = current_user.donations.group(:target_name).count
-
-      data = amounts.collect { |k, v| { key: k, x: counts[k], y: v } }
-      puts data.to_json
-      data
+      amounts.collect { |k, v| { key: k, x: counts[k], y: v } }
     end
   end
 end

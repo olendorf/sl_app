@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_16_162243) do
+ActiveRecord::Schema.define(version: 2021_04_05_144645) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,13 @@ ActiveRecord::Schema.define(version: 2021_03_16_162243) do
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
     t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
+  end
+
+  create_table "analyzable_detections", force: :cascade do |t|
+    t.integer "visit_id"
+    t.string "position"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "analyzable_inventories", force: :cascade do |t|
@@ -96,6 +103,14 @@ ActiveRecord::Schema.define(version: 2021_03_16_162243) do
     t.index ["user_id"], name: "index_analyzable_transactions_on_user_id"
   end
 
+  create_table "analyzable_visits", force: :cascade do |t|
+    t.integer "web_object_id"
+    t.string "avatar_key"
+    t.string "avatar_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "avatars", force: :cascade do |t|
     t.string "avatar_key"
     t.string "avatar_name"
@@ -106,6 +121,16 @@ ActiveRecord::Schema.define(version: 2021_03_16_162243) do
     t.index ["avatar_key"], name: "index_avatars_on_avatar_key"
     t.index ["avatar_name"], name: "index_avatars_on_avatar_name"
     t.index ["display_name"], name: "index_avatars_on_display_name"
+  end
+
+  create_table "listable_avatars", force: :cascade do |t|
+    t.string "avatar_name"
+    t.string "avatar_key"
+    t.string "list_name"
+    t.integer "listable_id"
+    t.string "listable_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "rezzable_donation_boxes", force: :cascade do |t|
@@ -126,6 +151,16 @@ ActiveRecord::Schema.define(version: 2021_03_16_162243) do
   end
 
   create_table "rezzable_terminals", force: :cascade do |t|
+  end
+
+  create_table "rezzable_traffic_cops", force: :cascade do |t|
+    t.boolean "power"
+    t.integer "sensor_mode", default: 0
+    t.integer "security_mode", default: 0
+    t.string "first_visit_message"
+    t.string "repeat_visit_message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "rezzable_web_objects", force: :cascade do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :listable_avatar do
     transient do
@@ -6,12 +8,12 @@ FactoryBot.define do
     end
     avatar_name { "#{first_name} #{last_name}" }
     avatar_key { SecureRandom.uuid }
-    
-    # factory :allowed_avatar do 
+
+    # factory :allowed_avatar do
     #   list_name { 'allowed' }
     # end
-    
-    # factory :banned_avatar do 
+
+    # factory :banned_avatar do
     # end
   end
 end

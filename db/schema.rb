@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_02_195713) do
+ActiveRecord::Schema.define(version: 2021_04_05_144645) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,6 +121,16 @@ ActiveRecord::Schema.define(version: 2021_04_02_195713) do
     t.index ["avatar_key"], name: "index_avatars_on_avatar_key"
     t.index ["avatar_name"], name: "index_avatars_on_avatar_name"
     t.index ["display_name"], name: "index_avatars_on_display_name"
+  end
+
+  create_table "listable_avatars", force: :cascade do |t|
+    t.string "avatar_name"
+    t.string "avatar_key"
+    t.string "list_name"
+    t.integer "listable_id"
+    t.string "listable_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "rezzable_donation_boxes", force: :cascade do |t|

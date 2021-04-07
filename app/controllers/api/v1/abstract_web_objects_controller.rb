@@ -5,6 +5,7 @@ module Api
     # Parent controll for all rezzable objects
     class AbstractWebObjectsController < Api::V1::ApiController
       before_action :process_atts, only: %i[create update]
+
       def create
         if AbstractWebObject.find_by_object_key(@atts[:object_key])
           load_requesting_object

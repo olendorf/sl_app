@@ -55,7 +55,32 @@ RSpec.describe "Api::V1::Rezzable::TrafficCops", type: :request do
     end
   end
   
-
+  describe 'adding a detection' do 
+    let(:path) { api_rezzable_traffic_cop_path(traffic_cop) }
+    context 'new visitor and new visit' do 
+      let(:avatar) { FactoryBot.build :avatar }
+      let(:atts) {
+        {
+          detection: {
+            avatar_name: 'test',
+            avatar_key: 'test',
+            position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                            transform_values { |v| v.round(4) }
+          }
+        }
+      }
+      
+      it 'should return ok status' do 
+        put path, params: atts.to_json, headers: headers(traffic_cop)
+        expect(response.status).to eq 200
+      end
+      
+      it 'should add the visit' do 
+        put path, params: atts.to_json, headers: headers(traffic_cop)
+        expect(traffic_cop.visits.size).to eq 1
+      end
+    end
+  end
   
 
 end

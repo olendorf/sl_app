@@ -84,6 +84,7 @@ module Rezzable
           avatar_name: detection[:avatar_name]
           )
         visit.detections << Analyzable::Detection.new(position: detection[:position].to_json)
+        self.detection = nil
         visits << visit
       end 
       

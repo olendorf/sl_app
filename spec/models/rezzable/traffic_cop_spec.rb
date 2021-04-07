@@ -46,4 +46,137 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
       expect(traffic_cop.listable_avatars.where(list_name: 'banned').size).to eq 1
     end
   end
+  
+  describe '#allowed_list' do 
+    it 'should return only allowed avatars' do 
+      traffic_cop.listable_avatars << FactoryBot.build(:allowed_avatar)
+      traffic_cop.listable_avatars << FactoryBot.build(:allowed_avatar)
+      traffic_cop.listable_avatars << FactoryBot.build(:allowed_avatar)
+      traffic_cop.listable_avatars << FactoryBot.build(:banned_avatar)
+      traffic_cop.listable_avatars << FactoryBot.build(:banned_avatar)
+      expect(traffic_cop.allowed_list.size).to eq 3
+    end
+  end
+  
+  describe '#banned_list' do 
+    it 'should return only banned avatars' do 
+      traffic_cop.listable_avatars << FactoryBot.build(:allowed_avatar)
+      traffic_cop.listable_avatars << FactoryBot.build(:allowed_avatar)
+      traffic_cop.listable_avatars << FactoryBot.build(:allowed_avatar)
+      traffic_cop.listable_avatars << FactoryBot.build(:banned_avatar)
+      traffic_cop.listable_avatars << FactoryBot.build(:banned_avatar)
+      expect(traffic_cop.banned_list.size).to eq 2
+    end
+  end
+  
+  
+  describe 'handling detections' do 
+    context 'first visit' do 
+      before(:each) do 
+        traffic_cop.update(detection: {
+          avatar_name: 'Random Citizen',
+          avatar_key: 'foo',
+          position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                          transform_values { |v| v.round(4) }
+        })
+      end
+      it 'should create a new visit' do 
+        expect(traffic_cop.visits.size).to eq 1
+      end
+      
+      it 'should have the correct start time' do 
+        expect(traffic_cop.visits.first.start_time).to be_within(1.second).of(Time.now)
+      end
+      
+      it 'should have the correct duration' do 
+        expect(traffic_cop.visits.first.duration).to be_within(1).of(15)
+      end
+
+    end
+    
+          
+    context 'continued visit' do 
+      
+      before(:each) do 
+        traffic_cop.visits << FactoryBot.build(:visit, avatar_name: 'test',
+                                                       avatar_key: 'test',
+                                                       start_time: 30.seconds.ago,
+                                                       stop_time: 15.seconds.ago,
+                                                       duration: 15)
+        FactoryBot.create(:detection, visit_id: traffic_cop.visits.first.id)    
+
+        traffic_cop.update(detection: {
+          avatar_name: 'test',
+          avatar_key: 'test',
+          position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                          transform_values { |v| v.round(4) }
+        })  
+        
+      end
+      it 'should not add a visit' do 
+        expect(traffic_cop.visits.size).to eq 1
+      end
+      
+      it 'should update the duration' do 
+        expect(traffic_cop.visits.first.reload.duration).to be_within(1).of(45)
+      end
+    end
+    
+    context 'new visit same avie' do 
+      
+      before(:each) do 
+        traffic_cop.visits << FactoryBot.build(:visit, avatar_name: 'test',
+                                                       avatar_key: 'test',
+                                                       start_time: 6.minutes.ago,
+                                                       stop_time: 4.minutes.ago,
+                                                       duration: 120)
+        FactoryBot.create(:detection, visit_id: traffic_cop.visits.first.id)    
+
+        traffic_cop.update(detection: {
+          avatar_name: 'test',
+          avatar_key: 'test',
+          position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                          transform_values { |v| v.round(4) }
+        })  
+        
+      end
+      it 'should not add a visit' do 
+        expect(traffic_cop.visits.size).to eq 2
+      end
+      
+      it 'should update the duration' do 
+        expect(traffic_cop.visits.last.reload.duration).to be_within(1).of(15)
+      end
+    end
+    
+    context 'new visit new avie' do 
+      
+      before(:each) do 
+        traffic_cop.visits << FactoryBot.build(:visit, avatar_name: 'test',
+                                                       avatar_key: 'test',
+                                                       start_time: 6.minutes.ago,
+                                                       stop_time: 4.minutes.ago,
+                                                       duration: 120)
+        FactoryBot.create(:detection, visit_id: traffic_cop.visits.first.id)    
+
+        traffic_cop.update(detection: {
+          avatar_name: 'new',
+          avatar_key: 'new',
+          position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                          transform_values { |v| v.round(4) }
+        })  
+        
+      end
+      it 'should not add a visit' do 
+        expect(traffic_cop.visits.size).to eq 2
+      end
+      
+      it 'should update the duration' do 
+        expect(traffic_cop.visits.last.reload.duration).to be_within(1).of(15)
+      end
+    end
+    
+    
+  end
+  
 end

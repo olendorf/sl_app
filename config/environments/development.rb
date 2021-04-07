@@ -19,6 +19,9 @@ Rails.application.configure do
                          class_name: 'Rezzable::DonationBox',
                          association: :abstract_web_object
     Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Rezzable::TrafficCop',
+                         association: :abstract_web_object
+    Bullet.add_whitelist type: :unused_eager_loading,
                          class_name: 'Analyzable::Inventory',
                          association: :user
     Bullet.add_whitelist type: :unused_eager_loading,

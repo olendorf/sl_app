@@ -9,11 +9,12 @@ FactoryBot.define do
     avatar_name { "#{first_name} #{last_name}" }
     avatar_key { SecureRandom.uuid }
 
-    # factory :allowed_avatar do
-    #   list_name { 'allowed' }
-    # end
+    factory :allowed_avatar do
+      list_name { 'allowed' }
+    end
 
-    # factory :banned_avatar do
-    # end
+    factory :banned_avatar do
+      list_name { 'banned' }
+    end
   end
 end

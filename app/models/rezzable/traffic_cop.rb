@@ -7,6 +7,7 @@ module Rezzable
     acts_as :abstract_web_object
     
     attr_accessor :detection
+    attr_accessor :outgoing_response
     
     before_update :handle_detection, if: :detection?
 
@@ -58,8 +59,7 @@ module Rezzable
           first_visit_message: first_visit_message,
           repeat_visit_message: repeat_visit_message
         },
-        data: {
-        }
+        response: outgoing_response
       }
     end
     # rubocop:enable Style/RedundantSelf
@@ -75,10 +75,12 @@ module Rezzable
         previous_visit = visits.where(avatar_key: detection[:avatar_key]).
                             order(start_time: :desc).limit(1).first
         add_detection(previous_visit) and return if previous_visit && previous_visit.active?
-        add_visit 
+        add_visit (previous_visit)
+        set_message(previous_visit)
       end
       
-      def add_visit   
+      def add_visit(previous_visit)
+        self.outgoing_response = previous_visit.nil? ? first_visit_message : repeat_visit_message
         visit = Analyzable::Visit.new(
           avatar_key: detection[:avatar_key],
           avatar_name: detection[:avatar_name]
@@ -92,6 +94,13 @@ module Rezzable
         previous_visit.detections << Analyzable::Detection.new(
           position: self.detection[:position].to_json
         )
+      end
+      
+      def set_message(previous_visit)
+        self.outgoing_response = nil
+        self.outgoing_response = first_visit_message and return unless previous_visit
+        self.outgoing_response = repeat_visit_message if previous_visit.stop_time < Time.now - 
+                                                             Settings.default.traffic_cop.return_message_delay.days
       end
     
   end

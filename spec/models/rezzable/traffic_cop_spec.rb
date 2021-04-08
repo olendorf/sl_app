@@ -29,7 +29,9 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
   }
 
   let(:user) { FactoryBot.create :active_user }
-  let(:traffic_cop) { FactoryBot.create :traffic_cop, user_id: user.id }
+  let(:traffic_cop) { FactoryBot.create :traffic_cop, user_id: user.id, 
+                                                      first_visit_message: 'foo', 
+                                                      repeat_visit_message: 'bar' }
 
   describe '#add_to_allowed_list' do
     it 'should add the listable ' do
@@ -91,6 +93,10 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
       it 'should have the correct duration' do 
         expect(traffic_cop.visits.first.duration).to be_within(1).of(15)
       end
+      
+      it 'should set the first visit message' do 
+        expect(traffic_cop.outgoing_response).to eq('foo')
+      end
 
     end
     
@@ -120,32 +126,74 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
       it 'should update the duration' do 
         expect(traffic_cop.visits.first.reload.duration).to be_within(1).of(45)
       end
+      
+      it 'should not set a message' do 
+        expect(traffic_cop.outgoing_response).to be_nil
+      end
     end
     
     context 'new visit same avie' do 
+      context 'last visit was recent' do 
       
-      before(:each) do 
-        traffic_cop.visits << FactoryBot.build(:visit, avatar_name: 'test',
-                                                       avatar_key: 'test',
-                                                       start_time: 6.minutes.ago,
-                                                       stop_time: 4.minutes.ago,
-                                                       duration: 120)
-        FactoryBot.create(:detection, visit_id: traffic_cop.visits.first.id)    
-
-        traffic_cop.update(detection: {
-          avatar_name: 'test',
-          avatar_key: 'test',
-          position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
-                          transform_values { |v| v.round(4) }
-        })  
+        before(:each) do 
+          traffic_cop.visits << FactoryBot.build(:visit, avatar_name: 'test',
+                                                         avatar_key: 'test',
+                                                         start_time: 6.minutes.ago,
+                                                         stop_time: 4.minutes.ago,
+                                                         duration: 120)
+          FactoryBot.create(:detection, visit_id: traffic_cop.visits.first.id)    
+  
+          traffic_cop.update(detection: {
+            avatar_name: 'test',
+            avatar_key: 'test',
+            position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                            transform_values { |v| v.round(4) }
+          })  
+          
+        end
+        it 'should not add a visit' do 
+          expect(traffic_cop.visits.size).to eq 2
+        end
         
-      end
-      it 'should not add a visit' do 
-        expect(traffic_cop.visits.size).to eq 2
+        it 'should update the duration' do 
+          expect(traffic_cop.visits.last.duration).to be_within(1).of(15)
+        end
+        
+        it 'should not set a message' do 
+          expect(traffic_cop.outgoing_response).to be_nil
+        end
       end
       
-      it 'should update the duration' do 
-        expect(traffic_cop.visits.last.reload.duration).to be_within(1).of(15)
+      context 'last visit was not recent' do 
+      
+        before(:each) do 
+          traffic_cop.visits << FactoryBot.build(:visit, avatar_name: 'test',
+                                                         avatar_key: 'test',
+                                                         start_time: 8.days.ago,
+                                                         stop_time: 8.days.ago + 30.minutes,
+                                                         duration: 30)
+          FactoryBot.create(:detection, visit_id: traffic_cop.visits.first.id)    
+  
+          traffic_cop.update(detection: {
+            avatar_name: 'test',
+            avatar_key: 'test',
+            position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                            transform_values { |v| v.round(4) }
+          })  
+          
+        end
+        it 'should not add a visit' do 
+          expect(traffic_cop.visits.size).to eq 2
+        end
+        
+        it 'should update the duration' do 
+          expect(traffic_cop.visits.last.duration).to be_within(1).of(15)
+        end
+        
+        
+        it 'should set the correct message' do 
+          expect(traffic_cop.outgoing_response).to eq 'bar'
+        end
       end
     end
     

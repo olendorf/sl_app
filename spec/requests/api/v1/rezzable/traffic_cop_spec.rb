@@ -4,7 +4,10 @@ RSpec.describe "Api::V1::Rezzable::TrafficCops", type: :request do
   it_behaves_like 'a user object API', :traffic_cop
   
   let(:user) { FactoryBot.create :active_user }
-  let(:traffic_cop) { FactoryBot.create :traffic_cop, user_id: user.id }
+  let(:traffic_cop) { FactoryBot.create :traffic_cop, user_id: user.id,
+                                                      first_visit_message: 'foo',
+                                                      repeat_visit_message: 'bar'
+  }
   
   describe 'adding an allowed avatar.' do 
     let(:avatar) { FactoryBot.build :avatar }
@@ -70,14 +73,58 @@ RSpec.describe "Api::V1::Rezzable::TrafficCops", type: :request do
         }
       }
       
+      before(:each) { put path, params: atts.to_json, headers: headers(traffic_cop) }
+      
       it 'should return ok status' do 
-        put path, params: atts.to_json, headers: headers(traffic_cop)
+        # put path, params: atts.to_json, headers: headers(traffic_cop)
         expect(response.status).to eq 200
       end
       
       it 'should add the visit' do 
-        put path, params: atts.to_json, headers: headers(traffic_cop)
+        # put path, params: atts.to_json, headers: headers(traffic_cop)
         expect(traffic_cop.visits.size).to eq 1
+      end
+      
+      it 'should return the appropriate response' do 
+        expect(JSON.parse(response.body)['data']['response']).to eq 'foo'
+      end
+    end
+    
+    context 'repeat visitor and new visit' do 
+      let(:avatar) { FactoryBot.build :avatar }
+      let(:atts) {
+        {
+          detection: {
+            avatar_name: 'test',
+            avatar_key: 'test',
+            position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                            transform_values { |v| v.round(4) }
+          }
+        }
+      }
+      
+      before(:each) do 
+        traffic_cop.visits << FactoryBot.build(:visit, avatar_name: 'test', 
+                                                       avatar_key: 'test',
+                                                       start_time: 5.days.ago,
+                                                       stop_time: 4.days.ago,
+                                                       duration: 1.day.to_int)
+        FactoryBot.create(:detection, visit_id: traffic_cop.visits.last.id)
+        put path, params: atts.to_json, headers: headers(traffic_cop)
+      end
+      
+      it 'should return ok status' do 
+        # put path, params: atts.to_json, headers: headers(traffic_cop)
+        expect(response.status).to eq 200
+      end
+      
+      it 'should add the visit' do 
+        # put path, params: atts.to_json, headers: headers(traffic_cop)
+        expect(traffic_cop.visits.size).to eq 2
+      end
+      
+      it 'should return the appropriate response' do 
+        expect(JSON.parse(response.body)['data']['response']).to eq 'bar'
       end
     end
   end

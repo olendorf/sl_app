@@ -8,6 +8,7 @@ module Rezzable
     
     attr_accessor :detection
     attr_accessor :outgoing_response
+    attr_accessor :has_access
     
     before_update :handle_detection, if: :detection?
 
@@ -46,6 +47,11 @@ module Rezzable
       security_mode_parcel: 1,
       security_mode_owned_parcels: 2
     }
+    
+    enum access_mode: {
+      access_mode_banned: 0,
+      access_mode_allowed: 1
+    }
   
     
         # rubocop:disable Style/RedundantSelf
@@ -70,13 +76,26 @@ module Rezzable
         !detection.nil?
       end
       
+
+      
       def handle_detection
         self.detection = self.detection.with_indifferent_access
+        determine_access
+        return unless has_access
         previous_visit = visits.where(avatar_key: detection[:avatar_key]).
                             order(start_time: :desc).limit(1).first
         add_detection(previous_visit) and return if previous_visit && previous_visit.active?
         add_visit (previous_visit)
         set_message(previous_visit)
+      end
+      
+      def determine_access
+        self.has_access = true
+        self.has_access = self.banned_list.where(avatar_key: detection[:avatar_key]).size.zero?
+        if access_mode_allowed? && self.has_access
+          self.has_access = self.allowed_list.where(avatar_key: detection[:avatar_key]).size > 0
+        end
+        self.has_access
       end
       
       def add_visit(previous_visit)

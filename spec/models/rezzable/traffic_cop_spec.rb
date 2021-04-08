@@ -27,6 +27,13 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
       security_mode_owned_parcels: 2
     )
   }
+  
+  it {
+    should define_enum_for(:access_mode).with_values(
+        access_mode_banned: 0,
+        access_mode_allowed: 1
+      )
+  }
 
   let(:user) { FactoryBot.create :active_user }
   let(:traffic_cop) { FactoryBot.create :traffic_cop, user_id: user.id, 
@@ -221,6 +228,70 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
       
       it 'should update the duration' do 
         expect(traffic_cop.visits.last.reload.duration).to be_within(1).of(15)
+      end
+    end
+    
+    context 'access_mode_banned' do 
+      it 'should set has_access to false if the avatar is banned' do 
+        traffic_cop.access_mode = :access_mode_banned
+        traffic_cop.save
+        traffic_cop.listable_avatars << FactoryBot.build(:banned_avatar, avatar_name: 'test', 
+                                                                         avatar_key: 'test')
+        # traffic_cop.save
+        traffic_cop.update(detection: {
+                avatar_name: 'test',
+                avatar_key: 'test',
+                position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                                transform_values { |v| v.round(4) }
+              })  
+        expect(traffic_cop.has_access).to be_falsey
+      end
+      it 'should set has_access to true if the avatar is not banned' do 
+        traffic_cop.access_mode = :access_mode_banned
+        traffic_cop.save
+        traffic_cop.listable_avatars << FactoryBot.build(:banned_avatar, avatar_name: 'test', 
+                                                                         avatar_key: 'test')
+        
+        traffic_cop.update(detection: {
+              avatar_name: 'not_test',
+              avatar_key: 'not_Test',
+              position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                              transform_values { |v| v.round(4) }
+            })  
+        expect(traffic_cop.has_access).to be_truthy
+      end
+    end 
+    
+    
+    
+    context 'access_mode_allowed' do 
+      it 'should set has_access to false if the avatar is banned' do 
+        traffic_cop.access_mode = :access_mode_allowed
+        traffic_cop.save
+        traffic_cop.listable_avatars << FactoryBot.build(:allowed_avatar, avatar_name: 'test', 
+                                                                         avatar_key: 'test')
+        # traffic_cop.save
+        traffic_cop.update(detection: {
+                avatar_name: 'test',
+                avatar_key: 'test',
+                position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                                transform_values { |v| v.round(4) }
+              })  
+        expect(traffic_cop.has_access).to be_truthy
+      end
+      it 'should set has_access to true if the avatar is not banned' do 
+        traffic_cop.access_mode = :access_mode_allowed
+        traffic_cop.save
+        traffic_cop.listable_avatars << FactoryBot.build(:allowed_avatar, avatar_name: 'test', 
+                                                                         avatar_key: 'test')
+        
+        traffic_cop.update(detection: {
+              avatar_name: 'not_test',
+              avatar_key: 'not_Test',
+              position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                              transform_values { |v| v.round(4) }
+            })  
+        expect(traffic_cop.has_access).to be_falsey
       end
     end
     

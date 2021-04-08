@@ -127,6 +127,51 @@ RSpec.describe "Api::V1::Rezzable::TrafficCops", type: :request do
         expect(JSON.parse(response.body)['data']['response']).to eq 'bar'
       end
     end
+    
+    context 'visitor is allowed' do       
+      let(:atts) {
+        {
+          detection: {
+            avatar_name: 'test',
+            avatar_key: 'test',
+            position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                            transform_values { |v| v.round(4) }
+          }
+        }
+      }
+      
+      before(:each) do 
+        put path, params: atts.to_json, headers: headers(traffic_cop)
+      end
+      
+      it 'should return allowed in data' do 
+        puts response.body
+        expect(JSON.parse(response.body)['data']['has_access']).to be_truthy
+      end
+    end
+    
+    context 'visitor is not allowed' do       
+      let(:atts) {
+        {
+          detection: {
+            avatar_name: 'test',
+            avatar_key: 'test',
+            position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                            transform_values { |v| v.round(4) }
+          }
+        }
+      }
+      
+      before(:each) do 
+        traffic_cop.listable_avatars << FactoryBot.build(:banned_avatar, avatar_key: 'test')
+        put path, params: atts.to_json, headers: headers(traffic_cop)
+      end
+      
+      it 'should return allowed in data' do 
+        puts response.body
+        expect(JSON.parse(response.body)['data']['has_access']).to be_falsey
+      end
+    end
   end
   
 

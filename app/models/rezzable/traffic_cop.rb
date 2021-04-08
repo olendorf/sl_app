@@ -63,9 +63,11 @@ module Rezzable
           sensor_mode: sensor_mode,
           security_mode: security_mode,
           first_visit_message: first_visit_message,
-          repeat_visit_message: repeat_visit_message
+          repeat_visit_message: repeat_visit_message,
+          access_mode: access_mode
         },
-        response: outgoing_response
+        response: outgoing_response,
+        has_access: has_access
       }
     end
     # rubocop:enable Style/RedundantSelf

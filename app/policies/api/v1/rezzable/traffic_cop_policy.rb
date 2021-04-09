@@ -1,2 +1,10 @@
-class Api::V1::Rezzable::TrafficCopPolicy < Api::V1::RezzablePolicy
+# frozen_string_literal: true
+
+module Api
+  module V1
+    module Rezzable
+      class TrafficCopPolicy < Api::V1::RezzablePolicy
+      end
+    end
+  end
 end

@@ -64,8 +64,6 @@ class AbstractWebObject < ApplicationRecord
   end
 
   private
-    
-   
 
   def source_type
     return 'Web object' if actable.nil?

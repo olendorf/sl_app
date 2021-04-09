@@ -47,6 +47,7 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Exclude:
     - app/models/user.rb
+    - app/models/rezzable/traffic_cop.rb
     
 Metrics/MethodLength:
   Max: 20

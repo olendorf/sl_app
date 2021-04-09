@@ -36,6 +36,7 @@ class User < ApplicationRecord
   has_many :splits, dependent: :destroy, as: :splittable
   accepts_nested_attributes_for :splits, allow_destroy: true
   has_many :inventories, class_name: 'Analyzable::Inventory'
+  has_many :visits, class_name: 'Analyzable::Visit', dependent: :destroy
 
   # THese two methods need to be overridden to deal with Devise's need for emails.
   def email_required?

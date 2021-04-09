@@ -87,6 +87,7 @@ module Rezzable
         previous_visit = visits.where(avatar_key: detection[:avatar_key]).
                             order(start_time: :desc).limit(1).first
         add_detection(previous_visit) and return if previous_visit && previous_visit.active?
+        send_inventory(previous_visit)
         add_visit (previous_visit)
         set_message(previous_visit)
       end
@@ -122,7 +123,19 @@ module Rezzable
         self.outgoing_response = nil
         self.outgoing_response = first_visit_message and return unless previous_visit
         self.outgoing_response = repeat_visit_message if previous_visit.stop_time < Time.now - 
-                                                             Settings.default.traffic_cop.return_message_delay.days
+                                                             Settings.default.traffic_cop.
+                                                                return_message_delay.days
+      end
+      
+      def send_inventory(previous_visit)
+        return unless self.inventory_to_give
+        if !previous_visit || previous_visit.stop_time < Time.now - 
+                                                             Settings.default.traffic_cop.
+                                                                return_message_delay.days
+                                                                
+          inventory = server.inventories.find_by_inventory_name(self.inventory_to_give)
+          InventorySlRequest.give_inventory(inventory, self.detection[:avatar_name])
+        end
       end
     
   end

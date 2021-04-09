@@ -167,6 +167,7 @@ ActiveRecord::Schema.define(version: 2021_04_08_162504) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "access_mode", default: 0
+    t.string "inventory_to_give"
   end
 
   create_table "rezzable_web_objects", force: :cascade do |t|

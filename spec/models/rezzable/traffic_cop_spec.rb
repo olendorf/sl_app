@@ -36,9 +36,18 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
   }
 
   let(:user) { FactoryBot.create :active_user }
+  let(:server) do 
+    server = FactoryBot.create :server, user_id: user.id
+    server.inventories << FactoryBot.build(:inventory, inventory_name: 'foo')
+    server.inventories << FactoryBot.build(:inventory, inventory_name: 'bar')
+    server
+  end
   let(:traffic_cop) { FactoryBot.create :traffic_cop, user_id: user.id, 
                                                       first_visit_message: 'foo', 
-                                                      repeat_visit_message: 'bar' }
+                                                      repeat_visit_message: 'bar',
+                                                      server_id: server.id }
+                                                      
+
 
   describe '#add_to_allowed_list' do
     it 'should add the listable ' do
@@ -106,7 +115,6 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
       end
 
     end
-    
           
     context 'continued visit' do 
       
@@ -262,8 +270,6 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
       end
     end 
     
-    
-    
     context 'access_mode_allowed' do 
       it 'should set has_access to false if the avatar is banned' do 
         traffic_cop.access_mode = :access_mode_allowed
@@ -295,7 +301,86 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
       end
     end
     
-    
+    context 'sending inventory' do
+      let(:uri_regex) {
+        %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/inventory/give/foo\?
+                            auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
+      }
+      before(:each) do 
+        @stub = stub_request(:post, uri_regex)
+      end
+      context 'when inventory is not set' do 
+        
+        it 'should not send anything' do 
+          traffic_cop.update(detection: {
+            avatar_name: 'Random Citizen',
+            avatar_key: 'foo',
+            position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                            transform_values { |v| v.round(4) }
+          })
+          expect(@stub).to_not have_been_requested
+        end
+      end
+      
+      context 'when inventory is set' do 
+        before(:each) do 
+          traffic_cop.inventory_to_give = 'foo'
+          traffic_cop.save
+        end
+        context 'and the avatars first visit' do 
+          it 'should request the inventory be given' do
+
+            traffic_cop.update(detection: {
+              avatar_name: 'Random Citizen',
+              avatar_key: 'foo',
+              position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                              transform_values { |v| v.round(4) }
+            })
+          
+            expect(@stub).to have_been_requested
+          end
+        end
+        
+        context 'and the avatars recent repeat visit' do
+          it 'should not request the inventory give' do 
+            traffic_cop.visits << FactoryBot.build(:visit, avatar_name: 'Random Citizen',
+                                                           avatar_key: 'foo',
+                                                           start_time: 2.days.ago, 
+                                                           stop_time: 2.day.ago + 1.hour,
+                                                           duration: 1.hour.to_i)
+  
+            traffic_cop.update(detection: {
+              avatar_name: 'Random Citizen',
+              avatar_key: 'foo',
+              position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                              transform_values { |v| v.round(4) }
+            })
+          
+            expect(@stub).to_not have_been_requested
+          end
+        end
+        
+        context 'and the avatars later repeat visit' do 
+          it 'should not request the inventory give' do 
+            traffic_cop.visits << FactoryBot.build(:visit, avatar_name: 'Random Citizen',
+                                                           avatar_key: 'foo',
+                                                           start_time: 10.days.ago, 
+                                                           stop_time: 10.day.ago + 1.hour,
+                                                           duration: 1.hour.to_i)
+  
+            traffic_cop.update(detection: {
+              avatar_name: 'Random Citizen',
+              avatar_key: 'foo',
+              position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }.
+                              transform_values { |v| v.round(4) }
+            })
+          
+            expect(@stub).to have_been_requested
+          end
+        end
+        
+      end
+    end
   end
   
 end

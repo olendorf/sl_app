@@ -6,7 +6,7 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
   it { should respond_to :abstract_web_object }
 
   it {
-    should have_many(:visits).dependent(:destroy)
+    should have_many(:visits).dependent(:nullify)
                              .class_name('Analyzable::Visit')
   }
 

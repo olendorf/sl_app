@@ -13,7 +13,7 @@ module Rezzable
     before_update :handle_detection, if: :detection?
 
     has_many :visits, class_name: 'Analyzable::Visit',
-                      dependent: :destroy,
+                      dependent: :nullify,
                       foreign_key: :web_object_id
     # accepts_nested_attributes_for :visits, allow_destroy: true
 
@@ -104,7 +104,8 @@ module Rezzable
         self.outgoing_response = previous_visit.nil? ? first_visit_message : repeat_visit_message
         visit = Analyzable::Visit.new(
           avatar_key: detection[:avatar_key],
-          avatar_name: detection[:avatar_name]
+          avatar_name: detection[:avatar_name],
+          region: self.region
           )
         visit.detections << Analyzable::Detection.new(position: detection[:position].to_json)
         self.detection = nil

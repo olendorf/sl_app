@@ -24,6 +24,7 @@ RSpec.describe User, type: :model do
       'Analyzable::Transaction'
     ).dependent(:destroy)
   }
+  it { should have_many(:visits).class_name('Analyzable::Visit').dependent(:destroy) }
   it { should have_many(:splits).dependent(:destroy) }
   it { should have_many(:inventories).class_name('Analyzable::Inventory') }
 

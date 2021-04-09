@@ -112,6 +112,8 @@ ActiveRecord::Schema.define(version: 2021_04_08_162504) do
     t.datetime "start_time"
     t.datetime "stop_time"
     t.integer "duration"
+    t.integer "user_id"
+    t.string "region"
   end
 
   create_table "avatars", force: :cascade do |t|

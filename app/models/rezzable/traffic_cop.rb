@@ -67,6 +67,10 @@ module Rezzable
       }
     end
     # rubocop:enable Style/RedundantSelf
+    
+    def current_visitors
+      visits.where('stop_time > ?', 1.minute.ago)
+    end
 
     private
 

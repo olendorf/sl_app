@@ -48,6 +48,27 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
                                     repeat_visit_message: 'bar',
                                     server_id: server.id
   }
+  
+  describe '#current_visitors' do 
+    before(:each) do 
+      traffic_cop.visits << FactoryBot.build(:visit, start_time: 2.hours.ago, 
+                                                     stop_time: 1.hour.ago, 
+                                                     duration: 1.hour)
+                                                     
+      traffic_cop.visits << FactoryBot.build(:visit, start_time: 1.hours.ago, 
+                                                     stop_time: 15.seconds.ago, 
+                                                     duration: 1.hour - 15.seconds)
+                                                     
+      traffic_cop.visits << FactoryBot.build(:visit, start_time: 1.hours.ago, 
+                                                     stop_time: 30.seconds.ago, 
+                                                     duration: 1.hour - 30.seconds)
+      
+    end
+    
+    it 'should return only the current visitors' do 
+      expect(traffic_cop.current_visitors.size).to eq 2
+    end
+  end
 
   describe '#add_to_allowed_list' do
     it 'should add the listable ' do

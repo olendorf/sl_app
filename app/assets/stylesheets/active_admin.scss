@@ -12,6 +12,8 @@
 // @import "active_admin/base";
 
 @import "active_material";
+
+@import "slapp_data_colors";
 // @import "active_bootstrap_skin";
 
 // @import "active_admin_flat_skin";
@@ -27,6 +29,10 @@
 
 .panel {
   
+  &.sidebar_section {
+    width: 100%;
+  }
+  
   width: 70%;
   margin: auto;
   
@@ -41,4 +47,13 @@
     margin: 20px 50px;
   }
   
+}
+
+.status_tag {
+  &.on {
+    background-color: $slapp_data_ok;
+  }
+  &.off {
+    background-color: $am-theme-error;
+  }
 }

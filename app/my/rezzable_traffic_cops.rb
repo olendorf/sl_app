@@ -1,4 +1,4 @@
-ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
+ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
   include ActiveAdmin::RezzableBehavior
   
   menu label: 'Traffic Cops'
@@ -7,10 +7,15 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
   
   decorate_with Rezzable::TrafficCopDecorator
   
+  scope_to :current_user, association_method: :traffic_cops
+  
   index title: 'Traffic Cops' do
     selectable_column
+    column 'Power' do |traffic_cop| 
+      traffic_cop.decorate.pretty_power 
+    end
     column 'Object Name', sortable: :object_name do |traffic_cop|
-      link_to traffic_cop.object_name, admin_traffic_cop_path(traffic_cop)
+      link_to traffic_cop.object_name, my_traffic_cop_path(traffic_cop)
     end
     column 'Description', sortable: :description do |traffic_cop|
       truncate(traffic_cop.description, length: 10, separator: ' ')
@@ -18,14 +23,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
     column 'Location', sortable: :region, &:slurl
     column 'Server', sortable: 'server.object_name' do |traffic_cop|
       link_to traffic_cop.server.object_name,
-              admin_server_path(traffic_cop.server) if traffic_cop.server
-    end
-    column 'Owner', sortable: 'users.avatar_name' do |traffic_cop|
-      if traffic_cop.user
-        link_to traffic_cop.user.avatar_name, admin_user_path(traffic_cop.user)
-      else
-        'Orphan'
-      end
+              my_server_path(traffic_cop.server) if traffic_cop.server
     end
     
     column 'Current Visitors' do |traffic_cop| 
@@ -46,7 +44,6 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
   
   filter :abstract_web_object_object_name, as: :string, label: 'Object Name'
   filter :abstract_web_object_description, as: :string, label: 'Description'
-  filter :abstract_web_object_user_avatar_name, as: :string, label: 'Owner'
   filter :abstract_web_object_region, as: :string, label: 'Region'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   
@@ -96,7 +93,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
       table_for collection do 
         column :avatar_name
         column '' do |avatar|
-          link_to 'Delete',  admin_listable_avatar_path(avatar), method: :delete, data: {confirm: 'Delete this allowed avatar?' }
+          link_to 'Delete',  my_listable_avatar_path(avatar), method: :delete, data: {confirm: 'Delete this allowed avatar?' }
         end
       end
     end
@@ -114,7 +111,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
       table_for collection do 
         column :avatar_name
         column '' do |avatar|
-          link_to 'Delete',  admin_listable_avatar_path(avatar), method: :delete, data: {confirm: 'Unban this avatar?' }
+          link_to 'Delete',  my_listable_avatar_path(avatar), method: :delete, data: {confirm: 'Unban this avatar?' }
         end
       end
     end
@@ -127,13 +124,6 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
       row :server_name, &:object_name
       row :server_key, &:object_key
       row :description
-      row 'Owner', sortable: 'users.avatar_name' do |server|
-        if server.user
-          link_to server.user.avatar_name, admin_user_path(server.user)
-        else
-          'Orphan'
-        end
-      end
       row :location, &:slurl
       row 'Recent Visitors' do 
         traffic_cop.visits.where('stop_time > ?', 1.week.ago).size
@@ -181,7 +171,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
   end
 
   # See permitted parameters documentation:
-  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
+  # https://github.com/activemy/activemy/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
   # Uncomment all parameters which should be permitted for assignment
   #
@@ -191,7 +181,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
   #
   # permit_params do
   #   permitted = [:object_name, :object_key, :description, :region, :position, :url, :api_key, :user_id, :pinged_at, :major_version, :minor_version, :patch_version, :server_id, :power, :sensor_mode, :security_mode, :first_visit_message, :repeat_visit_message, :access_mode, :inventory_to_give]
-  #   permitted << :other if params[:action] == 'create' && current_user.admin?
+  #   permitted << :other if params[:action] == 'create' && current_user.my?
   #   permitted
   # end
   

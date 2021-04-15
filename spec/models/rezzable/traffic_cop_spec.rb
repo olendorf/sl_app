@@ -389,4 +389,27 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
       end
     end
   end
+  
+  describe '#visitors' do     before(:each) do 
+    traffic_cop.visits << FactoryBot.build(:visit, start_time: 2.hours.ago, 
+                                                   stop_time: 1.hour.ago, 
+                                                   duration: 1.hour)
+                                                   
+    traffic_cop.visits << FactoryBot.build(:visit, avatar_name: 'foo',
+                                                   avatar_key: 'bar',
+                                                   start_time: 1.hours.ago, 
+                                                   stop_time: 15.seconds.ago, 
+                                                   duration: 1.hour - 15.seconds)
+                                                   
+    traffic_cop.visits << FactoryBot.build(:visit, avatar_name: 'foo',
+                                                   avatar_key: 'bar',
+                                                   start_time: 1.hours.ago, 
+                                                   stop_time: 30.seconds.ago, 
+                                                   duration: 1.hour - 30.seconds)
+      
+    end
+    it 'should return the summed time spent by each avatar' do 
+      expect(traffic_cop.visitors.size).to eq 2
+    end
+  end
 end

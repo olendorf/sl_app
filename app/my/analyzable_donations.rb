@@ -3,7 +3,9 @@
 ActiveAdmin.register_page 'Donations', namespace: :my do
   menu parent: 'Data', label: 'Donations',
        priority: 1,
-       if: proc { current_user.transactions.size.positive? }
+       if: proc { current_user.donations.size.positive? }
+         
+  # scope_to :current_user, association_method: :donations
 
   content title: proc { I18n.t('active_admin.dashboard') } do
     panel '' do

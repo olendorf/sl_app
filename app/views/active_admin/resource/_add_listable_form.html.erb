@@ -1,0 +1,24 @@
+<%= form_for ListableAvatar.new, url: ("/#{params['controller'].split('/').first}/listable_avatars") do |f|%>
+  <%= content_tag :fieldset, class: 'inputs' do %>
+    <%= content_tag :ol do %>
+      <%= content_tag :li, class: 'string input required stringish', id: 'allowed-avatar_name_input' do %>
+        <%= f.label(:avatar_name, 'Avatar Name', class: 'label') %>
+        <%= f.text_field(:avatar_name, placeholder: 'Random Resident', 
+                                              class: 'string input required stringish', 
+                                              id: 'allowed-avatar_name') %>
+      <% end %>
+      <%= content_tag :li, class: 'string input required stringish', id: 'allowed-avatar_key_input' do %>
+        <%= f.label(:avatar_name, 'Avatar Name', class: 'label') %>
+        <%= f.text_field(:avatar_key, placeholder: '00000000-0000-0000-0000-000000000000', 
+                                             class: 'string input required stringish', 
+                                             id: 'allowed-avatar_key') %>
+      <% end %>
+      <%= f.hidden_field(:list_name, value: list_name) %>
+      <%= f.hidden_field(:listable_id, value: resource.id) %>
+      <%= f.hidden_field(:listable_type, value: resource.decorate.model.class.name) %>
+      
+    <% end %>
+    
+  <% end %>
+  <%= submit_tag 'Add' %>
+<% end %>

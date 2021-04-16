@@ -66,7 +66,7 @@ def give_transactions_to_user(user, avatars)
                                                           target_name: target.avatar_name,
                                                           created_at: Time.at(date))
     when :donation_boxes
-      if(user.send(source_type).size > 0)
+      if user.send(source_type).size.positive?
         source = user.send(source_type).sample
         source.transactions << FactoryBot.build(:donation, target_key: target.avatar_key,
                                                            target_name: target.avatar_name,
@@ -99,18 +99,19 @@ def give_donation_boxes_to_user(user, avatars)
   end
 end
 
+# rubocop:disable Metrics/AbcSize
 def give_visits_to_traffic_cop(traffic_cop, number_of_visits)
   dates = []
   number_of_visits.times { dates << Time.at(rand(1.year.ago.to_i..Time.now.to_i)) }
   dates.sort!
   dates.each do |date|
-    visit = FactoryBot.create(:visit, start_time: date, 
-                                                   region: traffic_cop.region, 
-                                                   stop_time: date + 15.seconds,
-                                                   duration: 15.seconds,
-                                                   user_id: traffic_cop.user.id)
+    visit = FactoryBot.create(:visit, start_time: date,
+                                      region: traffic_cop.region,
+                                      stop_time: date + 15.seconds,
+                                      duration: 15.seconds,
+                                      user_id: traffic_cop.user.id)
     FactoryBot.create(:detection, visit_id: visit.id)
-    rand(0..120).times do |i|
+    rand(0..120).times do |_i|
       position = JSON.parse(visit.detections.last.position)
       position['x'] += rand(-5.0..5.0)
       position['y'] += rand(-5.0..5.0)
@@ -120,13 +121,13 @@ def give_visits_to_traffic_cop(traffic_cop, number_of_visits)
       visit.duration = visit.duration + 30
       traffic_cop.visits << visit
     end
-    
   end
 end
+# rubocop:enable Metrics/AbcSize
 
-def give_traffic_cops_to_user(user, avatars, number_of_visits)
-  rand(1..3).times do 
-    traffic_cop= FactoryBot.create(:traffic_cop)
+def give_traffic_cops_to_user(user, _avatars, number_of_visits)
+  rand(1..3).times do
+    traffic_cop = FactoryBot.create(:traffic_cop)
     user.web_objects << traffic_cop
     traffic_cop.server_id = user.servers.sample.id
     traffic_cop.save
@@ -154,7 +155,7 @@ give_donation_boxes_to_user(owner, avatars)
 puts 'giving transactions to owner'
 give_transactions_to_user(owner, avatars)
 
-puts 'giving traffic_cops to owner' 
+puts 'giving traffic_cops to owner'
 give_traffic_cops_to_user(owner, avatars, 200)
 
 4.times do |i|
@@ -175,13 +176,12 @@ puts 'creating users'
   if rand < 0.5
     puts "giving donation_boxes to user #{i}"
     give_donation_boxes_to_user(user, avatars)
-    
+
   end
 
   puts "giving transactions to user #{i}"
   give_transactions_to_user(user, avatars)
-  
-  
+
   puts "giving traffic_cops to user #{i}"
   give_traffic_cops_to_user(user, avatars, 10) if rand < 0.25
 end

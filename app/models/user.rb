@@ -60,7 +60,7 @@ class User < ApplicationRecord
   def donation_boxes
     Rezzable::DonationBox.where(user_id: id)
   end
-  
+
   def traffic_cops
     Rezzable::TrafficCop.where(user_id: id)
   end
@@ -69,7 +69,6 @@ class User < ApplicationRecord
     ids = donation_boxes.collect { |box| box.abstract_web_object.id }
     transactions.where(web_object_id: ids)
   end
-  
 
   # def splittable_key
   #   avatar_key

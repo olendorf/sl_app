@@ -79,12 +79,10 @@ RSpec.describe 'Api::V1::Rezzable::TrafficCops', type: :request do
       before(:each) { put path, params: atts.to_json, headers: headers(traffic_cop) }
 
       it 'should return ok status' do
-        # put path, params: atts.to_json, headers: headers(traffic_cop)
         expect(response.status).to eq 200
       end
 
       it 'should add the visit' do
-        # put path, params: atts.to_json, headers: headers(traffic_cop)
         expect(traffic_cop.visits.size).to eq 1
       end
 
@@ -117,12 +115,10 @@ RSpec.describe 'Api::V1::Rezzable::TrafficCops', type: :request do
       end
 
       it 'should return ok status' do
-        # put path, params: atts.to_json, headers: headers(traffic_cop)
         expect(response.status).to eq 200
       end
 
       it 'should add the visit' do
-        # put path, params: atts.to_json, headers: headers(traffic_cop)
         expect(traffic_cop.visits.size).to eq 2
       end
 
@@ -148,7 +144,6 @@ RSpec.describe 'Api::V1::Rezzable::TrafficCops', type: :request do
       end
 
       it 'should return allowed in data' do
-        puts response.body
         expect(JSON.parse(response.body)['data']['has_access']).to be_truthy
       end
     end
@@ -171,7 +166,6 @@ RSpec.describe 'Api::V1::Rezzable::TrafficCops', type: :request do
       end
 
       it 'should return allowed in data' do
-        puts response.body
         expect(JSON.parse(response.body)['data']['has_access']).to be_falsey
       end
     end

@@ -54,6 +54,12 @@ en:
         failure: 'There was an error moving the inventory: %{message}'
       give: 
         failure: 'Unable to give inventory: %{message}'
+    
+    listable_avatar:
+      create:
+        success: '%{avatar_name} added to %{list_name} list'
+      destroy:
+        success: '%{avatar_name} removed to %{list_name} list'
   
   api:
     terminal:

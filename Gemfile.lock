@@ -43,8 +43,6 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    active_bootstrap_skin (0.1.5)
-      bootstrap-sass (~> 3.4.1)
     active_record-acts_as (5.0.2)
       activerecord (>= 6.0)
       activesupport (>= 6.0)
@@ -87,15 +85,10 @@ GEM
       ruby2_keywords (>= 0.0.2, < 1.0)
     archive-zip (0.12.0)
       io-like (~> 0.3.0)
-    autoprefixer-rails (10.2.4.0)
-      execjs
     bcrypt (3.1.16)
     bindex (0.8.1)
     bootsnap (1.7.3)
       msgpack (~> 1.0)
-    bootstrap-sass (3.4.1)
-      autoprefixer-rails (>= 5.2.1)
-      sassc (>= 2.0.0)
     builder (3.2.4)
     bullet (6.1.4)
       activesupport (>= 3.0.0)
@@ -185,7 +178,6 @@ GEM
       dry-initializer (~> 3.0)
       dry-schema (~> 1.5, >= 1.5.2)
     erubi (1.10.0)
-    execjs (2.7.0)
     factory_bot (6.1.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.1.0)
@@ -200,6 +192,11 @@ GEM
     formtastic_i18n (0.6.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    gon (6.4.0)
+      actionpack (>= 3.0.20)
+      i18n (>= 0.7)
+      multi_json
+      request_store (>= 1.0)
     guard (2.16.2)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -275,6 +272,7 @@ GEM
     mini_portile2 (2.5.0)
     minitest (5.14.4)
     msgpack (1.4.2)
+    multi_json (1.15.0)
     nenv (0.3.0)
     netrc (0.11.0)
     nio4r (2.5.7)
@@ -459,12 +457,10 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  active_bootstrap_skin
   active_material!
   active_record-acts_as
   activeadmin
   bootsnap (>= 1.4.2)
-  bootstrap-sass (~> 3.4.1)
   bullet
   byebug
   capybara (>= 2.15)
@@ -476,6 +472,7 @@ DEPENDENCIES
   draper
   factory_bot_rails
   faker
+  gon
   guard-rspec
   guard-spring
   highcharts-rails
@@ -490,7 +487,6 @@ DEPENDENCIES
   rest-client
   rspec-rails
   sass-rails (>= 6)
-  sassc-rails (>= 2.1.0)
   selenium-webdriver
   shoulda-matchers
   spring

@@ -171,6 +171,31 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
         end
       end
     end
+    
+    panel '' do 
+      div class: 'column lg' do 
+        render partial: 'visits_timeline'
+      end
+    end
+    
+    panel '' do 
+      div class: 'column md' do
+        render partial: 'visits_histogram' 
+      end
+      div class: 'column md' do
+        render partial: 'visitors_time_histogram'
+      end
+    end
+    
+    panel '' do 
+      div class: 'column md' do 
+        render partial: 'visitors_counts_histogram'
+      end
+      
+      div class: 'column md' do 
+        render partial: 'visitor_counts_duration_scatter'
+      end
+    end
   end
 
   permit_params :object_name, :description, :server_id, :power, :sensor_mode,
@@ -207,5 +232,12 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
       f.input :repeat_visit_message
     end
     f.actions
+  end
+  
+  controller do 
+    def show
+      gon.ids = [resource.id]
+      super
+    end
   end
 end

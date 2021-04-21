@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   namespace :async, defaults: { format: 'json' } do
     resources :donations, only: [:index]
+    resources :visits, only: [:index]
   end
 
   namespace :api, defaults: { format: 'json' } do

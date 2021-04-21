@@ -4,6 +4,8 @@
     <title>SlApp</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= include_gon(:init => true) %>
+    <%= Gon::Base.render_data({}) %>
     
     <script src="https://code.highcharts.com/highcharts.js"></script>
 

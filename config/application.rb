@@ -21,5 +21,7 @@ module SlApp
     # the framework and any gems in your application.
 
     config.active_record.belongs_to_required_by_default = false
+    
+    config.time_zone = "America/Los_Angeles"
   end
 end

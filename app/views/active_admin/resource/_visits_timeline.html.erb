@@ -1,0 +1,98 @@
+<div id="visits_timeline_container" style="width:1200px; height:600px;" %></div>
+
+<script type="text/javascript">
+// data = {
+// 	dates: ["2021-04-18", "2021-04-19", "2021-04-20", "2021-04-21"], 
+//   counts: [4, 15, 30, 20], 
+//   visitors: [3, 10, 27, 16],
+//   durations: [50,126, 450, 300]
+// }
+$(function () {
+        // var processed_json = new Array();   
+  $.getJSON('/async/visits', 
+                  {
+                      ids: gon.ids,
+                      chart: 'visits_timeline'
+                  },
+                  function(data) {
+
+      // draw chart
+       $('#visits_timeline_container').highcharts({ 
+          chart: {
+            type: 'line',
+            zoomType: 'x'
+          },
+          title: {
+            text: 'Traffic Over Time'
+          },
+          xAxis: {
+            allowDecimals: false,
+            type: 'datetime',
+            categories: 
+               data.dates,
+            accessibility: {
+                rangeDescription: 'Range: 1940 to 2017.'
+            }
+          },
+          yAxis: [{
+          title: {
+          	text: 'Number of visits',
+            style: {
+              color: Highcharts.getOptions().colors[0]
+            }
+          },
+          labels: {
+            style: {
+              color: Highcharts.getOptions().colors[0]
+            }
+          }
+          }, {
+          title: {
+          	text: 'Unique Visitors',
+            style: {
+              color: Highcharts.getOptions().colors[1]
+            },
+          },
+          labels: {
+            style: {
+              color: Highcharts.getOptions().colors[1]
+            }
+          }
+          }, {
+          title: {
+            text: 'Time Spent (minutes)',
+            style: {
+              color: Highcharts.getOptions().colors[5]
+            },
+          
+          },
+          labels: {
+            format: '{value} mins',
+            style: {
+              color: Highcharts.getOptions().colors[5]
+            }
+           },
+          opposite: true
+          }],
+          series: [{
+            name: 'Visits',
+            yAxis: 0,
+            data: data.counts
+          }, {
+            name: 'Visitors',
+            yAxis: 1,
+            data: data.visitors
+          }, {
+            name: 'Time Spent',
+            yAxis: 2,
+            opposite: true,
+            data: data.durations,
+            color: Highcharts.getOptions().colors[5]
+          }]
+    });
+  });
+});
+
+
+
+</script>

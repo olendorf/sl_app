@@ -28,3 +28,4 @@ module Async
     end
   end
 end
+# ?channel_id=2&product_ids[]=6900&product_ids[]=6901

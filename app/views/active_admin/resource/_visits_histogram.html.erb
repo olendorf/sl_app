@@ -1,28 +1,30 @@
 
-<div id="donations_container" style="width:600px; height:400px;" %>></div>
+<div id="visits_container" style="width:600px; height:400px;" %></div>
 
 <script type="text/javascript">
 
         $(function () {
                 // var processed_json = new Array();   
-                $.getJSON('/async/donations?chart=donation_histogram', function(data) {
-                    // Populate series
-                    // for (i = 0; i < data.length; i++){
-                    //     processed_json.push([data[i].key, data[i].value]);
-                    // }
-                 
+                $.getJSON('/async/visits', 
+                                {
+                                    ids: gon.ids,
+                                    chart: 'visits_histogram'
+                                },
+                                function(data) {
+
                     // draw chart
-                     $('#donations_container').highcharts({ 
+                     $('#visits_container').highcharts({ 
                     
                         title: {
-                            text: 'Frequency of Donation Amounts'
+                            text: 'Frequency of Visit Durations'
+                            // text: gon.ids
                         },
                     
                         xAxis: [{
                             alignTicks: false,
                             visible: false
                         }, {
-                            title: { text: 'Donation Amount($L)' },
+                            title: { text: 'Visit Duration (minutes)' },
                             alignTicks: false
                         }],
                     
@@ -51,7 +53,7 @@
                         },
                     
                         series: [{
-                            name: 'Donations',
+                            name: 'Durations',
                             type: 'histogram',
                             binsNumber: 'rice',
                             xAxis: 1,

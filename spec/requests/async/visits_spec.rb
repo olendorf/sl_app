@@ -131,7 +131,8 @@ RSpec.describe 'Async::Donations', type: :request do
         
         it 'should return the correct data' do 
           get path, params: { chart: 'visit_location_heatmap', ids: @traffic_cop.id }
-          expect(JSON.parse(response.body).collect { |d| d[2] }.max).to be >= 1
+          
+          expect(JSON.parse(response.body)['data'].collect { |d| d[2] }.max).to be >= 1
         end
       end
       

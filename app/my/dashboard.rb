@@ -38,18 +38,43 @@ ActiveAdmin.register_page 'Dashboard', namespace: :my do
   end
 
   sidebar :splits, only: %i[index] do
-    total = 0
-    dl class: 'row' do
-      current_user.splits.each do |split|
-        total += split.percent
-        dt split.target_name
-        dd "#{split.percent}%"
-      end
-      dt 'Total'
-      dd "#{total}%"
+    paginated_collection(
+      current_user.splits.page(
+          params[:split_page]
+        ).per(10), param_name: 'split_page', download_links: false
+    ) do 
+      table_for collection.order('percent DESC') do
+        column 'Recipieent', &:target_name
+        column :percent
+        column "" do |split|
+          link_to 'Delete', my_split_path(split),
+                  method: :delete,
+                  data: { confirm: 'Delete this split?' }
+        end
+      end 
     end
-
     hr
-    link_to 'Edit Splits', edit_my_user_path(current_user)
+    div class: "paginated_collection" do 
+      div class: "pagination_information" do 
+        text_node "Total: #{current_user.splits.sum(:percent)}"
+      end
+      div class: "pagination_information" do
+        link_to 'Add Splits', edit_my_user_path(current_user)
+      end
+    end
+      
   end
+    # total = 0
+    # dl class: 'row' do
+    #   current_user.splits.each do |split|
+    #     total += split.percent
+    #     dt split.target_name
+    #     dd "#{split.percent}%"
+    #   end
+    #   dt 'Total'
+    #   dd "#{total}%"
+    # end
+
+    # hr
+
 end

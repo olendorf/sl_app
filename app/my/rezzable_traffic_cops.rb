@@ -3,7 +3,7 @@
 ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
   include ActiveAdmin::RezzableBehavior
 
-  menu label: 'Traffic Cops'
+  menu if: proc{ current_user.traffic_cops.size.positive? }, label: 'Traffic Cops'
 
   actions :all, except: %i[new create]
 
@@ -36,7 +36,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
       traffic_cop.visits.where('stop_time > ?', 1.week.ago).size
     end
 
-    column 'Recent Time Spent' do |traffic_cop|
+    column 'Recent Time Spent (mins)' do |traffic_cop|
       traffic_cop.visits.where('stop_time > ?', 1.week.ago).sum(:duration) / 60
     end
 
@@ -148,7 +148,9 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
           column :avatar_key
           column :start_time
           column :stop_time
-          column :duration
+          column 'Duration (mins)' do |visit|
+            visit.duration/60.0
+          end
         end
       end
     end
@@ -161,7 +163,9 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
           column :avatar_name
           column :avatar_key
           column :visits
-          column :time_spent
+          column 'Time Spent (mins)' do |visitor|
+            visitor[:time_spent]/60.0
+          end
         end
         div id: 'visitors-footer' do
           paginate paginated_data, param_name: 'visitor_page'
@@ -195,6 +199,26 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
       div class: 'column md' do 
         render partial: 'visitor_counts_duration_scatter'
       end
+    end
+    
+    panel '' do 
+      div class: 'column md' do 
+        render partial: 'visits_heatmap'
+      end
+      
+      div class: 'column md' do 
+        render partial: 'duration_heatmap'
+      end
+    end
+    
+    panel '' do 
+      div class: 'column centered' do 
+        render partial: 'visit_location_heatmap'
+      end
+      
+      # div class: 'column md' do 
+      #   render partial: 'duration_heatmap'
+      # end
     end
   end
 

@@ -99,23 +99,33 @@ def give_donation_boxes_to_user(user, avatars)
   end
 end
 
+# hash.map { |k,v| [k, v.to_sym] }.to_h
 # rubocop:disable Metrics/AbcSize
-def give_visits_to_traffic_cop(traffic_cop, number_of_visits)
+def give_visits_to_traffic_cop(traffic_cop, avatars, number_of_visits)
   dates = []
   number_of_visits.times { dates << Time.at(rand(1.year.ago.to_i..Time.now.to_i)) }
   dates.sort!
   dates.each do |date|
+    avatar = avatars.sample
     visit = FactoryBot.create(:visit, start_time: date,
                                       region: traffic_cop.region,
                                       stop_time: date + 15.seconds,
                                       duration: 15.seconds,
+                                      avatar_name: avatar.avatar_name,
+                                      avatar_key: avatar.avatar_key,
                                       user_id: traffic_cop.user.id)
     FactoryBot.create(:detection, visit_id: visit.id)
     rand(0..120).times do |_i|
       position = JSON.parse(visit.detections.last.position)
       position['x'] += rand(-5.0..5.0)
+      position['x'] = 0 if (position['x']).negative?
+      position['x'] = 255 if position['x'] >= 255
       position['y'] += rand(-5.0..5.0)
+      position['y'] = 0 if (position['y']).negative?
+      position['y'] = 255 if position['y'] >= 255
       position['z'] += rand(-5.0..5.0)
+      position['z'] = 0 if (position['x']).negative?
+      position['z'] = 4095 if position['x'] >= 4096
       FactoryBot.create(:detection, visit_id: visit.id, position: position.to_json)
       visit.stop_time = visit.stop_time + 30.seconds
       visit.duration = visit.duration + 30
@@ -125,13 +135,13 @@ def give_visits_to_traffic_cop(traffic_cop, number_of_visits)
 end
 # rubocop:enable Metrics/AbcSize
 
-def give_traffic_cops_to_user(user, _avatars, number_of_visits)
+def give_traffic_cops_to_user(user, avatars, number_of_visits)
   rand(1..3).times do
     traffic_cop = FactoryBot.create(:traffic_cop)
     user.web_objects << traffic_cop
     traffic_cop.server_id = user.servers.sample.id
     traffic_cop.save
-    give_visits_to_traffic_cop(traffic_cop, number_of_visits)
+    give_visits_to_traffic_cop(traffic_cop, avatars, number_of_visits)
   end
 end
 

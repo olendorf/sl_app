@@ -8,7 +8,9 @@ branches:
   only:
     - master
     - develop
-
+env:
+  - CXX=g++-4.8
+  
 before_script:
   - bundle exec rake db:create db:migrate RAILS_ENV=test
 

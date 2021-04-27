@@ -2,13 +2,12 @@
 
 ActiveAdmin.register Split, namespace: :my do
   menu false
-  
+
   actions :destroy
-  
+
   scope_to :current_user, association_method: :splits
-  
-  
-  controller do 
+
+  controller do
     def destroy
       split = Split.find(params['id'])
       split.destroy!
@@ -16,6 +15,4 @@ ActiveAdmin.register Split, namespace: :my do
       redirect_back(fallback_location: my_dashboard_path)
     end
   end
-
-
 end

@@ -22,6 +22,5 @@ module Rezzable
     def pretty_access_mode
       access_mode.split('_')[2..].join(' ').titleize
     end
-
   end
 end

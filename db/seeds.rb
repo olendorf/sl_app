@@ -118,13 +118,13 @@ def give_visits_to_traffic_cop(traffic_cop, avatars, number_of_visits)
     rand(0..120).times do |_i|
       position = JSON.parse(visit.detections.last.position)
       position['x'] += rand(-5.0..5.0)
-      position['x'] = 0 if position['x'] < 0
+      position['x'] = 0 if (position['x']).negative?
       position['x'] = 255 if position['x'] >= 255
       position['y'] += rand(-5.0..5.0)
-      position['y'] = 0 if position['y'] < 0
+      position['y'] = 0 if (position['y']).negative?
       position['y'] = 255 if position['y'] >= 255
       position['z'] += rand(-5.0..5.0)
-      position['z'] = 0 if position['x'] < 0
+      position['z'] = 0 if (position['x']).negative?
       position['z'] = 4095 if position['x'] >= 4096
       FactoryBot.create(:detection, visit_id: visit.id, position: position.to_json)
       visit.stop_time = visit.stop_time + 30.seconds

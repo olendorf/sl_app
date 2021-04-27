@@ -3,7 +3,7 @@
 ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
   include ActiveAdmin::RezzableBehavior
 
-  menu if: proc{ current_user.traffic_cops.size.positive? }, label: 'Traffic Cops'
+  menu if: proc { current_user.traffic_cops.size.positive? }, label: 'Traffic Cops'
 
   actions :all, except: %i[new create]
 
@@ -149,7 +149,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
           column :start_time
           column :stop_time
           column 'Duration (mins)' do |visit|
-            visit.duration/60.0
+            visit.duration / 60.0
           end
         end
       end
@@ -164,7 +164,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
           column :avatar_key
           column :visits
           column 'Time Spent (mins)' do |visitor|
-            visitor[:time_spent]/60.0
+            visitor[:time_spent] / 60.0
           end
         end
         div id: 'visitors-footer' do
@@ -175,48 +175,48 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
         end
       end
     end
-    
-    panel '' do 
-      div class: 'column lg' do 
+
+    panel '' do
+      div class: 'column lg' do
         render partial: 'visits_timeline'
       end
     end
-    
-    panel '' do 
+
+    panel '' do
       div class: 'column md' do
-        render partial: 'visits_histogram' 
+        render partial: 'visits_histogram'
       end
       div class: 'column md' do
         render partial: 'visitors_time_histogram'
       end
     end
-    
-    panel '' do 
-      div class: 'column md' do 
+
+    panel '' do
+      div class: 'column md' do
         render partial: 'visitors_counts_histogram'
       end
-      
-      div class: 'column md' do 
+
+      div class: 'column md' do
         render partial: 'visitor_counts_duration_scatter'
       end
     end
-    
-    panel '' do 
-      div class: 'column md' do 
+
+    panel '' do
+      div class: 'column md' do
         render partial: 'visits_heatmap'
       end
-      
-      div class: 'column md' do 
+
+      div class: 'column md' do
         render partial: 'duration_heatmap'
       end
     end
-    
-    panel '' do 
-      div class: 'column centered' do 
+
+    panel '' do
+      div class: 'column centered' do
         render partial: 'visit_location_heatmap'
       end
-      
-      # div class: 'column md' do 
+
+      # div class: 'column md' do
       #   render partial: 'duration_heatmap'
       # end
     end
@@ -257,8 +257,8 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
     end
     f.actions
   end
-  
-  controller do 
+
+  controller do
     def show
       gon.ids = [resource.id]
       super

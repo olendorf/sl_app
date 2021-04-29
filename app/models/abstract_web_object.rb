@@ -86,7 +86,6 @@ class AbstractWebObject < ApplicationRecord
   end
 
   def handle_splits(transaction)
-
     splits.each do |share|
       user.handle_split(transaction, share)
     end

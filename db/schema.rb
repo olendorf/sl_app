@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_08_162504) do
+ActiveRecord::Schema.define(version: 2021_04_28_164649) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -156,6 +156,16 @@ ActiveRecord::Schema.define(version: 2021_04_08_162504) do
   end
 
   create_table "rezzable_terminals", force: :cascade do |t|
+  end
+
+  create_table "rezzable_tip_jars", force: :cascade do |t|
+    t.integer "split_percent"
+    t.integer "access_mode"
+    t.string "logged_in_key"
+    t.string "logged_in_name"
+    t.string "thank_you_message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "rezzable_traffic_cops", force: :cascade do |t|

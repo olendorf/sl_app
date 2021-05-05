@@ -5,6 +5,8 @@ module Rezzable
   # the data.
   class DonationBox < ApplicationRecord
     acts_as :abstract_web_object
+    
+    include TransactableBehavior
 
     def last_donation
       transaction = transactions.to_ary.max_by(&:created_at)

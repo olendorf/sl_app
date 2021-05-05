@@ -64,8 +64,8 @@ RSpec.describe User, type: :model do
       owner.web_objects << FactoryBot.create(:donation_box)
       owner.web_objects << FactoryBot.create(:donation_box)
       5.times do
-        owner.web_objects.first.transactions << FactoryBot.build(:donation)
-        owner.web_objects.last.transactions << FactoryBot.build(:donation)
+        owner.donation_boxes.first.transactions << FactoryBot.build(:donation)
+        owner.donation_boxes.last.transactions << FactoryBot.build(:donation)
       end
       expect(owner.donations.size).to eq 10
     end

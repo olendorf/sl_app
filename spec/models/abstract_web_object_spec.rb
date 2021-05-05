@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe AbstractWebObject, type: :model do
   it { should respond_to :api_key }
   # it { should belong_to(:user) }
-  it { should have_many(:transactions).class_name('Analyzable::Transaction').dependent(:nullify) }
+  # it { should have_many(:transactions).class_name('Analyzable::Transaction').dependent(:nullify) }
   # it { should belong_to(:server) }
 
   it { should validate_presence_of :object_name }
@@ -47,12 +47,12 @@ RSpec.describe AbstractWebObject, type: :model do
     end
   end
 
-  describe 'adding transactions' do
-    context 'no splits' do
-      it 'should add the transaction to the user' do
-        web_object.transactions << FactoryBot.build(:transaction, amount: 100)
-        expect(user.transactions.size).to eq 1
-      end
-    end
-  end
+  # describe 'adding transactions' do
+  #   context 'no splits' do
+  #     it 'should add the transaction to the user' do
+  #       web_object.transactions << FactoryBot.build(:transaction, amount: 100)
+  #       expect(user.transactions.size).to eq 1
+  #     end
+  #   end
+  # end
 end

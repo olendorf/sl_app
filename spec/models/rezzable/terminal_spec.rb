@@ -5,6 +5,8 @@ require 'rails_helper'
 RSpec.describe Rezzable::Terminal, type: :model do
   # it { is_expected.to act_as(:rezzable).class_name('AbstractWebObject') }
   it { should respond_to :abstract_web_object }
+  
+  it_behaves_like 'it is a transactable', :terminal
 
   let(:user) { FactoryBot.create :owner }
 

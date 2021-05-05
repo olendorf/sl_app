@@ -4,6 +4,8 @@ module Rezzable
   # Class for rezzable terminals in SL
   class Terminal < ApplicationRecord
     acts_as :abstract_web_object
+    
+    include TransactableBehavior
 
     # rubocop:disable Style/RedundantSelf
     def response_data

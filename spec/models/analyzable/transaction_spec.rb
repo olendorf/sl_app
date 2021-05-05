@@ -6,6 +6,7 @@ RSpec.describe Analyzable::Transaction, type: :model do
   let(:active_user) { FactoryBot.create :active_user }
 
   it { should belong_to :user }
+  it { should belong_to :transactable }
 
   it { should validate_presence_of :target_name }
   it { should validate_presence_of :target_name }

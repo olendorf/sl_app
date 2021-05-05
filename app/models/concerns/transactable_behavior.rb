@@ -10,17 +10,13 @@ module TransactableBehavior
     accepts_nested_attributes_for :transactions
   end
   
-  def transaction_category
-    return 'other' unless actable
+  # def transaction_category
+  #   'other'
+  # end
 
-    actable.transaction_category
-  end
-
-  def transaction_description(transaction)
-    return nil unless actable
-
-    actable.transaction_description(transaction)
-  end
+  # def transaction_description(transaction)
+  #   "No description given."
+  # end
 
   private
 

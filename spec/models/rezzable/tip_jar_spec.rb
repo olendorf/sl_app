@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Rezzable::TipJar, type: :model do
   it { should respond_to :abstract_web_object }
   
-  it_behaves_like 'it is a transactable', :tip_jar
+  it_behaves_like 'it is a sessional and transactable', :tip_jar
   
   it { should have_many(:sessions) }
   
@@ -20,7 +20,8 @@ RSpec.describe Rezzable::TipJar, type: :model do
   }
   
   let(:user) { FactoryBot.create :active_user }
-  let(:tip_jar) { FactoryBot.create :tip_jar }
+  let(:server) { FactoryBot.create :server, user_id: user.id }
+  let(:tip_jar) { FactoryBot.create :tip_jar, user_id: user.id, split_percent: 90, server_id: server.id }
   
   describe '#allowed_list' do 
     it 'should return the allowed list' do 
@@ -52,6 +53,52 @@ RSpec.describe Rezzable::TipJar, type: :model do
       it 'should return nil' do 
         expect(tip_jar.current_session).to be_nil
       end
+    end
+  end
+  
+  describe 'handling tips' do 
+    let(:tipper) { FactoryBot.build :avatar }
+    let(:tip) {{
+      transactions_attributes: {
+        avatar_name: tipper.avatar_name,
+        avatar_key: tipper.avatar_key,
+        amount: 100
+      }
+    }}
+    context 'no current session' do 
+      it 'should raise an bad request exception' do 
+        expect {
+          tip_jar.transactions << FactoryBot.build(:tip, 
+            target_name: tipper.avatar_name,
+            target_key: tipper.avatar_key,
+            amount: 100
+          )
+        }.to raise_error( ActionController::BadRequest)
+      end
+    end
+    
+    context 'current session' do 
+      before(:each) do 
+        tip_jar.sessions << FactoryBot.build(:session)
+      end
+      it 'should add the tip to the tip jar' do  
+        expect {          
+          tip_jar.transactions << FactoryBot.build(:tip, 
+            target_name: tipper.avatar_name,
+            target_key: tipper.avatar_key,
+            amount: 100
+          )
+        }.to change{ tip_jar.transactions.size}.by(1)
+      end
+      
+      # it 'should give the shared split to the logged in user' do  
+      #     tip_jar.transactions << FactoryBot.build(:tip, 
+      #       target_name: tipper.avatar_name,
+      #       target_key: tipper.avatar_key,
+      #       amount: 100
+      #       )
+          
+      # end
     end
   end
   

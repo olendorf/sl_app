@@ -51,7 +51,7 @@ module TransactableBehavior
   end
   
   def set_balance(transaction)
-    current_balance = user.transactions.last.nil? ? 0 : user.transactions.balance
+    current_balance = user.transactions.last.nil? ? 0 : user.balance
     transaction.balance = current_balance + transaction.amount
   end
   

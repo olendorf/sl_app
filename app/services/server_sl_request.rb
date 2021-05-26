@@ -5,7 +5,7 @@
 class ServerSlRequest
   include SlRequestHelper
 
-  def self.send_money(server, avatar_name, amount)
+  def self.send_money(server, avatar_name, avatar_key, amount)
     RestClient::Request.execute(
       url: "#{server.url}/give_money",
       method: :post,

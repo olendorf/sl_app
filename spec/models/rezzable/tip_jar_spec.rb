@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Rezzable::TipJar, type: :model do
   it { should respond_to :abstract_web_object }
   
-  it_behaves_like 'it is a sessional and transactable', :tip_jar
+  it_behaves_like 'it transactable', :tip_jar
   
   it { should have_many(:sessions) }
   

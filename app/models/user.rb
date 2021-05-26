@@ -153,15 +153,13 @@ class User < ApplicationRecord
   end
 
   def handle_split(transaction, share)
-    puts "handling split"
-    puts servers.inspect
     server = servers.sample
     return unless server
 
     amount = (share.percent / 100.0 * transaction.amount).round
-    puts "amount given: #{amount}"
     ServerSlRequest.send_money(server,
                               share.target_name,
+                              share.target_key,
                               amount)
     add_transaction_to_user(transaction, amount, share)
     target = User.find_by_avatar_key(share.target_key)

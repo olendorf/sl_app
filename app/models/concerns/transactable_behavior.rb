@@ -20,66 +20,68 @@ module TransactableBehavior
 
   private
   
-  def is_positive?(transaction)
-    transaction.amount.positive?
-  end
-
-  def source_type
-    return 'Web object' if actable.nil?
-
-    actable.model_name.route_key.singularize.split('_')[1..].join('_').humanize
-  end
-  
   def process_transaction(transaction)
-    handle_attributes(transaction)
-  end
-
-  def handle_attributes(transaction)
-    assign_user_to_transaction(transaction)
+    transaction.user_id = user.id
     transaction.description = transaction_description(transaction)
     transaction.category = transaction_category
     transaction.source_key = object_key
     transaction.source_name = object_name
-    transaction.source_type = source_type
+    transaction.balance = set_balance(transaction)
     transaction.save
-  end
-
-  def assign_user_to_transaction(transaction)
-    user.transactions << transaction
-  end
-
-  def handle_splits(transaction)
-    puts "handlng splits"
-    return if transaction.amount.negative?
-    puts "still handling splits"
-    splits.each do |share|
-      puts "handling object splits"
-      handle_split(transaction, share)
-      puts user.transactions.size
-    end
-    user.splits&.each do |share|
-      puts "handling user splits"
-      handle_split(transaction, share)
-      puts user.transactions.size
-    end
-    puts user.transactions.size
+    
   end
   
-  def handle_split(transaction, share)
-    puts "handling split"
-    puts servers.inspect
-    # server = servers.sample
-    return unless server
-
-    amount = (share.percent / 100.0 * transaction.amount).round
-    puts "amount given: #{amount}"
+  def handle_splits(transaction)
+    return if transaction.amount.negative?
+    all_splits = user.splits + splits
+    all_splits.each do |split|
+      handle_split(transaction, split)
+    end
+  end
+  
+  def handle_split(transaction, split)
+    amount = -1 * (split.percent / 100.0 * transaction.amount).round
     RezzableSlRequest.send_money(self,
-                                  share.target_name,
-                                  share.target_key,
-                                  amount)
-    user.add_transaction_to_user(transaction, amount, share)
-    target = User.find_by_avatar_key(share.target_key)
+                                  split.target_name,
+                                  split.target_key,
+                                  amount * -1)
+    add_transaction_to_user(transaction, split, amount)
+    target = User.find_by_avatar_key(split.target_key)
     add_transaction_to_target(target, amount) if target
+  end
+  
+  def set_balance(transaction)
+    current_balance = user.transactions.last.nil? ? 0 : user.transactions.balance
+    transaction.balance = current_balance + transaction.amount
+  end
+  
+  def add_transaction_to_user(transaction, split, amount)
+    current_balance = user.transactions.last.nil? ? 0 : user.balance
+    Analyzable::Transaction.create(
+      description: "Split from transaction #{transaction.id}",
+      amount: amount,
+      # source_type: 'system',
+      category: 'share',
+      user_id: user.id,
+      target_name: split.target_name,
+      target_key: split.target_key,
+      transaction_id: transaction.id,
+      balance: current_balance + amount
+    )
+  end
+  
+  def add_transaction_to_target(target, amount)
+    balance = target.balance + amount * -1
+    Analyzable::Transaction.new(
+      user_id: target.id,
+      description: "Split from transaction with #{user.avatar_name}",
+      amount: amount,
+      source_type: 'system',
+      category: 'share',
+      target_name: user.avatar_name,
+      target_key: user.avatar_key,
+      balance: balance
+    ).save
   end
   
   def self.included(base)

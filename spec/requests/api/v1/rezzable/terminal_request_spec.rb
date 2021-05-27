@@ -61,7 +61,7 @@ RSpec.describe 'Api::V1::Rezzable::Terminals', type: :request do
           )
           owner.splits << FactoryBot.build(:split, percent: 10)
           owner.splits << FactoryBot.build(:split, percent: 7)
-          body_regex = /"avatar_name":"[a-zA-Z' ]+","amount":[0-9]+/
+          body_regex = /"avatar_name":"[a-zA-Z' ]+","avatar_key":"[-a-f0-9]+","amount":[0-9]+/
           @stub = stub_request(:post, uri_regex).with(body: body_regex)
         end
 

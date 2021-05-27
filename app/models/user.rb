@@ -159,7 +159,6 @@ class User < ApplicationRecord
     amount = (share.percent / 100.0 * transaction.amount).round
     ServerSlRequest.send_money(server,
                               share.target_name,
-                              share.target_key,
                               amount)
     add_transaction_to_user(transaction, amount, share)
     target = User.find_by_avatar_key(share.target_key)

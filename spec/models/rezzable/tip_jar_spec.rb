@@ -81,15 +81,15 @@ RSpec.describe Rezzable::TipJar, type: :model do
       before(:each) do 
         tip_jar.sessions << FactoryBot.build(:session)
       end
-      it 'should add the tip to the tip jar' do  
-        expect {          
-          tip_jar.transactions << FactoryBot.build(:tip, 
-            target_name: tipper.avatar_name,
-            target_key: tipper.avatar_key,
-            amount: 100
-          )
-        }.to change{ tip_jar.transactions.size}.by(1)
-      end
+      # it 'should add the tip to the tip jar' do  
+      #   expect {          
+      #     tip_jar.transactions << FactoryBot.build(:tip, 
+      #       target_name: tipper.avatar_name,
+      #       target_key: tipper.avatar_key,
+      #       amount: 100
+      #     )
+      #   }.to change{ tip_jar.transactions.size}.by(1)
+      # end
       
       # it 'should give the shared split to the logged in user' do  
       #     tip_jar.transactions << FactoryBot.build(:tip, 

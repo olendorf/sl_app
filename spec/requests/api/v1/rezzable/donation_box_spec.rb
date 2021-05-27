@@ -59,7 +59,7 @@ RSpec.describe 'Api::V1::Rezzable::DonationBoxes', type: :request do
           'category' => 'donation',
           'source_key' => donation_box.object_key,
           'source_name' => donation_box.object_name,
-          'source_type' => 'Donation box',
+          # 'source_type' => 'Donation box',
           'description' => "Donation from #{target.avatar_name}."
         )
       end

@@ -32,7 +32,7 @@ RSpec.shared_examples 'it is a transactable' do |model_name|
     context 'splits' do 
       before(:each) {
         @stub = stub_request(:post, uri_regex)
-              .with(body: /{"avatar_name":"[a-zA-Z0-9' ]*","avatar_key":"[-a-f0-9]*","amount":[0-9]+}/)
+              .with(body: /{"avatar_name":"[a-zA-Z0-9' ]*","amount":[0-9]+}/)
               .to_return(status: 200, body: '', headers: {})
       }
       it 'should add the transactions to the user' do 

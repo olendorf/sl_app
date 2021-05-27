@@ -9,7 +9,7 @@ class ServerSlRequest
     RestClient::Request.execute(
       url: "#{server.url}/give_money",
       method: :post,
-      payload: { avatar_name: avatar_name, amount: amount }.to_json,
+      payload: { avatar_name: avatar_name, avatar_key: avatar_key, amount: amount }.to_json,
       content_type: :json,
       accept: :json,
       verify_ssl: false,

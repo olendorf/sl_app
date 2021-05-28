@@ -7,7 +7,7 @@ module Rezzable
     attr_accessor :session, :tip
     
     before_update :handle_session, if: :session?
-    # before_update :handle_tip, if: :tip?
+    before_update :handle_tip, if: :tip?
     
     include TransactableBehavior
     
@@ -71,51 +71,88 @@ module Rezzable
         curr_session.update(duration: duration, stopped_at: Time.current)
       end
       
-      # overriding app/models/concerns/transactable_behavior.rb
-      def handle_splits(transaction)
-        raise ActionController::BadRequest if current_session.nil?
-        return if transaction.amount.negative?
+      # # overriding app/models/concerns/transactable_behavior.rb
+      # def handle_splits(transaction)
+      #   raise ActionController::BadRequest if current_session.nil?
+      #   return if transaction.amount.negative?
         
-        transaction = give_percent(transaction)
+      #   transaction = give_percent(transaction)
         
-        splits.each do |share|
-          user.handle_split(transaction, share)
-        end
-        server&.splits&.each do |share|
-          user.handle_split(transaction, share)
-        end
-      end
+      #   splits.each do |share|
+      #     user.handle_split(transaction, share)
+      #   end
+      #   server&.splits&.each do |share|
+      #     user.handle_split(transaction, share)
+      #   end
+      # end
       
       def check_logged_in
         raise ActionController::BadRequest if current_session.nil?
       end 
       
       def give_percent(transaction)
-        puts "giving user percent"
-        user.handle_split( transaction, Split.new(percent: split_percent) )
-        transaction.amount = transaction.amount - (split_percent/100.0).round
-        transaction
+        user.reload
+        split_amount = ((split_percent/100.0) * transaction.amount).round
+        RezzableSlRequest.send_money(self, current_session.avatar_name, split_amount)
+        Analyzable::Transaction.create(
+            amount: split_amount * -1,
+            # source_key: current_session.avatar_key,
+            # source_name: current_session.avatar_name,
+            category: 'share',
+            user_id: user.id,
+            transactable_id: self.id,
+            transactable_type: 'Rezzable::TipJar',
+            description: "Tip split from #{transaction.target_name} to #{current_session.avatar_name}",
+            target_name: current_session.avatar_name,
+            target_key: current_session.avatar_key,
+            transaction_id: transaction.id,
+            balance: calculate_balance(split_amount * -1)
+          )
+        update_tippee_balance(transaction)
       end
       
-      # def handle_tip
-      #   puts self.transactions.inspect
-      #   data = self.tip
-      #   self.tip = nil
-      #   puts self.transactions.inspect
-      #   raise ActionController::BadRequest if current_session.nil?
+      def update_tippee_balance(transaction)
+        session_user = User.find_by_avatar_key(current_session.avatar_key)
+        return if session_user.nil?
+        
+        split_amount = ((split_percent/100.0) * transaction.amount).round
+        session_user.transactions << Analyzable::Transaction.create(
+            amount: split_amount,
+            source_key: user.avatar_key,
+            source_name: user.avatar_name,
+            category: 'share',
+            description: "Tip split from #{transaction.target_name} from #{user.avatar_name}",
+            target_name: user.avatar_name,
+            target_key: user.avatar_key,
+            balance: calculate_balance(split_amount)
+          )
+      end
+      
+      def handle_tip
+        data = self.tip.with_indifferent_access
+        self.tip = nil
+        raise ActionController::BadRequest if current_session.nil?
         
       #   puts self.transactions.inspect
-      #   new_trans = Analyzable::Transaction.new(
-      #     amount: data['amount'],
-      #     source_key: current_session.avatar_key,
-      #     source_name: current_session.avatar_name,
-      #     category: 'tip',
-      #     description: "Tip from #{data['avatar_name']} to #{current_session.avatar_name}",
-      #     target_name: data['avatar_name'],
-      #     target_key: data['avatar_key']
-      #   )
-      #   puts self.inspect
-      #   self.transactions << new_trans
-      # end
+        transaction = Analyzable::Transaction.create(
+            amount: data['amount'].to_i,
+            source_key: current_session.avatar_key,
+            source_name: current_session.avatar_name,
+            category: 'tip',
+            user_id: user.id,
+            transactable_id: self.id,
+            transactable_type: 'Rezzable::TipJar',
+            description: "Tip from #{data['avatar_name']} to #{current_session.avatar_name}",
+            target_name: data['target_name'],
+            target_key: data['target_key'],
+            balance: calculate_balance(data['amount'].to_i)
+          )
+        give_percent(transaction)
+      end
+      
+      def calculate_balance(amount)
+        current_balance = user.transactions.size.zero? ? 0 : user.transactions.last.balance
+        current_balance + amount
+      end
   end
 end

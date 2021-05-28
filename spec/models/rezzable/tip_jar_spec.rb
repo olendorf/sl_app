@@ -23,6 +23,11 @@ RSpec.describe Rezzable::TipJar, type: :model do
   let(:server) { FactoryBot.create :server, user_id: user.id }
   let(:tip_jar) { FactoryBot.create :tip_jar, user_id: user.id, split_percent: 90, server_id: server.id }
   
+  let(:uri_regex) do
+    %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/give_money\?
+       auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
+  end
+  
   describe '#allowed_list' do 
     it 'should return the allowed list' do 
       3.times do 
@@ -59,20 +64,20 @@ RSpec.describe Rezzable::TipJar, type: :model do
   describe 'handling tips' do 
     let(:tipper) { FactoryBot.build :avatar }
     let(:tip) {{
-      transactions_attributes: {
+      tip: {
         avatar_name: tipper.avatar_name,
         avatar_key: tipper.avatar_key,
         amount: 100
       }
     }}
     context 'no current session' do 
-      it 'should raise an bad request exception' do 
-        expect {
-          tip_jar.transactions << FactoryBot.build(:tip, 
+      it 'should raise an bad request exception' do         
+        atts = FactoryBot.attributes_for(:tip, 
             target_name: tipper.avatar_name,
             target_key: tipper.avatar_key,
-            amount: 100
-          )
+            amount: 100)
+        expect {       
+          tip_jar.update(tip: atts)
         }.to raise_error( ActionController::BadRequest)
       end
     end
@@ -80,25 +85,55 @@ RSpec.describe Rezzable::TipJar, type: :model do
     context 'current session' do 
       before(:each) do 
         tip_jar.sessions << FactoryBot.build(:session)
+        
+        @stub = stub_request(:post, uri_regex)
       end
-      # it 'should add the tip to the tip jar' do  
-      #   expect {          
-      #     tip_jar.transactions << FactoryBot.build(:tip, 
-      #       target_name: tipper.avatar_name,
-      #       target_key: tipper.avatar_key,
-      #       amount: 100
-      #     )
-      #   }.to change{ tip_jar.transactions.size}.by(1)
-      # end
+      it 'should add the tip to the tip jar' do 
+        atts = FactoryBot.attributes_for(:tip, 
+            target_name: tipper.avatar_name,
+            target_key: tipper.avatar_key,
+            amount: 100)
+        expect {       
+          tip_jar.update(tip: atts)
+        }.to change{ tip_jar.reload.transactions.size}.by(2)
+      end
       
-      # it 'should give the shared split to the logged in user' do  
-      #     tip_jar.transactions << FactoryBot.build(:tip, 
-      #       target_name: tipper.avatar_name,
-      #       target_key: tipper.avatar_key,
-      #       amount: 100
-      #       )
+      it 'should give the shared split to the logged in user' do 
+        atts = FactoryBot.attributes_for(:tip, 
+            target_name: tipper.avatar_name,
+            target_key: tipper.avatar_key,
+            amount: 100)
+        
+        tip_jar.update(tip: atts)
+        
+        expect(@stub).to have_been_requested
           
-      # end
+      end
+      
+      it 'should update the user balance correctly' do 
+        
+        atts = FactoryBot.attributes_for(:tip, 
+            target_name: tipper.avatar_name,
+            target_key: tipper.avatar_key,
+            amount: 100)
+        
+        tip_jar.update(tip: atts)
+        expect(user.balance).to eq 10
+      end
+      
+      it 'should update the session avatar if they have an account' do 
+        user_tipper = FactoryBot.create(:active_user, 
+                            avatar_name: tip_jar.current_session.avatar_name, 
+                            avatar_key: tip_jar.current_session.avatar_key)
+        atts = FactoryBot.attributes_for(:tip, 
+            target_name: tipper.avatar_name,
+            target_key: tipper.avatar_key,
+            amount: 100)
+        
+        tip_jar.update(tip: atts)
+        expect(user_tipper.reload.balance).to eq 90
+        
+      end
     end
   end
   

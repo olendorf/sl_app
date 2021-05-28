@@ -25,7 +25,7 @@ class RezzableSlRequest
     ) unless Rails.env.development?
   end
   
-  def self.send_money(object, avatar_name, avatar_key, amount)
+  def self.send_money(object, avatar_name, amount)
     RestClient::Request.execute(
       url: "#{object.url}/give_money",
       method: :post,

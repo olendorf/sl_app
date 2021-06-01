@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(version: 2021_05_05_163617) do
     t.integer "access_mode", default: 0
     t.string "logged_in_key"
     t.string "logged_in_name"
-    t.string "thank_you_message"
+    t.string "thank_you_message", default: 'Thank you for your generousity!'
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

@@ -50,8 +50,8 @@ ActiveAdmin.register Rezzable::Terminal, as: 'Terminal' do
 
   show title: :object_name do
     attributes_table do
-      row :terminal_name, &:object_name
-      row :terminal_key, &:object_key
+      row :object_name
+      row :object_key
       row :description
       row 'Owner', sortable: 'users.avatar_name' do |terminal|
         if terminal.user

@@ -67,14 +67,21 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
 
   show title: :object_name do
     attributes_table do
-      row :server_name, &:object_name
-      row :server_key, &:object_key
+      row :object_name, &:object_name
+      row :object_key, &:object_key
       row :description
-      row 'Owner', sortable: 'users.avatar_name' do |server|
-        if server.user
-          link_to server.user.avatar_name, admin_user_path(server.user)
+      row 'Owner', sortable: 'users.avatar_name' do |donation_box|
+        if donation_box.user
+          link_to donation_box.user.avatar_name, admin_user_path(donation_box.user)
         else
           'Orphan'
+        end
+      end
+      row 'Server' do |donation_box| 
+        if donation_box.server
+          link_to donation_box.server.object_name, admin_server_path(donation_box.server)
+        else
+          ''
         end
       end
       row :location, &:slurl

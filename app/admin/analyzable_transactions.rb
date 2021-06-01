@@ -73,6 +73,9 @@ ActiveAdmin.register Analyzable::Transaction, as: 'Transaction' do
   end
 
   controller do
+    def scoped_collection
+      super.includes(%i[user])
+    end
     def create
       @transaction = Analyzable::Transaction.new(
         permitted_params[:analyzable_transaction]

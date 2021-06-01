@@ -72,7 +72,7 @@ ActiveAdmin.register Rezzable::Server, as: 'Server' do
       ) do
         table_for collection.decorate do
           column 'Object Name' do |client|
-            path = "admin_#{client.model.actable.model_name.route_key}_path"
+            path = "admin_#{client.model.actable.class.name.split('::').last.underscore}_path"
             link_to client.object_name, send(path, client.model.actable.id)
           end
           column 'Temp' do |client|

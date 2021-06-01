@@ -128,14 +128,21 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
 
   show title: :object_name do
     attributes_table do
-      row :server_name, &:object_name
-      row :server_key, &:object_key
+      row :object_name
+      row :object_key
       row :description
       row 'Owner', sortable: 'users.avatar_name' do |server|
         if server.user
           link_to server.user.avatar_name, admin_user_path(server.user)
         else
           'Orphan'
+        end
+      end   
+      row 'Server' do |traffic_cop|
+        if traffic_cop.server
+          link_to traffic_cop.server.object_name, admin_server_path(traffic_cop.server)
+        else
+          ''
         end
       end
       row :location, &:slurl
@@ -216,5 +223,11 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
       f.input :repeat_visit_message
     end
     f.actions
+  end
+  
+  controller do 
+    # def scoped_collection
+    #   super.includes(%i[user])
+    # end
   end
 end

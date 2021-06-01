@@ -39,8 +39,6 @@ module Rezzable
       sessions.where(stopped_at: nil).last
     end
 
-    private
-
     def tip?
       !tip.nil?
     end

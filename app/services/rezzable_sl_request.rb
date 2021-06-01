@@ -24,7 +24,7 @@ class RezzableSlRequest
       headers: request_headers(resource)
     ) unless Rails.env.development?
   end
-  
+
   def self.send_money(object, avatar_name, amount)
     RestClient::Request.execute(
       url: "#{object.url}/give_money",

@@ -1,59 +1,52 @@
+# frozen_string_literal: true
+
+# Shared methods for models that are able to accept money
 module TransactableBehavior
   extend ActiveSupport::Concern
-  
-  included do 
-    has_many :transactions, as: :transactable, 
-                            class_name: 'Analyzable::Transaction', 
+
+  included do
+    has_many :transactions, as: :transactable,
+                            class_name: 'Analyzable::Transaction',
                             dependent: :nullify,
                             before_add: :process_transaction,
                             after_add: :handle_splits
     accepts_nested_attributes_for :transactions
   end
-  
-  # def transaction_category
-  #   'other'
-  # end
 
-  # def transaction_description(transaction)
-  #   "No description given."
-  # end
-
-  private
-  
   def process_transaction(transaction)
     transaction.user_id = user.id
     transaction.description = transaction_description(transaction)
     transaction.category = transaction_category
     transaction.source_key = object_key
     transaction.source_name = object_name
-    transaction.balance = set_balance(transaction)
+    transaction.balance = compute_balance(transaction)
     transaction.save
-    
   end
-  
+
   def handle_splits(transaction)
     return if transaction.amount.negative?
+
     all_splits = user.splits + splits
     all_splits.each do |split|
       handle_split(transaction, split)
     end
   end
-  
+
   def handle_split(transaction, split)
     amount = -1 * (split.percent / 100.0 * transaction.amount).round
     RezzableSlRequest.send_money(self,
-                                  split.target_name,
-                                  amount * -1)
+                                 split.target_name,
+                                 amount * -1)
     add_transaction_to_user(transaction, split, amount)
     target = User.find_by_avatar_key(split.target_key)
     add_transaction_to_target(target, amount) if target
   end
-  
-  def set_balance(transaction)
+
+  def compute_balance(transaction)
     current_balance = user.transactions.last.nil? ? 0 : user.balance
     transaction.balance = current_balance + transaction.amount
   end
-  
+
   def add_transaction_to_user(transaction, split, amount)
     current_balance = user.transactions.last.nil? ? 0 : user.balance
     Analyzable::Transaction.create(
@@ -68,7 +61,7 @@ module TransactableBehavior
       balance: current_balance + amount
     )
   end
-  
+
   def add_transaction_to_target(target, amount)
     balance = target.balance + amount * -1
     Analyzable::Transaction.new(
@@ -82,7 +75,6 @@ module TransactableBehavior
       balance: balance
     ).save
   end
-  
-  def self.included(base)
-  end
+
+  def self.included(base); end
 end

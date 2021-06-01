@@ -8,9 +8,9 @@ RSpec.describe Rezzable::DonationBox, type: :model do
   let(:user) { FactoryBot.create :active_user }
   let(:donation_box) { FactoryBot.create :donation_box, user_id: user.id }
   let(:target) { FactoryBot.create :avatar }
-  
+
   it_behaves_like 'it is a transactable', :donation_box
-  
+
   # it { should have_many(:transactions).class_name('Analyzable::Transaction') }
 
   describe '#last_donation' do

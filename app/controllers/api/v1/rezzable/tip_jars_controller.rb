@@ -1,2 +1,10 @@
-class Api::V1::Rezzable::TipJarsController < Api::V1::AbstractWebObjectsController
+# frozen_string_literal: true
+
+module Api
+  module V1
+    module Rezzable
+      class TipJarsController < Api::V1::AbstractWebObjectsController
+      end
+    end
+  end
 end

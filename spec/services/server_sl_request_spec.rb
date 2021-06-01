@@ -14,9 +14,8 @@ RSpec.describe ServerSlRequest do
 
   describe '.send_money' do
     it 'should make a request' do
-      uuid = SecureRandom.uuid
       stub = stub_request(:post, uri_regex)
-        .with(body: "{\"avatar_name\":\"Random Citizen\",\"amount\":100}")
+             .with(body: '{"avatar_name":"Random Citizen","amount":100}')
 
       ServerSlRequest.send_money(server, 'Random Citizen', 100)
 
@@ -25,9 +24,8 @@ RSpec.describe ServerSlRequest do
 
     context 'there is an error' do
       it 'should raise an error' do
-        uuid = SecureRandom.uuid
         stub_request(:post, uri_regex)
-          .with(body: "{\"avatar_name\":\"Random Citizen\",\"amount\":100}")
+          .with(body: '{"avatar_name":"Random Citizen","amount":100}')
           .to_return(status: 400, body: 'foo')
 
         expect {

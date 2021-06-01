@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :analyzable_session, aliases: [:session], class: 'Analyzable::Session' do
     transient do

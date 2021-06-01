@@ -66,7 +66,7 @@ class User < ApplicationRecord
   end
 
   def donations
-    ids = donation_boxes.collect { |box| box.id }
+    ids = donation_boxes.collect(&:id)
     transactions.where(transactable_id: ids)
   end
 
@@ -158,8 +158,8 @@ class User < ApplicationRecord
 
     amount = (share.percent / 100.0 * transaction.amount).round
     ServerSlRequest.send_money(server,
-                              share.target_name,
-                              amount)
+                               share.target_name,
+                               amount)
     add_transaction_to_user(transaction, amount, share)
     target = User.find_by_avatar_key(share.target_key)
     add_transaction_to_target(target, amount) if target

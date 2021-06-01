@@ -64,10 +64,10 @@ RSpec.describe User, type: :model do
       owner.web_objects << FactoryBot.create(:donation_box)
       owner.web_objects << FactoryBot.create(:donation_box)
       5.times do
-        FactoryBot.create(:donation, user_id: owner.id, 
+        FactoryBot.create(:donation, user_id: owner.id,
                                      transactable_id: owner.donation_boxes.first.id,
                                      transactable_type: 'Rezzable::DonationBox')
-        FactoryBot.create(:donation, user_id: owner.id, 
+        FactoryBot.create(:donation, user_id: owner.id,
                                      transactable_id: owner.donation_boxes.last.id,
                                      transactable_type: 'Rezzable::DonationBox')
       end
@@ -219,7 +219,7 @@ RSpec.describe User, type: :model do
   end
 
   describe 'adding transactions' do
-    describe 'with splits' do 
+    describe 'with splits' do
       let(:target_one) { FactoryBot.create :user }
       let(:target_two) { FactoryBot.create :avatar }
       let(:uri_regex) do
@@ -238,7 +238,7 @@ RSpec.describe User, type: :model do
         user.transactions << FactoryBot.build(:transaction, amount: 100)
         expect(user.transactions.size).to eq 3
       end
-  
+
       it 'should send the requests to send money' do
         stub = stub_request(:post, uri_regex)
         user.web_objects << FactoryBot.build(:server)
@@ -251,7 +251,7 @@ RSpec.describe User, type: :model do
         user.transactions << FactoryBot.build(:transaction, amount: 100)
         expect(stub).to have_been_requested.times(2)
       end
-  
+
       it 'should add the transction to the user if it exists' do
         stub_request(:post, uri_regex)
         user.web_objects << FactoryBot.build(:server)
@@ -264,7 +264,7 @@ RSpec.describe User, type: :model do
         user.transactions << FactoryBot.build(:transaction, amount: 100)
         expect(target_one.transactions.size).to eq 1
       end
-  
+
       it 'should update the balance of the exisiting user' do
         stub_request(:post, uri_regex)
         user.web_objects << FactoryBot.build(:server)

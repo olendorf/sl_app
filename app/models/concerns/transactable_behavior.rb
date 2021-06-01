@@ -43,7 +43,6 @@ module TransactableBehavior
     amount = -1 * (split.percent / 100.0 * transaction.amount).round
     RezzableSlRequest.send_money(self,
                                   split.target_name,
-                                  split.target_key,
                                   amount * -1)
     add_transaction_to_user(transaction, split, amount)
     target = User.find_by_avatar_key(split.target_key)

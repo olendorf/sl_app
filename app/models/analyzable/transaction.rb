@@ -11,7 +11,9 @@ module Analyzable
 
     belongs_to :user
 
-    belongs_to :web_object, class_name: 'AbstractWebObject', optional: true
+    belongs_to :transactable, polymorphic: true, class_name: 'Analyzable::Transaction'
+
+    # belongs_to :web_object, class_name: 'AbstractWebObject', optional: true
 
     enum category: %i[other account donation tip sale tier share]
   end

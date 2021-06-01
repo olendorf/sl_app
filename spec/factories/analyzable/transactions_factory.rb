@@ -17,5 +17,10 @@ FactoryBot.define do
       category { 'donation' }
       amount { rand(1..1000) }
     end
+
+    factory :tip do
+      category { 'tip' }
+      amount { rand(1..1000) }
+    end
   end
 end

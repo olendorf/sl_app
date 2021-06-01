@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Async::Donations', type: :request do
+RSpec.describe 'Async::Visits', type: :request do
   describe 'GET' do
     before(:all) do
       @user = FactoryBot.create :active_user

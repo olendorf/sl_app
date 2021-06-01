@@ -85,18 +85,19 @@ RSpec.shared_examples 'it takes payments' do |model_name, user_type, amount|
           server = FactoryBot.create :server, user_id: user.id
           web_object.server_id = server.id
           web_object.save
-          server.splits << FactoryBot.build(
+          web_object.splits << FactoryBot.build(
             :split, percent: 5,
                     target_name: target_one.avatar_name,
                     target_key: target_one.avatar_key
           )
-          server.splits << FactoryBot.build(
+          web_object.splits << FactoryBot.build(
             :split, percent: 10,
                     target_name: target_two.avatar_name,
                     target_key: target_two.avatar_key
           )
         end
         it 'should return ok status' do
+          puts web_object.splits.inspect
           put path, params: atts.to_json, headers: headers(web_object)
           expect(response.status).to eq 200
         end

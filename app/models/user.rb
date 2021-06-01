@@ -66,8 +66,8 @@ class User < ApplicationRecord
   end
 
   def donations
-    ids = donation_boxes.collect { |box| box.abstract_web_object.id }
-    transactions.where(web_object_id: ids)
+    ids = donation_boxes.collect(&:id)
+    transactions.where(transactable_id: ids)
   end
 
   # def splittable_key

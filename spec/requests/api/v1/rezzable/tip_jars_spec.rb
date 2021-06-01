@@ -3,11 +3,18 @@ require 'rails_helper'
 RSpec.describe "Api::V1::Rezzable::TipJars", type: :request do
   it_behaves_like 'a user object API', :tip_jar
   
+
+  let(:user) { FactoryBot.create :active_user }
+  let(:server) { FactoryBot.create :server, user_id: user.id }
+  let(:tip_jar) { FactoryBot.create :tip_jar, user_id: user.id, server_id: server.id }
+  let(:path) { api_rezzable_tip_jar_path(tip_jar) }
+  let(:avatar) { FactoryBot.build :avatar }
+  let(:uri_regex) do
+    %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/give_money\?
+       auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
+  end
+    
   describe 'tip jar sessions' do 
-    let(:user) { FactoryBot.create :active_user }
-    let(:tip_jar) { FactoryBot.create :tip_jar, user_id: user.id }
-    let(:avatar) { FactoryBot.build :avatar }
-    let(:path) { api_rezzable_tip_jar_path(tip_jar) }
     context 'user logs in' do 
       let(:atts) {{
         session: {
@@ -92,21 +99,27 @@ RSpec.describe "Api::V1::Rezzable::TipJars", type: :request do
     end
     
     describe 'handling tips' do 
-      # let(:tipper)
-      # let(:atts) {{ 
-      #   tip: {
-      #     amount: 100,
-          
-      #   }
-      # }}
+      before(:each) do 
+        tip_jar.sessions << FactoryBot.build(:session, avatar_name: avatar.avatar_name, 
+                                                       avatar_key: avatar.avatar_key)
+        @stub = stub_request(:post, uri_regex)
+      end
+      let(:tipper) { FactoryBot.build :avatar }
+      let(:atts) { {tip: {target_name: tipper.avatar_name, target_key: tipper.avatar_key, amount: 100}} }
+      it 'should return ok status' do 
+        put path, params: atts.to_json, headers: headers(tip_jar)
+        expect(response.status).to eq 200
+      end
       
-      # # this shouldn't happen but...
-      # context 'no user logged in' do 
-        
-      # end 
+      it 'should add transactions to the user' do
+        put path, params: atts.to_json, headers: headers(tip_jar)
+        expect(user.reload.transactions.size).to eq 2
+      end
       
-      # context 'user is logged in' do 
-      # end
+      it 'should request money be given to the tippee' do 
+        put path, params: atts.to_json, headers: headers(tip_jar)
+        expect(@stub).to have_been_requested
+      end
     end
   end
 end

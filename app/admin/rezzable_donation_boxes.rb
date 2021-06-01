@@ -78,8 +78,11 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
         end
       end
       row 'Server' do |donation_box| 
-        return nil unless donation_box.server
-        link_to donation_box.server.object_name, admin_server_path(donation_box.server)
+        if donation_box.server
+          link_to donation_box.server.object_name, admin_server_path(donation_box.server)
+        else
+          ''
+        end
       end
       row :location, &:slurl
       row :total_donations

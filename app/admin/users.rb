@@ -85,8 +85,8 @@ ActiveAdmin.register User do
       row :updated_at
     end
   end
-  
-  controller do 
+
+  controller do
     def scoped_collection
       super.includes(%i[splits])
     end

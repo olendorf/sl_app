@@ -24,6 +24,26 @@ class AbstractWebObject < ApplicationRecord
   #   Rezzable::Server.find server_id
   # end
 
+  def increment_caches
+    return unless user
+
+    user.web_objects_count += 1
+    user.web_objects_weight += actable.class::OBJECT_WEIGHT
+    user.save
+  end
+
+  def decrement_caches
+    return unless user
+
+    user.web_objects_count = user.web_objects_count - 1
+    user.web_objects_weight = user.web_objects_weight - actable.class::OBJECT_WEIGHT
+    user.save
+  end
+
+  def object_weight
+    actable.class::OBJECT_WEIGHT
+  end
+
   def response_data
     { api_key: api_key }
   end

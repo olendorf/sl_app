@@ -77,7 +77,7 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
           'Orphan'
         end
       end
-      row 'Server' do |donation_box| 
+      row 'Server' do |donation_box|
         if donation_box.server
           link_to donation_box.server.object_name, admin_server_path(donation_box.server)
         else

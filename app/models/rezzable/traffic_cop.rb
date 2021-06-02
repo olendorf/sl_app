@@ -5,6 +5,8 @@ module Rezzable
   class TrafficCop < ApplicationRecord
     acts_as :abstract_web_object
 
+    include RezzableBehavior
+
     attr_accessor :detection, :outgoing_response, :has_access
 
     before_update :handle_detection, if: :detection?
@@ -16,6 +18,8 @@ module Rezzable
 
     has_many :listable_avatars, as: :listable, dependent: :destroy
     accepts_nested_attributes_for :listable_avatars, allow_destroy: true
+
+    OBJECT_WEIGHT = 25
 
     LISTS = %i[allowed banned].freeze
 

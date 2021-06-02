@@ -5,7 +5,10 @@ module Rezzable
   class Terminal < ApplicationRecord
     acts_as :abstract_web_object
 
+    include RezzableBehavior
     include TransactableBehavior
+
+    OBJECT_WEIGHT = 10_000
 
     # rubocop:disable Style/RedundantSelf
     def response_data

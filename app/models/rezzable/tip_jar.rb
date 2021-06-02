@@ -10,11 +10,15 @@ module Rezzable
     before_update :handle_session, if: :session?
     before_update :handle_tip, if: :tip?
 
+    include RezzableBehavior
     include TransactableBehavior
+    
 
     has_many :sessions, as: :sessionable, class_name: 'Analyzable::Session'
 
     has_many :listable_avatars, as: :listable
+    
+    OBJECT_WEIGHT = 1
 
     enum access_mode: {
       access_mode_all: 0,

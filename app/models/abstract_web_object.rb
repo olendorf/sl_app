@@ -9,6 +9,7 @@ class AbstractWebObject < ApplicationRecord
   validates_presence_of :url
 
   actable
+  
 
   belongs_to :user, optional: true
 
@@ -19,10 +20,30 @@ class AbstractWebObject < ApplicationRecord
 
   after_initialize :set_pinged_at
   after_initialize :set_api_key
+  
+
 
   # def server
   #   Rezzable::Server.find server_id
   # end
+  
+  def increment_caches
+    return unless user
+    user.web_objects_count += 1
+    user.web_objects_weight += actable.class::OBJECT_WEIGHT
+    user.save
+  end
+  
+  def decrement_caches
+    return unless user
+    user.web_objects_count = user.web_objects_count - 1
+    user.web_objects_weight = user.web_objects_weight - actable.class::OBJECT_WEIGHT
+    user.save
+  end
+  
+  def object_weight
+    self.actable.class::OBJECT_WEIGHT
+  end
 
   def response_data
     { api_key: api_key }

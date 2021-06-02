@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_05_163617) do
+ActiveRecord::Schema.define(version: 2021_06_02_124702) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(version: 2021_05_05_163617) do
     t.integer "access_mode", default: 0
     t.string "logged_in_key"
     t.string "logged_in_name"
-    t.string "thank_you_message", default: 'Thank you for your generousity!'
+    t.string "thank_you_message"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -225,6 +225,8 @@ ActiveRecord::Schema.define(version: 2021_05_05_163617) do
     t.integer "role", default: 0
     t.integer "account_level", default: 0
     t.datetime "expiration_date"
+    t.integer "web_objects_count", default: 0
+    t.integer "web_objects_weight", default: 0
     t.index ["account_level"], name: "index_users_on_account_level"
     t.index ["avatar_key"], name: "index_users_on_avatar_key", unique: true
     t.index ["avatar_name"], name: "index_users_on_avatar_name", unique: true

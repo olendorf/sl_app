@@ -3,6 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Rezzable::TipJar, type: :model do
+  
+  it_behaves_like 'a rezzable object', :tip_jar, 1
+  
   it { should respond_to :abstract_web_object }
 
   # it_behaves_like 'it transactable', :tip_jar

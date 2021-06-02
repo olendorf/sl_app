@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Rezzable::DonationBox, type: :model do
   it_behaves_like 'a rezzable object', :donation_box, 1
-  
+
   it { should respond_to :abstract_web_object }
 
   let(:user) { FactoryBot.create :active_user }

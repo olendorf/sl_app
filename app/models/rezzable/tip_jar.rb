@@ -12,12 +12,11 @@ module Rezzable
 
     include RezzableBehavior
     include TransactableBehavior
-    
 
     has_many :sessions, as: :sessionable, class_name: 'Analyzable::Session'
 
     has_many :listable_avatars, as: :listable
-    
+
     OBJECT_WEIGHT = 1
 
     enum access_mode: {

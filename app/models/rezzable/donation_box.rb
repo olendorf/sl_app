@@ -8,7 +8,7 @@ module Rezzable
 
     include RezzableBehavior
     include TransactableBehavior
-    
+
     OBJECT_WEIGHT = 1
 
     def last_donation

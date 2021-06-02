@@ -88,7 +88,7 @@ ActiveAdmin.register Rezzable::TipJar, as: 'Tip Jar' do
         else
           'Orphan'
         end
-      end     
+      end
       row 'Server' do |tip_jar|
         if tip_jar.server
           link_to tip_jar.server.object_name, admin_server_path(tip_jar.server)
@@ -104,7 +104,7 @@ ActiveAdmin.register Rezzable::TipJar, as: 'Tip Jar' do
         end
       end
       row :location, &:slurl
-      
+
       # row :total_donations
       # row 'Largest Donation' do |db|
       #   donation = db.largest_donation
@@ -162,9 +162,11 @@ ActiveAdmin.register Rezzable::TipJar, as: 'Tip Jar' do
         f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
           [s.object_name, s.actable.id]
         }
-        f.input :access_mode, as: :select, 
-                              include_blank: false, 
-                              collection: Rezzable::TipJar.access_modes.collect { |k, v| [k.split('_').last.titleize, k] }
+        f.input :access_mode, as: :select,
+                              include_blank: false,
+                              collection: Rezzable::TipJar.access_modes.collect { |k, _v|
+                                            [k.split('_').last.titleize, k]
+                                          }
         f.input :thank_you_message
       end
       f.actions

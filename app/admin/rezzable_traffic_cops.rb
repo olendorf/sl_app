@@ -137,7 +137,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
         else
           'Orphan'
         end
-      end   
+      end
       row 'Server' do |traffic_cop|
         if traffic_cop.server
           link_to traffic_cop.server.object_name, admin_server_path(traffic_cop.server)
@@ -224,8 +224,8 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop' do
     end
     f.actions
   end
-  
-  controller do 
+
+  controller do
     # def scoped_collection
     #   super.includes(%i[user])
     # end

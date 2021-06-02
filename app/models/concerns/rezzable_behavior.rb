@@ -5,9 +5,7 @@ module RezzableBehavior
   extend ActiveSupport::Concern
 
   included do
-    
     after_create :increment_caches
     after_destroy :decrement_caches
-    
   end
 end

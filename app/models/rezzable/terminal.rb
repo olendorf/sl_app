@@ -7,9 +7,8 @@ module Rezzable
 
     include RezzableBehavior
     include TransactableBehavior
-    
-    OBJECT_WEIGHT = 10000
-    
+
+    OBJECT_WEIGHT = 10_000
 
     # rubocop:disable Style/RedundantSelf
     def response_data

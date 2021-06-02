@@ -3,9 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Rezzable::TrafficCop, type: :model do
-  
   it_behaves_like 'a rezzable object', :traffic_cop, 25
-  
+
   it { should respond_to :abstract_web_object }
 
   it {

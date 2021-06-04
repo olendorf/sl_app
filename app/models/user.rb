@@ -37,6 +37,7 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :splits, allow_destroy: true
   has_many :inventories, class_name: 'Analyzable::Inventory'
   has_many :visits, class_name: 'Analyzable::Visit', dependent: :destroy
+  has_many :sessions, class_name: 'Analyzable::Session', dependent: :destroy
 
   # THese two methods need to be overridden to deal with Devise's need for emails.
   def email_required?
@@ -67,6 +68,15 @@ class User < ApplicationRecord
 
   def donations
     ids = donation_boxes.collect(&:id)
+    transactions.where(transactable_id: ids)
+  end
+  
+  def tip_jars
+    Rezzable::TipJar.where(user_id: id)
+  end
+  
+  def tips
+    ids = tip_jars.collect(&:id)
     transactions.where(transactable_id: ids)
   end
 

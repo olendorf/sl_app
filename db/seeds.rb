@@ -64,6 +64,7 @@ def give_transactions_to_user(user, avatars)
                                                           source_key: user.avatar_key,
                                                           source_name: user.avatar_key,
                                                           target_name: target.avatar_name,
+                                                          category: 'other',
                                                           created_at: Time.at(date))
     when :donation_boxes
       if user.send(source_type).size.positive?
@@ -146,13 +147,23 @@ def give_traffic_cops_to_user(user, avatars, number_of_visits)
 end
 
 def give_tips_to_tip_jar(tip_jar, avatars, number_of_tips)
-  rand(0..number_of_tips).times do
-    tipper = avatars.sample
-    FactoryBot.build(:tip, target_name: tipper.avatar_name,
-                           target_key: tipper.avatar_key,
-                           transactable_id: tip_jar.id,
-                           transactable_type: 'Rezzable::TipJar',
-                           user_id: tip_jar.user.id)
+  employees = FactoryBot.create_list(:avatar, 10)
+  rand(1..10).times do 
+    employee = employees.sample
+    duration = rand(1..180)
+    tip_jar.actable.sessions << FactoryBot.build(:session, avatar_name: employee.avatar_name,
+                                                   avatar_key: employee.avatar_key,
+                                                   stopped_at: Time.current + duration.minutes,
+                                                   duration: duration)
+    rand(0..number_of_tips).times do
+      tipper = avatars.sample
+      FactoryBot.create(:tip, target_name: tipper.avatar_name,
+                             target_key: tipper.avatar_key,
+                             transactable_id: tip_jar.actable.id,
+                             transactable_type: 'Rezzable::TipJar',
+                             session_id: tip_jar.actable.sessions.last.id,
+                             user_id: tip_jar.user.id)
+    end
   end
 end
 

@@ -37,6 +37,8 @@ en:
     auth_digest: Invalid or missing auth_digest.
   
   active_admin:
+    tips: 'Tips'
+    donations: 'Donations'
     web_object:
       update:
         failure: 'There was an error updating the inworld object: %{message}'

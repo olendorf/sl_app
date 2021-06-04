@@ -13,7 +13,7 @@ module Rezzable
     include RezzableBehavior
     include TransactableBehavior
 
-    has_many :sessions, as: :sessionable, class_name: 'Analyzable::Session'
+    has_many :sessions, as: :sessionable, class_name: 'Analyzable::Session', dependent: :nullify
 
     has_many :listable_avatars, as: :listable
 

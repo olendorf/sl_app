@@ -2,7 +2,7 @@
 
 module Async
   # Handles AJAX requests for data to create charts and tables.
-  class VisitsController < ApplicationController
+  class VisitsController < AsyncController
     def index
       authorize :async, :index?
       ids = Rezzable::TrafficCop.where(user_id: current_user.id, id: params['ids'])
@@ -95,15 +95,15 @@ module Async
     end
     # rubocop:enable Metrics/AbcSize
 
-    def time_series_dates(start, stop, interval = 1.day)
-      dates = []
-      step_time = start
+    # def time_series_dates(start, stop, interval = 1.day)
+    #   dates = []
+    #   step_time = start
 
-      while step_time <= stop
-        dates << step_time.strftime('%F')
-        step_time += interval
-      end
-      dates
-    end
+    #   while step_time <= stop
+    #     dates << step_time.strftime('%F')
+    #     step_time += interval
+    #   end
+    #   dates
+    # end
   end
 end

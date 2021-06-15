@@ -53,6 +53,7 @@ module Rezzable
     def handle_session
       check_access
       data = session
+      data['user_id'] = user.id
       self.session = nil
       close_session and return if data['avatar_key'].nil?
 

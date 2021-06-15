@@ -76,8 +76,7 @@ class User < ApplicationRecord
   end
   
   def tips
-    ids = tip_jars.collect(&:id)
-    transactions.where(transactable_id: ids)
+    transactions.where(transactable_type: 'Rezzable::TipJar')
   end
 
   # def splittable_key

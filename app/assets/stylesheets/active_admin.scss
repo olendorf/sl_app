@@ -33,27 +33,34 @@
 
 .panel {
   
+  .column {
+    vertical-align: top;
+    &.md {
+      width: 40%;
+      display: inline-block;
+      margin: 20px 50px;
+      
+    }
+    
+    &.lg {
+      width: 80%;
+      display: inline-block;
+      margin: 20px 50px;
+    }
+    
+    .centered {
+      margin: 50px auto 50px;
+    }
+  }
+  
   &.sidebar_section {
     width: 100%;
   }
   
   width: 90%;
   margin: auto;
-  
-  .column.md {
-    width: 40%;
-    display: inline-block;
-    margin: 20px 50px;
-  }
-  .column.lg {
-    width: 80%;
-    display: inline-block;
-    margin: 20px 50px;
-  }
-  .column .centered {
-    margin: 50px auto 50px;
-  }
-  
+
+
 }
 
 .status_tag {

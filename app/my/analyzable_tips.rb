@@ -134,8 +134,16 @@ ActiveAdmin.register_page 'Tips', namespace: :my do
         render partial: 'employee_tip_counts_histogram'
       end
     end
+    
+    panel '' do 
+      div class: 'column lg' do 
+        render partial: 'tips_timeline'
+      end
+    end
 
   end
+  
+
   
 
   

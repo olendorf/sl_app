@@ -31,5 +31,18 @@ class Async::TipsController < AsyncController
     current_user.tips.joins(:session).group(:avatar_name).sum(:amount).collect { |k, v| v }
   end 
   
+  def tips_timeline
+    tips = current_user.tips.order(:created_at)
+    dates = time_series_dates(tips.first.created_at - 3.days, Time.current)
+    counts = Array.new(dates.size, 0)
+    amounts = Array.new(dates.size, 0)
+    tips.each do |t|
+      index = dates.index(t.created_at.strftime('%F'))
+      counts[index] += 1
+      amounts[index] += t.amount
+    end
+    {dates: dates, counts: counts, amounts: amounts}
+  end
+  
   
 end

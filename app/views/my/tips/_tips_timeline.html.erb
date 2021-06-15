@@ -1,0 +1,76 @@
+<div id="tips_timeline_container" style="width:1200px; height:600px;" %></div>
+
+<script type="text/javascript">
+// data = {
+// 	dates: ["2021-04-18", "2021-04-19", "2021-04-20", "2021-04-21"], 
+//   counts: [4, 15, 30, 20], 
+//   visitors: [3, 10, 27, 16],
+//   durations: [50,126, 450, 300]
+// }
+$(function () {
+        // var processed_json = new Array();   
+  $.getJSON('/async/tips', 
+                  {
+                      chart: 'tips_timeline'
+                  },
+                  function(data) {
+
+      // draw chart
+       $('#tips_timeline_container').highcharts({ 
+          chart: {
+            type: 'spline',
+            zoomType: 'x'
+          },
+          title: {
+            text: 'Daily Tips Over Time'
+          },
+          xAxis: {
+            allowDecimals: false,
+            type: 'datetime',
+            categories: 
+               data.dates,
+            accessibility: {
+                // rangeDescription: 'Range: 1940 to 2017.'
+            }
+          },
+          yAxis: [{
+          title: {
+          	text: 'Number of tips',
+            style: {
+              color: Highcharts.getOptions().colors[0]
+            }
+          },
+          labels: {
+            style: {
+              color: Highcharts.getOptions().colors[0]
+            }
+          }
+          }, {
+          title: {
+          	text: 'Amount Tipped',
+            style: {
+              color: Highcharts.getOptions().colors[1]
+            },
+          },
+          labels: {
+            style: {
+              color: Highcharts.getOptions().colors[1]
+            }
+          }
+          }],
+          series: [{
+            name: 'Tips',
+            yAxis: 0,
+            data: data.counts
+          }, {
+            name: 'Amount Tipped',
+            yAxis: 1,
+            data: data.amounts,
+            opposite: true
+          }]
+    });
+  });
+});
+
+
+</script>

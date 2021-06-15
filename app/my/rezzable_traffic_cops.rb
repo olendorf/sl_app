@@ -3,7 +3,9 @@
 ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
   include ActiveAdmin::RezzableBehavior
 
-  menu parent: 'Objects', if: proc { current_user.traffic_cops.size.positive? }, label: 'Traffic Cops'
+  menu parent: 'Objects', if: proc {
+                                current_user.traffic_cops.size.positive?
+                              }, label: 'Traffic Cops'
 
   actions :all, except: %i[new create]
 

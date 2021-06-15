@@ -40,9 +40,9 @@ RSpec.describe Rezzable::TipJar, type: :model do
       expect(tip_jar.allowed_list.size).to eq 3
     end
   end
-  
-  describe 'handling sessions' do 
-    it 'should correclty set teh attributes' do 
+
+  describe 'handling sessions' do
+    it 'should correclty set teh attributes' do
       atts = FactoryBot.attributes_for :session
       tip_jar.update(session: atts.with_indifferent_access)
       expect(tip_jar.sessions.last.user_id).to eq user.id

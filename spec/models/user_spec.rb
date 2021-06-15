@@ -59,8 +59,8 @@ RSpec.describe User, type: :model do
       expect(owner.donation_boxes.size).to eq 2
     end
   end
-  
-  describe 'tip_jars' do 
+
+  describe 'tip_jars' do
     it 'should return the donation_boxes and nothing else' do
       owner.web_objects << FactoryBot.build(:web_object)
       owner.web_objects << FactoryBot.build(:tip_jar)
@@ -85,18 +85,18 @@ RSpec.describe User, type: :model do
       expect(owner.donations.size).to eq 10
     end
   end
-  
-  describe '#tips' do 
+
+  describe '#tips' do
     it 'should return the users tips' do
       owner.web_objects << FactoryBot.create(:tip_jar)
       owner.web_objects << FactoryBot.create(:tip_jar)
       5.times do
         FactoryBot.create(:tip, user_id: owner.id,
-                                     transactable_id: owner.tip_jars.first.id,
-                                     transactable_type: 'Rezzable::TipJar')
+                                transactable_id: owner.tip_jars.first.id,
+                                transactable_type: 'Rezzable::TipJar')
         FactoryBot.create(:tip, user_id: owner.id,
-                                     transactable_id: owner.tip_jars.last.id,
-                                     transactable_type: 'Rezzable::TipJar')
+                                transactable_id: owner.tip_jars.last.id,
+                                transactable_type: 'Rezzable::TipJar')
       end
       expect(owner.tips.size).to eq 10
     end

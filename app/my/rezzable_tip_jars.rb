@@ -3,12 +3,12 @@
 ActiveAdmin.register Rezzable::TipJar, namespace: :my, as: 'Tip Jar' do
   include ActiveAdmin::RezzableBehavior
 
-   menu parent: 'Objects', label: 'Tip Jars', if: proc { current_user.tip_jars.size.positive? }
+  menu parent: 'Objects', label: 'Tip Jars', if: proc { current_user.tip_jars.size.positive? }
 
   actions :all, except: %i[new create]
 
   decorate_with Rezzable::TipJarDecorator
-  
+
   scope_to :current_user, association_method: :tip_jars
 
   filter :abstract_web_object_object_name, as: :string, label: 'Object Name'

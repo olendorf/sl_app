@@ -70,11 +70,11 @@ class User < ApplicationRecord
     ids = donation_boxes.collect(&:id)
     transactions.where(transactable_id: ids)
   end
-  
+
   def tip_jars
     Rezzable::TipJar.where(user_id: id)
   end
-  
+
   def tips
     transactions.where(transactable_type: 'Rezzable::TipJar')
   end

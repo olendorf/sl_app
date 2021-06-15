@@ -41,6 +41,14 @@ RSpec.describe Rezzable::TipJar, type: :model do
     end
   end
 
+  describe 'handling sessions' do
+    it 'should correclty set teh attributes' do
+      atts = FactoryBot.attributes_for :session
+      tip_jar.update(session: atts.with_indifferent_access)
+      expect(tip_jar.sessions.last.user_id).to eq user.id
+    end
+  end
+
   describe '#current_session' do
     before(:each) do
       tip_jar.sessions << FactoryBot.build(:session, created_at: 3.days.ago,

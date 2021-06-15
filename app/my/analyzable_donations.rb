@@ -7,11 +7,12 @@ ActiveAdmin.register_page 'Donations', namespace: :my do
 
   # scope_to :current_user, association_method: :donations
 
-  content title: proc { I18n.t('active_admin.dashboard') } do
+  content title: proc { I18n.t('active_admin.donations') } do
     panel '' do
       donations = current_user.donations.order('created_at DESC')
 
       div class: 'column md' do
+        h2 'Donations', class: 'table-name'
         paginated_collection(donations.page(params[:donation_page]).per(10),
                              param_name: 'donation_page',
                              entry_name: 'Donations',
@@ -24,6 +25,7 @@ ActiveAdmin.register_page 'Donations', namespace: :my do
         end
       end
       div class: 'column md' do
+        h2 'Donors', class: 'table-name'
         amounts = current_user.donations.group(:target_name).sum(:amount).sort_by do |_key, value|
           -value
         end.to_h

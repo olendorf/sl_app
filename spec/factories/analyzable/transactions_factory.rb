@@ -11,7 +11,7 @@ FactoryBot.define do
     description { Faker::Restaurant.description }
     amount { rand(-1000..1000) }
     transaction_key { rand < 0.25 ? SecureRandom.uuid : nil }
-    category { Analyzable::Transaction.categories.keys.sample }
+    category { (Analyzable::Transaction.categories.keys - ['tip']).sample }
 
     factory :donation do
       category { 'donation' }

@@ -1,4 +1,4 @@
-<div id="visits_timeline_container" style="width:1200px; height:600px;" %></div>
+<div id="tips_timeline_container" style="width:1200px; height:600px;" %></div>
 
 <script type="text/javascript">
 // data = {
@@ -9,21 +9,20 @@
 // }
 $(function () {
         // var processed_json = new Array();   
-  $.getJSON('/async/visits', 
+  $.getJSON('/async/tips', 
                   {
-                      ids: gon.ids,
-                      chart: 'visits_timeline'
+                      chart: 'tips_timeline'
                   },
                   function(data) {
 
       // draw chart
-       $('#visits_timeline_container').highcharts({ 
+       $('#tips_timeline_container').highcharts({ 
           chart: {
             type: 'spline',
             zoomType: 'x'
           },
           title: {
-            text: 'Traffic Over Time'
+            text: 'Daily Tips Over Time'
           },
           xAxis: {
             allowDecimals: false,
@@ -31,12 +30,12 @@ $(function () {
             categories: 
                data.dates,
             accessibility: {
-                rangeDescription: 'Range: 1940 to 2017.'
+                // rangeDescription: 'Range: 1940 to 2017.'
             }
           },
           yAxis: [{
           title: {
-          	text: 'Number of visits',
+          	text: 'Number of tips',
             style: {
               color: Highcharts.getOptions().colors[0]
             }
@@ -48,7 +47,7 @@ $(function () {
           }
           }, {
           title: {
-          	text: 'Unique Visitors',
+          	text: 'Amount Tipped',
             style: {
               color: Highcharts.getOptions().colors[1]
             },
@@ -58,41 +57,20 @@ $(function () {
               color: Highcharts.getOptions().colors[1]
             }
           }
-          }, {
-          title: {
-            text: 'Time Spent (minutes)',
-            style: {
-              color: Highcharts.getOptions().colors[5]
-            },
-          
-          },
-          labels: {
-            format: '{value} mins',
-            style: {
-              color: Highcharts.getOptions().colors[5]
-            }
-           }, 
-          opposite: true
           }],
           series: [{
-            name: 'Visits',
+            name: 'Tips',
             yAxis: 0,
             data: data.counts
           }, {
-            name: 'Visitors',
+            name: 'Amount Tipped',
             yAxis: 1,
-            data: data.visitors
-          }, {
-            name: 'Time Spent',
-            yAxis: 2,
-            opposite: true,
-            data: data.durations,
-            color: Highcharts.getOptions().colors[5]
+            data: data.amounts,
+            opposite: true
           }]
     });
   });
 });
-
 
 
 </script>

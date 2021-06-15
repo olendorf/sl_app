@@ -11,9 +11,8 @@ ActiveAdmin.register User do
     end
     column :account_level
     column :expiration_date
-    column 'Object Count' do |user|
-      user.web_objects.size
-    end
+    column 'Object Count', &:web_objects_count
+    column 'Object Weight', &:web_objects_weight
     column :split_percent
     column :current_sign_in_at
     column :sign_in_count

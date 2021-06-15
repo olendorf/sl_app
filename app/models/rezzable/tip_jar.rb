@@ -13,7 +13,7 @@ module Rezzable
     include RezzableBehavior
     include TransactableBehavior
 
-    has_many :sessions, as: :sessionable, class_name: 'Analyzable::Session'
+    has_many :sessions, as: :sessionable, class_name: 'Analyzable::Session', dependent: :nullify
 
     has_many :listable_avatars, as: :listable
 
@@ -53,6 +53,7 @@ module Rezzable
     def handle_session
       check_access
       data = session
+      data['user_id'] = user.id
       self.session = nil
       close_session and return if data['avatar_key'].nil?
 

@@ -1,28 +1,28 @@
 
-<div id="donations_container" style="width:600px; height:400px;" ></div>
+<div id="employee_tip_totals_histogram_containter" style="width:600px; height:400px;" ></div>
 
 <script type="text/javascript">
 
         $(function () {
                 // var processed_json = new Array();   
-                $.getJSON('/async/donations?chart=donation_histogram', function(data) {
+                $.getJSON('/async/tips?chart=employee_tip_totals_histogram', function(data) {
                     // Populate series
                     // for (i = 0; i < data.length; i++){
                     //     processed_json.push([data[i].key, data[i].value]);
                     // }
                  
                     // draw chart
-                     $('#donations_container').highcharts({ 
+                     $('#employee_tip_totals_histogram_containter').highcharts({ 
                     
                         title: {
-                            text: 'Frequency of Donation Amounts'
+                            text: 'Tip Totals by Employees'
                         },
                     
                         xAxis: [{
                             alignTicks: false,
                             visible: false
                         }, {
-                            title: { text: 'Donation Amount($L)' },
+                            title: { text: 'Tip Totals By Employees ($L)' },
                             alignTicks: false
                         }],
                     
@@ -51,7 +51,7 @@
                         },
                     
                         series: [{
-                            name: 'Donations',
+                            name: 'Time Spent Logged in',
                             type: 'histogram',
                             binsNumber: 'rice',
                             xAxis: 1,

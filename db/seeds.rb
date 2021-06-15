@@ -64,6 +64,7 @@ def give_transactions_to_user(user, avatars)
                                                           source_key: user.avatar_key,
                                                           source_name: user.avatar_key,
                                                           target_name: target.avatar_name,
+                                                          category: 'other',
                                                           created_at: Time.at(date))
     when :donation_boxes
       if user.send(source_type).size.positive?
@@ -93,7 +94,8 @@ def give_donation_boxes_to_user(user, avatars)
       target = avatars.sample
       donation_box.transactions << FactoryBot.build(
         :donation, target_key: target.avatar_key,
-                   target_name: target.avatar_name
+                   target_name: target.avatar_name,
+                   created_at: Time.at(rand(1.year.ago.to_i..Time.current.to_i))
       )
     end
   end
@@ -145,22 +147,40 @@ def give_traffic_cops_to_user(user, avatars, number_of_visits)
   end
 end
 
-def give_tips_to_tip_jar(tip_jar, avatars, number_of_tips)
-  rand(0..number_of_tips).times do
-    tipper = avatars.sample
-    FactoryBot.build(:tip, target_name: tipper.avatar_name,
-                           target_key: tipper.avatar_key,
-                           transactable_id: tip_jar.id,
-                           transactable_type: 'Rezzable::TipJar',
-                           user_id: tip_jar.user.id)
+# rubocop:disable Metrics/AbcSize
+def give_tips_to_tip_jar(tip_jar, employees, avatars, number_of_tips)
+  rand(1..50).times do
+    employee = employees.sample
+    start_time = Time.at(rand(1.year.ago.to_i..Time.current.to_i))
+    duration = rand(1..180)
+    stop_time = start_time + duration.minutes
+    tip_jar.actable.sessions << FactoryBot.build(:session,
+                                                 avatar_name: employee.avatar_name,
+                                                 avatar_key: employee.avatar_key,
+                                                 created_at: start_time,
+                                                 stopped_at: stop_time,
+                                                 user_id: tip_jar.user.id,
+                                                 duration: duration)
+    rand(0..number_of_tips).times do
+      tipper = avatars.sample
+      FactoryBot.create(:tip, target_name: tipper.avatar_name,
+                              target_key: tipper.avatar_key,
+                              transactable_id: tip_jar.actable.id,
+                              transactable_type: 'Rezzable::TipJar',
+                              session_id: tip_jar.actable.sessions.last.id,
+                              user_id: tip_jar.user.id,
+                              created_at: Time.at(rand(start_time.to_i..stop_time.to_i)))
+    end
   end
 end
+# rubocop:enable Metrics/AbcSize
 
 def give_tip_jars_to_user(user, avatars, number_of_tips)
-  rand(1..6).times do
+  employees = FactoryBot.create_list(:avatar, 10)
+  rand(1..10).times do
     server = user.servers.sample
     user.web_objects << FactoryBot.build(:tip_jar, server_id: server.id)
-    give_tips_to_tip_jar(user.web_objects.last, avatars, number_of_tips)
+    give_tips_to_tip_jar(user.web_objects.last, employees, avatars, number_of_tips)
   end
 end
 
@@ -188,7 +208,7 @@ puts 'giving traffic_cops to owner'
 give_traffic_cops_to_user(owner, avatars, 200)
 
 puts 'giving tip_jars to owner'
-give_tip_jars_to_user(owner, avatars, 200)
+give_tip_jars_to_user(owner, avatars, 20)
 
 4.times do |i|
   FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident"
@@ -218,7 +238,7 @@ puts 'creating users'
   give_traffic_cops_to_user(user, avatars, 10) if rand < 0.25
 
   puts "giving tip_jars to user #{i}"
-  give_tip_jars_to_user(user, avatars, 1000)
+  give_tip_jars_to_user(user, avatars, 20)
 end
 
 20.times do |i|

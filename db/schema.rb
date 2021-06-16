@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_16_133700) do
+ActiveRecord::Schema.define(version: 2021_06_16_163105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,21 @@ ActiveRecord::Schema.define(version: 2021_06_16_133700) do
     t.integer "inventory_type"
     t.integer "owner_perms"
     t.integer "next_perms"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "analyzable_product_links", force: :cascade do |t|
+    t.integer "product_id"
+    t.string "link_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "analyzable_products", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "image_key"
+    t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -197,7 +212,6 @@ ActiveRecord::Schema.define(version: 2021_06_16_133700) do
   create_table "rezzable_vendors", force: :cascade do |t|
     t.string "inventory_name"
     t.string "image_key"
-    t.integer "price"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

@@ -3,7 +3,6 @@ class CreateRezzableVendors < ActiveRecord::Migration[6.0]
     create_table :rezzable_vendors do |t|
       t.string :inventory_name
       t.string :image_key
-      t.integer :price
 
       t.timestamps
     end

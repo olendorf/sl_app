@@ -3,15 +3,16 @@
 module Rezzable
   # Model for inworld tip jars. Handles tracking sesssions and tips
   class TipJar < ApplicationRecord
+
+    include RezzableBehavior
+    include TransactableBehavior
+    
     acts_as :abstract_web_object
 
     attr_accessor :session, :tip
 
     before_update :handle_session, if: :session?
     before_update :handle_tip, if: :tip?
-
-    include RezzableBehavior
-    include TransactableBehavior
 
     has_many :sessions, as: :sessionable, class_name: 'Analyzable::Session', dependent: :nullify
 

@@ -3,10 +3,9 @@
 module Rezzable
   # Model for inworld tip jars. Handles tracking sesssions and tips
   class TipJar < ApplicationRecord
-
     include RezzableBehavior
     include TransactableBehavior
-    
+
     acts_as :abstract_web_object
 
     attr_accessor :session, :tip

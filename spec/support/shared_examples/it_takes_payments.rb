@@ -97,7 +97,6 @@ RSpec.shared_examples 'it takes payments' do |model_name, user_type, amount|
           )
         end
         it 'should return ok status' do
-          puts web_object.splits.inspect
           put path, params: atts.to_json, headers: headers(web_object)
           expect(response.status).to eq 200
         end

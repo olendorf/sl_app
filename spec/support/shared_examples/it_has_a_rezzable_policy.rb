@@ -61,23 +61,23 @@ RSpec.shared_examples 'it has a rezzable policy' do |model_name|
     context 'user is active' do
       context 'user has enough reserve object weight' do
         it 'grants permission to the user' do
-          expect(subject).to permit(active_user, web_object.class)
+          expect(subject).to permit(active_user, web_object)
         end
       end
 
-      # context 'user does not have enough reserve object weight' do
-      #   before(:each) do
-      #     web_object.valid?
-      #     (100 / web_object.weight).round.times do |i|
-      #       active_user.web_objects << FactoryBot.build(
-      #         model_name, object_name: "#{model_name}_#{i}"
-      #       )
-      #     end
-      #   end
-      #   it 'denies permission to the user' do
-      #     expect(subject).to_not permit(active_user, web_object)
-      #   end
-      # end
+      context 'user does not have enough reserve object weight' do
+        before(:each) do
+          web_object.valid?
+          4.times do |i|
+            active_user.web_objects << FactoryBot.build(
+              :traffic_cop, object_name: "traffic_cop_#{i}"
+            )
+          end
+        end
+        it 'denies permission to the user' do
+          expect(subject).to_not permit(active_user.reload, web_object)
+        end
+      end
     end
   end
 end

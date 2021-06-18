@@ -152,6 +152,11 @@ class User < ApplicationRecord
   def split_percent
     splits.inject(0) { |sum, split| sum + split.percent }
   end
+  
+  def check_object_weight(new_object_weight)
+    web_objects_weight + new_object_weight <=
+        account_level * Settings.default.account.weight_limit
+  end
 
   def handle_account_payment
     update_column(:account_level, 1) if account_level.zero?

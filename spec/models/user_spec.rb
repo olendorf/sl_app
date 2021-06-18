@@ -245,6 +245,27 @@ RSpec.describe User, type: :model do
       expect(user.active?).to be_falsey
     end
   end
+  
+  describe '#check_object_weight' do 
+    context 'there is enough space to add the object' do 
+      it 'should return true status' do
+        expect(
+          user.check_object_weight(Rezzable::TrafficCop::OBJECT_WEIGHT)
+          ).to be_truthy
+      end
+    end 
+    
+    context 'the new object would put the user over weight' do 
+      it 'should return false' do 
+        4.times do 
+          user.web_objects << FactoryBot.build(:traffic_cop)
+        end
+        expect(
+          user.reload.check_object_weight(Rezzable::TrafficCop::OBJECT_WEIGHT)
+          ).to be_falsey
+      end
+    end
+  end
 
   describe 'adding transactions' do
     describe 'with splits' do

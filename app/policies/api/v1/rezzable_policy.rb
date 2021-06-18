@@ -13,12 +13,18 @@ module Api
       end
 
       def update?
-        # return true if @user.can_be_owner?
         @user.active?
       end
 
       def create?
-        @user.active?
+        return true if @user.can_be_owner?
+        return false unless @user.active?
+        begin
+          object_weight = @record.class::OBJECT_WEIGHT
+        rescue 
+          object_weight = @record::OBJECT_WEIGHT
+        end
+        @user.check_object_weight(object_weight)
       end
 
       # class Scope < Scope

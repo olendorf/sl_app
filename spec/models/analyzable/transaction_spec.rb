@@ -8,6 +8,8 @@ RSpec.describe Analyzable::Transaction, type: :model do
   it { should belong_to :user }
   it { should belong_to :transactable }
   it { should belong_to(:session).optional }
+  it { should belong_to(:inventory).optional }
+  it { should belong_to(:product).optional }
 
   it { should validate_presence_of :target_name }
   it { should validate_presence_of :target_name }

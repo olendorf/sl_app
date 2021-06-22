@@ -79,6 +79,10 @@ class User < ApplicationRecord
   def tips
     transactions.where(transactable_type: 'Rezzable::TipJar')
   end
+  
+  def vendors
+    Rezzable::Vendor.where(user_id: id)
+  end
 
   # def splittable_key
   #   avatar_key

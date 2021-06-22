@@ -70,6 +70,16 @@ RSpec.describe User, type: :model do
       expect(owner.tip_jars.size).to eq 2
     end
   end
+  
+  describe 'tip_jars' do
+    it 'should return the donation_boxes and nothing else' do
+      owner.web_objects << FactoryBot.build(:web_object)
+      owner.web_objects << FactoryBot.build(:vendor)
+      owner.web_objects << FactoryBot.build(:vendor)
+
+      expect(owner.vendors.size).to eq 2
+    end
+  end
 
   describe '#donations' do
     it 'should return the users donations' do

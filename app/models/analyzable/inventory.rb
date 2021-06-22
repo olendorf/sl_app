@@ -11,6 +11,8 @@ module Analyzable
 
     belongs_to :user, optional: true
     belongs_to :server, class_name: 'Rezzable::Server'
+    has_many :sales, class_name: 'Analyzable::Transaction', 
+                     dependent: :nullify
 
     enum inventory_type: {
       texture: 0,

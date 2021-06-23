@@ -44,7 +44,7 @@ class User < ApplicationRecord
   def email_required?
     false
   end
- 
+
   def email_changed?
     false
   end
@@ -78,6 +78,10 @@ class User < ApplicationRecord
 
   def tips
     transactions.where(transactable_type: 'Rezzable::TipJar')
+  end
+
+  def vendors
+    Rezzable::Vendor.where(user_id: id)
   end
 
   # def splittable_key
@@ -152,10 +156,10 @@ class User < ApplicationRecord
   def split_percent
     splits.inject(0) { |sum, split| sum + split.percent }
   end
-  
+
   def check_object_weight(new_object_weight)
     web_objects_weight + new_object_weight <=
-        account_level * Settings.default.account.weight_limit
+      account_level * Settings.default.account.weight_limit
   end
 
   def handle_account_payment

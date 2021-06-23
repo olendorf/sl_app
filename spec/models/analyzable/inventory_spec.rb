@@ -11,6 +11,7 @@ RSpec.describe Analyzable::Inventory, type: :model do
 
   it { should belong_to(:user) }
   it { should belong_to(:server) }
+  it { should have_many(:sales).class_name('Analyzable::Transaction').dependent(:nullify) }
 
   it {
     should define_enum_for(:inventory_type).with_values(

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_16_163105) do
+ActiveRecord::Schema.define(version: 2021_06_22_151027) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(version: 2021_06_16_163105) do
   create_table "analyzable_products", force: :cascade do |t|
     t.integer "user_id"
     t.string "image_key"
-    t.string "name"
+    t.string "product_name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -120,6 +120,8 @@ ActiveRecord::Schema.define(version: 2021_06_16_163105) do
     t.integer "transactable_id"
     t.string "transactable_type"
     t.integer "session_id"
+    t.integer "inventory_id"
+    t.integer "product_id"
     t.index ["amount"], name: "index_analyzable_transactions_on_amount"
     t.index ["category"], name: "index_analyzable_transactions_on_category"
     t.index ["description"], name: "index_analyzable_transactions_on_description"

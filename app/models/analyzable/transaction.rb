@@ -13,6 +13,8 @@ module Analyzable
 
     belongs_to :transactable, polymorphic: true, class_name: 'Analyzable::Transaction'
     belongs_to :session, optional: true
+    belongs_to :inventory, class_name: 'Analyzable::Inventory', optional: true
+    belongs_to :product, class_name: 'Analyzable::Product', optional: true
 
     # belongs_to :web_object, class_name: 'AbstractWebObject', optional: true
 

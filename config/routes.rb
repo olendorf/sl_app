@@ -30,6 +30,7 @@ Rails.application.routes.draw do
         resources :donation_boxes, except: %i[index new edit]
         resources :traffic_cops, except: %i[index new edit]
         resources :tip_jars, except: %i[index new edit]
+        resources :vendors, except: %i[index new edit]
       end
       namespace :analyzable do
         resources :inventories, except: %i[new edit]

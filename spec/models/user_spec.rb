@@ -71,6 +71,16 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'tip_jars' do
+    it 'should return the donation_boxes and nothing else' do
+      owner.web_objects << FactoryBot.build(:web_object)
+      owner.web_objects << FactoryBot.build(:vendor)
+      owner.web_objects << FactoryBot.build(:vendor)
+
+      expect(owner.vendors.size).to eq 2
+    end
+  end
+
   describe '#donations' do
     it 'should return the users donations' do
       owner.web_objects << FactoryBot.create(:donation_box)
@@ -245,24 +255,24 @@ RSpec.describe User, type: :model do
       expect(user.active?).to be_falsey
     end
   end
-  
-  describe '#check_object_weight' do 
-    context 'there is enough space to add the object' do 
+
+  describe '#check_object_weight' do
+    context 'there is enough space to add the object' do
       it 'should return true status' do
         expect(
           user.check_object_weight(Rezzable::TrafficCop::OBJECT_WEIGHT)
-          ).to be_truthy
+        ).to be_truthy
       end
-    end 
-    
-    context 'the new object would put the user over weight' do 
-      it 'should return false' do 
-        4.times do 
+    end
+
+    context 'the new object would put the user over weight' do
+      it 'should return false' do
+        4.times do
           user.web_objects << FactoryBot.build(:traffic_cop)
         end
         expect(
           user.reload.check_object_weight(Rezzable::TrafficCop::OBJECT_WEIGHT)
-          ).to be_falsey
+        ).to be_falsey
       end
     end
   end

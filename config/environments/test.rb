@@ -26,6 +26,9 @@ Rails.application.configure do
                          class_name: 'Rezzable::TipJar',
                          association: :abstract_web_object
     Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Rezzable::Vendor',
+                         association: :abstract_web_object
+    Bullet.add_whitelist type: :unused_eager_loading,
                          class_name: 'Rezzable::DonationBox',
                          association: :server
     Bullet.add_whitelist type: :unused_eager_loading,

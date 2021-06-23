@@ -13,7 +13,7 @@ module Analyzable
     belongs_to :user
 
     def add_link
-      return if product_links.find_by_link_name(product_name)
+      return if product_links.find_by_link_name(product_name) 
 
       product_links << Analyzable::ProductLink.create(
         link_name: product_name

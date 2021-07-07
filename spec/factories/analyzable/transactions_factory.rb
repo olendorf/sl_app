@@ -22,5 +22,10 @@ FactoryBot.define do
       category { 'tip' }
       amount { rand(1..1000) }
     end
+    
+    factory :sale do 
+      category { 'sale' }
+      amount { rand(1..1000) }
+    end
   end
 end

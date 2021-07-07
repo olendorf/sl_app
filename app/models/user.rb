@@ -83,6 +83,10 @@ class User < ApplicationRecord
   def vendors
     Rezzable::Vendor.where(user_id: id)
   end
+  
+  def sales
+    transactions.where(transactable_type: 'Rezzable::Vendor')
+  end
 
   # def splittable_key
   #   avatar_key

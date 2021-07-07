@@ -184,6 +184,39 @@ def give_tip_jars_to_user(user, avatars, number_of_tips)
   end
 end
 
+def give_products_to_user(user, number_of_products)
+  rand(1..number_of_products).times do |i|
+    user.products << FactoryBot.build(:product)
+  end
+end
+
+def give_vendors_to_user(user, avatars, number_of_vendors, number_of_sales)
+  rand(1..number_of_vendors).times do 
+    server = user.servers.sample
+    inventory = FactoryBot.build(:inventory)
+    server.inventories << inventory
+    vendor = FactoryBot.build(:vendor, server_id: server.id, 
+                                       inventory_name: inventory.inventory_name)
+    user.web_objects << vendor
+    product = user.products.sample
+    product.product_links << FactoryBot.build(
+      :product_link, link_name: vendor.inventory_name)
+    rand(1..number_of_sales).times do 
+      target = avatars.sample
+      FactoryBot.create(:sale,
+        transactable_id: vendor.id,
+        transactable_type: 'Rezzable::Vendor',
+        source_name: vendor.object_name,
+        target_name: target.avatar_name,
+        target_key: target.avatar_key,
+        inventory_id: inventory.id,
+        product_id: product.id,
+        user_id: user.id
+      )
+    end
+  end
+end
+
 puts 'creating owner'
 owner = FactoryBot.create :owner, avatar_name: 'Random Citizen'
 
@@ -209,6 +242,10 @@ give_traffic_cops_to_user(owner, avatars, 200)
 
 puts 'giving tip_jars to owner'
 give_tip_jars_to_user(owner, avatars, 20)
+
+puts 'giving vendors to owner'
+give_products_to_user(owner, 10)
+give_vendors_to_user(owner, avatars, 50, 20)
 
 4.times do |i|
   FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident"
@@ -239,6 +276,10 @@ puts 'creating users'
 
   puts "giving tip_jars to user #{i}"
   give_tip_jars_to_user(user, avatars, 20)
+  
+  puts "giving vendors to user #{i}"
+  give_products_to_user(user, 10)
+  give_vendors_to_user(user, avatars, 20, 10)
 end
 
 20.times do |i|

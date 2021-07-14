@@ -17,6 +17,12 @@ FactoryBot.define do
       category { 'donation' }
       amount { rand(1..1000) }
     end
+    
+    factory :account do 
+      category { 'account' }
+      amount { rand(1..4) * Settings.default.account.monthly_cost}
+      description { "Account payment from #{target_name}" }
+    end
 
     factory :tip do
       category { 'tip' }

@@ -12,5 +12,6 @@ module Analyzable
       end
       output.join('|')
     end
+    
   end
 end

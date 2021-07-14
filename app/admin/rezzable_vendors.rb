@@ -14,7 +14,7 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
   filter :abstract_web_object_user_avatar_name, as: :string, label: 'Owner'
   filter :abstract_web_object_region, as: :string, label: 'Region'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
-  filter :abstract_web_object_create_at, as: :date_range
+  filter :abstract_web_object_create_at, as: :date_range, label: 'Date Created'
   filter :goal
 
   index title: 'Vendors' do
@@ -30,6 +30,15 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
       link_to vendor.server.object_name,
               admin_server_path(vendor.server) if vendor.server
     end
+    column 'Inventory' do |vendor|
+      inventory = vendor.server.inventories.find_by_inventory_name(
+        vendor.inventory_name)
+      if inventory 
+        link_to inventory.inventory_name, admin_inventory_path(inventory)
+      else
+        'No Inventory'
+      end
+    end
     column 'Owner', sortable: 'users.avatar_name' do |vendor|
       if vendor.user
         link_to vendor.user.avatar_name, admin_user_path(vendor.user)
@@ -38,10 +47,10 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
       end
     end
     column 'Sales ' do |vendor|
-      vendor.sales.count
+      vendor.transactions_count
     end
-    column 'Revenue' do |vendor|
-      vendor.sales.sum(:amount)
+    column "Revenue" do |vendor|
+      vendor.revenue
     end
     column 'Version', &:semantic_version
     column :status, &:pretty_active
@@ -88,15 +97,19 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
           ''
         end
       end
-      row 'Inventory Name' do |vendor|
+      row 'Inventory' do |vendor|
         inventory = vendor.server.inventories.find_by_inventory_name(vendor.inventory_name)
-        link_to inventory.inventory_name, admin_inventory_path(inventory)
+        if inventory 
+          link_to inventory.inventory_name, admin_inventory_path(inventory)
+        else
+          'No Inventory'
+        end
       end
       row :location, &:slurl
       row 'Sales' do |vendor|
-        sales = vendor.sales
-        "#{sales.sum(:amount)} $L (#{sales.count} sales)"
+        "#{vendor.revenue} $L (#{vendor.transactions_count} sales)"
       end
+      row :created_at
       row :updated_at
       row :pinged_at
       row :version, &:semantic_version
@@ -110,7 +123,9 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
         ).per(10), param_name: 'sales_page'
       ) do 
         table_for collection.order(created_at: :desc), download_links: false do 
-          column :created_at
+          column 'Date/Time' do |sale|
+            link_to sale.created_at.to_s(:long), admin_transaction_path(sale)
+          end
           column 'Customer', &:target_name
           column 'amount'
         end
@@ -148,7 +163,7 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
   #   end
   # end
 
-  permit_params :object_name, :description, :server_id, :inventory_name
+  permit_params :object_name, :description, :server_id, :inventory_name, :image_key
 
   form title: proc { "Edit #{resource.object_name}" } do |f|
 
@@ -170,9 +185,9 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
     f.actions
     end
 
-  # controller do
-  #   def scoped_collection
-  #     super.includes(%i[server user transactions])
-  #   end
-  # end
+  controller do
+    # def scoped_collection
+    #   super.includes(%i[user])
+    # end
+  end
 end

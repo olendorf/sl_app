@@ -8,6 +8,7 @@ module Analyzable
     before_save :add_link
 
     has_many :product_links, class_name: 'Analyzable::ProductLink'
+    accepts_nested_attributes_for :product_links, allow_destroy: true
     has_many :sales, class_name: 'Analyzable::Transaction', dependent: :nullify
 
     belongs_to :user

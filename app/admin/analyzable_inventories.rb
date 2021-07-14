@@ -33,6 +33,22 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
     column 'Next Perms' do |inventory|
       inventory.pretty_perms(:next)
     end
+    column 'Product' do |inventory|
+      
+      product_link = inventory.user.product_links.find_by_link_name(inventory.inventory_name)
+      if product_link
+        link_to product_link.product.product_name, admin_product_path(product_link.product)
+      else
+        'No Product Linked'
+      end
+    end
+    
+    column 'Revenue' do |inventory|
+      inventory.revenue
+    end
+    column "Units Sold" do |inventory|
+      inventory.transactions_count
+    end
     column :created_at
     column :updated_at
     actions
@@ -40,7 +56,8 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
 
   filter :inventory_name
   filter :inventory_description, label: 'Description'
-  filter :user_avatar_name, as: :string, label: 'Object Name'
+  filter :server_abstract_web_object_object_name, as: :string, label: 'Server Name'
+  filter :user_avatar_name, as: :string, label: 'User Name'
   filter :price, as: :numeric
   filter :inventory_type, as: :select, collection: Analyzable::Inventory.inventory_types
   filter :created_at, as: :date_range
@@ -52,6 +69,16 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
     attributes_table do
       row 'Name', &:inventory_name
       row 'Type', &:inventory_type
+      row :price
+      row 'Product' do |inventory|
+      
+        product_link = inventory.user.product_links.find_by_link_name(inventory.inventory_name)
+        if product_link
+          link_to product_link.product.product_name, admin_product_path(product_link.product)
+        else
+          'No Product Linked'
+        end
+      end
       row 'Owner' do |inventory|
         link_to inventory.server.user.avatar_name, admin_user_path(inventory.server.user)
       end
@@ -64,7 +91,27 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
       row 'Server' do |inventory|
         link_to inventory.server.object_name, admin_server_path(inventory.server)
       end
-      row :created_at
+      row 'Sales' do |inventory|
+        # sales = inventory.sales
+        "#{inventory.revenue} $L (#{inventory.transactions_count})"
+      end
+      row 'Date/Time',  &:created_at
+    end
+    
+    panel 'Sales' do 
+      paginated_collection(
+        resource.sales.page(
+          params[:sales_page]
+        ).per(10), param_name: 'sales_page'
+      ) do 
+        table_for collection.order(created_at: :desc), download_links: false do 
+          column 'Date/Time' do |sale|
+            link_to sale.created_at.to_s(:long), admin_transaction_path(sale)
+          end
+          column 'Customer', &:target_name
+          column 'amount'
+        end
+      end
     end
   end
 

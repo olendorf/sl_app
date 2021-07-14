@@ -39,6 +39,9 @@ class User < ApplicationRecord
   has_many :visits, class_name: 'Analyzable::Visit', dependent: :destroy
   has_many :sessions, class_name: 'Analyzable::Session', dependent: :destroy
   has_many :products, class_name: 'Analyzable::Product', dependent: :destroy
+  has_many :product_links, class_name: 'Analyzable::ProductLink', 
+                           dependent: :destroy
+  
 
   # THese two methods need to be overridden to deal with Devise's need for emails.
   def email_required?

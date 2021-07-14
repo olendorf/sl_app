@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_22_151027) do
+ActiveRecord::Schema.define(version: 2021_07_14_122740) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2021_06_22_151027) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "server_id"
+    t.integer "transactions_count", default: 0
     t.index ["description"], name: "index_abstract_web_objects_on_description"
     t.index ["object_key"], name: "index_abstract_web_objects_on_object_key"
     t.index ["object_name"], name: "index_abstract_web_objects_on_object_name"
@@ -72,6 +73,8 @@ ActiveRecord::Schema.define(version: 2021_06_22_151027) do
     t.integer "next_perms"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "transactions_count", default: 0
+    t.integer "revenue", default: 0
   end
 
   create_table "analyzable_product_links", force: :cascade do |t|
@@ -79,6 +82,7 @@ ActiveRecord::Schema.define(version: 2021_06_22_151027) do
     t.string "link_name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "user_id"
   end
 
   create_table "analyzable_products", force: :cascade do |t|
@@ -87,6 +91,9 @@ ActiveRecord::Schema.define(version: 2021_06_22_151027) do
     t.string "product_name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "product_links_count"
+    t.integer "transactions_count", default: 0
+    t.integer "revenue", default: 0
   end
 
   create_table "analyzable_sessions", force: :cascade do |t|
@@ -216,6 +223,7 @@ ActiveRecord::Schema.define(version: 2021_06_22_151027) do
     t.string "image_key"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "revenue", default: 0
   end
 
   create_table "rezzable_web_objects", force: :cascade do |t|

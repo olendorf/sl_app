@@ -36,4 +36,5 @@ RSpec.describe Analyzable::InventoryDecorator do
       end
     end
   end
+  
 end

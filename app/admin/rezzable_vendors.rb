@@ -32,8 +32,9 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
     end
     column 'Inventory' do |vendor|
       inventory = vendor.server.inventories.find_by_inventory_name(
-        vendor.inventory_name)
-      if inventory 
+        vendor.inventory_name
+      )
+      if inventory
         link_to inventory.inventory_name, admin_inventory_path(inventory)
       else
         'No Inventory'
@@ -46,12 +47,8 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
         'Orphan'
       end
     end
-    column 'Sales ' do |vendor|
-      vendor.transactions_count
-    end
-    column "Revenue" do |vendor|
-      vendor.revenue
-    end
+    column 'Sales ', &:transactions_count
+    column 'Revenue', &:revenue
     column 'Version', &:semantic_version
     column :status, &:pretty_active
 
@@ -99,7 +96,7 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
       end
       row 'Inventory' do |vendor|
         inventory = vendor.server.inventories.find_by_inventory_name(vendor.inventory_name)
-        if inventory 
+        if inventory
           link_to inventory.inventory_name, admin_inventory_path(inventory)
         else
           'No Inventory'
@@ -115,14 +112,14 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
       row :version, &:semantic_version
       row :status, &:pretty_active
     end
-    
-    panel 'Sales' do 
+
+    panel 'Sales' do
       paginated_collection(
         resource.sales.page(
           params[:sales_page]
         ).per(10), param_name: 'sales_page'
-      ) do 
-        table_for collection.order(created_at: :desc), download_links: false do 
+      ) do
+        table_for collection.order(created_at: :desc), download_links: false do
           column 'Date/Time' do |sale|
             link_to sale.created_at.to_s(:long), admin_transaction_path(sale)
           end
@@ -132,21 +129,21 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
       end
     end
 
-  #   panel 'Top 10 Donors For This Box' do
-  #     counts = resource.transactions.group(:target_name).count
-  #     sums = resource.transactions.group(:target_name).order('sum_amount DESC').sum(:amount)
-  #     data = sums.collect { |k, v| { donor: k, amount: v, count: counts[k] } }
-  #     paginated_data = Kaminari.paginate_array(data).page(params[:donor_page]).per(10)
+    #   panel 'Top 10 Donors For This Box' do
+    #     counts = resource.transactions.group(:target_name).count
+    #     sums = resource.transactions.group(:target_name).order('sum_amount DESC').sum(:amount)
+    #     data = sums.collect { |k, v| { donor: k, amount: v, count: counts[k] } }
+    #     paginated_data = Kaminari.paginate_array(data).page(params[:donor_page]).per(10)
 
-  #     table_for paginated_data do
-  #       column :donor
-  #       column :amount
-  #       column('Donations') do |item|
-  #         item[:count]
-  #       end
-  #     end
-  #   end
-  # end
+    #     table_for paginated_data do
+    #       column :donor
+    #       column :amount
+    #       column('Donations') do |item|
+    #         item[:count]
+    #       end
+    #     end
+    #   end
+    # end
   end
 
   # sidebar :donations, only: :show do
@@ -166,24 +163,22 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor' do
   permit_params :object_name, :description, :server_id, :inventory_name, :image_key
 
   form title: proc { "Edit #{resource.object_name}" } do |f|
-
-
     f.inputs do
-      div class: 'alert' do 
-        h1 "Only change the server OR inventory. Changing both will result in errors."
+      div class: 'alert' do
+        h1 'Only change the server OR inventory. Changing both will result in errors.'
       end
       f.input :object_name, label: 'Vendor name'
       f.input :description
       f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
         [s.object_name, s.actable.id]
       }
-      f.input :inventory_name, as: :select, 
-                               collection: resource.server.inventories.
-                                  collect { |inv| inv.inventory_name }
+      f.input :inventory_name, as: :select,
+                               collection: resource.server.inventories
+                                                   .collect(&:inventory_name)
       f.input :image_key
     end
     f.actions
-    end
+  end
 
   controller do
     # def scoped_collection

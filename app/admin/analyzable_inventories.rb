@@ -34,7 +34,6 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
       inventory.pretty_perms(:next)
     end
     column 'Product' do |inventory|
-      
       product_link = inventory.user.product_links.find_by_link_name(inventory.inventory_name)
       if product_link
         link_to product_link.product.product_name, admin_product_path(product_link.product)
@@ -42,13 +41,9 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
         'No Product Linked'
       end
     end
-    
-    column 'Revenue' do |inventory|
-      inventory.revenue
-    end
-    column "Units Sold" do |inventory|
-      inventory.transactions_count
-    end
+
+    column 'Revenue', &:revenue
+    column 'Units Sold', &:transactions_count
     column :created_at
     column :updated_at
     actions
@@ -71,7 +66,6 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
       row 'Type', &:inventory_type
       row :price
       row 'Product' do |inventory|
-      
         product_link = inventory.user.product_links.find_by_link_name(inventory.inventory_name)
         if product_link
           link_to product_link.product.product_name, admin_product_path(product_link.product)
@@ -95,16 +89,16 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
         # sales = inventory.sales
         "#{inventory.revenue} $L (#{inventory.transactions_count})"
       end
-      row 'Date/Time',  &:created_at
+      row 'Date/Time', &:created_at
     end
-    
-    panel 'Sales' do 
+
+    panel 'Sales' do
       paginated_collection(
         resource.sales.page(
           params[:sales_page]
         ).per(10), param_name: 'sales_page'
-      ) do 
-        table_for collection.order(created_at: :desc), download_links: false do 
+      ) do
+        table_for collection.order(created_at: :desc), download_links: false do
           column 'Date/Time' do |sale|
             link_to sale.created_at.to_s(:long), admin_transaction_path(sale)
           end

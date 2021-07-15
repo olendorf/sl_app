@@ -24,11 +24,24 @@ RSpec.describe User, type: :model do
       'Analyzable::Transaction'
     ).dependent(:destroy)
   }
-  it { should have_many(:visits).class_name('Analyzable::Visit').dependent(:destroy) }
+  it {
+    should have_many(:visits).class_name('Analyzable::Visit')
+                             .dependent(:destroy)
+  }
   it { should have_many(:splits).dependent(:destroy) }
   it { should have_many(:inventories).class_name('Analyzable::Inventory') }
-  it { should have_many(:sessions).class_name('Analyzable::Session').dependent(:destroy) }
-  it { should have_many(:products).class_name('Analyzable::Product').dependent(:destroy) }
+  it {
+    should have_many(:sessions).class_name('Analyzable::Session')
+                               .dependent(:destroy)
+  }
+  it {
+    should have_many(:products).class_name('Analyzable::Product')
+                               .dependent(:destroy)
+  }
+  it {
+    should have_many(:product_links).class_name('Analyzable::ProductLink')
+                                    .dependent(:destroy)
+  }
 
   describe '#servers' do
     it 'should return the servers and nothing else' do
@@ -110,6 +123,24 @@ RSpec.describe User, type: :model do
                                 transactable_type: 'Rezzable::TipJar')
       end
       expect(owner.tips.size).to eq 10
+    end
+  end
+
+  describe '#sales' do
+    it 'should return the users sales' do
+      user.web_objects << FactoryBot.build(:server)
+      user.servers.first.inventories << FactoryBot.build(:inventory)
+      owner.web_objects << FactoryBot.build(:vendor)
+      owner.web_objects << FactoryBot.build(:vendor)
+      5.times do
+        FactoryBot.create(:sale, user_id: owner.id,
+                                 transactable_id: owner.vendors.first.id,
+                                 transactable_type: 'Rezzable::Vendor')
+        FactoryBot.create(:sale, user_id: owner.id,
+                                 transactable_id: owner.vendors.last.id,
+                                 transactable_type: 'Rezzable::Vendor')
+      end
+      expect(owner.sales.size).to eq 10
     end
   end
 

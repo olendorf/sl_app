@@ -35,6 +35,9 @@ def give_terminals(user, avatars)
       terminal.server_id = user.servers.sample.id
       terminal.save
     end
+
+    # rand(1..50).times do
+    # end
   end
 end
 
@@ -42,7 +45,8 @@ def give_servers_to_user(user)
   rand(1..10).times do
     server = FactoryBot.create(:server, user_id: user.id)
     rand(1..50).times do
-      server.inventories << FactoryBot.build(:inventory)
+      server.inventories << FactoryBot.build(:sellable_inventory,
+                                             inventory_name: SecureRandom.uuid)
     end
   end
 end
@@ -66,13 +70,6 @@ def give_transactions_to_user(user, avatars)
                                                           target_name: target.avatar_name,
                                                           category: 'other',
                                                           created_at: Time.at(date))
-    when :donation_boxes
-      if user.send(source_type).size.positive?
-        source = user.send(source_type).sample
-        source.transactions << FactoryBot.build(:donation, target_key: target.avatar_key,
-                                                           target_name: target.avatar_name,
-                                                           created_at: Time.at(date))
-      end
     when :terminals
       source = user.send(source_type).sample
       amount = rand(1..6) * 300
@@ -184,6 +181,59 @@ def give_tip_jars_to_user(user, avatars, number_of_tips)
   end
 end
 
+def give_products_to_user(user, number_of_products)
+  rand(1..number_of_products).times do |_i|
+    user.products << FactoryBot.build(:product)
+  end
+end
+
+# rubocop:disable Metrics/AbcSize, Metrics/ParameterLists
+def give_sales_to_vendor(avatars, vendor, inventory, product, user, number_of_sales)
+  rand(1..number_of_sales).times do
+    target = avatars.sample
+    sale = FactoryBot.create(:sale,
+                             amount: inventory.price,
+                             transactable_id: vendor.id,
+                             transactable_type: 'Rezzable::Vendor',
+                             source_name: vendor.object_name,
+                             target_name: target.avatar_name,
+                             target_key: target.avatar_key,
+                             inventory_id: inventory.id,
+                             product_id: product.id,
+                             user_id: user.id)
+    inventory.transactions_count = 0 unless inventory.transactions_count
+    product.transactions_count = 0 unless product.transactions_count
+    inventory.transactions_count = inventory.transactions_count + 1
+    inventory.revenue += sale.amount
+    inventory.save
+    product.transactions_count = product.transactions_count + 1
+    product.revenue += sale.amount
+    product.save
+    vendor.actable.revenue += sale.amount
+    vendor.transactions_count += 1
+    vendor.save
+  end
+end
+
+def give_vendors_to_user(user, avatars, number_of_vendors, number_of_sales)
+  rand(1..number_of_vendors).times do
+    server = user.servers.sample
+    inventory = server.inventories.sample
+    server.inventories << inventory
+    vendor = FactoryBot.create(:vendor, server_id: server.id,
+                                        inventory_name: inventory.inventory_name)
+    user.web_objects << vendor
+    product = user.products.sample
+    product.product_links << FactoryBot.build(
+      :product_link, link_name: vendor.inventory_name, user_id: user.id
+    )
+
+    give_sales_to_vendor(avatars, vendor, inventory, product, user, number_of_sales)
+  end
+end
+
+# rubocop:enable Metrics/AbcSize, Metrics/ParameterLists
+
 puts 'creating owner'
 owner = FactoryBot.create :owner, avatar_name: 'Random Citizen'
 
@@ -195,20 +245,25 @@ give_splits(owner, avatars)
 puts 'giving servers to owner'
 give_servers_to_user(owner)
 
-puts 'giving terminals to owner'
-give_terminals(owner, avatars)
+# puts 'giving terminals to owner'
+# give_terminals(owner, avatars)
 
-puts 'giving donation_boxes to owner'
-give_donation_boxes_to_user(owner, avatars)
+# puts 'giving donation_boxes to owner'
+# give_donation_boxes_to_user(owner, avatars)
 
-puts 'giving transactions to owner'
-give_transactions_to_user(owner, avatars)
+# puts 'giving transactions to owner'
+# give_transactions_to_user(owner, avatars)
 
-puts 'giving traffic_cops to owner'
-give_traffic_cops_to_user(owner, avatars, 200)
+# puts 'giving traffic_cops to owner'
+# give_traffic_cops_to_user(owner, avatars, 200)
 
-puts 'giving tip_jars to owner'
-give_tip_jars_to_user(owner, avatars, 20)
+# puts 'giving tip_jars to owner'
+# give_tip_jars_to_user(owner, avatars, 20)
+
+puts 'giving vendors to owner'
+give_products_to_user(owner, 10)
+give_vendors_to_user(owner, avatars, 50, 20)
+puts "inv sales: #{owner.vendors.first.inventory.sales.size}"
 
 4.times do |i|
   FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident"
@@ -239,6 +294,10 @@ puts 'creating users'
 
   puts "giving tip_jars to user #{i}"
   give_tip_jars_to_user(user, avatars, 20)
+
+  puts "giving vendors to user #{i}"
+  give_products_to_user(user, 10)
+  give_vendors_to_user(user, avatars, 20, 10)
 end
 
 20.times do |i|

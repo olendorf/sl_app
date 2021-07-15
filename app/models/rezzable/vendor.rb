@@ -34,6 +34,13 @@ module Rezzable
       server.inventories.find_by_inventory_name(inventory_name)
     end
 
+    def sales
+      transactions.where(
+        transactable_type: 'Rezzable::Vendor',
+        transactable_id: id
+      )
+    end
+
     def product_link_id
       product_link = Analyzable::ProductLink.where(
         product_id: user.products.collect(&:id)

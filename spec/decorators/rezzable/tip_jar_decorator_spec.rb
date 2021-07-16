@@ -19,7 +19,4 @@ RSpec.describe Rezzable::TipJarDecorator do
       end
     end
   end
-  
-
-  
 end

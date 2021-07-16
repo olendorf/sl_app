@@ -42,11 +42,32 @@ module Rezzable
     end
 
     def product_link_id
-      product_link = Analyzable::ProductLink.where(
+      product_link.nil? ? nil : product.id
+    end
+
+    def product_link
+      Analyzable::ProductLink.where(
         product_id: user.products.collect(&:id)
-      )
-                                            .find_by_link_name(inventory.inventory_name)
-      product_link.nil? ? nil : product_link.product.id
+      ).find_by_link_name(inventory.inventory_name)
+    end
+
+    def product
+      product_link.nil? ? nil : product_link.product
+    end
+
+    def handle_revenue
+      inv = inventory
+      inv.revenue = inv.revenue + price
+      inv.save
+
+      self.revenue = revenue + price
+      save
+
+      prod = product
+      return unless prod
+
+      prod.revenue = prod.revenue + price
+      prod.save
     end
 
     def handle_sale
@@ -65,6 +86,8 @@ module Rezzable
         inventory_id: inventory.id,
         product_id: product_link_id
       )
+      handle_revenue
     end
   end
+  
 end

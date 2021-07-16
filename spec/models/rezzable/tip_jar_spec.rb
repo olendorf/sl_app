@@ -72,25 +72,26 @@ RSpec.describe Rezzable::TipJar, type: :model do
       end
     end
   end
-  
-  describe '#transaction_category' do 
-    it 'should return tip' do 
+
+  describe '#transaction_category' do
+    it 'should return tip' do
       expect(tip_jar.transaction_category).to eq 'tip'
     end
   end
-  
-  describe '#transaction_description' do 
-    it 'should return the correct description' do 
+
+  describe '#transaction_description' do
+    it 'should return the correct description' do
       transaction = FactoryBot.build(:transaction)
       tip_jar.sessions << FactoryBot.build(:session)
       expect(tip_jar.transaction_description(transaction)).to eq(
-            "Tip from #{transaction.target_name} to " + 
-            "#{tip_jar.sessions.last.avatar_name}.")
+        "Tip from #{transaction.target_name} to " +
+        "#{tip_jar.sessions.last.avatar_name}."
+      )
     end
   end
-  
-  describe '#check_logged_in' do 
-    it 'should raise an error if no one is logged in' do 
+
+  describe '#check_logged_in' do
+    it 'should raise an error if no one is logged in' do
       expect { tip_jar.check_logged_in }.to raise_error(ActionController::BadRequest)
     end
   end

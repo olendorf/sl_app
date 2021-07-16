@@ -34,6 +34,16 @@ RSpec.describe 'Api::V1::Rezzable::Vendor', type: :request do
       put path, params: atts.to_json, headers: headers(vendor)
       expect(inventory.reload.sales.size).to eq 1
     end
+    
+    it 'should update the inventory revenue' do 
+      put path, params: atts.to_json, headers: headers(vendor)
+      expect(inventory.reload.revenue).to eq inventory.price
+    end
+    
+    it 'should update the vendor revenue' do 
+      put path, params: atts.to_json, headers: headers(vendor)
+      expect(vendor.reload.revenue).to eq inventory.price
+    end
 
     context 'there is a related product' do
       before(:each) do
@@ -45,6 +55,11 @@ RSpec.describe 'Api::V1::Rezzable::Vendor', type: :request do
       it 'should add the transaction to the product' do
         put path, params: atts.to_json, headers: headers(vendor)
         expect(@product.reload.sales.size).to eq 1
+      end
+      
+      it 'should add the price to the revenue' do 
+        put path, params: atts.to_json, headers: headers(vendor)
+        expect(@product.reload.revenue).to eq inventory.price
       end
     end
   end

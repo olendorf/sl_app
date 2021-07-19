@@ -89,5 +89,4 @@ module Rezzable
       handle_revenue
     end
   end
-  
 end

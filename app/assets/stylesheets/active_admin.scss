@@ -41,6 +41,12 @@ form .alert h1 {
   
   .column {
     vertical-align: top;
+    
+    &.sm {
+      width: 30%;
+      display: inline-block;
+      margin: 20px 30px;
+    }
     &.md {
       width: 40%;
       display: inline-block;

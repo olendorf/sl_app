@@ -1,0 +1,62 @@
+<div id="inventory_sales_timeline_container" class: 'centered' style="width:1600px; height:800px;" %></div>
+
+
+
+<script type="text/javascript">
+// data = {
+// 	dates: ["2021-04-18", "2021-04-19", "2021-04-20", "2021-04-21"], 
+//   counts: [4, 15, 30, 20], 
+//   visitors: [3, 10, 27, 16],
+//   durations: [50,126, 450, 300]
+// }
+$(function () {
+        // var processed_json = new Array();   
+  $.getJSON('/async/sales/', 
+                  {
+                      chart: 'inventory_sales_timeline',
+                      ids: gon.ids
+                  },
+                  function(data) {
+
+      // draw chart
+       $('#inventory_sales_timeline_container').highcharts({ 
+          chart: {
+            type: 'spline',
+            zoomType: 'x'
+          },
+          title: {
+            text: 'Sales Over Time'
+          },
+          xAxis: {
+            allowDecimals: false,
+            type: 'datetime',
+            categories: 
+               data.dates,
+            accessibility: {
+                // rangeDescription: 'Range: 1940 to 2017.'
+            }
+          },
+          yAxis: [{
+          title: {
+          	text: 'Number of Sales',
+            style: {
+              color: Highcharts.getOptions().colors[0]
+            }
+          },
+          labels: {
+            style: {
+              color: Highcharts.getOptions().colors[0]
+            }
+          }
+          }],
+          series: [{
+            name: 'Sales',
+            yAxis: 0,
+            data: data.counts
+          }]
+    });
+  });
+});
+
+
+</script>

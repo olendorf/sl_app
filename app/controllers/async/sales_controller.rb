@@ -8,6 +8,89 @@ module Async
       render json: send(params['chart'], params['ids']).to_json
     end
     
+    def sales_by_inventory_revenue_timeline(ids = nil)
+      sales = current_user.sales.includes(:inventory)
+      dates = time_series_months(sales.first.created_at - 1.month, Time.current)
+      inventories = current_user.inventories.where('revenue > ?', 0)
+      data = inventories.order(:revenue).reverse.collect do 
+        |i| [i.inventory_name, Array.new(dates.size, 0)] 
+      end.to_h
+      sales.each do |s|
+        if s.inventory
+          index = dates.index(s.created_at.strftime('%B %Y'))
+          if index
+            data[s.inventory.inventory_name][index] += s.amount.nil? ? 0 : s.amount
+          end 
+        end 
+      end
+      data = data.collect { |k, v| {name: k, data: v} }
+      {dates: dates, data: data, colors: inventory_colors(inventories)}
+    end
+    
+    def sales_by_inventory_items_timeline(ids = nil)
+      sales = current_user.sales.includes(:inventory)
+      dates = time_series_months(sales.first.created_at - 1.month, Time.current)
+      inventories = current_user.inventories.where('revenue > ?', 0)
+      data = inventories.order(:revenue).reverse.collect do 
+        |i| [i.inventory_name, Array.new(dates.size, 0)] 
+      end.to_h
+      sales.each do |s|
+        if s.inventory
+          index = dates.index(s.created_at.strftime('%B %Y'))
+          if index
+            data[s.inventory.inventory_name][index] += 1
+          end 
+        end 
+      end
+      data = data.collect { |k, v| {name: k, data: v} }
+      {dates: dates, data: data, colors: inventory_colors(inventories)}
+    end
+    
+    def inventory_colors(inventories)
+      md5 = Digest::MD5.new
+      inventories.collect { |p| "##{md5.hexdigest(p.inventory_name)[0..5]}"}
+    end
+    
+    def sales_by_product_items_timeline(ids = nil)
+      sales = current_user.sales.includes(:product)
+      dates = time_series_months(sales.first.created_at - 1.month, Time.current)
+      products = current_user.products
+      data = products.order(:revenue).reverse.collect { |p| [p.product_name, Array.new(dates.size, 0)] }.to_h
+      sales.each do |s|
+        if s.product
+          index = dates.index(s.created_at.strftime('%B %Y'))
+          if index
+            data[s.product.product_name][index] += 1
+          end 
+        end 
+      end
+      data = data.collect { |k, v| {name: k, data: v} }
+      {dates: dates, colors: product_colors(products), data: data}
+    end
+    
+    def sales_by_product_revenue_timeline(ids = nil)
+      
+      sales = current_user.sales.includes(:product)
+      dates = time_series_months(sales.first.created_at - 1.month, Time.current)
+      products = current_user.products
+      data = products.order(:revenue).reverse.collect { |p| [p.product_name, Array.new(dates.size, 0)] }.to_h
+      sales.each do |s|
+        if s.product
+          index = dates.index(s.created_at.strftime('%B %Y'))
+          if index
+            data[s.product.product_name][index] += s.amount.nil? ? 0 : s.amount
+          end
+        end
+      end
+      data = data.collect { |k, v| {name: k, data: v} }
+      {dates: dates, colors: product_colors(products), data: data}
+    end
+    
+    def product_colors(products)
+      md5 = Digest::MD5.new
+      products.collect { |p| "##{md5.hexdigest(p.product_name)[0..5]}"}
+    end
+    
     def vendor_sales_timeline(ids)
       sales_timeline(
         Rezzable::Vendor.find(ids.first).sales.order(:created_at))
@@ -32,6 +115,8 @@ module Async
       end
       { dates: dates, counts: counts }
     end
+    
+    
 
     # def visits_histogram(ids)
     #   Analyzable::Visit.select(:duration).where(web_object_id: ids).collect do |v|

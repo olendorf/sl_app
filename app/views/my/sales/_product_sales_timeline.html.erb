@@ -1,0 +1,69 @@
+<div id="sales_by_product_items_timeline_container" style="width:1500; height:900px;" %></div>
+
+<script type="text/javascript">
+
+$(function() {
+  $.getJSON('/async/sales',
+              {
+                  chart: 'sales_by_product_items_timeline'
+              },
+              function(data){
+                
+        $('#sales_by_product_items_timeline_container').highcharts({
+            chart: {
+                type: 'area',
+                marginBottom: 100,
+                zoomType: 'x'
+            },
+            title: {
+              floating: true,
+              align: 'left', 
+              text: 'Items Sold Over Time Broken Down By Product'
+            },
+            colors: data.colors,
+            xAxis: {
+              allowDecimals: false,
+              type: 'category',
+              crosshair: true,
+              categories: data.dates,
+              labels: {
+                // align: 'left',
+                reserveSpace: true
+                // rotation: 270
+              }
+            },
+          yAxis: {
+            title: {
+              text: 'Revenue ($L)'
+            },
+            min: 0
+            // visible: false,
+            // startOnTick: false,
+            // endOnTick: false
+          },
+          legend: {
+            enabled: true,
+            verticalAlign: 'top'
+          },
+          plotOptions: {
+              area: {
+                  stacking: 'normal'
+              },
+              series: {
+                  label: {
+                      minFontSize: 5,
+                      maxFontSize: 15,
+                      style: {
+                          color: 'rgba(255,255,255,0.75)'
+                      }
+                  }
+              }
+          },
+          series: data.data
+        })
+    });
+});
+
+
+</script>
+

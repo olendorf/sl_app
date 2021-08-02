@@ -11,7 +11,8 @@ RSpec.describe 'Async::Visits', type: :request do
       3.times do 
         inventory = FactoryBot.create(:inventory,
           user_id: @user.id,
-          server_id: @server.id)
+          server_id: @server.id,
+          price: 100)
          vendor = FactoryBot.create(:vendor,
           inventory_name: inventory.inventory_name,
           server_id: @server.id,
@@ -56,6 +57,22 @@ RSpec.describe 'Async::Visits', type: :request do
           get path, params: { chart: 'vendor_sales_timeline', ids: [@user.vendors.first.id] } 
           expect(JSON.parse(response.body)['counts']).to eq [0, 0, 0, 3]
         end
+      end
+    end
+    
+    describe 'asking for product revenue steamgraph data' do 
+      it 'should return ok status' do 
+          get path, params: { chart: 'sales_product_revenue_steamgraph'}
+          expect(response.status).to eq 200
+      end
+      
+      it 'should return the data' do 
+          get path, params: { chart: 'sales_product_revenue_steamgraph'}
+          expect(JSON.parse(response.body).with_indifferent_access).to eq (
+                  {"dates" => ["2021-07-27","2021-07-28","2021-07-29","2021-07-30"],
+                   "data" => [{"name" => @user.products.first.product_name, "data" => [0,0,0,300]},
+                           {"name" => @user.products.second.product_name, "data" => [0,0,0,300]},
+                           {"name" => @user.products.third.product_name, "data" =>[0,0,0,300]}]})
       end
     end
   end

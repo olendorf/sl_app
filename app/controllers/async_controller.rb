@@ -16,7 +16,7 @@ class AsyncController < ApplicationController
     end
     dates
   end
-  
+
   def time_series_months(start, stop, interval = 1.month)
     dates = []
     step_time = start

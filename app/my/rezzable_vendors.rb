@@ -3,12 +3,12 @@
 ActiveAdmin.register Rezzable::Vendor, as: 'Vendor', namespace: :my do
   include ActiveAdmin::RezzableBehavior
 
-  menu parent: 'Objects', label: 'Vendors', if: proc { 
-            current_user.vendors.size.positive? }
+  menu parent: 'Objects', label: 'Vendors', if: proc {
+                                                  current_user.vendors.size.positive?
+                                                }
 
   actions :all, except: %i[new create]
-  
-  
+
   scope_to :current_user, association_method: :vendors
 
   decorate_with Rezzable::VendorDecorator
@@ -119,17 +119,17 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor', namespace: :my do
           end
         end
       end
-      
-      div class: 'column md' do 
+
+      div class: 'column md' do
         h1 'Customers'
         amounts = resource.sales.group(:target_name).sum(:amount)
-        data = resource.sales.group(:target_name).count.collect do |k, v| 
-          {avatar_name: k, purchases: v, amount_paid: amounts[k]}
+        data = resource.sales.group(:target_name).count.collect do |k, v|
+          { avatar_name: k, purchases: v, amount_paid: amounts[k] }
         end
-        paginated_data = Kaminari.paginate_array(data).
-                              page(params[:customer_page]).per(10)
-                              
-        table_for paginated_data do 
+        paginated_data = Kaminari.paginate_array(data)
+                                 .page(params[:customer_page]).per(10)
+
+        table_for paginated_data do
           column :avatar_name
           column :purchases
           column :amount_paid
@@ -141,16 +141,13 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor', namespace: :my do
           page_entries_info paginated_data, entry_name: 'Customers'
         end
       end
-    end 
-    
-    panel '' do 
+    end
+
+    panel '' do
       div class: 'column lg' do
-        
         render partial: 'vendor_sales_timeline'
       end
     end
-    
-    
 
     #   panel 'Top 10 Donors For This Box' do
     #     counts = resource.transactions.group(:target_name).count
@@ -204,7 +201,6 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor', namespace: :my do
   end
 
   controller do
-    
     def show
       gon.ids = [resource.id]
       super

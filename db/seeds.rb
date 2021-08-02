@@ -201,8 +201,7 @@ def give_sales_to_vendor(avatars, vendor, inventory, product, user, number_of_sa
                              inventory_id: inventory.id,
                              product_id: product.id,
                              created_at: Time.at(rand(1.year.ago.to_i..Time.now.to_i)),
-                             user_id: user.id
-                             )
+                             user_id: user.id)
     inventory.transactions_count = 0 unless inventory.transactions_count
     product.transactions_count = 0 unless product.transactions_count
     inventory.transactions_count = inventory.transactions_count + 1

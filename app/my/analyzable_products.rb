@@ -51,7 +51,7 @@ ActiveAdmin.register Analyzable::Product, namespace: :my, as: 'Product' do
       row :updated_at
     end
 
-   panel '' do
+    panel '' do
       div class: 'column sm' do
         h1 'Sales'
         paginated_collection(
@@ -68,19 +68,21 @@ ActiveAdmin.register Analyzable::Product, namespace: :my, as: 'Product' do
           end
         end
       end
-      
-      div class: 'column sm' do 
+
+      div class: 'column sm' do
         h1 'Customers'
         amounts = resource.sales.group(:target_name).sum(:amount)
-        data = resource.sales.group(:target_name).count.sort_by do |k, v|
+        data = resource.sales.group(:target_name).count.sort_by do |_k, v|
           v
-        end.reverse.collect do |k, v| 
-          {avatar_name: k, purchases: v, amount_paid: amounts[k]}
         end
-        paginated_data = Kaminari.paginate_array(data).
-                              page(params[:customer_page]).per(10)
-                              
-        table_for paginated_data do 
+
+        data = data.reverse.collect do |k, v|
+          { avatar_name: k, purchases: v, amount_paid: amounts[k] }
+        end
+        paginated_data = Kaminari.paginate_array(data)
+                                 .page(params[:customer_page]).per(10)
+
+        table_for paginated_data do
           column :avatar_name
           column :purchases
           column :amount_paid
@@ -92,20 +94,23 @@ ActiveAdmin.register Analyzable::Product, namespace: :my, as: 'Product' do
           page_entries_info paginated_data, entry_name: 'Customers'
         end
       end
-      #Hash[h.sort_by{|k, v| v}.reverse]
-      div class: 'column sm' do 
+      # Hash[h.sort_by{|k, v| v}.reverse]
+      div class: 'column sm' do
         h1 'Inventories'
         sales = resource.sales.joins(:inventory)
         amounts = sales.group(:inventory_name).sum(:amount)
-        data = sales.joins(:inventory).group(:inventory_name).count.sort_by do|k, v| 
+        data = sales.joins(:inventory).group(:inventory_name).count.sort_by do |_k, v|
           v
-        end.reverse.collect do |k, v| 
-          {inventory_name: k, purchases: v, amount_paid: amounts[k]}
         end
-        paginated_data = Kaminari.paginate_array(data).
-                              page(params[:customer_page]).per(10)
-                              
-        table_for paginated_data do 
+
+        data = data.reverse.collect do |k, v|
+          { inventory_name: k, purchases: v, amount_paid: amounts[k] }
+        end
+
+        paginated_data = Kaminari.paginate_array(data)
+                                 .page(params[:customer_page]).per(10)
+
+        table_for paginated_data do
           column :inventory_name
           column :purchases
           column :amount_paid
@@ -117,11 +122,10 @@ ActiveAdmin.register Analyzable::Product, namespace: :my, as: 'Product' do
           page_entries_info paginated_data, entry_name: 'Customers'
         end
       end
-    end 
-    
-    panel '' do 
+    end
+
+    panel '' do
       div class: 'column lg' do
-        
         render partial: 'product_sales_timeline'
       end
     end

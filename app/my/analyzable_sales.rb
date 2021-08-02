@@ -4,16 +4,16 @@ ActiveAdmin.register_page 'Sales', namespace: :my do
   menu parent: 'Data', label: 'Sales',
        priority: 3,
        if: proc { current_user.sales.size.positive? }
-         
-         
-  content title: proc { I18n.t() } do 
-    panel 'Recent Sales' do 
-      sales = current_user.sales.includes(:transactable, :inventory, :product).order('created_at DESC')
+
+  content title: proc { I18n.t } do
+    panel 'Recent Sales' do
+      sales = current_user.sales.includes(:transactable, :inventory,
+                                          :product).order('created_at DESC')
       paginated_collection(sales.page(params[:sales_page]).per(10),
-                                  param_name: 'sales_page',
-                                  entry_name: 'Sales',
-                                  download_links: false) do 
-        table_for collection do 
+                           param_name: 'sales_page',
+                           entry_name: 'Sales',
+                           download_links: false) do
+        table_for collection do
           column 'Date/Time', &:created_at
           column 'Customer', &:target_name
           column 'Amount', &:amount
@@ -27,93 +27,91 @@ ActiveAdmin.register_page 'Sales', namespace: :my do
           column 'Inventory' do |sale|
             if sale.inventory
               link_to sale.inventory.inventory_name, my_inventory_path(sale.inventory)
-            else
-              nil
             end
           end
           column 'Product' do |sale|
-            if sale.product 
-              link_to sale.product.product_name, my_product_path(sale.product)
-            else
-              nil
-            end
+            link_to sale.product.product_name, my_product_path(sale.product) if sale.product
           end
         end
       end
-      
     end
-    
-    panel 'Data from the last month' do 
-      div class: 'column sm' do 
+
+    panel 'Data from the last month' do
+      div class: 'column sm' do
         h2('Sales by Customer', class: 'table-name')
         target_amounts = current_user.sales.group(:target_name).sum(:amount)
-        data = current_user.sales.where('created_at >= ?',  1.month.ago).group(:target_name).count.collect do |k, v|
-          {customer: k, items_sold: v, total_paid: target_amounts[k]}
+        data = current_user.sales.where('created_at >= ?',
+                                        1.month.ago).group(:target_name).count.collect do |k, v|
+          { customer: k, items_sold: v, total_paid: target_amounts[k] }
         end
         data = data.sort_by { |d| d[:total_paid] }.reverse
-      
+
         data = Kaminari.paginate_array(
           data
         ).page(params[:customer_page]).per(10)
-  
+
         paginated_collection(data, param_name: 'customer_page',
-                            entry_name: 'Customers',
-                            download_links: false) do
-          table_for collection do 
+                                   entry_name: 'Customers',
+                                   download_links: false) do
+          table_for collection do
             column :customer
             column :items_sold
             column :total_paid
           end
         end
       end
-      
-      div class: 'column sm' do 
+
+      div class: 'column sm' do
         h2('Sales by Inventory', class: 'table-name')
-        sales_data = current_user.sales.where('analyzable_transactions.created_at >= ?',  1.month.ago).joins(:inventory)
+        sales_data = current_user.sales.where('analyzable_transactions.created_at >= ?',
+                                              1.month.ago).joins(:inventory)
         sales_amounts = sales_data.group(:inventory_name).sum(:amount)
         data = sales_data.joins(:inventory).group(:inventory_name).count.collect do |k, v|
-          {inventory: k, items_sold: v, total_paid: sales_amounts[k]}
+          { inventory: k, items_sold: v, total_paid: sales_amounts[k] }
         end
         data = data.sort_by { |d| d[:total_paid] }.reverse
-      
+
         data = Kaminari.paginate_array(
           data
         ).page(params[:inventory_page]).per(10)
-  
+
         paginated_collection(data, param_name: 'inventory_page',
-                            entry_name: 'Inventory',
-                            download_links: false) do
-          table_for collection do 
+                                   entry_name: 'Inventory',
+                                   download_links: false) do
+          table_for collection do
             column 'Inventory' do |i|
-              link_to i[:inventory], 
+              link_to i[:inventory],
                       my_inventory_path(
-                        current_user.inventories.find_by_inventory_name(i[:inventory]))
+                        current_user.inventories.find_by_inventory_name(i[:inventory])
+                      )
             end
             column :items_sold
             column :total_paid
           end
         end
       end
-      
-      div class: 'column sm' do 
+
+      div class: 'column sm' do
         h2('Sales by Product', class: 'table-name')
-        sales_data = current_user.sales.where('analyzable_transactions.created_at >= ?',  1.month.ago).joins(:product)
+        sales_data = current_user.sales.where('analyzable_transactions.created_at >= ?',
+                                              1.month.ago).joins(:product)
         sales_amounts = sales_data.group(:product_name).sum(:amount)
         data = sales_data.joins(:inventory).group(:product_name).count.collect do |k, v|
-          {product: k, items_sold: v, total_paid: sales_amounts[k]}
+          { product: k, items_sold: v, total_paid: sales_amounts[k] }
         end
         data = data.sort_by { |d| d[:total_paid] }.reverse
-      
+
         data = Kaminari.paginate_array(
           data
         ).page(params[:product_page]).per(10)
-  
+
         paginated_collection(data, param_name: 'product_page',
-                            entry_name: 'Product',
-                            download_links: false) do
-          table_for collection do 
+                                   entry_name: 'Product',
+                                   download_links: false) do
+          table_for collection do
             column 'Product' do |i|
-              link_to i[:product], my_product_path(current_user.products.find_by_product_name(i[:product]))
+              link_to i[:product],
+                      my_product_path(current_user.products.find_by_product_name(i[:product]))
             end
             column :items_sold
             column :total_paid
@@ -121,27 +119,25 @@ ActiveAdmin.register_page 'Sales', namespace: :my do
         end
       end
     end
-    
-    panel '' do 
-      div class: 'column lg' do 
+
+    panel '' do
+      div class: 'column lg' do
         render partial: 'product_revenue_timeline'
       end
-      
-      div class: 'column lg' do 
+
+      div class: 'column lg' do
         render partial: 'product_sales_timeline'
       end
-      
-      div class: 'column lg' do 
+
+      div class: 'column lg' do
         render partial: 'inventory_revenue_timeline'
       end
-      
-      div class: 'column lg' do 
+
+      div class: 'column lg' do
         render partial: 'inventory_sales_timeline'
       end
     end
   end
-  
-
 
   # content title: proc { I18n.t('active_admin.sales') } do
   #   panel '' do

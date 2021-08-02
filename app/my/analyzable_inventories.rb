@@ -32,7 +32,7 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
     end
     column 'Next Perms' do |inventory|
       inventory.pretty_perms(:next)
-    end    
+    end
     column 'Product' do |inventory|
       product_link = inventory.user.product_links.find_by_link_name(inventory.inventory_name)
       if product_link
@@ -84,7 +84,7 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
       end
       row :created_at
     end
-    
+
     panel '' do
       div class: 'column md' do
         h1 'Sales'
@@ -102,17 +102,17 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
           end
         end
       end
-      
-      div class: 'column md' do 
+
+      div class: 'column md' do
         h1 'Customers'
         amounts = resource.sales.group(:target_name).sum(:amount)
-        data = resource.sales.group(:target_name).count.collect do |k, v| 
-          {avatar_name: k, purchases: v, amount_paid: amounts[k]}
+        data = resource.sales.group(:target_name).count.collect do |k, v|
+          { avatar_name: k, purchases: v, amount_paid: amounts[k] }
         end
-        paginated_data = Kaminari.paginate_array(data).
-                              page(params[:customer_page]).per(10)
-                              
-        table_for paginated_data do 
+        paginated_data = Kaminari.paginate_array(data)
+                                 .page(params[:customer_page]).per(10)
+
+        table_for paginated_data do
           column :avatar_name
           column :purchases
           column :amount_paid
@@ -124,11 +124,10 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
           page_entries_info paginated_data, entry_name: 'Customers'
         end
       end
-    end 
-    
-    panel '' do 
+    end
+
+    panel '' do
       div class: 'column lg' do
-        
         render partial: 'inventory_sales_timeline'
       end
     end
@@ -195,8 +194,8 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
       super
     end
   end
-    
-  controller do  
+
+  controller do
     def show
       gon.ids = [resource.id]
       super

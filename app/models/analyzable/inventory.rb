@@ -40,6 +40,5 @@ module Analyzable
         end
       end
     end
-    
   end
 end

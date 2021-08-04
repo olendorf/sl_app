@@ -59,6 +59,34 @@ RSpec.describe 'Async::Visits', type: :request do
         end
       end
     end
+    
+    context 'asking for data from a single inventory' do
+      describe 'inventory sales timeline data' do
+        it 'should return OK status' do
+          get path, params: { chart: 'inventory_sales_timeline', ids: [@user.inventories.first.id] }
+          expect(response.status).to eq 200
+        end
+
+        it 'should return the data' do
+          get path, params: { chart: 'vendor_sales_timeline', ids: [@user.inventories.first.id] }
+          expect(JSON.parse(response.body)['counts']).to eq [0, 0, 0, 3]
+        end
+      end
+    end
+    
+    context 'asking for data from a single product' do
+      describe 'product sales timeline data' do
+        it 'should return OK status' do
+          get path, params: { chart: 'product_sales_timeline', ids: [@user.products.first.id] }
+          expect(response.status).to eq 200
+        end
+
+        it 'should return the data' do
+          get path, params: { chart: 'vendor_sales_timeline', ids: [@user.products.first.id] }
+          expect(JSON.parse(response.body)['counts']).to eq [0, 0, 0, 3]
+        end
+      end
+    end
 
     describe 'asking for product revenue timeline data' do
       it 'should return ok status' do
@@ -103,7 +131,6 @@ RSpec.describe 'Async::Visits', type: :request do
       end
 
       it 'should return the data' do
-        puts @user.inventories.first.revenue
         get path, params: { chart: 'sales_by_inventory_revenue_timeline' }
         expect(JSON.parse(response.body).with_indifferent_access).to eq(
           { 'colors' => ['#255828', '#fc5fc2', '#368986'],

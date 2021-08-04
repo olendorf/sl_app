@@ -68,7 +68,7 @@ RSpec.describe 'Async::Visits', type: :request do
         end
 
         it 'should return the data' do
-          get path, params: { chart: 'vendor_sales_timeline', ids: [@user.inventories.first.id] }
+          get path, params: { chart: 'inventory_sales_timeline', ids: [@user.inventories.first.id] }
           expect(JSON.parse(response.body)['counts']).to eq [0, 0, 0, 3]
         end
       end
@@ -82,7 +82,7 @@ RSpec.describe 'Async::Visits', type: :request do
         end
 
         it 'should return the data' do
-          get path, params: { chart: 'vendor_sales_timeline', ids: [@user.products.first.id] }
+          get path, params: { chart: 'product_sales_timeline', ids: [@user.products.first.id] }
           expect(JSON.parse(response.body)['counts']).to eq [0, 0, 0, 3]
         end
       end

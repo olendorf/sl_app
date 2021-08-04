@@ -33,6 +33,16 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
     column 'Next Perms' do |inventory|
       inventory.pretty_perms(:next)
     end
+    column 'Product' do |inventory|
+      product_link = inventory.user.product_links.find_by_link_name(inventory.inventory_name)
+      if product_link
+        link_to product_link.product.product_name, my_product_path(product_link.product)
+      else
+        'No Product Linked'
+      end
+    end
+    column 'Sales ', &:transactions_count
+    column 'Revenue', &:revenue
     column :created_at
     column :updated_at
     actions
@@ -40,6 +50,7 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
 
   filter :inventory_name
   filter :inventory_description, label: 'Description'
+  filter :server_abstract_web_object_object_name, as: :string, label: 'Server Name'
   filter :price, as: :numeric
   filter :inventory_type, as: :select, collection: Analyzable::Inventory.inventory_types
   filter :created_at, as: :date_range
@@ -51,6 +62,14 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
     attributes_table do
       row 'Name', &:inventory_name
       row 'Type', &:inventory_type
+      row 'Product' do |inventory|
+        product_link = inventory.user.product_links.find_by_link_name(inventory.inventory_name)
+        if product_link
+          link_to product_link.product.product_name, my_product_path(product_link.product)
+        else
+          'No Product Linked'
+        end
+      end
       row 'Owner Perms' do |inventory|
         inventory.pretty_perms(:owner)
       end
@@ -60,7 +79,57 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
       row 'Server' do |inventory|
         link_to inventory.server.object_name, my_server_path(inventory.server)
       end
+      row 'Sales' do |inventory|
+        "#{inventory.revenue} $L (#{inventory.transactions_count} sales)"
+      end
       row :created_at
+    end
+
+    panel '' do
+      div class: 'column md' do
+        h1 'Sales'
+        paginated_collection(
+          resource.sales.page(
+            params[:sales_page]
+          ).per(10), param_name: 'sales_page'
+        ) do
+          table_for collection.order(created_at: :desc), download_links: false do
+            column 'Date/Time' do |sale|
+              link_to sale.created_at.to_s(:long), my_transaction_path(sale)
+            end
+            column 'Customer', &:target_name
+            column 'amount'
+          end
+        end
+      end
+
+      div class: 'column md' do
+        h1 'Customers'
+        amounts = resource.sales.group(:target_name).sum(:amount)
+        data = resource.sales.group(:target_name).count.collect do |k, v|
+          { avatar_name: k, purchases: v, amount_paid: amounts[k] }
+        end
+        paginated_data = Kaminari.paginate_array(data)
+                                 .page(params[:customer_page]).per(10)
+
+        table_for paginated_data do
+          column :avatar_name
+          column :purchases
+          column :amount_paid
+        end
+        div id: 'customers-footer' do
+          paginate paginated_data, param_name: 'customer_page'
+        end
+        div class: 'pagination_information' do
+          page_entries_info paginated_data, entry_name: 'Customers'
+        end
+      end
+    end
+
+    panel '' do
+      div class: 'column lg' do
+        render partial: 'inventory_sales_timeline'
+      end
     end
   end
 
@@ -122,6 +191,13 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
           params['collection_selection']
         )
       end
+      super
+    end
+  end
+
+  controller do
+    def show
+      gon.ids = [resource.id]
       super
     end
   end

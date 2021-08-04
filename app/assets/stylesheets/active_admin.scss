@@ -25,9 +25,10 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
-.panel .column .table-name {
+.panel .table-name {
   font-size: 1.5em;
   font: bold;
+  margin: 0 0 0 10px;
   // text-align: center;
 }
 
@@ -37,10 +38,24 @@ form .alert h1 {
   margin: 10px
 }
 
-.panel {
+.panel {   
   
   .column {
-    vertical-align: top;
+    vertical-align: top; 
+    
+   .table-name {
+      font-size: 1.5em;
+      font: bold;
+      margin-bottom: 10px;
+    }
+    
+
+    
+    &.sm {
+      width: 30%;
+      display: inline-block;
+      margin: 20px 30px;
+    }
     &.md {
       width: 40%;
       display: inline-block;

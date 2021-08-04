@@ -17,6 +17,17 @@ class AsyncController < ApplicationController
     dates
   end
 
+  def time_series_months(start, stop, interval = 1.month)
+    dates = []
+    step_time = start
+
+    while step_time <= stop
+      dates << step_time.strftime('%B %Y')
+      step_time += interval
+    end
+    dates
+  end
+
   # def pundit_user
   #   current_user
   # end

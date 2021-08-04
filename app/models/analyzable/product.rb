@@ -20,5 +20,10 @@ module Analyzable
         link_name: product_name
       )
     end
+
+    def inventories
+      inventory_names = product_links.collect(&:link_name)
+      user.inventories.where(inventory_name: inventory_names)
+    end
   end
 end

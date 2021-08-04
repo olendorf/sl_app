@@ -231,6 +231,7 @@ ActiveAdmin.setup do |config|
   config.register_javascript 'highcharts/modules/heatmap'
   config.register_javascript 'highcharts/modules/boost-canvas'
   config.register_javascript 'highcharts/modules/boost'
+  config.register_javascript 'highcharts/modules/streamgraph'
   # config.register_javascript 'highcharts/themes/sunset'
   config.register_javascript 'highcharts/themes/dark-unica'
   # config.register_javascript 'highcharts/themes/grid'

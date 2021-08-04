@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     resources :donations, only: [:index]
     resources :visits, only: [:index]
     resources :tips, only: [:index]
+    resources :sales, only: [:index]
   end
 
   namespace :api, defaults: { format: 'json' } do

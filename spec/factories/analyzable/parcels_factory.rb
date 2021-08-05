@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :analyzable_parcel, class: 'Analyzable::Parcel' do
     transient do

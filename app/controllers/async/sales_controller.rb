@@ -120,6 +120,5 @@ module Async
       end
       { dates: dates, counts: counts }
     end
-
   end
 end

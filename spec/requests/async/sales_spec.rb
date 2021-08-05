@@ -59,21 +59,23 @@ RSpec.describe 'Async::Visits', type: :request do
         end
       end
     end
-    
+
     context 'asking for data from a single inventory' do
       describe 'inventory sales timeline data' do
         it 'should return OK status' do
-          get path, params: { chart: 'inventory_sales_timeline', ids: [@user.inventories.first.id] }
+          get path,
+              params: { chart: 'inventory_sales_timeline', ids: [@user.inventories.first.id] }
           expect(response.status).to eq 200
         end
 
         it 'should return the data' do
-          get path, params: { chart: 'inventory_sales_timeline', ids: [@user.inventories.first.id] }
+          get path,
+              params: { chart: 'inventory_sales_timeline', ids: [@user.inventories.first.id] }
           expect(JSON.parse(response.body)['counts']).to eq [0, 0, 0, 3]
         end
       end
     end
-    
+
     context 'asking for data from a single product' do
       describe 'product sales timeline data' do
         it 'should return OK status' do

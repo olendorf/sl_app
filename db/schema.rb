@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_14_122740) do
+ActiveRecord::Schema.define(version: 2021_08_05_165643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,6 +75,19 @@ ActiveRecord::Schema.define(version: 2021_07_14_122740) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "transactions_count", default: 0
     t.integer "revenue", default: 0
+  end
+
+  create_table "analyzable_parcels", force: :cascade do |t|
+    t.string "parcel_name"
+    t.string "description"
+    t.string "owner_key"
+    t.string "owner_name"
+    t.integer "area"
+    t.string "parcel_key"
+    t.integer "weekly_tier"
+    t.integer "purchase_price"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "analyzable_product_links", force: :cascade do |t|
@@ -186,6 +199,12 @@ ActiveRecord::Schema.define(version: 2021_07_14_122740) do
     t.integer "goal"
     t.datetime "dead_line"
     t.string "response"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "rezzable_parcel_boxes", force: :cascade do |t|
+    t.integer "parcel_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

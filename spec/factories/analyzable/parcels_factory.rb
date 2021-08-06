@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :analyzable_parcel, class: 'Analyzable::Parcel' do
+  factory :analyzable_parcel, aliases: [:parcel], class: 'Analyzable::Parcel' do
     transient do
       first_name { Faker::Name.first_name }
       last_name { rand < 0.5 ? Faker::Name.last_name : 'Resident' }

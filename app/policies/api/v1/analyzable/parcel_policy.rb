@@ -1,22 +1,30 @@
-class Api::V1::Analyzable::ParcelPolicy < ApplicationPolicy
+# frozen_string_literal: true
 
-  def create?
-    @user.active?
-  end
+module Api
+  module V1
+    module Analyzable
+      # Authorization for prcels
+      class ParcelPolicy < ApplicationPolicy
+        def create?
+          @user.active?
+        end
 
-  def show?
-    create?
-  end
+        def show?
+          create?
+        end
 
-  def update?
-    create?
-  end
+        def update?
+          create?
+        end
 
-  def index?
-    create?
-  end
+        def index?
+          create?
+        end
 
-  def destroy?
-    create?
+        def destroy?
+          create?
+        end
+      end
+    end
   end
 end

@@ -28,6 +28,12 @@ Rails.application.configure do
                          class_name: 'Rezzable::Vendor',
                          association: :abstract_web_object
     Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Rezzable::ParcelBox',
+                         association: :abstract_web_object
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Rezzable::TierStation',
+                         association: :abstract_web_object
+    Bullet.add_whitelist type: :unused_eager_loading,
                          class_name: 'Analyzable::Inventory',
                          association: :user
     Bullet.add_whitelist type: :unused_eager_loading,

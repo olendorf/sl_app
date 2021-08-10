@@ -32,9 +32,12 @@ Rails.application.routes.draw do
         resources :traffic_cops, except: %i[index new edit]
         resources :tip_jars, except: %i[index new edit]
         resources :vendors, except: %i[index new edit]
+        resources :parcel_boxes, except: %i[index new edit]
+        resources :tier_stations, except: %i[index new edit]
       end
       namespace :analyzable do
         resources :inventories, except: %i[new edit]
+        resources :parcels, except: %i[new edit]
       end
     end
   end

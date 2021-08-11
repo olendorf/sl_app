@@ -8,6 +8,7 @@ FactoryBot.define do
     end
     owner_name { "#{first_name} #{last_name}" }
     parcel_name { Faker::Commerce.product_name }
+    region { Faker::Hipster.words(number: rand(1..3)).join(' ')[0..64] }
     description { Faker::Hipster.sentence(word_count: 3) }
     area { rand(16..8192) }
     parcel_key { SecureRandom.uuid }

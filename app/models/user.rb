@@ -41,6 +41,7 @@ class User < ApplicationRecord
   has_many :products, class_name: 'Analyzable::Product', dependent: :destroy
   has_many :product_links, class_name: 'Analyzable::ProductLink',
                            dependent: :destroy
+  has_many :parcels, class_name: 'Analyzable::Parcel', dependent: :destroy
 
   # THese two methods need to be overridden to deal with Devise's need for emails.
   def email_required?
@@ -88,6 +89,14 @@ class User < ApplicationRecord
 
   def sales
     transactions.where(transactable_type: 'Rezzable::Vendor')
+  end
+  
+  def parcel_boxes
+    Rezzable::ParcelBox.where(user_id: id)
+  end
+  
+  def tier_stations
+    Rezzable::TierStation.where(user_id: id)
   end
 
   # def splittable_key

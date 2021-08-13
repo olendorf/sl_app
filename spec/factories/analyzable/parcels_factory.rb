@@ -7,6 +7,7 @@ FactoryBot.define do
       last_name { rand < 0.5 ? Faker::Name.last_name : 'Resident' }
     end
     owner_name { "#{first_name} #{last_name}" }
+    owner_key { SecureRandom.uuid }
     parcel_name { Faker::Commerce.product_name }
     region { Faker::Hipster.words(number: rand(1..3)).join(' ')[0..64] }
     description { Faker::Hipster.sentence(word_count: 3) }

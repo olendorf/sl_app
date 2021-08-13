@@ -37,7 +37,7 @@ Rails.application.routes.draw do
       end
       namespace :analyzable do
         resources :inventories, except: %i[new edit]
-        resources :parcels, except: %i[new edit]
+        resources :parcels, except: %i[new edit destroy]
       end
     end
   end

@@ -169,7 +169,7 @@ RSpec.describe 'Api::V1::Analyzable::Inventories', type: :request do
         expect(response.status).to eq 200
       end
 
-      it 'should delete teh object' do
+      it 'should delete tehe object' do
         delete api_analyzable_inventory_path(target.inventory_name), headers: headers(server)
         expect(Analyzable::Inventory.where(id: target.id).size).to eq 0
       end

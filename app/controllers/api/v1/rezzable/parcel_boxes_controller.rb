@@ -6,7 +6,6 @@ module Api
       # Controller for boxes that determine when a parcel for sale/rent had been
       # bought.
       class ParcelBoxesController < Api::V1::AbstractWebObjectsController
-
       end
     end
   end

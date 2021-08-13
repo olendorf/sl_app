@@ -90,11 +90,11 @@ class User < ApplicationRecord
   def sales
     transactions.where(transactable_type: 'Rezzable::Vendor')
   end
-  
+
   def parcel_boxes
     Rezzable::ParcelBox.where(user_id: id)
   end
-  
+
   def tier_stations
     Rezzable::TierStation.where(user_id: id)
   end

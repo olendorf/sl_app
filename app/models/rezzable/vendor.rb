@@ -13,7 +13,7 @@ module Rezzable
     acts_as :abstract_web_object
 
     OBJECT_WEIGHT = 1
-    
+
     # def response_data
     #   {
     #     api_key: self.api_key

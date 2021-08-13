@@ -42,11 +42,10 @@ RSpec.describe User, type: :model do
     should have_many(:product_links).class_name('Analyzable::ProductLink')
                                     .dependent(:destroy)
   }
-  
+
   it {
     should have_many(:parcels).class_name('Analyzable::Parcel').dependent(:destroy)
   }
-  
 
   describe '#servers' do
     it 'should return the servers and nothing else' do
@@ -114,7 +113,7 @@ RSpec.describe User, type: :model do
       expect(owner.donations.size).to eq 10
     end
   end
-  
+
   describe '#parcel_boxes' do
     it 'should return the users parcel_boxes' do
       owner.web_objects << FactoryBot.create(:parcel_box)
@@ -123,7 +122,7 @@ RSpec.describe User, type: :model do
       expect(owner.parcel_boxes.size).to eq 2
     end
   end
-      
+
   describe 'tier_stations' do
     it 'should return the users tier stations' do
       owner.web_objects << FactoryBot.create(:tier_station)

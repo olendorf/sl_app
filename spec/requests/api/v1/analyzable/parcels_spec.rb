@@ -91,6 +91,7 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
 
       it 'should return the correct data' do
         get path, headers: headers(parcel_box)
+        puts response.body
         expect(JSON.parse(response.body)['data']['parcels'].first['parcel_name']).to eq 'parcel 0'
       end
     end

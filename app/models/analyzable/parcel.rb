@@ -7,6 +7,7 @@ module Analyzable
     before_update :handle_tier_payment, if: :tier_payment
     
     belongs_to :parcel_box, class_name: 'Rezzable::ParcelBox'
+    belongs_to :user
     
     attr_accessor :tier_payment
 
@@ -16,8 +17,19 @@ module Analyzable
     
     
     def handle_tier_payment
-      added_time = tier_payment.to_f/self.weekly_tier
+      added_time = tier_payment['amount'].to_f/self.weekly_tier
+      requesting_object = AbstractWebObject.find_by_object_key(tier_payment['object_key'])
       self.expiration_date = self.expiration_date + 1.week.to_i * added_time
+      self.user.transactions << Analyzable::Transaction(
+        amount: tier_payment['amount'],
+        target_key: self.owner_key,
+        target_name: self.owner_name,
+        source_key: requesting_object.object_key,
+        source_name: requesting_object.object_name,
+        source_type: 'tier_station',
+        category: 'tier',
+        description: "Tier payment from #{self.owner_name}"
+      )
     end
   end
 end

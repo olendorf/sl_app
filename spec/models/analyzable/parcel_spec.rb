@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Analyzable::Parcel, type: :model do
   it { should belong_to(:parcel_box).class_name('Rezzable::ParcelBox') }
+  it { should belong_to(:user) }
 
   let(:user) { FactoryBot.create :active_user }
 

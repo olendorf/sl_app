@@ -112,9 +112,17 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
     end
     
     describe 'user makes a tier payment' do 
+      let(:owner) { FactoryBot.create :owner }
+      let(:terminal) { FactoryBot.create :terminal, user_id: owner.id }
       let(:parcel) { user.parcels.find_by_parcel_name("#{renter.avatar_name}'s parcel 1")}
       let(:path) { api_analyzable_parcel_path(parcel) }
-      let(:atts) { {tier_payment: parcel.weekly_tier * 3} }
+      let(:atts) { 
+        {tier_payment: {
+          amount: parcel.weekly_tier * 3,
+          object_key: terminal.object_key
+          } 
+        }
+      }
       
       it 'should return ok status' do 
         put path, params: atts.to_json, headers: headers(tier_station)
@@ -126,7 +134,9 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
         expect(parcel.reload.expiration_date).to be_within(1.minute).of(4.weeks.from_now)
       end
       
-      it 'should add teh transaction' do 
+      it 'should add the transaction' do 
+        put path, params: atts.to_json, headers: headers(tier_station)
+        expect(user.reload.transactions.size).to eq 1
       end
     end
 

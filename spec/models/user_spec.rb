@@ -173,13 +173,16 @@ RSpec.describe User, type: :model do
   end
 
   describe 'when a account_payment is received' do
+    let(:terminal) { FactoryBot.create :terminal, user_id: owner.id }
+    
     context 'for active user' do
       let(:active_user) { FactoryBot.create :active_user, account_level: 3 }
+
 
       it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 3 * 2
         expected_expiration_date = active_user.expiration_date + 2.months.to_i
-        active_user.update(account_payment: amount)
+        active_user.update(account_payment: {'amount' => amount, 'object_key' => terminal.object_key})
         expect(
           active_user.reload.expiration_date
         ).to be_within(1.second).of(expected_expiration_date)
@@ -187,8 +190,8 @@ RSpec.describe User, type: :model do
       
       it 'should add a transaction to the owner' do 
         amount = Settings.default.account.monthly_cost * 3 * 2
-        expected_expiration_date = active_user.expiration_date + 2.months.to_i
-        active_user.update(account_payment: amount)
+        # expected_expiration_date = active_user.expiration_date + 2.months.to_i
+        active_user.update(account_payment: { 'amount' => amount, 'object_key' => terminal.object_key})
         expect(owner.reload.transactions.size).to eq 1
       end
     end
@@ -202,7 +205,7 @@ RSpec.describe User, type: :model do
       it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 2 * 2.25
         expected_expiration_date = Time.now + 1.month.to_i * 2.25
-        inactive_user.update(account_payment: amount)
+        inactive_user.update(account_payment: {'amount' => amount, 'object_key' => terminal.object_key})
         expect(inactive_user.expiration_date).to be_within(1.second).of(expected_expiration_date)
       end
     end
@@ -214,7 +217,7 @@ RSpec.describe User, type: :model do
       it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 1 * 2.35
         expected_expiration_date = Time.now + 1.month.to_i * 2.35
-        user.update(account_payment: amount)
+        user.update(account_payment: {'amount' => amount, 'object_key' => terminal.object_key})
         expect(user.expiration_date).to be_within(1.second).of(expected_expiration_date)
       end
     end

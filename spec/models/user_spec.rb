@@ -184,6 +184,13 @@ RSpec.describe User, type: :model do
           active_user.reload.expiration_date
         ).to be_within(1.second).of(expected_expiration_date)
       end
+      
+      it 'should add a transaction to the owner' do 
+        amount = Settings.default.account.monthly_cost * 3 * 2
+        expected_expiration_date = active_user.expiration_date + 2.months.to_i
+        active_user.update(account_payment: amount)
+        expect(owner.reload.transactions.size).to eq 1
+      end
     end
 
     context 'for inactive_user' do
@@ -290,7 +297,7 @@ RSpec.describe User, type: :model do
       expect(owner.active?).to be_truthy
     end
 
-    it 'should rturn true for active up-to-date users' do
+    it 'should return true for active up-to-date users' do
       user.expiration_date = 1.month.from_now
       user.account_level = 1
       expect(user.active?).to be_truthy

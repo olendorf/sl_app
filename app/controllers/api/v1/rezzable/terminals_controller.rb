@@ -5,17 +5,17 @@ module Api
     module Rezzable
       # Controllre for request for in world Rezzable Terminals
       class TerminalsController < Api::V1::AbstractWebObjectsController
-        def update
-          if @atts['transactions_attributes']
-            target_user = User.find_by_avatar_key(
-              @atts['transactions_attributes'][0]['target_key']
-            )
-            add_transaction_to_user(target_user)
-            extend_user_expiration_date(target_user)
-            @message = I18n.t('api.terminal.payment.success')
-          end
-          super
-        end
+        # def update
+        #   if @atts['transactions_attributes']
+        #     target_user = User.find_by_avatar_key(
+        #       @atts['transactions_attributes'][0]['target_key']
+        #     )
+        #     add_transaction_to_user(target_user)
+        #     extend_user_expiration_date(target_user)
+        #     @message = I18n.t('api.terminal.payment.success')
+        #   end
+        #   super
+        # end
 
         private
 

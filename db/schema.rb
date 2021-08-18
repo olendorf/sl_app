@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 2021_08_10_175557) do
     t.string "region"
     t.integer "user_id"
     t.integer "parcel_box_id"
+    t.datetime "expiration_date"
   end
 
   create_table "analyzable_product_links", force: :cascade do |t|

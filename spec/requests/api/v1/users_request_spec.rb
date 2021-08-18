@@ -621,32 +621,47 @@ RSpec.describe 'Api::V1::Users', type: :request do
         end
       end
 
-      # describe 'making a payment' do
-      #   before(:each) do
-      #     @stub = stub_request(:put, uri_regex)
-      #   end
+      describe 'making a payment' do
+        before(:each) do
+          @stub = stub_request(:put, uri_regex)
+        end
 
-      #   let(:atts) {
-      #     {
-      #       # added_time: 3,
-      #       account_payment: Settings.default.account.monthly_cost *
-      #         3 * existing_user.account_level
-      #     }
-      #   }
+        let(:atts) {
+          {
+            # added_time: 3,
+            account_payment: {
+              amount: Settings.default.account.monthly_cost *
+                    3 * existing_user.account_level,
+              object_key: terminal.object_key
+              }
+          }
+        }
 
-      #   it 'returns ok status' do
-      #     put path, params: atts.to_json, headers: headers(terminal)
-      #     expect(response.status).to eq 200
-      #   end
+        it 'returns ok status' do
+          put path, params: atts.to_json, headers: headers(terminal)
+          expect(response.status).to eq 200
+        end
 
-      #   it 'updates the expiration_date' do
-      #     expected_time = existing_user.expiration_date +
-      #                     (atts[:account_payment].to_f / (
-      #                       existing_user.account_level * Settings.default.account.monthly_cost
-      #                     ) * 1.month.to_i)
-      #     put path, params: atts.to_json, headers: headers(terminal)
-      #     expect(existing_user.reload.expiration_date).to be_within(10.seconds).of(expected_time)
-      #   end
+        it 'updates the expiration_date' do
+          expected_time = existing_user.expiration_date +
+                          (atts[:account_payment][:amount].to_f / (
+                            existing_user.account_level * Settings.default.account.monthly_cost
+                          ) * 1.month.to_i)
+          put path, params: atts.to_json, headers: headers(terminal)
+          expect(existing_user.reload.expiration_date).to be_within(10.seconds).of(expected_time)
+        end
+        
+        it 'adds the transaction to the user' do 
+          put path, params: atts.to_json, headers: headers(terminal)
+          expect(existing_user.reload.transactions.size).to eq 1
+        end
+        
+        it 'adds the transaction to the owner' do 
+          put path, params: atts.to_json, headers: headers(terminal)
+          expect(owner.reload.transactions.size).to eq 1
+        end
+        
+      end
 
       #   it 'adds a transaction' do
       #     expect {

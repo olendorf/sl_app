@@ -31,9 +31,13 @@ module Api
         def index
           authorize @requesting_object
           params['parcel_page'] ||= 1
-          page = @requesting_object.user.parcels.where(
+          params['scope'] ||= 'region'
+          parcels = @requesting_object.user.parcels.where(
             region: @requesting_object.region
-          ).page(params['parcel_page']).per(9)
+          ) if params['scope'] == 'region'
+          parcels = @requesting_object.user.parcels.where(
+           owner_key: params['owner_key']) if params['scope'] == 'renter'
+          page = parcels.page(params['parcel_page']).per(9)
           data = paged_data(page)
           render json: { message: 'OK', data: data }, status: :ok
         end

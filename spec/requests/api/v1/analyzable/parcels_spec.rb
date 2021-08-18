@@ -42,7 +42,7 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
       get path, headers: headers(parcel_box)
       expect(JSON.parse(response.body)['data']).to include(
         'parcel_name', 'description', 'owner_key', 'owner_name', 'area',
-        'parcel_key', 'weekly_tier', 'purchase_price', 'region'
+        'parcel_key', 'weekly_tier', 'purchase_price', 'region', 'expiration_date'
       )
     end
   end
@@ -51,21 +51,88 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
     before(:each) do
       @parcel = FactoryBot.create :parcel, parcel_box_id: parcel_box.id, user_id: user.id
     end
+    let(:path ) { api_analyzable_parcel_path(@parcel) }
 
     it 'should return ok status' do
-      path = api_analyzable_parcel_path(@parcel)
+      # path = api_analyzable_parcel_path(@parcel)
       atts = { weekly_tier: 101, purchase_price: 1 }
       put path, params: atts.to_json, headers: headers(parcel_box)
       expect(response.status).to eq 200
     end
 
     it 'should update the parcel info' do
-      path = api_analyzable_parcel_path(@parcel)
+      # path = api_analyzable_parcel_path(@parcel)
       atts = { weekly_tier: 101, purchase_price: 1 }
       put path, params: atts.to_json, headers: headers(parcel_box)
       expect(@parcel.reload.weekly_tier).to eq 101
     end
+    
   end
+  
+  describe 'tier station requests' do 
+    let(:tier_station) { FactoryBot.create :tier_station, user_id: user.id }
+    let(:renter) { FactoryBot.create :avatar }
+    
+    before(:each) do 
+      3.times do
+        user.parcels << FactoryBot.create(:parcel)
+      end
+      5.times do |i|
+        user.parcels << FactoryBot.create(:parcel, parcel_name: "parcel #{i}", region: 'foo')
+      end
+      2.times do |i|
+        user.parcels << FactoryBot.create(:parcel,
+                                parcel_name: "#{renter.avatar_name}'s parcel #{i}",
+                                owner_name: renter.avatar_name,
+                                owner_key: renter.avatar_key,
+                                expiration_date: 1.week.from_now
+        )
+      end
+      
+      
+      
+      
+    end
+    
+    describe 'getting renters parcels' do
+      let(:atts) {
+          {scope: 'renter',
+          owner_key: renter.avatar_key}
+      }
+      let(:path) {api_analyzable_parcels_path}
+      it 'should return ok status' do 
+        get path, params: atts.to_json, headers: headers(tier_station)
+        expect(response.status).to eq 200
+      end
+      
+      it 'should return the renters parcles' do 
+        get path, params: atts, headers: headers(tier_station)
+        expect(JSON.parse(response.body)['data']['parcels'].size).to eq 2
+      end
+    end
+    
+    describe 'user makes a tier payment' do 
+      let(:parcel) { user.parcels.find_by_parcel_name("#{renter.avatar_name}'s parcel 1")}
+      let(:path) { api_analyzable_parcel_path(parcel) }
+      let(:atts) { {tier_payment: parcel.weekly_tier * 3} }
+      
+      it 'should return ok status' do 
+        put path, params: atts.to_json, headers: headers(tier_station)
+        expect(response.status).to eq 200
+      end
+      
+      it 'should update the expiration_date' do 
+        put path, params: atts.to_json, headers: headers(tier_station)
+        expect(parcel.reload.expiration_date).to be_within(1.minute).of(4.weeks.from_now)
+      end
+      
+      it 'should add teh transaction' do 
+      end
+    end
+
+  end
+  
+
 
   describe 'index' do
     let(:path) { api_analyzable_parcels_path }
@@ -106,10 +173,18 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
         expect(JSON.parse(response.body)['data']['parcels'].size).to eq 9
       end
 
-      it 'should return the correct data' do
-        get path, params: { parcel_page: 1 }, headers: headers(parcel_box)
-        expect(JSON.parse(response.body)['data']['parcels'].first['parcel_name']).to eq 'parcel 0'
-      end
+      # it 'should return the correct data' do
+      #   get path, params: { parcel_page: 1 }, headers: headers(parcel_box)
+      #   data = JSON.parse(response.body)['data']['parcels'].collect do |d|
+      #     d['parcel_name']
+      #   end
+      #   # expect(JSON.parse(response.body)['data']['parcels'].collect).to eq 'parcel 0'
+      #   expect(data).to include(
+      #     'parcel 0', 'parcel 1', 'parcel 2', 'parcel 3', 'parcel 4',
+      #     'parcel 5', 'parcel 6', 'parcel 7', 'parcel 8'
+      #     )
+        
+      # end
     end
 
     context '2nd page' do
@@ -125,11 +200,18 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
 
       it 'should return the correct data' do
         get path, params: { parcel_page: 2 }, headers: headers(parcel_box)
-        expect(JSON.parse(response.body)['data']['parcels'].first['parcel_name']).to eq 'parcel 9'
+        expected = []
+        9.times do |i|
+          expected << "parcel #{i + 9}"
+        end
+        data = JSON.parse(response.body)['data']['parcels'].collect do |d|
+          d['parcel_name']
+        end
+        expect(data).to include(*expected)
       end
     end
 
-    context '2nd page' do
+    context 'last page' do
       it 'returns ok status' do
         get path, params: { parcel_page: 3 }, headers: headers(parcel_box)
         expect(response.status).to eq 200

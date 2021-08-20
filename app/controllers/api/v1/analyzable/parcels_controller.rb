@@ -24,7 +24,7 @@ module Api
         def update
           authorize @requesting_object
           @parcel = ::Analyzable::Parcel.find(params['id'])
-          @parcel.update(atts)
+          @parcel.update(atts.merge(requesting_object: @requesting_object))
           render json: { message: 'Updated' }, status: :ok
         end
 

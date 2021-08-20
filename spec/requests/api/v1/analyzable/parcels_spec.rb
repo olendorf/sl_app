@@ -117,11 +117,7 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
       let(:parcel) { user.parcels.find_by_parcel_name("#{renter.avatar_name}'s parcel 1")}
       let(:path) { api_analyzable_parcel_path(parcel) }
       let(:atts) { 
-        {tier_payment: {
-          amount: parcel.weekly_tier * 3,
-          object_key: terminal.object_key
-          } 
-        }
+        {tier_payment: parcel.weekly_tier * 3}
       }
       
       it 'should return ok status' do 

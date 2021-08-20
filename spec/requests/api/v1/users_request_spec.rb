@@ -629,11 +629,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
         let(:atts) {
           {
             # added_time: 3,
-            account_payment: {
-              amount: Settings.default.account.monthly_cost *
-                    3 * existing_user.account_level,
-              object_key: terminal.object_key
-              }
+            account_payment: Settings.default.account.monthly_cost *
+                    3 * existing_user.account_level
           }
         }
 
@@ -644,7 +641,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
         it 'updates the expiration_date' do
           expected_time = existing_user.expiration_date +
-                          (atts[:account_payment][:amount].to_f / (
+                          (atts[:account_payment].to_f / (
                             existing_user.account_level * Settings.default.account.monthly_cost
                           ) * 1.month.to_i)
           put path, params: atts.to_json, headers: headers(terminal)

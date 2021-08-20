@@ -22,7 +22,7 @@ class User < ApplicationRecord
 
   validates_numericality_of :account_level, greater_than_or_equal_to: 0
 
-  attr_accessor :account_payment, :admin_update, :added_time
+  attr_accessor :account_payment, :admin_update, :added_time, :requesting_object
 
   has_paper_trail
 
@@ -179,14 +179,14 @@ class User < ApplicationRecord
 
   def handle_account_payment
     update_column(:account_level, 1) if account_level.zero?
-    added_time = account_payment['amount'].to_f / (
+    added_time = account_payment.to_f / (
                         account_level * Settings.default.account.monthly_cost)
     self.expiration_date = Time.now if
       expiration_date.nil? || expiration_date < Time.now
     self.expiration_date = expiration_date + (1.month.to_i * added_time)
-    requesting_object = AbstractWebObject.find_by_object_key(account_payment['object_key'])
-    add_account_transaction_to_user(self, requesting_object, account_payment['amount'] * -1)
-    add_account_transaction_to_user(requesting_object.user, requesting_object, account_payment['amount'])
+    # requesting_object = AbstractWebObject.find_by_object_key(account_payment['object_key'])
+    add_account_transaction_to_user(self, requesting_object, account_payment * -1)
+    add_account_transaction_to_user(requesting_object.user, requesting_object, account_payment)
   end
   
   def add_account_transaction_to_user(target_user, requesting_object, amount)

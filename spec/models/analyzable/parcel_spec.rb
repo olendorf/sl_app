@@ -20,6 +20,9 @@ RSpec.describe Analyzable::Parcel, type: :model do
     #   FactoryBot.create :parcel, user_id: user.id, region_name: 'foo', parcel_name: "parcel #{i}"
     # end
   end
+  
+  describe 'handling a tier payment' do 
+  end
 
   describe '.open_parcels' do
     context 'no open parcels' do

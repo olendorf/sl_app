@@ -182,7 +182,7 @@ RSpec.describe User, type: :model do
       it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 3 * 2
         expected_expiration_date = active_user.expiration_date + 2.months.to_i
-        active_user.update(account_payment: {'amount' => amount, 'object_key' => terminal.object_key})
+        active_user.update(account_payment: amount, requesting_object: terminal)
         expect(
           active_user.reload.expiration_date
         ).to be_within(1.second).of(expected_expiration_date)
@@ -191,7 +191,7 @@ RSpec.describe User, type: :model do
       it 'should add a transaction to the owner' do 
         amount = Settings.default.account.monthly_cost * 3 * 2
         # expected_expiration_date = active_user.expiration_date + 2.months.to_i
-        active_user.update(account_payment: { 'amount' => amount, 'object_key' => terminal.object_key})
+        active_user.update(account_payment: amount, requesting_object: terminal)
         expect(owner.reload.transactions.size).to eq 1
       end
     end
@@ -205,7 +205,7 @@ RSpec.describe User, type: :model do
       it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 2 * 2.25
         expected_expiration_date = Time.now + 1.month.to_i * 2.25
-        inactive_user.update(account_payment: {'amount' => amount, 'object_key' => terminal.object_key})
+        inactive_user.update(account_payment: amount, requesting_object: terminal)
         expect(inactive_user.expiration_date).to be_within(1.second).of(expected_expiration_date)
       end
     end
@@ -217,7 +217,7 @@ RSpec.describe User, type: :model do
       it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 1 * 2.35
         expected_expiration_date = Time.now + 1.month.to_i * 2.35
-        user.update(account_payment: {'amount' => amount, 'object_key' => terminal.object_key})
+        user.update(account_payment: amount, requesting_object: terminal)
         expect(user.expiration_date).to be_within(1.second).of(expected_expiration_date)
       end
     end

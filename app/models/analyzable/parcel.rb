@@ -9,6 +9,7 @@ module Analyzable
     
     belongs_to :parcel_box, class_name: 'Rezzable::ParcelBox'
     belongs_to :user
+    has_many :states, class_name: 'Analyzable::ParcelState'
     
     attr_accessor :tier_payment, :requesting_object
 

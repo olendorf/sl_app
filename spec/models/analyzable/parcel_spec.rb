@@ -8,6 +8,7 @@ RSpec.describe Analyzable::Parcel, type: :model do
   it { should have_many(:states) }
 
   let(:user) { FactoryBot.create :active_user }
+  let(:renter) { FactoryBot.build :avatar }
 
   before(:each) do
     3.times do
@@ -17,12 +18,33 @@ RSpec.describe Analyzable::Parcel, type: :model do
       parcel_box = FactoryBot.create :parcel_box, user_id: user.id, region: 'foo'
       FactoryBot.create :parcel, user_id: user.id, region: 'foo', parcel_box_id: parcel_box.id
     end
-    # 2.times do |i|
-    #   FactoryBot.create :parcel, user_id: user.id, region_name: 'foo', parcel_name: "parcel #{i}"
-    # end
+    FactoryBot.create :parcel, user_id: user.id, region: 'foo', owner_key: renter.avatar_key,
+                               owner_name: renter.avatar_name, expiration_date: 1.week.from_now
   end
   
   describe 'handling a tier payment' do 
+    let(:tier_station) { FactoryBot.create :tier_station, user_id: user.id }
+
+    it 'should update the expiration date' do 
+      parcel = user.parcels.find_by_owner_key(renter.avatar_key)
+      parcel.update(tier_payment:  (3 * parcel.weekly_tier), requesting_object: tier_station)
+      expect(parcel.expiration_date).to be_within(1.second).of(
+        4.weeks.from_now
+        )
+    end
+    
+    it 'should add the transaction' do 
+      parcel = user.parcels.find_by_owner_key(renter.avatar_key)
+      parcel.update(tier_payment:  (3 * parcel.weekly_tier), requesting_object: tier_station)
+      expect(user.transactions.size).to eq 1
+    end
+  end
+  
+  describe 'parcel is sold' do 
+    
+  end
+  
+  describe 'handling abandoned parcel' do
   end
 
   describe '.open_parcels' do

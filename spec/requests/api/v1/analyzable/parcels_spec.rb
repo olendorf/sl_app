@@ -12,7 +12,7 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
 
   describe 'create' do
     let(:path) { api_analyzable_parcels_path }
-    let(:atts) { FactoryBot.attributes_for :parcel }
+    let(:atts) { FactoryBot.attributes_for :parcel, owner_key: nil, owner_name: nil }
 
     it 'should return created status' do
       post path, params: atts.to_json, headers: headers(parcel_box)
@@ -23,6 +23,11 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
       expect {
         post path, params: atts.to_json, headers: headers(parcel_box)
       }.to change(user.parcels, :count).by(1)
+    end
+    
+    it 'should add a for_sale parcel state' do 
+      post path, params: atts.to_json, headers: headers(parcel_box)
+      expect(Analyzable::Parcel.last.states.first.state).to eq 'for_sale'
     end
   end
 
@@ -74,6 +79,7 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
     before(:each) do 
       
       @parcel = FactoryBot.create(:parcel, parcel_box_id: parcel_box.id, user_id: user.id)
+      @parcel.states << FactoryBot.build(:state, state: 'for_sale', created_at: 2.days.ago)
       @renter = FactoryBot.build(:avatar)
     end
     
@@ -88,6 +94,26 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
     it 'should remove the parcel_box' do 
       put path, params: atts.to_json, headers: headers(parcel_box)
       expect(Rezzable::ParcelBox.where(id: parcel_box.id).size).to eq 0
+    end
+    
+    it 'should add the parcel state occupied' do 
+      put path, params: atts.to_json, headers: headers(parcel_box)
+      expect(@parcel.states.last.state).to eq 'occupied'
+    end
+    
+    it 'should close out the previous state' do 
+      put path, params: atts.to_json, headers: headers(parcel_box)
+      expect(@parcel.states.first.closed_at).to be_within(1.second).of(Time.current)
+    end
+    
+    it 'should set the correct duration' do 
+      put path, params: atts.to_json, headers: headers(parcel_box)
+      expect(@parcel.states.first.duration).to be_within(1.second).of(2.days)
+    end
+    
+    it 'should have two states' do 
+      put path, params: atts.to_json, headers: headers(parcel_box)
+      expect(@parcel.reload.states.size).to eq 2
     end
     
   end
@@ -254,7 +280,9 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
 
       it 'should return the correct data' do
         get path, params: { parcel_page: 3 }, headers: headers(parcel_box)
-        expect(JSON.parse(response.body)['data']['parcels'].first['parcel_name']).to eq 'parcel 18'
+        expect(JSON.parse(response.body)['data']['parcels'].collect{ |p| p['parcel_name'] }).to include(
+          "parcel 18", "parcel 19", "parcel 20", "parcel 21", "parcel 22", "parcel 23"
+          )
       end
     end
   end

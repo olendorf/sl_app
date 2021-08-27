@@ -5,7 +5,7 @@ module Analyzable
   class Parcel < ApplicationRecord
     
     before_update :handle_tier_payment, if: :tier_payment
-    before_update :delete_parcel_box, if: :owner_key
+    before_update :handle_parcel_sale, if: :owner_key_changed?
     
     belongs_to :parcel_box, class_name: 'Rezzable::ParcelBox'
     belongs_to :user
@@ -17,8 +17,11 @@ module Analyzable
       user.parcels.where(region: region, parcel_box_id: nil, owner_key: nil)
     end
     
-    def delete_parcel_box
+    def handle_parcel_sale
+      
       self.parcel_box.destroy if self.parcel_box
+      self.states.last.update(closed_at: Time.current, duration: (Time.current - self.states.last.created_at) )
+      self.states << Analyzable::ParcelState.new(state: :occupied)
     end
     
     

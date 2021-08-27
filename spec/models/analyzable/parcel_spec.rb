@@ -34,7 +34,7 @@ RSpec.describe Analyzable::Parcel, type: :model do
     context 'some open parcels' do
       it 'should return the empty parcels' do
         2.times do |i|
-          FactoryBot.create :parcel, user_id: user.id, region: 'foo', parcel_name: "parcel #{i}"
+          FactoryBot.create :parcel, user_id: user.id, owner_key: nil, region: 'foo', parcel_name: "parcel #{i}"
         end
 
         expect(Analyzable::Parcel.open_parcels(user, 'foo').size).to eq 2

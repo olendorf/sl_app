@@ -5,6 +5,7 @@ module Analyzable
   class Parcel < ApplicationRecord
     
     before_update :handle_tier_payment, if: :tier_payment
+    before_update :delete_parcel_box, if: :owner_key
     
     belongs_to :parcel_box, class_name: 'Rezzable::ParcelBox'
     belongs_to :user
@@ -12,7 +13,11 @@ module Analyzable
     attr_accessor :tier_payment, :requesting_object
 
     def self.open_parcels(user, region)
-      user.parcels.where(region: region, parcel_box_id: nil)
+      user.parcels.where(region: region, parcel_box_id: nil, owner_key: nil)
+    end
+    
+    def delete_parcel_box
+      self.parcel_box.destroy if self.parcel_box
     end
     
     

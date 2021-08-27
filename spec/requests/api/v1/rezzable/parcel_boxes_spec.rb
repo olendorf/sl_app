@@ -28,7 +28,7 @@ RSpec.describe 'Api::V1::Rezzable::ParcelBoxes', type: :request do
     context 'there are other parcels on the sim' do
       before(:each) do
         3.times do |i|
-          FactoryBot.create :parcel, region: 'foo', parcel_name: "parcel #{i}", user_id: user.id
+          FactoryBot.create :parcel, region: 'foo', parcel_name: "parcel #{i}", user_id: user.id, owner_key: nil, owner_name: nil
         end
         2.times do |i|
           parcel_box = FactoryBot.create :parcel_box, user_id: user.id, region: 'foo'
@@ -42,7 +42,7 @@ RSpec.describe 'Api::V1::Rezzable::ParcelBoxes', type: :request do
         expect(response.status).to eq 201
       end
 
-      it 'should return an empty hash of available parcels' do
+      it 'should return an  hash of available parcels' do
         post path, params: atts.to_json,
                    headers: headers(parcel_box, api_key: Settings.default.web_object.api_key)
         expect(JSON.parse(response.body)['data']['open_parcels']).to include(

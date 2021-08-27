@@ -69,6 +69,29 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
     
   end
   
+     
+  describe 'renter buys parcel' do 
+    before(:each) do 
+      
+      @parcel = FactoryBot.create(:parcel, parcel_box_id: parcel_box.id, user_id: user.id)
+      @renter = FactoryBot.build(:avatar)
+    end
+    
+    let(:path) { api_analyzable_parcel_path(@parcel) }
+    let(:atts) { { owner_name: @renter.avatar_name, owner_key: @renter.avatar_key} } 
+    
+    it 'should return ok status' do 
+      put path, params: atts.to_json, headers: headers(parcel_box)
+      expect(response.status).to eq 200
+    end
+    
+    it 'should remove the parcel_box' do 
+      put path, params: atts.to_json, headers: headers(parcel_box)
+      expect(Rezzable::ParcelBox.where(id: parcel_box.id).size).to eq 0
+    end
+    
+  end
+  
   describe 'tier station requests' do 
     let(:tier_station) { FactoryBot.create :tier_station, user_id: user.id }
     let(:renter) { FactoryBot.create :avatar }
@@ -93,6 +116,7 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
       
       
     end
+ 
     
     describe 'getting renters parcels' do
       let(:atts) {

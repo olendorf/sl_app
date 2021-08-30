@@ -33,7 +33,8 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
 
   describe 'show' do
     before(:each) do
-      @parcel = FactoryBot.create :parcel, parcel_box_id: parcel_box.id, user_id: user.id
+      @parcel = FactoryBot.create :parcel, user_id: user.id
+      @parcel.parcel_box = parcel_box
     end
 
     it 'should return ok status' do
@@ -54,7 +55,8 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
 
   describe 'update' do
     before(:each) do
-      @parcel = FactoryBot.create :parcel, parcel_box_id: parcel_box.id, user_id: user.id
+      @parcel = FactoryBot.create :parcel, user_id: user.id
+      @parcel.parcel_box = parcel_box
     end
     let(:path ) { api_analyzable_parcel_path(@parcel) }
 
@@ -78,7 +80,8 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
   describe 'renter buys parcel' do 
     before(:each) do 
       
-      @parcel = FactoryBot.create(:parcel, parcel_box_id: parcel_box.id, user_id: user.id)
+      @parcel = FactoryBot.create(:parcel, user_id: user.id)
+      @parcel.parcel_box = parcel_box
       @parcel.states << FactoryBot.build(:state, state: 'for_sale', created_at: 2.days.ago)
       @renter = FactoryBot.build(:avatar)
     end

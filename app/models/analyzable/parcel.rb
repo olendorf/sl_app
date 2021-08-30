@@ -4,17 +4,18 @@ module Analyzable
   # Model for inworld parcels for rent.
   class Parcel < ApplicationRecord
     
+    # before_create :add_open_state
+    
     before_update :handle_tier_payment, if: :tier_payment
     before_update :handle_parcel_sale, if: :owner_key_changed?
     
-    belongs_to :parcel_box, class_name: 'Rezzable::ParcelBox'
+    has_one :parcel_box, class_name: 'Rezzable::ParcelBox', inverse_of: :parcel
     belongs_to :user
-    has_many :states, class_name: 'Analyzable::ParcelState'
+    has_many :states, class_name: 'Analyzable::ParcelState', dependent: :destroy
     
     attr_accessor :tier_payment, :requesting_object
-
     def self.open_parcels(user, region)
-      user.parcels.where(region: region, parcel_box_id: nil, owner_key: nil)
+      user.parcels.includes(:parcel_box).where(owner_key: nil, region: region, rezzable_parcel_boxes: {parcel_id: nil })
     end
     
     def handle_parcel_sale

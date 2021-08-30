@@ -9,7 +9,7 @@ module Rezzable
     include RezzableBehavior
 
     OBJECT_WEIGHT = 1
-    has_one :parcel, class_name: 'Analyzable::Parcel'
+    belongs_to :parcel, class_name: 'Analyzable::Parcel'
 
     def response_data
       open_parcels = {}

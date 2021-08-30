@@ -31,9 +31,9 @@ RSpec.describe 'Api::V1::Rezzable::ParcelBoxes', type: :request do
           FactoryBot.create :parcel, region: 'foo', parcel_name: "parcel #{i}", user_id: user.id, owner_key: nil, owner_name: nil
         end
         2.times do |i|
-          parcel_box = FactoryBot.create :parcel_box, user_id: user.id, region: 'foo'
-          FactoryBot.create :parcel, region: 'foo', parcel_name: "taken #{i}",
-                                     parcel_box_id: parcel_box.id, user_id: user.id
+          parcel = FactoryBot.create :parcel, region: 'foo', parcel_name: "taken #{i}",
+                                    user_id: user.id
+          parcel.parcel_box = FactoryBot.create :parcel_box, user_id: user.id, region: 'foo'         
         end
       end
       it 'should return ok status ' do

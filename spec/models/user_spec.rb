@@ -44,7 +44,12 @@ RSpec.describe User, type: :model do
   }
 
   it {
-    should have_many(:parcels).class_name('Analyzable::Parcel').dependent(:destroy)
+    should have_many(:parcels).class_name('Analyzable::Parcel')
+  }
+  
+  it {
+    should have_many(:parcel_states).class_name('Analyzable::ParcelState')
+                                .dependent(:destroy)
   }
 
   describe '#servers' do

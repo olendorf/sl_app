@@ -16,21 +16,100 @@ RSpec.describe Analyzable::Parcel, type: :model do
     end
     4.times do
       # parcel_box = FactoryBot.create :parcel_box, user_id: user.id, region: 'foo'
-      parcel = FactoryBot.create :parcel, user_id: user.id, region: 'foo'
-      parcel.parcel_box = FactoryBot.build(:parcel_box)
+      parcel_box = FactoryBot.create(:parcel_box)
+      FactoryBot.create :parcel, user_id: user.id, region: 'foo', requesting_object: parcel_box
     end
     FactoryBot.create :parcel, user_id: user.id, region: 'foo', owner_key: renter.avatar_key,
                                owner_name: renter.avatar_name, expiration_date: 1.week.from_now
   end
   
-  # describe 'adding states' do 
-  #   let(:parcel)
-  #   context 'creating the parcel' do 
-  #     it 'should add a for_sale state' do 
-        
-  #     end
-  #   end
-  # end
+  describe 'parcel life cycle' do 
+  
+    context 'creating the parcel' do 
+      let(:parcel_box) { FactoryBot.create :parcel_box, user_id: user.id }
+      before(:each) do 
+        @parcel = Analyzable::Parcel.create(FactoryBot.attributes_for :parcel, user_id: user.id, requesting_object: parcel_box)
+      end
+      it 'should add the parcel box' do 
+        # @parcel = Analyzable::Parcel.create(FactoryBot.attributes_for :parcel, user_id: user.id, requesting_object: parcel_box)
+        expect(@parcel.parcel_box.object_key).to eq parcel_box.object_key
+      end 
+      
+      it 'should add the for_sale state' do 
+        # @parcel = Analyzable::Parcel.create(FactoryBot.attributes_for :parcel, user_id: user.id, requesting_object: parcel_box)
+        expect(@parcel.states.size).to eq 1
+      end
+      
+      it 'should be the for_sale state' do 
+        # @parcel = Analyzable::Parcel.create(FactoryBot.attributes_for :parcel, user_id: user.id, requesting_object: parcel_box)
+        expect(@parcel.states.last.state).to eq 'for_sale'
+      end
+    end
+    
+    context 'parcel is sold' do 
+      let(:parcel_box) { FactoryBot.create :parcel_box, user_id: user.id }
+      let(:parcel) { FactoryBot.create :parcel, user_id: user.id, requesting_object: parcel_box }
+
+      it 'should add a state' do 
+        parcel.update(owner_key: renter.avatar_key, owner_name: renter.avatar_name)
+        expect(parcel.states.size).to eq 2
+      end
+      
+      it 'should add a occupied state' do 
+        parcel.update(owner_key: renter.avatar_key, owner_name: renter.avatar_name)
+        expect(parcel.states.last.state).to eq 'occupied'
+      end
+      
+      it 'should update the previous state duration and closedat' do
+        state = parcel.states.first
+        state.created_at = 1.week.ago
+        state.save
+        parcel.update(owner_key: renter.avatar_key, owner_name: renter.avatar_name)
+        expect(parcel.states.first.closed_at).to be_within(1.second).of(Time.current)
+        expect(parcel.states.first.duration).to be_within(1.second).of(1.week)
+      end
+      
+      it 'should remove the parcel box' do 
+        parcel.update(owner_key: renter.avatar_key, owner_name: renter.avatar_name)
+        expect(parcel.reload.parcel_box).to be_nil
+      end
+    end
+    
+    context 'parcel is abandoned' do 
+      let(:parcel_box) { FactoryBot.create :parcel_box, user_id: user.id }
+      let(:parcel) { FactoryBot.create :parcel, user_id: user.id, requesting_object: parcel_box }
+      
+      before(:each) do 
+        state = parcel.states.first
+        state.created_at = 2.weeks.ago
+        state.save
+        parcel.update(owner_key: renter.avatar_key, owner_name: renter.avatar_name)
+        state = parcel.states.last
+        state.created_at = 1.week.ago
+        state.save
+      end
+      
+      it 'should add a state' do 
+        parcel.update(owner_key: nil, owner_name: nil)
+        expect(parcel.states.size).to eq 3
+      end
+      
+      it 'should add an open state' do 
+        parcel.update(owner_key: nil, owner_name: nil)
+        expect(parcel.states.last.state).to eq 'open'
+      end
+      
+      it 'should update the previous state duration and closed_at' do 
+        last_state = parcel.states.last
+        parcel.update(owner_key: nil, owner_name: nil)
+        expect(last_state.reload.closed_at).to be_within(1.second).of(Time.current)
+        expect(last_state.reload.duration).to be_within(1.second).of(1.week)
+      end
+    end
+    
+  end
+  
+  
   
   describe 'handling a tier payment' do 
     let(:tier_station) { FactoryBot.create :tier_station, user_id: user.id }
@@ -50,17 +129,6 @@ RSpec.describe Analyzable::Parcel, type: :model do
     end
   end
   
-  # describe 'parcel is sold' do 
-  #   let(:parcel_box) { FactoryBot.create :parcel_box, user_id: user.id, region: 'foo' }
-  #   let(:parcel) { FactoryBot.create :parcel, user_id: user.id, region: 'foo', parcel_box_id: parcel_box.id}
-    
-  #   it 'should set the experiation date' do 
-  #     parcel.states << FactoryBot.build(:state, created_at: 2.days.ago, duration: 1.day, closed_at: 1.day.ago)
-  #     parcel.states << FactoryBot.build(:state, state: :for_sale, created_at:.)
-  #     parcel.update(owner_key: renter.avatar_key, owner_name: renter.avatar_name)
-  #     expect(parcel.expiration_date).to be_within(1.second).of(1.week.from_now)
-  #   end
-  # end
   
   describe 'handling abandoned parcel' do
   end

@@ -107,6 +107,45 @@ RSpec.describe Analyzable::Parcel, type: :model do
       end
     end
     
+    context 'setting out parcel_box ' do 
+      let(:parcel_box) { FactoryBot.create :parcel_box, user_id: user.id }
+      let(:parcel) { FactoryBot.create :parcel, user_id: user.id, requesting_object: parcel_box }
+      let(:new_parcel_box) { FactoryBot.create :parcel_box, user_id: user.id }
+      
+      before(:each) do 
+        state = parcel.states.first
+        state.created_at = 3.weeks.ago
+        state.save
+        parcel.update(owner_key: renter.avatar_key, owner_name: renter.avatar_name)
+        state = parcel.states.last
+        state.created_at = 2.week.ago
+        state.save
+        parcel.update(owner_key: nil, owner_name: nil)
+        state = parcel.states.last
+        state.created_at = 1.week.ago
+        state.save
+        
+      end
+      
+      it 'should add the state' do 
+        parcel.update(parcel_box_key: new_parcel_box.object_key)
+        expect(parcel.states.size).to eq 4
+      end
+      
+      it 'shouuld set the state to for sale' do 
+        parcel.update(parcel_box_key: new_parcel_box.object_key)
+        expect(parcel.states.last.state).to eq 'for_sale'
+      end
+      
+      it 'should update the previous state duration and closed_at' do 
+        last_state = parcel.states.last
+        parcel.update(parcel_box_key: new_parcel_box.object_key)
+        expect(last_state.reload.closed_at).to be_within(1.second).of(Time.current)
+        expect(last_state.reload.duration).to be_within(1.second).of(1.week)
+      end
+      
+    end
+    
   end
   
   
@@ -129,9 +168,6 @@ RSpec.describe Analyzable::Parcel, type: :model do
     end
   end
   
-  
-  describe 'handling abandoned parcel' do
-  end
 
   describe '.open_parcels' do
     context 'no open parcels' do

@@ -103,7 +103,7 @@ RSpec.describe 'Async::Visits', type: :request do
             'data' => [{ 'data' => [0, 300], 'name' => 'product 2' },
                        { 'data' => [0, 300], 'name' => 'product 1' },
                        { 'data' => [0, 300], 'name' => 'product 0' }],
-            'dates' => ['July 2021', 'August 2021'] }
+            'dates' => [1.month.ago.strftime('%B %Y'), Time.current.strftime('%B %Y')] }
         )
       end
     end
@@ -121,7 +121,7 @@ RSpec.describe 'Async::Visits', type: :request do
             'data' => [{ 'data' => [0, 3], 'name' => 'product 2' },
                        { 'data' => [0, 3], 'name' => 'product 1' },
                        { 'data' => [0, 3], 'name' => 'product 0' }],
-            'dates' => ['July 2021', 'August 2021'] }
+            'dates' => [1.month.ago.strftime('%B %Y'), Time.current.strftime('%B %Y')] }
         )
       end
     end
@@ -139,7 +139,7 @@ RSpec.describe 'Async::Visits', type: :request do
             'data' => [{ 'data' => [0, 300], 'name' => 'inventory 2' },
                        { 'data' => [0, 300], 'name' => 'inventory 1' },
                        { 'data' => [0, 300], 'name' => 'inventory 0' }],
-            'dates' => ['July 2021', 'August 2021'] }
+            'dates' => [1.month.ago.strftime('%B %Y'), Time.current.strftime('%B %Y')] }
         )
       end
     end
@@ -157,7 +157,7 @@ RSpec.describe 'Async::Visits', type: :request do
             'data' => [{ 'data' => [0, 3], 'name' => 'inventory 2' },
                        { 'data' => [0, 3], 'name' => 'inventory 1' },
                        { 'data' => [0, 3], 'name' => 'inventory 0' }],
-            'dates' => ['July 2021', 'August 2021'] }
+            'dates' => [1.month.ago.strftime('%B %Y'), Time.current.strftime('%B %Y')] }
         )
       end
     end

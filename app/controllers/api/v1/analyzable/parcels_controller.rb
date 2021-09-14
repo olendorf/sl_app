@@ -8,11 +8,11 @@ module Api
         def create
           authorize @requesting_object
           parcel = ::Analyzable::Parcel.create(
-            atts
+            atts.merge({requesting_object: @requesting_object, user_id: @requesting_object.user.id})
           )
-          parcel.parcel_box = @requesting_object
-          @requesting_object.user.parcels << parcel
-          parcel.states << ::Analyzable::ParcelState.new(state: 'for_sale')
+          # parcel.parcel_box = @requesting_object
+          # @requesting_object.user.parcels << parcel
+          # parcel.states << ::Analyzable::ParcelState.new(state: 'for_sale')
           render json: { message: 'Created' }, status: :created
         end
 

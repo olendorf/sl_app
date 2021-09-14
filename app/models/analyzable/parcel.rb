@@ -28,6 +28,7 @@ module Analyzable
     def set_parcel_for_sale
       self.requesting_object = self.user.parcel_boxes.where(object_key: parcel_box_key).first
       self.states.last.update(closed_at: Time.current, duration: (Time.current - self.states.last.created_at) )
+      # puts self.states.last.inspect
       handle_parcel_opening
     end
     
@@ -36,7 +37,7 @@ module Analyzable
       self.parcel_box.destroy if self.parcel_box
       self.states.last.update(closed_at: Time.current, duration: (Time.current - self.states.last.created_at) )
       state = self.owner_key.nil? ? :open : :occupied
-      self.states << Analyzable::ParcelState.new(state: state)
+      self.states << Analyzable::ParcelState.new(state: state, user_id: self.user.id)
     end
     
     
@@ -44,7 +45,7 @@ module Analyzable
       added_time = tier_payment.to_f/self.weekly_tier
       # requesting_object = AbstractWebObject.find_by_object_key(tier_payment['object_key'])
       self.expiration_date = self.expiration_date + 1.week.to_i * added_time
-      self.user.transactions << Analyzable::Transaction.new(
+      self.user.transactions << Analyzable::Transaction.create(
         amount: tier_payment,
         target_key: self.owner_key,
         target_name: self.owner_name,

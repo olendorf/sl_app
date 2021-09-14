@@ -64,8 +64,8 @@ RSpec.describe Analyzable::Parcel, type: :model do
         state.created_at = 1.week.ago
         state.save
         parcel.update(owner_key: renter.avatar_key, owner_name: renter.avatar_name)
-        expect(parcel.states.first.closed_at).to be_within(1.second).of(Time.current)
-        expect(parcel.states.first.duration).to be_within(1.second).of(1.week)
+        expect(parcel.states.first.closed_at).to be_within(10.seconds).of(Time.current)
+        expect(parcel.states.first.duration).to be_within(10.seconds).of(1.week)
       end
 
       it 'should remove the parcel box' do
@@ -138,8 +138,8 @@ RSpec.describe Analyzable::Parcel, type: :model do
       it 'should update the previous state duration and closed_at' do
         last_state = parcel.states.last
         parcel.update(parcel_box_key: new_parcel_box.object_key)
-        expect(last_state.reload.closed_at).to be_within(1.second).of(Time.current)
-        expect(last_state.reload.duration).to be_within(1.second).of(1.week)
+        expect(last_state.reload.closed_at).to be_within(10.second).of(Time.current)
+        expect(last_state.reload.duration).to be_within(10.second).of(1.week)
       end
     end
   end
@@ -150,7 +150,7 @@ RSpec.describe Analyzable::Parcel, type: :model do
     it 'should update the expiration date' do
       parcel = user.parcels.find_by_owner_key(renter.avatar_key)
       parcel.update(tier_payment: (3 * parcel.weekly_tier), requesting_object: tier_station)
-      expect(parcel.expiration_date).to be_within(1.second).of(
+      expect(parcel.expiration_date).to be_within(10.seconds).of(
         4.weeks.from_now
       )
     end

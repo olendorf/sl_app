@@ -9,56 +9,56 @@ Rails.application.configure do
     # Bullet.growl         = true
     Bullet.rails_logger  = true
     Bullet.add_footer    = true
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Rezzable::Terminal',
                          association: :abstract_web_object
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Rezzable::Server',
                          association: :abstract_web_object
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Rezzable::DonationBox',
                          association: :abstract_web_object
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Rezzable::TrafficCop',
                          association: :abstract_web_object
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Rezzable::TipJar',
                          association: :abstract_web_object
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Rezzable::Vendor',
                          association: :abstract_web_object
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Rezzable::ParcelBox',
                          association: :abstract_web_object
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Rezzable::TierStation',
                          association: :abstract_web_object
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Analyzable::Inventory',
                          association: :user
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Rezzable::DonationBox',
                          association: :user
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Rezzable::DonationBox',
                          association: :server
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Rezzable::DonationBox',
                          association: :transactions
-    Bullet.add_whitelist type: :unused_eager_loading,
+    Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Analyzable::Transaction',
                          association: :web_object
-    Bullet.add_whitelist type: :n_plus_one_query,
+    Bullet.add_safelist type: :n_plus_one_query,
                          class_name: 'AbstractWebObject',
                          association: :user
-    Bullet.add_whitelist type: :n_plus_one_query,
+    Bullet.add_safelist type: :n_plus_one_query,
                          class_name: 'AbstractWebObject',
                          association: :server
-    Bullet.add_whitelist type: :n_plus_one_query,
+    Bullet.add_safelist type: :n_plus_one_query,
                          class_name: 'AbstractWebObject',
                          association: :transactions
-    Bullet.add_whitelist type: :counter_cache, class_name: 'User', association: :web_objects
-    Bullet.add_whitelist type: :n_plus_one_query,
+    Bullet.add_safelist type: :counter_cache, class_name: 'User', association: :web_objects
+    Bullet.add_safelist type: :n_plus_one_query,
                          class_name: 'AbstractWebObject',
                          association: :actable
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_05_192715) do
+ActiveRecord::Schema.define(version: 2021_08_30_172356) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,16 @@ ActiveRecord::Schema.define(version: 2021_08_05_192715) do
     t.integer "revenue", default: 0
   end
 
+  create_table "analyzable_parcel_states", force: :cascade do |t|
+    t.integer "duration"
+    t.datetime "closed_at"
+    t.integer "state"
+    t.integer "parcel_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "user_id"
+  end
+
   create_table "analyzable_parcels", force: :cascade do |t|
     t.string "parcel_name"
     t.string "description"
@@ -88,6 +98,9 @@ ActiveRecord::Schema.define(version: 2021_08_05_192715) do
     t.integer "purchase_price"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "region"
+    t.integer "user_id"
+    t.datetime "expiration_date"
   end
 
   create_table "analyzable_product_links", force: :cascade do |t|
@@ -204,9 +217,9 @@ ActiveRecord::Schema.define(version: 2021_08_05_192715) do
   end
 
   create_table "rezzable_parcel_boxes", force: :cascade do |t|
-    t.integer "parcel_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "parcel_id"
   end
 
   create_table "rezzable_servers", force: :cascade do |t|

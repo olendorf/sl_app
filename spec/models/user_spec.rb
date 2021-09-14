@@ -43,6 +43,15 @@ RSpec.describe User, type: :model do
                                     .dependent(:destroy)
   }
 
+  it {
+    should have_many(:parcels).class_name('Analyzable::Parcel')
+  }
+
+  it {
+    should have_many(:parcel_states).class_name('Analyzable::ParcelState')
+                                    .dependent(:destroy)
+  }
+
   describe '#servers' do
     it 'should return the servers and nothing else' do
       user.web_objects << FactoryBot.build(:web_object)
@@ -110,6 +119,24 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#parcel_boxes' do
+    it 'should return the users parcel_boxes' do
+      owner.web_objects << FactoryBot.create(:parcel_box)
+      owner.web_objects << FactoryBot.create(:parcel_box)
+      owner.web_objects << FactoryBot.build(:web_object)
+      expect(owner.parcel_boxes.size).to eq 2
+    end
+  end
+
+  describe 'tier_stations' do
+    it 'should return the users tier stations' do
+      owner.web_objects << FactoryBot.create(:tier_station)
+      owner.web_objects << FactoryBot.create(:tier_station)
+      owner.web_objects << FactoryBot.build(:web_object)
+      expect(owner.tier_stations.size).to eq 2
+    end
+  end
+
   describe '#tips' do
     it 'should return the users tips' do
       owner.web_objects << FactoryBot.create(:tip_jar)
@@ -151,16 +178,25 @@ RSpec.describe User, type: :model do
   end
 
   describe 'when a account_payment is received' do
+    let(:terminal) { FactoryBot.create :terminal, user_id: owner.id }
+
     context 'for active user' do
       let(:active_user) { FactoryBot.create :active_user, account_level: 3 }
 
       it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 3 * 2
         expected_expiration_date = active_user.expiration_date + 2.months.to_i
-        active_user.update(account_payment: amount)
+        active_user.update(account_payment: amount, requesting_object: terminal)
         expect(
           active_user.reload.expiration_date
         ).to be_within(1.second).of(expected_expiration_date)
+      end
+
+      it 'should add a transaction to the owner' do
+        amount = Settings.default.account.monthly_cost * 3 * 2
+        # expected_expiration_date = active_user.expiration_date + 2.months.to_i
+        active_user.update(account_payment: amount, requesting_object: terminal)
+        expect(owner.reload.transactions.size).to eq 1
       end
     end
 
@@ -173,7 +209,7 @@ RSpec.describe User, type: :model do
       it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 2 * 2.25
         expected_expiration_date = Time.now + 1.month.to_i * 2.25
-        inactive_user.update(account_payment: amount)
+        inactive_user.update(account_payment: amount, requesting_object: terminal)
         expect(inactive_user.expiration_date).to be_within(1.second).of(expected_expiration_date)
       end
     end
@@ -185,7 +221,7 @@ RSpec.describe User, type: :model do
       it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 1 * 2.35
         expected_expiration_date = Time.now + 1.month.to_i * 2.35
-        user.update(account_payment: amount)
+        user.update(account_payment: amount, requesting_object: terminal)
         expect(user.expiration_date).to be_within(1.second).of(expected_expiration_date)
       end
     end
@@ -268,7 +304,7 @@ RSpec.describe User, type: :model do
       expect(owner.active?).to be_truthy
     end
 
-    it 'should rturn true for active up-to-date users' do
+    it 'should return true for active up-to-date users' do
       user.expiration_date = 1.month.from_now
       user.account_level = 1
       expect(user.active?).to be_truthy

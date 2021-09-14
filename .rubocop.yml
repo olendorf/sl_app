@@ -25,6 +25,7 @@ Lint/AmbiguousBlockAssociation:
 Lint/EmptyBlock:
   Exclude:
     - app/decorators/**/*
+    - spec/factories/**/*
     
 Lint/NestedMethodDefinition:
   Exclude:

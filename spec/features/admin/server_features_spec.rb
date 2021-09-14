@@ -33,7 +33,6 @@ RSpec.feature 'Server management', type: :feature do
 
       expect(page).to have_text('200 lindens given to Random Citizen')
       expect(stub).to have_been_requested
-      puts user.transactions.inspect
       expect(user.reload.transactions.size).to eq 1
     end
 

@@ -22,7 +22,7 @@ class User < ApplicationRecord
 
   validates_numericality_of :account_level, greater_than_or_equal_to: 0
 
-  attr_accessor :account_payment, :admin_update, :added_time
+  attr_accessor :account_payment, :admin_update, :added_time, :requesting_object
 
   has_paper_trail
 
@@ -41,6 +41,8 @@ class User < ApplicationRecord
   has_many :products, class_name: 'Analyzable::Product', dependent: :destroy
   has_many :product_links, class_name: 'Analyzable::ProductLink',
                            dependent: :destroy
+  has_many :parcels, class_name: 'Analyzable::Parcel', dependent: :destroy
+  has_many :parcel_states, class_name: 'Analyzable::ParcelState', dependent: :destroy
 
   # THese two methods need to be overridden to deal with Devise's need for emails.
   def email_required?
@@ -88,6 +90,14 @@ class User < ApplicationRecord
 
   def sales
     transactions.where(transactable_type: 'Rezzable::Vendor')
+  end
+
+  def parcel_boxes
+    Rezzable::ParcelBox.where(user_id: id)
+  end
+
+  def tier_stations
+    Rezzable::TierStation.where(user_id: id)
   end
 
   # def splittable_key
@@ -168,6 +178,7 @@ class User < ApplicationRecord
       account_level * Settings.default.account.weight_limit
   end
 
+  # rubocop:disable Metrics/AbcSize
   def handle_account_payment
     update_column(:account_level, 1) if account_level.zero?
     added_time = account_payment.to_f / (
@@ -175,6 +186,22 @@ class User < ApplicationRecord
     self.expiration_date = Time.now if
       expiration_date.nil? || expiration_date < Time.now
     self.expiration_date = expiration_date + (1.month.to_i * added_time)
+    add_account_transaction_to_user(self, requesting_object, account_payment * -1)
+    add_account_transaction_to_user(requesting_object.user, requesting_object, account_payment)
+  end
+  # rubocop:enable Metrics/AbcSize
+
+  def add_account_transaction_to_user(target_user, requesting_object, amount)
+    target_user.transactions << ::Analyzable::Transaction.new(
+      amount: amount,
+      target_key: requesting_object.user.avatar_key,
+      target_name: requesting_object.user.avatar_name,
+      source_key: requesting_object.object_key,
+      source_name: requesting_object.object_name,
+      source_type: 'terminal',
+      category: 'account',
+      description: 'Account payment.'
+    )
   end
 
   def handle_split(transaction, share)

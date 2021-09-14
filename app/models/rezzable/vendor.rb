@@ -14,6 +14,12 @@ module Rezzable
 
     OBJECT_WEIGHT = 1
 
+    # def response_data
+    #   {
+    #     api_key: self.api_key
+    #   }
+    # end
+
     def transaction_description(transaction)
       "In world purchase by #{transaction.target_name}"
     end

@@ -15,7 +15,7 @@ module Rezzable
       open_parcels = {}
       Analyzable::Parcel.open_parcels(user, region).each { |p| open_parcels[p.parcel_name] = p.id }
       {
-        api_key: self.api_key,
+        api_key: api_key,
         open_parcels: open_parcels
       }
     end

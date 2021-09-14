@@ -22,44 +22,43 @@ RSpec.describe Analyzable::Parcel, type: :model do
     FactoryBot.create :parcel, user_id: user.id, region: 'foo', owner_key: renter.avatar_key,
                                owner_name: renter.avatar_name, expiration_date: 1.week.from_now
   end
-  
-  describe 'parcel life cycle' do 
-  
-    context 'creating the parcel' do 
+
+  describe 'parcel life cycle' do
+    context 'creating the parcel' do
       let(:parcel_box) { FactoryBot.create :parcel_box, user_id: user.id }
-      before(:each) do 
-        @parcel = Analyzable::Parcel.create(FactoryBot.attributes_for :parcel, user_id: user.id, requesting_object: parcel_box)
+      before(:each) do
+        @parcel = Analyzable::Parcel.create(
+          FactoryBot.attributes_for(:parcel, user_id: user.id,
+                                             requesting_object: parcel_box)
+        )
       end
-      it 'should add the parcel box' do 
-        # @parcel = Analyzable::Parcel.create(FactoryBot.attributes_for :parcel, user_id: user.id, requesting_object: parcel_box)
+      it 'should add the parcel box' do
         expect(@parcel.parcel_box.object_key).to eq parcel_box.object_key
-      end 
-      
-      it 'should add the for_sale state' do 
-        # @parcel = Analyzable::Parcel.create(FactoryBot.attributes_for :parcel, user_id: user.id, requesting_object: parcel_box)
+      end
+
+      it 'should add the for_sale state' do
         expect(@parcel.states.size).to eq 1
       end
-      
-      it 'should be the for_sale state' do 
-        # @parcel = Analyzable::Parcel.create(FactoryBot.attributes_for :parcel, user_id: user.id, requesting_object: parcel_box)
+
+      it 'should be the for_sale state' do
         expect(@parcel.states.last.state).to eq 'for_sale'
       end
     end
-    
-    context 'parcel is sold' do 
+
+    context 'parcel is sold' do
       let(:parcel_box) { FactoryBot.create :parcel_box, user_id: user.id }
       let(:parcel) { FactoryBot.create :parcel, user_id: user.id, requesting_object: parcel_box }
 
-      it 'should add a state' do 
+      it 'should add a state' do
         parcel.update(owner_key: renter.avatar_key, owner_name: renter.avatar_name)
         expect(parcel.states.size).to eq 2
       end
-      
-      it 'should add a occupied state' do 
+
+      it 'should add a occupied state' do
         parcel.update(owner_key: renter.avatar_key, owner_name: renter.avatar_name)
         expect(parcel.states.last.state).to eq 'occupied'
       end
-      
+
       it 'should update the previous state duration and closedat' do
         state = parcel.states.first
         state.created_at = 1.week.ago
@@ -68,18 +67,18 @@ RSpec.describe Analyzable::Parcel, type: :model do
         expect(parcel.states.first.closed_at).to be_within(1.second).of(Time.current)
         expect(parcel.states.first.duration).to be_within(1.second).of(1.week)
       end
-      
-      it 'should remove the parcel box' do 
+
+      it 'should remove the parcel box' do
         parcel.update(owner_key: renter.avatar_key, owner_name: renter.avatar_name)
         expect(parcel.reload.parcel_box).to be_nil
       end
     end
-    
-    context 'parcel is abandoned' do 
+
+    context 'parcel is abandoned' do
       let(:parcel_box) { FactoryBot.create :parcel_box, user_id: user.id }
       let(:parcel) { FactoryBot.create :parcel, user_id: user.id, requesting_object: parcel_box }
-      
-      before(:each) do 
+
+      before(:each) do
         state = parcel.states.first
         state.created_at = 2.weeks.ago
         state.save
@@ -88,31 +87,31 @@ RSpec.describe Analyzable::Parcel, type: :model do
         state.created_at = 1.week.ago
         state.save
       end
-      
-      it 'should add a state' do 
+
+      it 'should add a state' do
         parcel.update(owner_key: nil, owner_name: nil)
         expect(parcel.states.size).to eq 3
       end
-      
-      it 'should add an open state' do 
+
+      it 'should add an open state' do
         parcel.update(owner_key: nil, owner_name: nil)
         expect(parcel.states.last.state).to eq 'open'
       end
-      
-      it 'should update the previous state duration and closed_at' do 
+
+      it 'should update the previous state duration and closed_at' do
         last_state = parcel.states.last
         parcel.update(owner_key: nil, owner_name: nil)
         expect(last_state.reload.closed_at).to be_within(1.second).of(Time.current)
         expect(last_state.reload.duration).to be_within(1.second).of(1.week)
       end
     end
-    
-    context 'setting out parcel_box ' do 
+
+    context 'setting out parcel_box ' do
       let(:parcel_box) { FactoryBot.create :parcel_box, user_id: user.id }
       let(:parcel) { FactoryBot.create :parcel, user_id: user.id, requesting_object: parcel_box }
       let(:new_parcel_box) { FactoryBot.create :parcel_box, user_id: user.id }
-      
-      before(:each) do 
+
+      before(:each) do
         state = parcel.states.first
         state.created_at = 3.weeks.ago
         state.save
@@ -124,50 +123,44 @@ RSpec.describe Analyzable::Parcel, type: :model do
         state = parcel.states.last
         state.created_at = 1.week.ago
         state.save
-        
       end
-      
-      it 'should add the state' do 
+
+      it 'should add the state' do
         parcel.update(parcel_box_key: new_parcel_box.object_key)
         expect(parcel.states.size).to eq 4
       end
-      
-      it 'shouuld set the state to for sale' do 
+
+      it 'shouuld set the state to for sale' do
         parcel.update(parcel_box_key: new_parcel_box.object_key)
         expect(parcel.states.last.state).to eq 'for_sale'
       end
-      
-      it 'should update the previous state duration and closed_at' do 
+
+      it 'should update the previous state duration and closed_at' do
         last_state = parcel.states.last
         parcel.update(parcel_box_key: new_parcel_box.object_key)
         expect(last_state.reload.closed_at).to be_within(1.second).of(Time.current)
         expect(last_state.reload.duration).to be_within(1.second).of(1.week)
       end
-      
     end
-    
   end
-  
-  
-  
-  describe 'handling a tier payment' do 
+
+  describe 'handling a tier payment' do
     let(:tier_station) { FactoryBot.create :tier_station, user_id: user.id }
 
-    it 'should update the expiration date' do 
+    it 'should update the expiration date' do
       parcel = user.parcels.find_by_owner_key(renter.avatar_key)
-      parcel.update(tier_payment:  (3 * parcel.weekly_tier), requesting_object: tier_station)
+      parcel.update(tier_payment: (3 * parcel.weekly_tier), requesting_object: tier_station)
       expect(parcel.expiration_date).to be_within(1.second).of(
         4.weeks.from_now
-        )
+      )
     end
-    
-    it 'should add the transaction' do 
+
+    it 'should add the transaction' do
       parcel = user.parcels.find_by_owner_key(renter.avatar_key)
-      parcel.update(tier_payment:  (3 * parcel.weekly_tier), requesting_object: tier_station)
+      parcel.update(tier_payment: (3 * parcel.weekly_tier), requesting_object: tier_station)
       expect(user.transactions.size).to eq 1
     end
   end
-  
 
   describe '.open_parcels' do
     context 'no open parcels' do
@@ -179,7 +172,8 @@ RSpec.describe Analyzable::Parcel, type: :model do
     context 'some open parcels' do
       it 'should return the empty parcels' do
         2.times do |i|
-          FactoryBot.create :parcel, user_id: user.id, owner_key: nil, region: 'foo', parcel_name: "parcel #{i}"
+          FactoryBot.create :parcel, user_id: user.id, owner_key: nil, region: 'foo',
+                                     parcel_name: "parcel #{i}"
         end
 
         expect(Analyzable::Parcel.open_parcels(user, 'foo').size).to eq 2

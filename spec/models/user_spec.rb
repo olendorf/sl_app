@@ -46,10 +46,10 @@ RSpec.describe User, type: :model do
   it {
     should have_many(:parcels).class_name('Analyzable::Parcel')
   }
-  
+
   it {
     should have_many(:parcel_states).class_name('Analyzable::ParcelState')
-                                .dependent(:destroy)
+                                    .dependent(:destroy)
   }
 
   describe '#servers' do
@@ -179,10 +179,9 @@ RSpec.describe User, type: :model do
 
   describe 'when a account_payment is received' do
     let(:terminal) { FactoryBot.create :terminal, user_id: owner.id }
-    
+
     context 'for active user' do
       let(:active_user) { FactoryBot.create :active_user, account_level: 3 }
-
 
       it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 3 * 2
@@ -192,8 +191,8 @@ RSpec.describe User, type: :model do
           active_user.reload.expiration_date
         ).to be_within(1.second).of(expected_expiration_date)
       end
-      
-      it 'should add a transaction to the owner' do 
+
+      it 'should add a transaction to the owner' do
         amount = Settings.default.account.monthly_cost * 3 * 2
         # expected_expiration_date = active_user.expiration_date + 2.months.to_i
         active_user.update(account_payment: amount, requesting_object: terminal)

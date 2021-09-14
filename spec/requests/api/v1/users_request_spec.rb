@@ -630,7 +630,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
           {
             # added_time: 3,
             account_payment: Settings.default.account.monthly_cost *
-                    3 * existing_user.account_level
+              3 * existing_user.account_level
           }
         }
 
@@ -647,17 +647,16 @@ RSpec.describe 'Api::V1::Users', type: :request do
           put path, params: atts.to_json, headers: headers(terminal)
           expect(existing_user.reload.expiration_date).to be_within(10.seconds).of(expected_time)
         end
-        
-        it 'adds the transaction to the user' do 
+
+        it 'adds the transaction to the user' do
           put path, params: atts.to_json, headers: headers(terminal)
           expect(existing_user.reload.transactions.size).to eq 1
         end
-        
-        it 'adds the transaction to the owner' do 
+
+        it 'adds the transaction to the owner' do
           put path, params: atts.to_json, headers: headers(terminal)
           expect(owner.reload.transactions.size).to eq 1
         end
-        
       end
 
       #   it 'adds a transaction' do

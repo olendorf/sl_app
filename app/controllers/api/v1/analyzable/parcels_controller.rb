@@ -7,8 +7,9 @@ module Api
       class ParcelsController < Api::V1::AnalyzableController
         def create
           authorize @requesting_object
-          parcel = ::Analyzable::Parcel.create(
-            atts.merge({requesting_object: @requesting_object, user_id: @requesting_object.user.id})
+          ::Analyzable::Parcel.create(
+            atts.merge({ requesting_object: @requesting_object,
+                         user_id: @requesting_object.user.id })
           )
           # parcel.parcel_box = @requesting_object
           # @requesting_object.user.parcels << parcel
@@ -31,6 +32,7 @@ module Api
           render json: { message: 'Updated' }, status: :ok
         end
 
+        # rubocop:disable Metrics/AbcSize
         def index
           authorize @requesting_object
           params['parcel_page'] ||= 1
@@ -39,11 +41,13 @@ module Api
             region: @requesting_object.region
           ) if params['scope'] == 'region'
           parcels = @requesting_object.user.parcels.where(
-           owner_key: params['owner_key']) if params['scope'] == 'renter'
+            owner_key: params['owner_key']
+          ) if params['scope'] == 'renter'
           page = parcels.page(params['parcel_page']).per(9)
           data = paged_data(page)
           render json: { message: 'OK', data: data }, status: :ok
         end
+        # rubocop:enable Metrics/AbcSize
 
         private
 

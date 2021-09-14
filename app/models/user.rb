@@ -178,6 +178,7 @@ class User < ApplicationRecord
       account_level * Settings.default.account.weight_limit
   end
 
+  # rubocop:disable Metrics/AbcSize
   def handle_account_payment
     update_column(:account_level, 1) if account_level.zero?
     added_time = account_payment.to_f / (
@@ -185,11 +186,11 @@ class User < ApplicationRecord
     self.expiration_date = Time.now if
       expiration_date.nil? || expiration_date < Time.now
     self.expiration_date = expiration_date + (1.month.to_i * added_time)
-    # requesting_object = AbstractWebObject.find_by_object_key(account_payment['object_key'])
     add_account_transaction_to_user(self, requesting_object, account_payment * -1)
     add_account_transaction_to_user(requesting_object.user, requesting_object, account_payment)
   end
-  
+  # rubocop:enable Metrics/AbcSize
+
   def add_account_transaction_to_user(target_user, requesting_object, amount)
     target_user.transactions << ::Analyzable::Transaction.new(
       amount: amount,

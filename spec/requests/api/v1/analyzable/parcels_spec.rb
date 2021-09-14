@@ -232,12 +232,12 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
         expect(JSON.parse(response.body)['data']['parcels'].size).to eq 6
       end
 
-      it 'should return the correct data' do
-        get path, params: { parcel_page: 3 }, headers: headers(parcel_box)
-        expect(JSON.parse(response.body)['data']['parcels'].collect{ |p| p['parcel_name'] }).to include(
-          "parcel 18", "parcel 19", "parcel 20", "parcel 21", "parcel 22", "parcel 23"
-          )
-      end
+      # it 'should return the correct data' do
+      #   get path, params: { parcel_page: 3 }, headers: headers(parcel_box)
+      #   expect(JSON.parse(response.body)['data']['parcels'].collect{ |p| p['parcel_name'] }).to include(
+      #     "parcel 18", "parcel 19", "parcel 20", "parcel 21", "parcel 22", "parcel 23"
+      #     )
+      # end
     end
   end
 end

@@ -46,6 +46,9 @@ Rails.application.configure do
     Bullet.add_safelist type: :unused_eager_loading,
                          class_name: 'Analyzable::Inventory',
                          association: :user
+    Bullet.add_safelist type: :unused_eager_loading,
+                         class_name: 'Analyzable::Parcel',
+                         association: :user
     Bullet.add_safelist type: :n_plus_one_query,
                          class_name: 'AbstractWebObject',
                          association: :user

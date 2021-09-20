@@ -6,5 +6,10 @@ module Analyzable
     belongs_to :user
 
     enum state: %i[open for_sale occupied]
+    
+    def duration
+      end_time = self.closed_at.nil? ? Time.current : self.closed_at
+      (end_time - created_at).to_i
+    end
   end
 end

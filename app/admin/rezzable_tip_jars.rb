@@ -51,9 +51,6 @@ ActiveAdmin.register Rezzable::TipJar, as: 'Tip Jar' do
       end
     end
 
-    # column 'Total Donations', &:total_donations
-    # column :goal
-    # column :dead_line
     column 'Version', &:semantic_version
     column :status, &:pretty_active
 
@@ -61,17 +58,6 @@ ActiveAdmin.register Rezzable::TipJar, as: 'Tip Jar' do
     actions
   end
 
-  # sidebar :settings, only: %i[edit show] do
-  #   attributes_table do
-  #     row :show_last_donation
-  #     row :show_last_donor
-  #     row :show_total
-  #     row :show_largest_donation
-  #     row :show_biggest_donor
-  #     row :goal
-  #     row :dead_line
-  #   end
-  # end
 
   show title: :object_name do
     attributes_table do
@@ -104,16 +90,6 @@ ActiveAdmin.register Rezzable::TipJar, as: 'Tip Jar' do
         end
       end
       row :location, &:slurl
-
-      # row :total_donations
-      # row 'Largest Donation' do |db|
-      #   donation = db.largest_donation
-      #   "#{donation['target_name']}: L$ #{donation['amount']} (#{donation['created_at']}})"
-      # end
-      # row 'Biggest Donor' do |db|
-      #   donor = db.biggest_donor
-      #   "#{donor[:avatar_name]}: L$ #{donor[:amount]}"
-      # end
       row :created_at
       row :updated_at
       row :pinged_at
@@ -122,35 +98,6 @@ ActiveAdmin.register Rezzable::TipJar, as: 'Tip Jar' do
     end
   end
 
-  #   panel 'Top 10 Donors For This Box' do
-  #     counts = resource.transactions.group(:target_name).count
-  #     sums = resource.transactions.group(:target_name).order('sum_amount DESC').sum(:amount)
-  #     data = sums.collect { |k, v| { donor: k, amount: v, count: counts[k] } }
-  #     paginated_data = Kaminari.paginate_array(data).page(params[:donor_page]).per(10)
-
-  #     table_for paginated_data do
-  #       column :donor
-  #       column :amount
-  #       column('Donations') do |item|
-  #         item[:count]
-  #       end
-  #     end
-  #   end
-  # end
-
-  # sidebar :donations, only: :show do
-  #   paginated_collection(
-  #     resource.transactions.page(
-  #       params[:donation_page]
-  #     ).per(10), param_name: 'donation_page'
-  #   ) do
-  #     table_for collection.order(created_at: :desc).decorate, download_links: false do
-  #       column :created_at
-  #       column 'Payer/Payee', &:target_name
-  #       column :amount
-  #     end
-  #   end
-  # end
 
   permit_params :object_name, :description, :server_id, :access_mode, :thank_you_message
 

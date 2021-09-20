@@ -80,9 +80,7 @@ ActiveAdmin.register Rezzable::TierStation, as: 'Tier Station' do
       row :version, &:semantic_version
       row :status, &:pretty_active
     end
-
   end
-
 
   permit_params :object_name, :description, :server_id
 

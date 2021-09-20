@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe Analyzable::ParcelDecorator do  
+RSpec.describe Analyzable::ParcelDecorator do
   let(:parcel) do
     FactoryBot.build :parcel,
                      region: 'Foo Man Choo',
@@ -15,5 +17,4 @@ RSpec.describe Analyzable::ParcelDecorator do
       )
     end
   end
-
 end

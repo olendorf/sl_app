@@ -58,7 +58,6 @@ ActiveAdmin.register Rezzable::TipJar, as: 'Tip Jar' do
     actions
   end
 
-
   show title: :object_name do
     attributes_table do
       row :object_name, &:object_name
@@ -97,7 +96,6 @@ ActiveAdmin.register Rezzable::TipJar, as: 'Tip Jar' do
       row :status, &:pretty_active
     end
   end
-
 
   permit_params :object_name, :description, :server_id, :access_mode, :thank_you_message
 

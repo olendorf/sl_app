@@ -25,7 +25,8 @@ module Analyzable
         self.parcel_box = requesting_object
         self.region = requesting_object.region
         self.position = requesting_object.position
-        states << Analyzable::ParcelState.new(state: 'for_sale', user_id: requesting_object.user.id)
+        states << Analyzable::ParcelState.new(state: 'for_sale',
+                                              user_id: requesting_object.user.id)
       else
         states << Analyzable::ParcelState.new(state: 'open', user_id: user.id)
       end

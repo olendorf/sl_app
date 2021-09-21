@@ -21,24 +21,34 @@ module Analyzable
     end
 
     def handle_parcel_opening
-      self.parcel_box = requesting_object if requesting_object
-      states << Analyzable::ParcelState.new(state: 'for_sale', user_id: user.id)
+      if requesting_object
+        self.parcel_box = requesting_object
+        self.region = requesting_object.region
+        self.position = requesting_object.position
+        states << Analyzable::ParcelState.new(state: 'for_sale',
+                                              user_id: requesting_object.user.id)
+      else
+        states << Analyzable::ParcelState.new(state: 'open', user_id: user.id)
+      end
     end
 
     def set_parcel_for_sale
       self.requesting_object = user.parcel_boxes.where(object_key: parcel_box_key).first
-      states.last.update(closed_at: Time.current,
-                         duration: (Time.current - states.last.created_at))
+      states.last.update(closed_at: Time.current)
       # puts self.states.last.inspect
       handle_parcel_opening
     end
 
     def handle_parcel_owner_change
       parcel_box&.destroy
-      states.last.update(closed_at: Time.current,
-                         duration: (Time.current - states.last.created_at))
-      state = owner_key.nil? ? :open : :occupied
-      states << Analyzable::ParcelState.new(state: state, user_id: user.id)
+      states.last.update(closed_at: Time.current)
+      if owner_key.nil?
+        states << Analyzable::ParcelState.new(state: :open, user_id: user.id)
+        self.expiration_date = nil
+      else
+        states << Analyzable::ParcelState.new(state: :occupied, user_id: user.id)
+        self.expiration_date = 1.week.from_now
+      end
     end
 
     def handle_tier_payment

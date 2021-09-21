@@ -233,6 +233,101 @@ def give_vendors_to_user(user, avatars, number_of_vendors, number_of_sales)
   end
 end
 
+def add_events_to_parcel(parcel)
+  # parcel.parcel_box.destroy
+  owner = FactoryBot.build :avatar
+  event_time = rand(parcel.states.last.created_at..Time.current)
+  puts event_time
+
+  previous_state = parcel.states.last
+
+  parcel.update(
+    owner_key: owner.avatar_key,
+    owner_name: owner.avatar_name
+  )
+
+  previous_state.closed_at = event_time
+  previous_state.save
+  last_state = parcel.states.last
+  last_state.created_at = event_time
+  last_state.save
+
+  parcel.expiration_date = rand(1..4).weeks.from_now
+  parcel.save
+
+  if rand < 0.5
+    event_time = rand(parcel.states.last.created_at..Time.current)
+    parcel.update(
+      owner_key: nil,
+      owner_name: nil,
+      created_at: event_time
+    )
+
+    previous_state = parcel.states[-2]
+    previous_state.closed_at = event_time
+    previous_state.save
+    last_state = parcel.states.last
+    last_state.created_at = event_time
+    last_state.save
+  end
+  add_events_to_parcel(parcel) if rand < 0.66
+end
+
+def setup_parcel_data_for_user(user, num_tier_stations = 2, num_parcels = 10)
+  num_tier_stations.times do |_i|
+    user.web_objects << FactoryBot.build(:tier_station)
+  end
+
+  num_parcels.times do |_i|
+    # parcel = FactoryBot.create(:parcel, user_id: user.id)
+    # parcel.states.destroy_all
+    parcel_box = FactoryBot.create :parcel_box, user_id: user.id
+    user.parcels << FactoryBot.create(:parcel, requesting_object: parcel_box)
+    state = user.parcels.last.states.last
+    state.created_at = rand(1.year.ago..Time.current)
+    state.save
+
+    add_events_to_parcel(user.parcels.last) if rand < 0.66
+
+    # # parcel.parcel_box.destroy
+    # owner = FactoryBot.build :avatar
+    # event_time = rand(user.parcels.last.states.last.created_at..Time.current)
+    # puts event_time
+
+    # previous_state = user.parcels.last.states.last
+
+    # user.parcels.last.update(
+    #   owner_key: owner.avatar_key,
+    #   owner_name: owner.avatar_name)
+
+    # previous_state.closed_at = event_time
+    # previous_state.save
+    # last_state = user.parcels.last.states.last
+    # last_state.created_at = event_time
+    # last_state.save
+
+    # user.parcels.last.expiration_date = rand(1..4).weeks.from_now
+    # user.parcels.last.save
+
+    # if rand < 0.5
+    #   event_time = rand(user.parcels.last.states.last.created_at..Time.current)
+    #   user.parcels.last.update(
+    #   owner_key: nil,
+    #   owner_name: nil,
+    #   created_at: event_time)
+
+    #   previous_state = user.parcels.last.states[-2]
+    #   previous_state.closed_at = event_time
+    #   previous_state.save
+    #   last_state = user.parcels.last.states.last
+    #   last_state.created_at = event_time
+    #   last_state.save
+
+    # end
+    # end
+  end
+end
+
 # rubocop:enable Metrics/AbcSize, Metrics/ParameterLists
 
 puts 'creating owner'
@@ -265,6 +360,9 @@ puts 'giving vendors to owner'
 give_products_to_user(owner, 10)
 give_vendors_to_user(owner, avatars, 50, 20)
 puts "inv sales: #{owner.vendors.first.inventory.sales.size}"
+
+puts 'setting up land rental system for owner'
+setup_parcel_data_for_user(owner)
 
 4.times do |i|
   FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident"
@@ -299,6 +397,9 @@ puts 'creating users'
   puts "giving vendors to user #{i}"
   give_products_to_user(user, 10)
   give_vendors_to_user(user, avatars, 20, 10)
+
+  puts "setting up land rental system for user #{i}"
+  setup_parcel_data_for_user(user)
 end
 
 20.times do |i|

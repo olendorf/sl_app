@@ -9,7 +9,7 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory' do
 
   actions :all, except: %i[new create]
 
-  index titles: 'Inventory' do
+  index title: 'Inventory' do
     selectable_column
     column 'Name' do |inventory|
       link_to inventory.inventory_name, admin_inventory_path(inventory)

@@ -16,7 +16,7 @@ RSpec.describe Analyzable::Parcel, type: :model do
     end
     4.times do
       # parcel_box = FactoryBot.create :parcel_box, user_id: user.id, region: 'foo'
-      parcel_box = FactoryBot.create(:parcel_box)
+      parcel_box = FactoryBot.create(:parcel_box, user_id: user.id)
       FactoryBot.create :parcel, user_id: user.id, region: 'foo', requesting_object: parcel_box
     end
     FactoryBot.create :parcel, user_id: user.id, region: 'foo', owner_key: renter.avatar_key,

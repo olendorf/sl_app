@@ -237,7 +237,6 @@ def add_events_to_parcel(parcel)
   # parcel.parcel_box.destroy
   owner = FactoryBot.build :avatar
   event_time = rand(parcel.states.last.created_at..Time.current)
-  puts event_time
 
   previous_state = parcel.states.last
 
@@ -279,8 +278,6 @@ def setup_parcel_data_for_user(user, num_tier_stations = 2, num_parcels = 10)
   end
 
   num_parcels.times do |_i|
-    # parcel = FactoryBot.create(:parcel, user_id: user.id)
-    # parcel.states.destroy_all
     parcel_box = FactoryBot.create :parcel_box, user_id: user.id
     user.parcels << FactoryBot.create(:parcel, requesting_object: parcel_box)
     state = user.parcels.last.states.last
@@ -289,42 +286,6 @@ def setup_parcel_data_for_user(user, num_tier_stations = 2, num_parcels = 10)
 
     add_events_to_parcel(user.parcels.last) if rand < 0.66
 
-    # # parcel.parcel_box.destroy
-    # owner = FactoryBot.build :avatar
-    # event_time = rand(user.parcels.last.states.last.created_at..Time.current)
-    # puts event_time
-
-    # previous_state = user.parcels.last.states.last
-
-    # user.parcels.last.update(
-    #   owner_key: owner.avatar_key,
-    #   owner_name: owner.avatar_name)
-
-    # previous_state.closed_at = event_time
-    # previous_state.save
-    # last_state = user.parcels.last.states.last
-    # last_state.created_at = event_time
-    # last_state.save
-
-    # user.parcels.last.expiration_date = rand(1..4).weeks.from_now
-    # user.parcels.last.save
-
-    # if rand < 0.5
-    #   event_time = rand(user.parcels.last.states.last.created_at..Time.current)
-    #   user.parcels.last.update(
-    #   owner_key: nil,
-    #   owner_name: nil,
-    #   created_at: event_time)
-
-    #   previous_state = user.parcels.last.states[-2]
-    #   previous_state.closed_at = event_time
-    #   previous_state.save
-    #   last_state = user.parcels.last.states.last
-    #   last_state.created_at = event_time
-    #   last_state.save
-
-    # end
-    # end
   end
 end
 

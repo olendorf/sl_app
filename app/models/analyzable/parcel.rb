@@ -12,6 +12,7 @@ module Analyzable
     has_one :parcel_box, class_name: 'Rezzable::ParcelBox', inverse_of: :parcel
     belongs_to :user
     has_many :states, class_name: 'Analyzable::ParcelState', dependent: :destroy
+    has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify
 
     attr_accessor :tier_payment, :requesting_object, :parcel_box_key
 
@@ -63,6 +64,7 @@ module Analyzable
         source_name: requesting_object.object_name,
         source_type: 'tier_station',
         category: 'tier',
+        parcel_id: self.id,
         description: "Tier payment from #{owner_name}"
       )
     end

@@ -29,7 +29,7 @@ class AsyncController < ApplicationController
     end
     dates
   end
-  
+
   def generate_color_map(items)
     md5 = Digest::MD5.new
     color_map = {}

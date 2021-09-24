@@ -4,16 +4,17 @@ ActiveAdmin.register_page 'Rentals', namespace: :my do
   menu parent: 'Data', label: 'Rentals',
        priority: 3,
        if: proc { current_user.tier_payments.size.positive? }
-         
-  content do 
-    panel 'Recent Tier Payments' do 
+
+  content do
+    panel 'Recent Tier Payments' do
       tier_payments = current_user.tier_payments.includes([:parcel]).order('created_at DESC')
       paginated_collection(
-          tier_payments.page(params[:tier_payment_page]).per(20),
-                                param_name: 'tier_payment_page',
-                                entry_name: 'Tier Payment',
-                                download_links: false) do 
-        table_for collection do 
+        tier_payments.page(params[:tier_payment_page]).per(20),
+        param_name: 'tier_payment_page',
+        entry_name: 'Tier Payment',
+        download_links: false
+      ) do
+        table_for collection do
           column 'Date/Time', &:created_at
           column 'Renter', &:target_name
           column 'Parcel' do |tier_payment|
@@ -26,34 +27,31 @@ ActiveAdmin.register_page 'Rentals', namespace: :my do
         end
       end
     end
-    
-      
+
     panel '' do
       div class: 'column lg' do
         render partial: 'parcel_status_treemap'
       end
-      
     end
-    
+
     panel '' do
       div class: 'column lg' do
         render partial: 'region_revenue_bar_chart'
       end
     end
-    
-    panel '' do 
-      div class: 'column lg' do 
+
+    panel '' do
+      div class: 'column lg' do
         render partial: 'parcel_status_timeline'
       end
     end
-    
-    panel '' do 
-      div class: 'column lg' do 
+
+    panel '' do
+      div class: 'column lg' do
         render partial: 'rental_income_timeline'
       end
     end
   end
-
 
   # content title: proc { I18n.t } do
   #   panel 'Recent Sales' do

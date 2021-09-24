@@ -3,72 +3,68 @@
 require 'rails_helper'
 
 RSpec.describe 'Async::Rentals', type: :request do
-  describe 'index' do 
-    before(:all) do 
+  describe 'index' do
+    before(:all) do
       @user = FactoryBot.create :active_user
-      1.times do 
-        parcel_box = FactoryBot.create(:parcel_box, user_id: @user.id)
-        @user.parcels << FactoryBot.create(:parcel, requesting_object: parcel_box)
-        
-      end
-      2.times do 
+      parcel_box = FactoryBot.create(:parcel_box, user_id: @user.id)
+      @user.parcels << FactoryBot.create(:parcel, requesting_object: parcel_box)
+      2.times do
         parcel_box = FactoryBot.create(:parcel_box, user_id: @user.id)
         @user.parcels << FactoryBot.create(:parcel, requesting_object: parcel_box)
         avatar = FactoryBot.build(:avatar)
         @user.parcels.last.update(owner_key: avatar.avatar_key, owner_name: avatar.avatar_name)
         @user.parcels.last.update(owner_key: nil, owner_name: nil)
       end
-      
-      3.times do 
+
+      3.times do
         parcel_box = FactoryBot.create(:parcel_box, user_id: @user.id)
         @user.parcels << FactoryBot.create(:parcel, requesting_object: parcel_box)
         avatar = FactoryBot.build(:avatar)
         @user.parcels.last.update(owner_key: avatar.avatar_key, owner_name: avatar.avatar_name)
       end
     end
-    
+
     let(:path) { async_rentals_path }
-    
+
     before(:each) { sign_in @user }
-    
-    context 'asking for parcel state treemap data' do 
-      it 'should return ok status' do 
-          get path, params: { chart: 'parcel_status_treemap' }
-          expect(response.status).to eq 200
+
+    context 'asking for parcel state treemap data' do
+      it 'should return ok status' do
+        get path, params: { chart: 'parcel_status_treemap' }
+        expect(response.status).to eq 200
       end
-      
-      it 'should return the data' do 
-          get path, params: { chart: 'parcel_status_treemap' }
-          expect(JSON.parse(response.body).size).to eq 21
-      end
-    end
-    
-    context 'askign for parcel state timeline' do 
-      it 'should return ok status' do 
-          get path, params: { chart: 'parcel_status_timeline' }
-          expect(response.status).to eq 200
-      end
-      
-      it 'should return the data' do 
-          get path, params: { chart: 'parcel_status_timeline' }
-          expect(JSON.parse(response.body)['data'].size).to eq 3
+
+      it 'should return the data' do
+        get path, params: { chart: 'parcel_status_treemap' }
+        expect(JSON.parse(response.body).size).to eq 21
       end
     end
-    
-    context 'askign for rental income timeline' do 
-      it 'should return ok status' do 
-          get path, params: { chart: 'rental_income_timeline' }
-          expect(response.status).to eq 200
+
+    context 'askign for parcel state timeline' do
+      it 'should return ok status' do
+        get path, params: { chart: 'parcel_status_timeline' }
+        expect(response.status).to eq 200
       end
-      
-      it 'should return the data' do 
-          get path, params: { chart: 'rental_income_timeline' }
-          expect(JSON.parse(response.body)['data'].size).to eq 6
+
+      it 'should return the data' do
+        get path, params: { chart: 'parcel_status_timeline' }
+        expect(JSON.parse(response.body)['data'].size).to eq 3
+      end
+    end
+
+    context 'askign for rental income timeline' do
+      it 'should return ok status' do
+        get path, params: { chart: 'rental_income_timeline' }
+        expect(response.status).to eq 200
+      end
+
+      it 'should return the data' do
+        get path, params: { chart: 'rental_income_timeline' }
+        expect(JSON.parse(response.body)['data'].size).to eq 6
       end
     end
   end
-  
-  
+
   # describe 'GET' do
   #   before(:all) do
   #     @user = FactoryBot.create :active_user

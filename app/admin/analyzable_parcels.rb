@@ -39,10 +39,9 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel' do
   filter :weekly_tier
   filter :expiration_date
   filter :user_avatar_name, as: :string, label: 'Owner Name'
-  filter :current_state, as: :check_boxes, 
-                         collection: Analyzable::ParcelState.
-                          states.keys.collect { |k| [k.humanize, k]}
-  
+  filter :current_state, as: :check_boxes,
+                         collection: Analyzable::ParcelState
+                           .states.keys.collect { |k| [k.humanize, k] }
 
   show title: :parcel_name do
     attributes_table do

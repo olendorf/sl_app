@@ -4,7 +4,7 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel', namespace: :my do
   menu label: 'Parcels', if: proc { current_user.parcels.size.positive? }
 
   decorate_with Analyzable::ParcelDecorator
-  
+
   scope_to :current_user, association_method: :parcels
 
   actions :all, except: %i[new create]
@@ -37,9 +37,9 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel', namespace: :my do
   filter :region
   filter :weekly_tier
   filter :expiration_date
-  filter :current_state, as: :check_boxes, 
-                         collection: Analyzable::ParcelState.
-                          states.keys.collect { |k| [k.humanize, k]}
+  filter :current_state, as: :check_boxes,
+                         collection: Analyzable::ParcelState
+                           .states.keys.collect { |k| [k.humanize, k] }
 
   show title: :parcel_name do
     attributes_table do

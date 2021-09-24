@@ -253,13 +253,12 @@ def add_events_to_parcel(parcel)
 
   parcel.expiration_date = rand(1..4).weeks.from_now
   parcel.save
-  
-  rand(1..4).times do 
+
+  rand(1..4).times do
     parcel.update(tier_payment: parcel.weekly_tier, requesting_object: parcel.user.tier_stations.sample)
     payment = parcel.user.tier_payments.last
     payment.created_at = event_time
     payment.save
-    
   end
 
   if rand < 0.2
@@ -284,13 +283,13 @@ def setup_parcel_data_for_user(user, num_tier_stations: 2, num_regions: 5, num_p
   num_tier_stations.times do |_i|
     user.web_objects << FactoryBot.build(:tier_station)
   end
-  
+
   regions = []
-  
-  num_regions.times do   
-    regions <<  Faker::Lorem.words(
-          number: rand(1..3)
-        ).map(&:capitalize).join(' ')
+
+  num_regions.times do
+    regions << Faker::Lorem.words(
+      number: rand(1..3)
+    ).map(&:capitalize).join(' ')
   end
 
   num_parcels.times do |_i|
@@ -301,7 +300,6 @@ def setup_parcel_data_for_user(user, num_tier_stations: 2, num_regions: 5, num_p
     state.save
 
     add_events_to_parcel(user.parcels.last) if rand < 0.9
-
   end
 end
 

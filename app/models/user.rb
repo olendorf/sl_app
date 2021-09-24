@@ -75,7 +75,7 @@ class User < ApplicationRecord
     ids = donation_boxes.collect(&:id)
     transactions.where(transactable_id: ids)
   end
-  
+
   def tier_payments
     transactions.where(category: :tier)
   end

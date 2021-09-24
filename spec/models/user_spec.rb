@@ -170,6 +170,26 @@ RSpec.describe User, type: :model do
       expect(owner.sales.size).to eq 10
     end
   end
+  
+  describe '#tier_payments' do 
+    it 'should return the tier payments' do 
+      3.times do 
+        user.parcels << FactoryBot.build(:parcel)
+        user.web_objects << FactoryBot.build(:tier_station)
+      end
+      15.times do 
+        parcel = user.parcels.sample
+        parcel.update(
+          tier_payment: parcel.weekly_tier,
+          requesting_object: user.tier_stations.sample
+          )
+      end
+      # not sure why, but wasn't working with the user.transactions.size in the expect()
+      actual = user.transactions.size
+      expect(actual).to eq 15
+      
+    end
+  end
 
   describe :email_changed? do
     it 'should be falsey' do

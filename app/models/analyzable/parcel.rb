@@ -11,7 +11,9 @@ module Analyzable
 
     has_one :parcel_box, class_name: 'Rezzable::ParcelBox', inverse_of: :parcel
     belongs_to :user
-    has_many :states, class_name: 'Analyzable::ParcelState', dependent: :destroy
+    has_many :states, class_name: 'Analyzable::ParcelState', dependent: :destroy,
+      after_add: :set_current_state
+    
     has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify
 
     attr_accessor :tier_payment, :requesting_object, :parcel_box_key
@@ -20,6 +22,7 @@ module Analyzable
       user.parcels.includes(:parcel_box).where(owner_key: nil, region: region,
                                                rezzable_parcel_boxes: { parcel_id: nil })
     end
+    
 
     def handle_parcel_opening
       if requesting_object
@@ -48,13 +51,27 @@ module Analyzable
         self.expiration_date = nil
       else
         states << Analyzable::ParcelState.new(state: :occupied, user_id: user.id)
+        self.user.transactions << Analyzable::Transaction.create(
+          amount: self.purchase_price,
+          category: :land_sale,
+          target_name: owner_name,
+          target_key: owner_key,
+          parcel_id: self.id
+          )
         self.expiration_date = 1.week.from_now
       end
     end
+    
+    def set_current_state(state)
+      self.current_state = state.state
+    end
 
     def handle_tier_payment
+      # puts "handlnig tier payment"
       added_time = tier_payment.to_f / weekly_tier
       # requesting_object = AbstractWebObject.find_by_object_key(tier_payment['object_key'])
+      # puts user.inspect
+      self.expiration_date = Time.current if self.expiration_date.nil?
       self.expiration_date = expiration_date + 1.week.to_i * added_time
       user.transactions << Analyzable::Transaction.create(
         amount: tier_payment,
@@ -64,6 +81,8 @@ module Analyzable
         source_name: requesting_object.object_name,
         source_type: 'tier_station',
         category: 'tier',
+        transactable_id: requesting_object.id,
+        transactable_type: 'Rezzable::TierStation',
         parcel_id: self.id,
         description: "Tier payment from #{owner_name}"
       )

@@ -75,6 +75,10 @@ class User < ApplicationRecord
     ids = donation_boxes.collect(&:id)
     transactions.where(transactable_id: ids)
   end
+  
+  def tier_payments
+    transactions.where(category: :tier)
+  end
 
   def tip_jars
     Rezzable::TipJar.where(user_id: id)
@@ -99,14 +103,6 @@ class User < ApplicationRecord
   def tier_stations
     Rezzable::TierStation.where(user_id: id)
   end
-
-  # def splittable_key
-  #   avatar_key
-  # end
-
-  # def splittable_name
-  #   avatar_name
-  # end
 
   def time_left
     expiration_date.nil? ? 0 : Time.diff(expiration_date, Time.now)
@@ -259,8 +255,9 @@ class User < ApplicationRecord
       transaction.balance = transaction.amount
       transaction.previous_balance = 0
     else
-      transaction.previous_balance = transactions.last.balance
-      transaction.balance = transactions.last.balance + transaction.amount
+      balance = transactions.last.balance.nil? ? 0 : transactions.last.balance
+      transaction.previous_balance = balance
+      transaction.balance = balance + transaction.amount
     end
   end
 end

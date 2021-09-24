@@ -1,0 +1,69 @@
+<div id="region_revenue_bar_chart_container" style="width:1500; height:900px;"></div>
+
+<script type="text/javascript">
+
+$(function() {
+  $.getJSON('/async/rentals',
+              {
+                  chart: 'region_revenue_bar_chart'
+              },
+              function(data){
+                
+        $('#region_revenue_bar_chart_container').highcharts({
+           chart: {
+                type: 'bar'
+            },
+            
+            colors: data.colors,
+            title: {
+                text: 'Revenue By Region, Last 30 Days'
+            },
+            subtitle: {
+              text: data.colors
+            },
+            xAxis: {
+                categories: data.regions,
+                colors: data.colors,
+                labels: {
+                  style: {
+                    fontSize: '28px'
+                  }
+                },
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '$L',
+                    style: {
+                      fontSize: '28px'
+                    }
+                }
+            },
+            tooltip: {
+                valueSuffix: ' $L'
+            },
+            legend: {
+              enabled: false
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    colorByPoint: true,
+                },
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{data: data.data}]
+        })
+    });
+});
+
+
+</script>
+

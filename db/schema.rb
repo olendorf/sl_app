@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_21_153031) do
+ActiveRecord::Schema.define(version: 2021_09_23_125259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,6 +101,7 @@ ActiveRecord::Schema.define(version: 2021_09_21_153031) do
     t.integer "user_id"
     t.datetime "expiration_date"
     t.string "position"
+    t.string "current_state"
   end
 
   create_table "analyzable_product_links", force: :cascade do |t|

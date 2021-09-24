@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Analyzable::Parcel, as: 'Parcel', namespace: :my do
-  menu label: 'Parcels'
+  menu label: 'Parcels', if: proc { current_user.parcels.size.positive? }
 
   decorate_with Analyzable::ParcelDecorator
   
@@ -18,7 +18,7 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel', namespace: :my do
       truncate(parcel.description, length: 20, separator: ' ')
     end
     column 'State' do |parcel|
-      parcel.states.last.state.humanize
+      parcel.current_state.humanize
     end
     column 'Current Renter', &:owner_name
     column :expiration_date
@@ -37,6 +37,9 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel', namespace: :my do
   filter :region
   filter :weekly_tier
   filter :expiration_date
+  filter :current_state, as: :check_boxes, 
+                         collection: Analyzable::ParcelState.
+                          states.keys.collect { |k| [k.humanize, k]}
 
   show title: :parcel_name do
     attributes_table do

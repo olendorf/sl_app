@@ -32,7 +32,7 @@ module Async
       counts.collect { |k, v| { x: v, y: durations[k] / 60.0, name: k } }
     end
 
-    # rubocop:disable Metics/AbcSize
+    # rubocop:disable Metrics/AbcSize
     def visits_timeline(ids)
       visits = Analyzable::Visit.where(web_object_id: ids).order(:start_time)
       dates = time_series_dates(visits.first.start_time - 3.days, Time.current)
@@ -52,7 +52,7 @@ module Async
       end
       { dates: dates, counts: counts, durations: durations, visitors: visitors }
     end
-    # rubocop:enable Metics/AbcSize
+    # rubocop:enable Metrics/AbcSize
 
     def visits_heatmap(ids)
       visits = Analyzable::Visit.where(web_object_id: ids).order(:start_time)
@@ -94,16 +94,5 @@ module Async
       { data: data, max: data.collect { |d| d[2] }.max }
     end
     # rubocop:enable Metrics/AbcSize
-
-    # def time_series_dates(start, stop, interval = 1.day)
-    #   dates = []
-    #   step_time = start
-
-    #   while step_time <= stop
-    #     dates << step_time.strftime('%F')
-    #     step_time += interval
-    #   end
-    #   dates
-    # end
   end
 end

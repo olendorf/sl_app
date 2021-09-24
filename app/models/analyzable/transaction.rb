@@ -15,9 +15,10 @@ module Analyzable
     belongs_to :session, optional: true
     belongs_to :inventory, class_name: 'Analyzable::Inventory', optional: true
     belongs_to :product, class_name: 'Analyzable::Product', optional: true
+    belongs_to :parcel, class_name: 'Analyzable::Parcel', optional: true
 
     # belongs_to :web_object, class_name: 'AbstractWebObject', optional: true
 
-    enum category: %i[other account donation tip sale tier share]
+    enum category: %i[other account donation tip sale tier share land_sale]
   end
 end

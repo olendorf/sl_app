@@ -1,19 +1,18 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Analyzable::Parcel, as: 'Parcel' do
-  menu label: 'Parcels'
+ActiveAdmin.register Analyzable::Parcel, as: 'Parcel', namespace: :my do
+  menu label: 'Parcels', if: proc { current_user.parcels.size.positive? }
 
   decorate_with Analyzable::ParcelDecorator
+
+  scope_to :current_user, association_method: :parcels
 
   actions :all, except: %i[new create]
 
   index title: 'Parcels' do
     selectable_column
-    column 'Owner' do |parcel|
-      link_to parcel.user.avatar_name, admin_user_path(parcel.user)
-    end
     column 'Parcel Name' do |parcel|
-      link_to parcel.parcel_name, admin_parcel_path(parcel)
+      link_to parcel.parcel_name, my_parcel_path(parcel)
     end
     column 'Description' do |parcel|
       truncate(parcel.description, length: 20, separator: ' ')
@@ -38,16 +37,12 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel' do
   filter :region
   filter :weekly_tier
   filter :expiration_date
-  filter :user_avatar_name, as: :string, label: 'Owner Name'
   filter :current_state, as: :check_boxes,
                          collection: Analyzable::ParcelState
                            .states.keys.collect { |k| [k.humanize, k] }
 
   show title: :parcel_name do
     attributes_table do
-      row 'Owner' do |parcel|
-        link_to parcel.user.avatar_name, admin_user_path(parcel.user)
-      end
       row :description
       row 'State' do |parcel|
         parcel.states.last.state.humanize

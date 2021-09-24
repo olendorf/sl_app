@@ -10,13 +10,15 @@ RSpec.describe Analyzable::Transaction, type: :model do
   it { should belong_to(:session).optional }
   it { should belong_to(:inventory) }
   it { should belong_to(:product) }
+  it { should belong_to(:parcel).optional }
 
   it { should validate_presence_of :target_name }
   it { should validate_presence_of :target_name }
   it { should validate_numericality_of(:amount).only_integer }
 
   it {
-    should define_enum_for(:category).with_values(%i[other account donation tip sale tier share])
+    should define_enum_for(:category).with_values(%i[other account donation tip sale tier share
+                                                     land_sale])
   }
 
   describe 'balance' do

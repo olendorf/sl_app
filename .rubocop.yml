@@ -35,6 +35,7 @@ Metrics/AbcSize:
   Max: 25
   Exclude:
     - app/controllers/concerns/**/*
+    - app/controllers/async/rentals_controller.rb
     
 Metrics/BlockLength:
   Exclude:
@@ -56,6 +57,7 @@ Metrics/MethodLength:
   Exclude:
     - db/**/*
     - app/controllers/concerns/**/*
+    - app/controllers/async/rentals_controller.rb
     
 Metrics/PerceivedComplexity:
   Max: 15

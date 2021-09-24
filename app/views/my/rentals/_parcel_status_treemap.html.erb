@@ -1,0 +1,53 @@
+<div id="parcel_status_treemap_containter" style="width:1500; height:900px;"></div>
+
+<script type="text/javascript">
+
+$(function() {
+  $.getJSON('/async/rentals',
+              {
+                  chart: 'parcel_status_treemap'
+              },
+              function(data){
+                
+        $('#parcel_status_treemap_containter').highcharts({
+          series: [{
+            type: "treemap",
+            layoutAlgorithm: 'squarified',
+            alternateStartingDirection: true,
+            levels: [{
+                level: 1,
+                layoutAlgorithm: 'squarified',
+                dataLabels: {
+                    enabled: true,
+                    align: 'left',
+                    color: 'black',
+                    verticalAlign: 'top',
+                    style: {
+                        fontSize: '48px',
+                        textOutline: 'none'
+                    }
+                }
+            },{
+                level: 2,
+                layoutAlgorithm: 'squarified',
+                dataLabels: {
+                      enabled: true,
+                      color: 'black',
+                      style: {
+                          fontSize: '24px',
+                          textOutline: 'none'
+                      }
+                  }
+            }],
+            data: data
+        }],
+        title: {
+            text: 'Parcel Statuses By Region'
+        }
+        })
+    });
+});
+
+
+</script>
+

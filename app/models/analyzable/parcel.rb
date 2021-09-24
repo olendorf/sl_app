@@ -11,7 +11,10 @@ module Analyzable
 
     has_one :parcel_box, class_name: 'Rezzable::ParcelBox', inverse_of: :parcel
     belongs_to :user
-    has_many :states, class_name: 'Analyzable::ParcelState', dependent: :destroy
+    has_many :states, class_name: 'Analyzable::ParcelState', dependent: :destroy,
+                      after_add: :set_current_state
+
+    has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify
 
     attr_accessor :tier_payment, :requesting_object, :parcel_box_key
 
@@ -32,6 +35,7 @@ module Analyzable
       end
     end
 
+    # rubocop:disable Naming/AccessorMethodName
     def set_parcel_for_sale
       self.requesting_object = user.parcel_boxes.where(object_key: parcel_box_key).first
       states.last.update(closed_at: Time.current)
@@ -39,6 +43,7 @@ module Analyzable
       handle_parcel_opening
     end
 
+    # rubocop:disable Metrics/AbcSize
     def handle_parcel_owner_change
       parcel_box&.destroy
       states.last.update(closed_at: Time.current)
@@ -47,13 +52,26 @@ module Analyzable
         self.expiration_date = nil
       else
         states << Analyzable::ParcelState.new(state: :occupied, user_id: user.id)
+        user.transactions << Analyzable::Transaction.create(
+          amount: purchase_price,
+          category: :land_sale,
+          target_name: owner_name,
+          target_key: owner_key,
+          parcel_id: id
+        )
         self.expiration_date = 1.week.from_now
       end
     end
 
+    def set_current_state(state)
+      self.current_state = state.state
+    end
+    # rubocop:enable Naming/AccessorMethodName
+
     def handle_tier_payment
       added_time = tier_payment.to_f / weekly_tier
-      # requesting_object = AbstractWebObject.find_by_object_key(tier_payment['object_key'])
+
+      self.expiration_date = Time.current if expiration_date.nil?
       self.expiration_date = expiration_date + 1.week.to_i * added_time
       user.transactions << Analyzable::Transaction.create(
         amount: tier_payment,
@@ -63,8 +81,12 @@ module Analyzable
         source_name: requesting_object.object_name,
         source_type: 'tier_station',
         category: 'tier',
+        transactable_id: requesting_object.id,
+        transactable_type: 'Rezzable::TierStation',
+        parcel_id: id,
         description: "Tier payment from #{owner_name}"
       )
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end

@@ -26,6 +26,7 @@ install:
   - bundle install
   - nvm install node
   - npm install @popperjs/core --save
+  - npx browserslist@latest --update-db
   # - node -v
   # - npm i -g yarn
   # - yarn

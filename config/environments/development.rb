@@ -78,6 +78,7 @@ Rails.application.configure do
 
   # allows cloud nine
   config.hosts << 'be0f165895ee4035b9be940cc9687901.vfs.cloud9.us-east-2.amazonaws.com'
+  config.hosts << "38787ca1462d4917b9ccd26e8081b30c.vfs.cloud9.us-east-2.amazonaws.com"
 
   # Show full error reports.
   config.consider_all_requests_local = true
@@ -124,6 +125,8 @@ Rails.application.configure do
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true
+  
+  config.assets.check_precompiled_asset = false
 
   # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true

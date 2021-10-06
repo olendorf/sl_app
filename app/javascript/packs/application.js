@@ -7,9 +7,9 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
-require("@popperjs/core")
+require("../src/popper.min")
 
-import "../src/bootstrap.min"
+require("../src/bootstrap.min")
 
 require("../src/jquery").start()
 // require("../src/popper.min")

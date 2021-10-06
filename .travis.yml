@@ -26,7 +26,7 @@ install:
   - bundle install
   - nvm install node
   - npm install @popperjs/core --save
-  - npm install --save jquery
+  - npm install jquery --save
   - npx browserslist@latest --update-db
   # - node -v
   # - npm i -g yarn

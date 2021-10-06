@@ -9,7 +9,7 @@ require("@rails/activestorage").start()
 require("channels")
 require("@popperjs/core")
 
-import "./src/bootstrap"
+import "../src/bootstrap"
 
 require("../src/jquery").start()
 // require("../src/popper.min")

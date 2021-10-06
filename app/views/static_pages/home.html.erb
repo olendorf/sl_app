@@ -1,18 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--<meta charset="utf-8">-->
+<!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">-->
 
-<title>Detox - HTML 5 Template Preview</title>
+<!--<title>Detox - HTML 5 Template Preview</title>-->
 
 <!-- Fav Icon -->
-<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+<!--<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">-->
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Poppins:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&display=swap" rel="stylesheet">
+<!--<link href="https://fonts.googleapis.com/css?family=Poppins:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">-->
+<!--<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&display=swap" rel="stylesheet">-->
 
 <!-- Stylesheets -->
 <!--<link href="assets/css/font-awesome-all.css" rel="stylesheet">-->
@@ -28,11 +28,11 @@
 <!--<link href="assets/css/style.css" rel="stylesheet">-->
 <!--<link href="assets/css/responsive.css" rel="stylesheet">-->
 
-</head>
+<!--</head>-->
 
 
 <!-- page wrapper -->
-<body class="boxed_wrapper ltr">
+<!--<body class="boxed_wrapper ltr">-->
 
 
 
@@ -42,7 +42,7 @@
             <div class="header-upper clearfix">
                 <div class="outer-box pull-left">
                     <div class="logo-box pull-left">
-                        <figure class="logo"><a href="index.html"><img src="assets/images/logo.png" alt=""></a></figure>
+                        <figure class="logo"><a href="index.html"><%= image_tag("logo.png",  alt: "" )%></a></figure>
                     </div>
                     <div class="menu-area pull-left">
                         <!--Mobile Navigation Toggler-->
@@ -175,7 +175,7 @@
         <!--sticky Header-->
         <div class="sticky-header">
             <div class="container clearfix">
-                <figure class="logo-box"><a href="index.html"><img src="assets/images/small-logo.png" alt=""></a></figure>
+                <figure class="logo-box"><a href="index.html"><%= image_tag("small-logo.png", alt: "") %></a></figure>
                 <div class="menu-area">
                     <nav class="main-menu clearfix">
                         <!--Keep This Empty / Menu will come through Javascript-->
@@ -192,7 +192,7 @@
         <div class="close-btn"><i class="fas fa-times"></i></div>
         
         <nav class="menu-box">
-            <div class="nav-logo"><a href="index.html"><img src="assets/images/logo-2.png" alt="" title=""></a></div>
+            <div class="nav-logo"><a href="index.html"><%= image_tag("logo-2.png", alt: "", title: "") %></a></div>
             <div class="menu-outer"><!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header--></div>
             <div class="contact-info">
                 <h4>Contact Info</h4>
@@ -218,8 +218,8 @@
     <!-- banner-section -->
     <section class="banner-section">
         <div class="pattern-box">
-            <div class="pattern-1 wow slideInDown" data-wow-delay="500ms" data-wow-duration="1500ms" style="background-image: url(assets/images/shape/pattern-1.png);"></div>
-            <div class="pattern-2" style="background-image: url(assets/images/shape/pattern-2.png);"></div>
+            <div class="pattern-1 wow slideInDown" data-wow-delay="500ms" data-wow-duration="1500ms" style="background-image: url(<%= asset_path 'shape/pattern-1.png' %>);"></div>
+            <div class="pattern-2" style="background-image: url(<%= asset_path 'shape/pattern-2.png' %>"></div>
         </div>
         <div class="auto-container">
             <div class="row clearfix">
@@ -235,11 +235,11 @@
                 </div>
                 <div class="col-lg-6 col-md-12 col-sm-12 image-column">
                     <div class="image-box wow slideInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
-                        <figure class="image image-1"><img src="assets/images/banner/banner-1.png" alt=""></figure>
-                        <figure class="image image-2 float-bob-y"><img src="assets/images/banner/banner-2.png" alt=""></figure>
-                        <figure class="image image-3 wow slideInDown" data-wow-delay="500ms" data-wow-duration="1500ms"><img src="assets/images/banner/banner-5.png" alt=""></figure>
-                        <figure class="image image-4"><img src="assets/images/banner/banner-3.png" alt=""></figure>
-                        <figure class="image image-5 rotate-me"><img src="assets/images/banner/banner-4.png" alt=""></figure>
+                        <figure class="image image-1"><%= image_tag("banner/banner-1.png",  alt: "") %></figure>
+                        <figure class="image image-2 float-bob-y"><%= image_tag("banner/banner-2.png", alt: "") %></figure>
+                        <figure class="image image-3 wow slideInDown" data-wow-delay="500ms" data-wow-duration="1500ms"><%= image_tag("banner/banner-5.png", alt: "") %></figure>
+                        <figure class="image image-4"><%= image_tag("banner/banner-3.png", alt: "") %></figure>
+                        <figure class="image image-5 rotate-me"><%= image_tag("banner/banner-4.png", alt: "") %></figure>
                     </div>
                 </div>
             </div>
@@ -316,7 +316,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-12 image-column">
                     <div id="image_block_01">
                         <div class="image-box wow slideInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <figure class="image js-tilt"><img src="assets/images/resource/illustration-2.png" alt=""></figure>
+                            <figure class="image js-tilt"><%= image_tag("resource/illustration-2.png", alt: "") %></figure>
                         </div>
                     </div>
                 </div>
@@ -348,7 +348,7 @@
     <!-- process-section -->
     <section class="process-section bg-color-1">
         <div class="pattern-box">
-            <div class="pattern-1 wow slideInDown animated" data-wow-delay="500ms" data-wow-duration="1500ms" style="background-image: url(assets/images/shape/pattern-3.png)"></div>
+            <div class="pattern-1 wow slideInDown animated" data-wow-delay="500ms" data-wow-duration="1500ms" style="background-image: url(<%= asset_path 'shape/pattern-3.png' %>"></div>
         </div>
         <div class="auto-container">
             <div class="row clearfix">
@@ -385,7 +385,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-12 image-column">
                     <div id="image_block_02">
                         <div class="image-box wow slideInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <figure class="image js-tilt"><img src="assets/images/resource/illustration-3.png" alt=""></figure>
+                            <figure class="image js-tilt"><%= image_tag("resource/illustration-3.png", alt: "") %></figure>
                         </div>
                     </div>
                 </div>
@@ -466,8 +466,8 @@
     <!-- testimonial-section -->
     <section class="testimonial-section">
         <div class="pattern-box">
-            <div class="pattern-1 wow slideInLeft animated" data-wow-delay="500ms" data-wow-duration="1500ms" style="background-image: url(assets/images/shape/pattern-4.png)"></div>
-            <div class="pattern-2" style="background-image: url(assets/images/shape/pattern-2.png)"></div>
+            <div class="pattern-1 wow slideInLeft animated" data-wow-delay="500ms" data-wow-duration="1500ms" style="background-image: url(<%= asset_path 'shape/pattern-4.png' %>"></div>
+            <div class="pattern-2" style="background-image: url(<%= asset_path 'shape/pattern-2.png' %>"></div>
         </div>
         <div class="auto-container">
             <div class="testimonial-carousel owl-carousel owl-theme owl-dots-none owl-nav-none">
@@ -476,7 +476,7 @@
                         <div class="testimonial-inner">
                             <div class="row align-items-center clearfix">
                                 <div class="col-lg-6 col-md-6 col-sm-12 image-column">
-                                    <figure class="image-box"><img src="assets/images/resource/testimonial-1.jpg" alt=""></figure>
+                                    <figure class="image-box"><%= image_tag("resource/testimonial-1.jpg", alt: "") %></figure>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 content-column">
                                     <div class="content-box">
@@ -503,7 +503,7 @@
                         <div class="testimonial-inner">
                             <div class="row align-items-center clearfix">
                                 <div class="col-lg-6 col-md-6 col-sm-12 image-column">
-                                    <figure class="image-box"><img src="assets/images/resource/testimonial-1.jpg" alt=""></figure>
+                                    <figure class="image-box"><%= image_tag("resource/testimonial-1.jpg", alt: "") %></figure>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 content-column">
                                     <div class="content-box">
@@ -530,7 +530,7 @@
                         <div class="testimonial-inner">
                             <div class="row align-items-center clearfix">
                                 <div class="col-lg-6 col-md-6 col-sm-12 image-column">
-                                    <figure class="image-box"><img src="assets/images/resource/testimonial-1.jpg" alt=""></figure>
+                                    <figure class="image-box"><%= image_tag("resource/testimonial-1.jpg", alt: "") %></figure>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 content-column">
                                     <div class="content-box">
@@ -571,7 +571,7 @@
                         <div class="inner-box">
                             <div class="image-holder">
                                 <figure class="image-box">
-                                    <img src="assets/images/gallery/project-1.jpg" alt="">
+                                    <%= image_tag("gallery/project-1.jpg", alt: "") %>
                                 </figure>
                                 <a href="assets/images/gallery/project-1.jpg" class="lightbox-image view-btn" data-fancybox="gallery"><i class="fas fa-search-plus"></i></a>
                             </div>
@@ -587,7 +587,7 @@
                         <div class="inner-box">
                             <div class="image-holder">
                                 <figure class="image-box">
-                                    <img src="assets/images/gallery/project-2.jpg" alt="">
+                                    <%= image_tag("gallery/project-2.jpg", alt: "") %>
                                 </figure>
                                 <a href="assets/images/gallery/project-2.jpg" class="lightbox-image view-btn" data-fancybox="gallery"><i class="fas fa-search-plus"></i></a>
                             </div>
@@ -603,7 +603,7 @@
                         <div class="inner-box">
                             <div class="image-holder">
                                 <figure class="image-box">
-                                    <img src="assets/images/gallery/project-3.jpg" alt="">
+                                    <%= image_tag("gallery/project-3.jpg", alt: "") %>
                                 </figure>
                                 <a href="assets/images/gallery/project-3.jpg" class="lightbox-image view-btn" data-fancybox="gallery"><i class="fas fa-search-plus"></i></a>
                             </div>
@@ -619,7 +619,7 @@
                         <div class="inner-box">
                             <div class="image-holder">
                                 <figure class="image-box">
-                                    <img src="assets/images/gallery/project-4.jpg" alt="">
+                                    <%= image_tag("gallery/project-4.jpg", alt: "") %>
                                 </figure>
                                 <a href="assets/images/gallery/project-4.jpg" class="lightbox-image view-btn" data-fancybox="gallery"><i class="fas fa-search-plus"></i></a>
                             </div>
@@ -635,7 +635,7 @@
                         <div class="inner-box">
                             <div class="image-holder">
                                 <figure class="image-box">
-                                    <img src="assets/images/gallery/project-5.jpg" alt="">
+                                    <%= image_tag("gallery/project-5.jpg", alt: "") %>
                                 </figure>
                                 <a href="assets/images/gallery/project-5.jpg" class="lightbox-image view-btn" data-fancybox="gallery"><i class="fas fa-search-plus"></i></a>
                             </div>
@@ -651,7 +651,7 @@
                         <div class="inner-box">
                             <div class="image-holder">
                                 <figure class="image-box">
-                                    <img src="assets/images/gallery/project-6.jpg" alt="">
+                                    <%= image_tag("gallery/project-6.jpg", alt: "") %>
                                 </figure>
                                 <a href="assets/images/gallery/project-6.jpg" class="lightbox-image view-btn" data-fancybox="gallery"><i class="fas fa-search-plus"></i></a>
                             </div>
@@ -672,17 +672,17 @@
     <section class="clients-section bg-color-1">
         <div class="auto-container">
             <div class="clients-carousel-1 owl-carousel owl-theme owl-dots-none owl-nav-none">
-                <figure class="clients-logo"><a href="index.html"><img src="assets/images/clients/logo-1.png" alt=""></a></figure>
-                <figure class="clients-logo"><a href="index.html"><img src="assets/images/clients/logo-2.png" alt=""></a></figure>
-                <figure class="clients-logo"><a href="index.html"><img src="assets/images/clients/logo-3.png" alt=""></a></figure>
-                <figure class="clients-logo"><a href="index.html"><img src="assets/images/clients/logo-4.png" alt=""></a></figure>
-                <figure class="clients-logo"><a href="index.html"><img src="assets/images/clients/logo-5.png" alt=""></a></figure>
+                <figure class="clients-logo"><a href="index.html"><%= image_tag("clients/logo-1.png", alt: "") %></a></figure>
+                <figure class="clients-logo"><a href="index.html"><%= image_tag("clients/logo-2.png", alt: "") %></a></figure>
+                <figure class="clients-logo"><a href="index.html"><%= image_tag("clients/logo-3.png", alt: "") %></a></figure>
+                <figure class="clients-logo"><a href="index.html"><%= image_tag("clients/logo-4.png", alt: "") %></a></figure>
+                <figure class="clients-logo"><a href="index.html"><%= image_tag("clients/logo-5.png", alt: "") %></a></figure>
             </div>
             <div class="clients-carousel-2 owl-carousel owl-theme owl-dots-none owl-nav-none">
-                <figure class="clients-logo"><a href="index.html"><img src="assets/images/clients/logo-6.png" alt=""></a></figure>
-                <figure class="clients-logo"><a href="index.html"><img src="assets/images/clients/logo-7.png" alt=""></a></figure>
-                <figure class="clients-logo"><a href="index.html"><img src="assets/images/clients/logo-8.png" alt=""></a></figure>
-                <figure class="clients-logo"><a href="index.html"><img src="assets/images/clients/logo-9.png" alt=""></a></figure>
+                <figure class="clients-logo"><a href="index.html"><%= image_tag("clients/logo-6.png", alt: "") %></a></figure>
+                <figure class="clients-logo"><a href="index.html"><%= image_tag("clients/logo-7.png", alt: "") %></a></figure>
+                <figure class="clients-logo"><a href="index.html"><%= image_tag("clients/logo-8.png", alt: "") %></a></figure>
+                <figure class="clients-logo"><a href="index.html"><%= image_tag("clients/logo-9.png", alt: "") %></a></figure>
             </div>
         </div>
     </section>
@@ -691,7 +691,7 @@
 
     <!-- pricing-section -->
     <section class="pricing-section">
-        <div class="pattern-layer wow slideInRight animated" data-wow-delay="500ms" data-wow-duration="1500ms" style="background-image: url(assets/images/shape/pattern-6.png)"></div>
+        <div class="pattern-layer wow slideInRight animated" data-wow-delay="500ms" data-wow-duration="1500ms" style="background-image: url(<%= asset_path 'shape/pattern-6.png' %>"></div>
         <div class="auto-container">
             <div class="sec-title">
                 <p>Pricing Table</p>
@@ -715,7 +715,7 @@
                             <div class="col-lg-4 col-md-6 col-sm-12 pricing-block">
                                 <div class="pricing-block-one">
                                     <div class="pricing-table js-tilt">
-                                        <div class="pattern-box" style="background-image: url(assets/images/shape/pattern-5.png);"></div>
+                                        <div class="pattern-box" style="background-image: url(<%= asset_path 'shape/pattern-5.png' %>"></div>
                                         <div class="table-header">
                                             <h5>Basic Plan</h5>
                                             <h2>$20.00</h2>
@@ -739,7 +739,7 @@
                             <div class="col-lg-4 col-md-6 col-sm-12 pricing-block">
                                 <div class="pricing-block-one active_block">
                                     <div class="pricing-table js-tilt">
-                                        <div class="pattern-box" style="background-image: url(assets/images/shape/pattern-5.png);"></div>
+                                        <div class="pattern-box" style="background-image: url(<%= asset_path 'shape/pattern-5.png' %>"></div>
                                         <div class="table-header">
                                             <h5>Standard Plan</h5>
                                             <h2>$30.00</h2>
@@ -763,7 +763,7 @@
                             <div class="col-lg-4 col-md-6 col-sm-12 pricing-block">
                                 <div class="pricing-block-one">
                                     <div class="pricing-table js-tilt">
-                                        <div class="pattern-box" style="background-image: url(assets/images/shape/pattern-5.png);"></div>
+                                        <div class="pattern-box" style="background-image: url(<%= asset_path 'shape/pattern-5.png' %>"></div>
                                         <div class="table-header">
                                             <h5>Premium Plan</h5>
                                             <h2>$50.00</h2>
@@ -791,7 +791,7 @@
                             <div class="col-lg-4 col-md-6 col-sm-12 pricing-block">
                                 <div class="pricing-block-one">
                                     <div class="pricing-table js-tilt">
-                                        <div class="pattern-box" style="background-image: url(assets/images/shape/pattern-5.png);"></div>
+                                        <div class="pattern-box" style="background-image: url(<%= asset_path 'shape/pattern-5.png' %>"></div>
                                         <div class="table-header">
                                             <h5>Basic Plan</h5>
                                             <h2>$50.00</h2>
@@ -815,7 +815,7 @@
                             <div class="col-lg-4 col-md-6 col-sm-12 pricing-block">
                                 <div class="pricing-block-one active_block">
                                     <div class="pricing-table js-tilt">
-                                        <div class="pattern-box" style="background-image: url(assets/images/shape/pattern-5.png);"></div>
+                                        <div class="pattern-box" style="background-image: url(<%= asset_path 'shape/pattern-5.png' %>"></div>
                                         <div class="table-header">
                                             <h5>Standard Plan</h5>
                                             <h2>$70.00</h2>
@@ -839,7 +839,7 @@
                             <div class="col-lg-4 col-md-6 col-sm-12 pricing-block">
                                 <div class="pricing-block-one">
                                     <div class="pricing-table js-tilt">
-                                        <div class="pattern-box" style="background-image: url(assets/images/shape/pattern-5.png);"></div>
+                                        <div class="pattern-box" style="background-image: url(<%= asset_path 'shape/pattern-5.png' %>"></div>
                                         <div class="table-header">
                                             <h5>Premium Plan</h5>
                                             <h2>$90.00</h2>
@@ -871,7 +871,7 @@
 
     <!-- news-section -->
     <section class="news-section">
-        <div class="pattern-layer wow slideInRight animated" data-wow-delay="500ms" data-wow-duration="1500ms" style="background-image: url(assets/images/shape/pattern-2.png)"></div>
+        <div class="pattern-layer wow slideInRight animated" data-wow-delay="500ms" data-wow-duration="1500ms" style="background-image: url(<%= asset_path 'shape/pattern-2.png' %>)"></div>
         <div class="auto-container">
             <div class="sec-title text-center">
                 <p>Recent Article</p>
@@ -882,7 +882,7 @@
                     <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
                         <div class="inner-box">
                             <div class="image-holder">
-                                <figure class="image-box"><img src="assets/images/news/news-1.jpg" alt=""></figure>
+                                <figure class="image-box"><%= image_tag("news/news-1.jpg", alt: "") %></figure>
                                 <div class="post-date"><i class="fas fa-calendar-alt"></i><p>Dec 23</p></div>
                                 <div class="link"><a href="blog-details.html"><i class="fas fa-arrow-right"></i></a></div>
                             </div>
@@ -901,7 +901,7 @@
                     <div class="news-block-one wow fadeInUp" data-wow-delay="300ms" data-wow-duration="1500ms">
                         <div class="inner-box">
                             <div class="image-holder">
-                                <figure class="image-box"><img src="assets/images/news/news-2.jpg" alt=""></figure>
+                                <figure class="image-box"><%= image_tag("news/news-2.jpg", alt: "") %></figure>
                                 <div class="post-date"><i class="fas fa-calendar-alt"></i><p>Dec 22</p></div>
                                 <div class="link"><a href="blog-details.html"><i class="fas fa-arrow-right"></i></a></div>
                             </div>
@@ -920,7 +920,7 @@
                     <div class="news-block-one wow fadeInUp" data-wow-delay="600ms" data-wow-duration="1500ms">
                         <div class="inner-box">
                             <div class="image-holder">
-                                <figure class="image-box"><img src="assets/images/news/news-3.jpg" alt=""></figure>
+                                <figure class="image-box"><%= image_tag("news/news-3.jpg", alt: "") %></figure>
                                 <div class="post-date"><i class="fas fa-calendar-alt"></i><p>Dec 21</p></div>
                                 <div class="link"><a href="blog-details.html"><i class="fas fa-arrow-right"></i></a></div>
                             </div>
@@ -944,8 +944,8 @@
     <!-- cta-section -->
     <section class="cta-section bg-color-2">
         <div class="pattern-box">
-            <div class="pattern-1" style="background-image: url(assets/images/shape/pattern-7.png);"></div>
-            <div class="pattern-2" style="background-image: url(assets/images/shape/pattern-8.png);"></div>
+            <div class="pattern-1" style="background-image: url(<%= asset_path 'shape/pattern-7.png' %>);"></div>
+            <div class="pattern-2" style="background-image: url(<%= asset_path 'shape/pattern-8.png' %>);"></div>
         </div>
         <div class="auto-container">
             <div class="content-box text-center wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
@@ -965,7 +965,7 @@
                     <div class="row clearfix">
                         <div class="col-lg-3 col-md-6 col-sm-12 footer-column">
                             <div class="footer-widget logo-widget">
-                                <figure class="footer-logo"><a href="index.html"><img src="assets/images/footer-logo.png" alt=""></a></figure>
+                                <figure class="footer-logo"><a href="index.html"><%= image_tag("footer-logo.png", alt: "") %></a></figure>
                                 <div class="text">
                                     <p>Lorem ipsum dolor amet consectetur adipielit sed eiusm tempor incididunt ut labore dolore.</p>
                                 </div>
@@ -1048,22 +1048,22 @@
 
 
 <!-- jequery plugins -->
-<script src="assets/js/jquery.js"></script>
-<script src="assets/js/popper.min.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
-<script src="assets/js/owl.js"></script>
-<script src="assets/js/wow.js"></script>
-<script src="assets/js/validation.js"></script>
-<script src="assets/js/jquery.fancybox.js"></script>
-<script src="assets/js/appear.js"></script>
-<script src="assets/js/scrollbar.js"></script>
-<script src="assets/js/tilt.jquery.js"></script>
-<script src="assets/js/jQuery.style.switcher.min.js"></script>
-<script src="assets/js/plugins.js"></script>
-<script src="assets/js/text_animation.js"></script>
+<!--<script src="assets/js/jquery.js"></script>-->
+<!--<script src="assets/js/popper.min.js"></script>-->
+<!--<script src="assets/js/bootstrap.min.js"></script>-->
+<!--<script src="assets/js/owl.js"></script>-->
+<!--<script src="assets/js/wow.js"></script>-->
+<!--<script src="assets/js/validation.js"></script>-->
+<!--<script src="assets/js/jquery.fancybox.js"></script>-->
+<!--<script src="assets/js/appear.js"></script>-->
+<!--<script src="assets/js/scrollbar.js"></script>-->
+<!--<script src="assets/js/tilt.jquery.js"></script>-->
+<!--<script src="assets/js/jQuery.style.switcher.min.js"></script>-->
+<!--<script src="assets/js/plugins.js"></script>-->
+<!--<script src="assets/js/text_animation.js"></script>-->
 
 <!-- main-js -->
-<script src="assets/js/script.js"></script>
+<!--<script src="assets/js/script.js"></script>-->
 
-</body><!-- End of .page_wrapper -->
-</html>
+<!--</body><!-- End of .page_wrapper -->-->
+<!--</html>-->

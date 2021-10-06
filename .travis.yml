@@ -25,6 +25,7 @@ cache:
 install:
   - bundle install
   - nvm install node
+  - npm install @popperjs/core --save
   # - node -v
   # - npm i -g yarn
   # - yarn

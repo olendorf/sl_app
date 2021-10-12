@@ -151,7 +151,8 @@ RSpec.describe Analyzable::Parcel, type: :model do
     it 'should update the expiration date' do
       parcel = user.parcels.find_by_owner_key(renter.avatar_key)
       parcel.update(tier_payment: (3 * parcel.weekly_tier), requesting_object: tier_station)
-      expect(parcel.expiration_date).to be_within(10.seconds).of(
+      # Test fails when the extension spans over daylights savings time shift.
+      expect(parcel.expiration_date).to be_within(2.hours).of(
         4.weeks.from_now
       )
     end

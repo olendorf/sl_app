@@ -1,0 +1,32 @@
+.main-header .logo {
+    font-size: 28px;
+}
+
+.logo .highlight {
+    color: $secondary-color;
+}
+
+
+
+.main-menu .navigation  li.active  a {
+    font-weight: 900;
+    font-size: 24px;
+    text-decoration: underline;
+}
+
+.main-menu .navigation.user-nav li {
+    a {
+        color: $primary-color;
+        &:hover {
+            color: $secondary-color;
+        }
+    }
+    
+    ul {
+        background: $primary-color;
+        li a {
+            color: $muted-primary;
+        }
+    }
+} 
+

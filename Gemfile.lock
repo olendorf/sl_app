@@ -473,14 +473,14 @@ DEPENDENCIES
   guard-rspec
   guard-spring
   highcharts-rails
-  jbuilder (~> 2.7)
+  jbuilder
   jquery-rails
   listen
   paper_trail
   pg
-  puma (~> 4.1)
+  puma
   pundit
-  rails (~> 6.0.3, >= 6.0.3.4)
+  rails
   rest-client
   rspec-rails
   sass-rails
@@ -490,14 +490,14 @@ DEPENDENCIES
   spring-commands-rspec
   spring-watcher-listen
   time_diff
-  turbolinks (~> 5)
+  turbolinks
   web-console
   webdrivers
   webmock
-  webpacker (~> 4.0)
+  webpacker
 
 RUBY VERSION
    ruby 2.6.3p62
 
 BUNDLED WITH
-   2.2.4
+   2.2.28

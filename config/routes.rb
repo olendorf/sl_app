@@ -3,15 +3,19 @@
 require 'api_constraints'
 
 Rails.application.routes.draw do
-  devise_for :users, ActiveAdmin::Devise.config
-  ActiveAdmin.routes(self)
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
-  root to: 'static_pages#home'
+  root to: 'pages#home'
 
-  get 'static_pages/home' => 'static_pages#home'
-
-  # get 'async/donations' => 'async/donations#get'
+  get 'pages/home' => 'pages#home'
+  get 'pages/products' => 'pages#products'
+  get 'pages/pricing' => 'pages#pricing'
+  get 'pages/documentation' => 'pages#documentation'
+  get 'pages/faqs' => 'pages#faqs'
+  
+  
+  devise_for :users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
 
   namespace :async, defaults: { format: 'json' } do
     resources :donations, only: [:index]

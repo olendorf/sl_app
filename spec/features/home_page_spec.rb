@@ -44,6 +44,7 @@ RSpec.feature 'Home page features', type: :feature do
       visit pages_home_path
       click_on('Logout')
       expect(page).to have_content('Signed out successfully.') 
+      expect(page).to have_current_path(root_path)
     end
   end
 

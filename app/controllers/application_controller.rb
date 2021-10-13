@@ -7,7 +7,6 @@ class ApplicationController < ActionController::Base
   before_action :set_paper_trail_whodunnit
   
   def after_sign_out_path_for(resource_or_scope)
-    puts "signout patch called"
     '/'
   end
 

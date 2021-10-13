@@ -39,6 +39,12 @@ RSpec.feature 'Home page features', type: :feature do
       expect(page).to have_link('My stuff', href: my_dashboard_path)
       expect(page).to have_link('Admin stuff', href: admin_dashboard_path)
     end
+    
+    scenario " user signs out" do 
+      visit pages_home_path
+      click_on('Logout')
+      expect(page).to have_content('Signed out successfully.') 
+    end
   end
 
   context 'user is logged in' do

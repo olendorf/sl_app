@@ -1,5 +1,5 @@
 
-<div id="visits_container" style="width:600px; height:400px;" %></div>
+<div id="visitors_counts_container" style="width:600px; height:400px;" %></div>
 
 <script type="text/javascript">
 
@@ -8,15 +8,20 @@
                 $.getJSON('/async/visits', 
                                 {
                                     ids: gon.ids,
-                                    chart: 'visits_histogram'
+                                    chart: 'visitors_counts_histogram'
                                 },
                                 function(data) {
 
                     // draw chart
-                     $('#visits_container').highcharts({ 
+                     $('#visitors_counts_container').highcharts({ 
+                        chart: {
+                            style: {
+                              fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                            }
+                        },
                     
                         title: {
-                            text: 'Frequency of Visit Durations'
+                            text: 'Number of Visits'
                             // text: gon.ids
                         },
                     
@@ -24,7 +29,7 @@
                             alignTicks: false,
                             visible: false
                         }, {
-                            title: { text: 'Visit Duration (minutes)' },
+                            title: { text: 'Number of Visits' },
                             alignTicks: false
                         }],
                     

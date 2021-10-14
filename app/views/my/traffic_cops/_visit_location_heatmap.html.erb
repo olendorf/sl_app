@@ -16,10 +16,10 @@
                      $('#visit_location_container').highcharts({ 
                         chart: {
                             type: 'heatmap',
-                            zoomType: 'xy'
-                            // marginTop: 40,
-                            // marginBottom: 80,
-                            // plotBorderWidth: 1
+                            zoomType: 'xy',
+                            style: {
+                              fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                            },
                         },
                         boost: {
                             useGPUTranslations: true
@@ -38,32 +38,6 @@
                             title: null,
                             endOnTick: false
                         },
-                        //     categories: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 
-                        //                     'Thursday', 'Friday', 'Saturday']
-                        // },
-                    
-                        // yAxis: {
-                        //     categories: [
-                        //                     '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', 
-                        //                     '8 AM', '9 AM', '10 AM', '11 AM', 'Noon', '1 PM', 
-                        //                     '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', 
-                        //                     '8 PM', '9 PM', '10 PM', '11 PM', '12 PM'
-                        //                 ]
-                            // title: null,
-                        //     // reversed: true
-                        // },
-                    
-                        // accessibility: {
-                        //     point: {
-                        //         descriptionFormatter: function (point) {
-                        //             var ix = point.index + 1,
-                        //                 xName = getPointCategoryName(point, 'x'),
-                        //                 yName = getPointCategoryName(point, 'y'),
-                        //                 val = point.value;
-                        //             return ix + '. ' + xName + ' sales ' + yName + ', ' + val + '.';
-                        //         }
-                        //     }
-
                     
                         legend: {
                             align: 'right',
@@ -90,23 +64,11 @@
                             }
                         },
                     
-                        // tooltip: {
-                        //     formatter: function () {
-                        //         return '<b>' + getPointCategoryName(this.point, 'x') + '</b> sold <br><b>' +
-                        //             this.point.value + '</b> items on <br><b>' + getPointCategoryName(this.point, 'y') + '</b>';
-                        //     }
-                        // },
-                    
                         series: [{
                             name: 'Location of Visits',
                             borderWidth: 0,
                             data: data.data,
                             boostThreshold: 500,  // Boost when there are more than 1
-                            // point in the series.
-                            // dataLabels: {
-                            //     enabled: true,
-                            //     color: '#000000'
-                            // }
                         }]
 
                     }); 

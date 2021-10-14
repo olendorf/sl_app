@@ -12,7 +12,7 @@ module Async
 
     def parcel_status_treemap
       color_map = {
-        'open' => '#EC2500', 'for_sale' => '#EC9800', 'occupied' => '#9EDE00'
+        'open' => '#FF0D0D', 'for_sale' => '#FAB733', 'occupied' => '#ACB334'
       }
       states = Analyzable::ParcelState.states.keys
       regions = {}
@@ -103,7 +103,8 @@ module Async
       end
       transactions.each do |transaction|
         data[transaction.parcel.region][
-          transaction.created_at.strftime('%B %Y')] += transaction.amount
+          transaction.created_at.strftime('%B %Y')] += transaction.amount if data[transaction.parcel.region][
+          transaction.created_at.strftime('%B %Y')] 
       end
       chart_data = { dates: dates, data: [], colors: generate_color_map(regions).values }
       data.each do |region, d|

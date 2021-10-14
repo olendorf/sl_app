@@ -2,6 +2,8 @@ default:
   site_url: "http://example.com"
   
   visit_us_slurl: "maps.secondlife.com/secondlife/Facilis%20Quis%20Qui/148/10/2297/"
+  chart:
+    font: 'Arial, Helvetica, Clean, sans-serif'
   account:
     monthly_cost: 300
     weight_limit: 100

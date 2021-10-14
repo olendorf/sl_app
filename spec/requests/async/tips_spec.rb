@@ -113,7 +113,7 @@ RSpec.describe 'Async::Tips', type: :request do
 
       it 'should return the data' do
         get path, params: { chart: 'tips_timeline' }
-        expect(JSON.parse(response.body)['counts']).to eq [0, 0, 0, 200]
+        expect(JSON.parse(response.body)['counts']).to eq [0, 200]
         expect(JSON.parse(response.body)['amounts'].size).to be > 0
       end
     end

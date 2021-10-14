@@ -13,11 +13,16 @@ $(function() {
             chart: {
                 type: 'area',
                 marginBottom: 100,
-                zoomType: 'x'
+                zoomType: 'x',
+                style: {
+                    fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                }
             },
             title: {
-              floating: true,
-              align: 'left', 
+              // floating: true,
+              marginTop: 100,
+              marginBottom: 40,
+              // align: 'left', 
               text: 'Items Sold Over Time Broken Down By Product'
             },
             colors: data.colors,
@@ -42,8 +47,11 @@ $(function() {
             // endOnTick: false
           },
           legend: {
-            enabled: true,
-            verticalAlign: 'top'
+            layout: 'vertical',
+            verticalAlign: 'middle',
+            align: 'right',
+            enabled: true
+            // verticalAlign: 'top'
           },
           plotOptions: {
               area: {

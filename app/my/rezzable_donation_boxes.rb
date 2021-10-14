@@ -154,8 +154,8 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
   end
 
   controller do
-    # def scoped_collection
-    # super.includes(%i[transactions])
-    # end
+    def scoped_collection
+      super.includes(%i[transactions])
+    end
   end
 end

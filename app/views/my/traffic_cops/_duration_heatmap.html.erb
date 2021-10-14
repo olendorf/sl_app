@@ -15,11 +15,10 @@
                     // draw chart
                      $('#duration_heatmap_container').highcharts({ 
                         chart: {
-                            type: 'heatmap'
-                            // marginTop: 40,
-                            // marginBottom: 80,
-                            // plotBorderWidth: 1
-
+                            type: 'heatmap',
+                            style: {
+                              fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                            },
                         },
                     
                     
@@ -43,18 +42,6 @@
                             // reversed: true
                         },
                     
-                        // accessibility: {
-                        //     point: {
-                        //         descriptionFormatter: function (point) {
-                        //             var ix = point.index + 1,
-                        //                 xName = getPointCategoryName(point, 'x'),
-                        //                 yName = getPointCategoryName(point, 'y'),
-                        //                 val = point.value;
-                        //             return ix + '. ' + xName + ' sales ' + yName + ', ' + val + '.';
-                        //         }
-                        //     }
-                        // },
-                    
                         colorAxis: {
                             min: 0,
                             minColor: '#FFFFFF',
@@ -70,21 +57,10 @@
                             symbolHeight: 280
                         },
                     
-                        // tooltip: {
-                        //     formatter: function () {
-                        //         return '<b>' + getPointCategoryName(this.point, 'x') + '</b> sold <br><b>' +
-                        //             this.point.value + '</b> items on <br><b>' + getPointCategoryName(this.point, 'y') + '</b>';
-                        //     }
-                        // },
-                    
                         series: [{
                             name: 'Time Spent By Time and Day',
                             borderWidth: 1,
                             data: data
-                            // dataLabels: {
-                            //     enabled: true,
-                            //     color: '#000000'
-                            // }
                         }]
 
                     }); 

@@ -114,11 +114,13 @@ module Async
     def sales_timeline(sales)
       dates = time_series_dates(sales.first.created_at - 3.days, Time.current)
       counts = Array.new(dates.size, 0)
+      revenue = Array.new(dates.size, 0)
       sales.each do |s|
         index = dates.index(s.created_at.strftime('%F'))
         counts[index] += 1
+        revenue[index] += s.amount
       end
-      { dates: dates, counts: counts }
+      { dates: dates, counts: counts, revenue:  revenue }
     end
   end
 end

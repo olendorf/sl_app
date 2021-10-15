@@ -13,7 +13,8 @@
 
 @import "active_material";
 
-@import "slapp_data_colors";
+// @import "slapp_data_colors";
+@import "theme/variables";
 // @import "active_bootstrap_skin";
 
 // @import "active_admin_flat_skin";
@@ -36,6 +37,10 @@ form .alert h1 {
   color: $form_alert;
   font-size: 24px;
   margin: 10px
+}
+
+#header {
+  background-color: $primary-color;
 }
 
 .panel {   

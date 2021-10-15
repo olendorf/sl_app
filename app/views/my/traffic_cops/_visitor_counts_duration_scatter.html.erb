@@ -1,0 +1,82 @@
+
+<div id="visitors_counts_duration_container" style="width:600px; height:400px;" %></div>
+
+<script type="text/javascript">
+
+        $(function () {
+                // var processed_json = new Array();   
+                $.getJSON('/async/visits', 
+                                {
+                                    ids: gon.ids,
+                                    chart: 'visitors_duration_counts_scatter'
+                                },
+                                function(data) {
+
+                    // draw chart
+                     $('#visitors_counts_duration_container').highcharts({ 
+                          chart: {
+                                type: 'scatter',
+                                zoomType: 'xy',
+                                style: {
+                                  fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                                }
+                            },
+                            title: {
+                                text: 'Time Spent By an Avatar by Number of Visits'
+                            },
+                            xAxis: {
+                                title: {
+                                    enabled: true,
+                                    text: 'Number of Visits'
+                                },
+                                min: 0,
+                                startOnTick: true,
+                                endOnTick: true,
+                                showLastLabel: true
+                            },
+                            yAxis: {
+                                title: {
+                                    text: 'Time Spent (minutes)'
+                                },
+                                min: 0
+                            },
+                            legend: {
+                                enabled: false
+                            },
+                            plotOptions: {
+                                scatter: {
+                                    marker: {
+                                        radius: 5,
+                                        states: {
+                                            hover: {
+                                                enabled: true,
+                                                lineColor: 'rgb(100,100,100)'
+                                            }
+                                        }
+                                    },
+                                    states: {
+                                        hover: {
+                                            marker: {
+                                                enabled: false
+                                            }
+                                        }
+                                    },
+                                    tooltip: {
+                                        headerFormat: '<b>{point.point.name}</b><br>',
+                                        pointFormat: '{point.x} visits, {point.y} minutes'
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'Avatars',
+                                // color: 'rgba(223, 83, 83, .5)',
+                                data: data
+                            }]
+                    
+   
+                    }); 
+                });
+            });
+
+
+</script>

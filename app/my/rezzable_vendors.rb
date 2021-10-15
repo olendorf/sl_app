@@ -52,18 +52,6 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor', namespace: :my do
     actions
   end
 
-  # sidebar :settings, only: %i[edit show] do
-  #   attributes_table do
-  #     row :show_last_donation
-  #     row :show_last_donor
-  #     row :show_total
-  #     row :show_largest_donation
-  #     row :show_biggest_donor
-  #     row :goal
-  #     row :dead_line
-  #   end
-  # end
-
   show title: :object_name do
     attributes_table do
       row 'Image' do |vendor|
@@ -149,36 +137,7 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor', namespace: :my do
       end
     end
 
-    #   panel 'Top 10 Donors For This Box' do
-    #     counts = resource.transactions.group(:target_name).count
-    #     sums = resource.transactions.group(:target_name).order('sum_amount DESC').sum(:amount)
-    #     data = sums.collect { |k, v| { donor: k, amount: v, count: counts[k] } }
-    #     paginated_data = Kaminari.paginate_array(data).page(params[:donor_page]).per(10)
-
-    #     table_for paginated_data do
-    #       column :donor
-    #       column :amount
-    #       column('Donations') do |item|
-    #         item[:count]
-    #       end
-    #     end
-    #   end
-    # end
   end
-
-  # sidebar :donations, only: :show do
-  #   paginated_collection(
-  #     resource.transactions.page(
-  #       params[:donation_page]
-  #     ).per(10), param_name: 'donation_page'
-  #   ) do
-  #     table_for collection.order(created_at: :desc).decorate, download_links: false do
-  #       column :created_at
-  #       column 'Payer/Payee', &:target_name
-  #       column :amount
-  #     end
-  #   end
-  # end
 
   permit_params :object_name, :description, :server_id, :inventory_name, :image_key
 

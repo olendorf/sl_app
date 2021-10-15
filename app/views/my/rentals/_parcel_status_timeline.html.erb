@@ -13,11 +13,12 @@ $(function() {
             chart: {
                 type: 'area',
                 marginBottom: 100,
-                zoomType: 'x'
+                zoomType: 'x',
+                style: {
+                  fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                }  
             },
             title: {
-              floating: true,
-              align: 'left', 
               text: 'Status of Parcels over Time'
             },
             // colors: data.colors,
@@ -34,7 +35,7 @@ $(function() {
             },
           yAxis: {
             title: {
-              text: 'Revenue ($L)'
+              text: 'Number of Parcels'
             },
             min: 0
             // visible: false,
@@ -42,8 +43,7 @@ $(function() {
             // endOnTick: false
           },
           legend: {
-            enabled: true,
-            verticalAlign: 'top'
+            enabled: true
           },
           plotOptions: {
               area: {

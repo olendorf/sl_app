@@ -11,15 +11,15 @@ $(function() {
                 
         $('#region_revenue_bar_chart_container').highcharts({
            chart: {
-                type: 'bar'
+               type: 'bar',
+               style: {
+                    fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+               }   
             },
             
             colors: data.colors,
             title: {
                 text: 'Revenue By Region, Last 30 Days'
-            },
-            subtitle: {
-              text: data.colors
             },
             xAxis: {
                 categories: data.regions,

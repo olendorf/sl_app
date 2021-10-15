@@ -1,4 +1,4 @@
-<div id="product_sales_timeline_container" class: 'centered' style="width:1600px; height:800px;" %></div>
+<div id="product_sales_timeline_container" class='centered' style="width:1600px; height:800px;" %></div>
 
 
 
@@ -22,7 +22,10 @@ $(function () {
        $('#product_sales_timeline_container').highcharts({ 
           chart: {
             type: 'spline',
-            zoomType: 'x'
+            zoomType: 'x',
+            style: {
+              fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+            }  
           },
           title: {
             text: 'Sales Over Time'
@@ -37,22 +40,40 @@ $(function () {
             }
           },
           yAxis: [{
-          title: {
-          	text: 'Number of Sales',
-            style: {
-              color: Highcharts.getOptions().colors[0]
+            title: {
+            	text: 'Number of Sales',
+              style: {
+                color: Highcharts.getOptions().colors[0]
+              }
+            },
+            labels: {
+              style: {
+                color: Highcharts.getOptions().colors[0]
+              }
             }
-          },
-          labels: {
-            style: {
-              color: Highcharts.getOptions().colors[0]
-            }
-          }
+          },{
+            title: {
+            	text: 'Revenue',
+              style: {
+                color: Highcharts.getOptions().colors[1]
+              }
+            },
+            labels: {
+              style: {
+                color: Highcharts.getOptions().colors[1]
+              }
+            },
+            opposite: true
           }],
           series: [{
             name: 'Sales',
             yAxis: 0,
             data: data.counts
+          },{
+            name: 'Revenue',
+            yAxis: 1,
+            data: data.revenue
+            
           }]
     });
   });

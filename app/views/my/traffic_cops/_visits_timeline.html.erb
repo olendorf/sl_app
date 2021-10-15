@@ -20,7 +20,10 @@ $(function () {
        $('#visits_timeline_container').highcharts({ 
           chart: {
             type: 'spline',
-            zoomType: 'x'
+            zoomType: 'x',
+            style: {
+              fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+            }
           },
           title: {
             text: 'Traffic Over Time'

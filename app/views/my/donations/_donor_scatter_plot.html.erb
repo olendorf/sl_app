@@ -1,25 +1,26 @@
 
-<div id="donor_scatter_plot_container" style="width: 1000; height:400px;" %>></div>
+<div id="donor_scatter_plot_container" style="width: 1000; height:400px;" %></div>
 
 
 <script type="text/javascript">
 
-        $(function () {
-                var processed_json = new Array();   
-                $.getJSON('/async/donations?chart=donor_scatter_plot', function(data) {
-                    // Populate series
-                    // for (i = 0; i < data.length; i++){
-                    //     processed_json.push([data[i].key, data[i].value]);
-                    // }
-                 
-                    // draw chart
+        $(function () { 
+                $.getJSON('/async/donations',
+                                {chart: 'donor_scatter_plot'},
+                                function(data) {
                      $('#donor_scatter_plot_container').highcharts({ 
                         chart: {
                             type: 'scatter',
-                            zoomType: 'xy'
+                            zoomType: 'xy',
+                            style: {
+                              fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                            }
                         },
                         title: {
                             text: 'Amount Donated by Number of Donations by Donor'
+                        },
+                        subtitle: {
+                            data
                         },
                         xAxis: {
                             title: {
@@ -60,7 +61,7 @@
                                     }
                                 },
                                 tooltip: {
-                                    headerFormat: '<b>{point.point.key}</b><br>',
+                                    headerFormat: '<b>{point.point.name}</b><br>',
                                     pointFormat: '{point.x} donations, {point.y} $L'
                                 }
                             }

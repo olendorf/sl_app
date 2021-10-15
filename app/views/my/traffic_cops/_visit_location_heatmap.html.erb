@@ -1,0 +1,81 @@
+
+<div id="visit_location_container" class='centered' style="width:800px; height:800px;" %></div>
+
+<script type="text/javascript">
+
+        $(function () {
+                // var processed_json = new Array();   
+                $.getJSON('/async/visits', 
+                                {
+                                    ids: gon.ids,
+                                    chart: 'visit_location_heatmap'
+                                },
+                                function(data) {
+
+                    // draw chart
+                     $('#visit_location_container').highcharts({ 
+                        chart: {
+                            type: 'heatmap',
+                            zoomType: 'xy',
+                            style: {
+                              fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                            },
+                        },
+                        boost: {
+                            useGPUTranslations: true
+                        },
+                    
+                        title: {
+                            text: 'Where Visitors Go'
+                        },
+                    
+                        xAxis: {
+                            max: 255,
+                            title: null
+                        },                    
+                        yAxis: {
+                            max: 255,
+                            title: null,
+                            endOnTick: false
+                        },
+                    
+                        legend: {
+                            align: 'right',
+                            layout: 'vertical',
+                            margin: 0,
+                            verticalAlign: 'top',
+                            y: 25,
+                            symbolHeight: 280
+                        },
+                    
+                        colorAxis: {
+                            minColor: '#367bc7',
+                            maxColor: '#F99F4A',
+                            // stops: [
+                            //     [0, '#3060cf'],
+                            //     [0.5, '#fffbbc'],
+                            //     [0.9, '#c4463a'],
+                            //     [1, '#c4463a']
+                            // ],
+                            min: 0,
+                            max: data.max,
+                            startOnTick: false,
+                            endOnTick: false,
+                            labels: {
+                                format: '{value} mins'
+                            }
+                        },
+                    
+                        series: [{
+                            name: 'Location of Visits',
+                            borderWidth: 0,
+                            data: data.data,
+                            boostThreshold: 500,  // Boost when there are more than 1
+                        }]
+
+                    }); 
+                });
+            });
+
+
+</script>

@@ -1,4 +1,4 @@
-<div id="inventory_sales_timeline_container" class: 'centered' style="width:1600px; height:800px;" %></div>
+<div id="inventory_sales_timeline_container" class= 'centered' style="width:1300px; height:800px;" %></div>
 
 
 
@@ -22,7 +22,10 @@ $(function () {
        $('#inventory_sales_timeline_container').highcharts({ 
           chart: {
             type: 'spline',
-            zoomType: 'x'
+            zoomType: 'x',
+            style: {
+              fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+            }
           },
           title: {
             text: 'Sales Over Time'
@@ -36,18 +39,21 @@ $(function () {
                 // rangeDescription: 'Range: 1940 to 2017.'
             }
           },
-          yAxis: [{
-          title: {
-          	text: 'Number of Sales',
-            style: {
-              color: Highcharts.getOptions().colors[0]
-            }
+          legend: {
+            enabled: false
           },
-          labels: {
-            style: {
-              color: Highcharts.getOptions().colors[0]
+          yAxis: [{
+            title: {
+            	text: 'Number of Sales',
+              style: {
+                color: Highcharts.getOptions().colors[0]
+              }
+            },
+            labels: {
+              style: {
+                color: Highcharts.getOptions().colors[0]
+              }
             }
-          }
           }],
           series: [{
             name: 'Sales',

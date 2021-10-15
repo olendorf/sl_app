@@ -10,6 +10,11 @@ $(function() {
               function(data){
                 
         $('#parcel_status_treemap_containter').highcharts({
+          chart: {
+              style: {
+                fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+              }  
+          },
           series: [{
             type: "treemap",
             layoutAlgorithm: 'squarified',

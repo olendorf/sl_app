@@ -3,16 +3,15 @@
 
 <script type="text/javascript">
 
-        $(function () {
-                // var processed_json = new Array();   
+        $(function () { 
                 $.getJSON('/async/tips?chart=tippers_histogram', function(data) {
-                    // Populate series
-                    // for (i = 0; i < data.length; i++){
-                    //     processed_json.push([data[i].key, data[i].value]);
-                    // }
-                 
-                    // draw chart
+   
                      $('#tippers_histogram_container').highcharts({ 
+                        chart: {
+                            style: {
+                              fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                            }  
+                        },
                     
                         title: {
                             text: 'Frequency of Total Tip Amounts by Tipper'

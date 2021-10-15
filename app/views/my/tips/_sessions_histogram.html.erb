@@ -6,13 +6,14 @@
         $(function () {
                 // var processed_json = new Array();   
                 $.getJSON('/async/tips?chart=sessions_histogram', function(data) {
-                    // Populate series
-                    // for (i = 0; i < data.length; i++){
-                    //     processed_json.push([data[i].key, data[i].value]);
-                    // }
                  
                     // draw chart
                      $('#sessions_histogram_container').highcharts({ 
+                        chart: {
+                            style: {
+                              fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                            }  
+                        },
                     
                         title: {
                             text: 'Length of Tip Jar Sessions'

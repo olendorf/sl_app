@@ -1,4 +1,6 @@
-<div id="sales_by_inventory_revenue_timeline_container" style="width:1500; height:900px;" %></div>
+<!--<div id="sales_by_inventory_revenue_timeline_container" style="width:1500; height:900px;" ></div>-->
+
+<div id="sales_by_inventory_revenue_timeline_container" style="height:900px" ></div>
 
 <script type="text/javascript">
 
@@ -13,11 +15,12 @@ $(function() {
             chart: {
                 type: 'area',
                 marginBottom: 100,
-                zoomType: 'x'
+                zoomType: 'x',
+                style: {
+                  fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                }  
             },
             title: {
-              floating: true,
-              align: 'left', 
               text: 'Sales Revenue Over Time Broken Down By Inventory'
             },
             colors: data.colors,
@@ -42,11 +45,12 @@ $(function() {
             // endOnTick: false
           },
           legend: {
-            enabled: true,
-            floating: true,
-            verticalAlign: 'top',
+            layout: 'vertical',
+            verticalAlign: 'middle',
             align: 'right',
-            layout: 'veritcal'
+            enabled: true
+            // margin: 25,
+            // y : 25 /* pushes the legend 25 points down */
           },
           plotOptions: {
               area: {

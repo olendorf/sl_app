@@ -233,8 +233,11 @@ ActiveAdmin.setup do |config|
   config.register_javascript 'highcharts/modules/boost'
   config.register_javascript 'highcharts/modules/streamgraph'
   config.register_javascript 'highcharts/modules/treemap.js'
+  config.register_javascript 'highcharts/modules/exporting.js'
+  config.register_javascript 'highcharts/modules/export-data.js'
+  config.register_javascript 'src/theme_bloom.js'
   # config.register_javascript 'highcharts/themes/sunset'
-  config.register_javascript 'highcharts/themes/dark-unica'
+  # config.register_javascript 'highcharts/themes/dark-unica'
   # config.register_javascript 'highcharts/themes/grid'
   # config.register_javascript 'highcharts/themes/skies'
 
@@ -370,7 +373,7 @@ ActiveAdmin.setup do |config|
   # By default, the footer shows the current Active Admin version. You can
   # override the content of the footer here.
   #
-  # config.footer = 'my custom footer text'
+  config.footer = 'Copyright 2021 by SLapp Data'
 
   # == Sorting
   #

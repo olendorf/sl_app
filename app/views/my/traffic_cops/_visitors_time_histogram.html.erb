@@ -1,5 +1,5 @@
 
-<div id="visitors_counts_container" style="width:600px; height:400px;" %></div>
+<div id="visitors_time_container" style="width:600px; height:400px;" %></div>
 
 <script type="text/javascript">
 
@@ -8,15 +8,19 @@
                 $.getJSON('/async/visits', 
                                 {
                                     ids: gon.ids,
-                                    chart: 'visitors_counts_histogram'
+                                    chart: 'visitors_time_histogram'
                                 },
                                 function(data) {
 
                     // draw chart
-                     $('#visitors_counts_container').highcharts({ 
-                    
+                     $('#visitors_time_container').highcharts({ 
+                        chart: {            
+                            style: {
+                              fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                            }
+                        },
                         title: {
-                            text: 'Time Spent By Visitors'
+                            text: 'Time Spent By Visitor'
                             // text: gon.ids
                         },
                     

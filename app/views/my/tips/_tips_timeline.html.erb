@@ -1,4 +1,4 @@
-<div id="tips_timeline_container" style="width:1200px; height:600px;" %></div>
+<div id="tips_timeline_container" class="centered" style="width:1200px; height:600px;" %></div>
 
 <script type="text/javascript">
 // data = {
@@ -19,7 +19,11 @@ $(function () {
        $('#tips_timeline_container').highcharts({ 
           chart: {
             type: 'spline',
-            zoomType: 'x'
+            zoomType: 'x',
+            style: {
+              fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+            }  
+            
           },
           title: {
             text: 'Daily Tips Over Time'
@@ -56,7 +60,8 @@ $(function () {
             style: {
               color: Highcharts.getOptions().colors[1]
             }
-          }
+          },
+          opposite: true
           }],
           series: [{
             name: 'Tips',

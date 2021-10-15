@@ -24,8 +24,8 @@ module Async
         -value
       end.to_h
       counts = current_user.donations.group(:target_name).count
-      amounts.collect { |k, v| { key: k, x: counts[k], y: v } }
+      # amounts.collect { |k, v| { x: counts[k], y: v } }
+      amounts.collect { |k, v| [counts[k], v, k ] }
     end
   end
 end
-# ?channel_id=2&product_ids[]=6900&product_ids[]=6901

@@ -112,6 +112,7 @@ module Async
     end
 
     def sales_timeline(sales)
+      return {} if sales.size.zero?
       dates = time_series_dates(sales.first.created_at - 3.days, Time.current)
       counts = Array.new(dates.size, 0)
       revenue = Array.new(dates.size, 0)

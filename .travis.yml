@@ -26,7 +26,7 @@ install:
   - bundle install
   - nvm install node
   - npm install bootstrap
-  # - node -v
+  - node -v
   # - npm i -g yarn
   # - yarn
 addons:

@@ -12,4 +12,12 @@ environment.plugins.prepend('Provide',
   })
 )
 
+environment.config.merge(
+  {
+    output: {
+        hashFunction: "sha256"
+    }
+}
+)
+
 module.exports = environment

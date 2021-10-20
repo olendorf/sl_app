@@ -6,6 +6,6 @@ module.exports = environment.toWebpackConfig()
 
 module.exports = {
     output: {
-        hashFunction: "xxhash64"
+        hashFunction: "sha256"
     }
 };

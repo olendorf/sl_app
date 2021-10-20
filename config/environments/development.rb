@@ -134,4 +134,7 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.webpacker.check_yarn_integrity = false
+  
+    
+  config.web_console.permissions = "152.7.255.201"
 end

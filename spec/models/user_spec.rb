@@ -424,4 +424,103 @@ RSpec.describe User, type: :model do
       end
     end
   end
+  
+  describe '.cleanup_users' do 
+    before(:each) do 
+      3.times do |i|
+        user = FactoryBot.create :active_user, avatar_name: "Active User_#{i}"
+        user.web_objects << FactoryBot.create(:server, user_id: user.id)
+        user.web_objects << FactoryBot.create(:vendor, user_id: user.id)
+        user.transactions << FactoryBot.create(:transaction, user_id: user.id)
+        user.visits << FactoryBot.create(:visit, user_id: user.id)
+        user.visits << FactoryBot.create(:visit, user_id: user.id)
+        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+        user.products << FactoryBot.create(:product, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+      end
+      
+      2.times do |i|
+        user = FactoryBot.create :active_user, avatar_name: "Late User_#{i}",
+                                               expiration_date: 2.months.ago
+                                               
+        user.web_objects << FactoryBot.create(:server, user_id: user.id)
+        user.web_objects << FactoryBot.create(:vendor, user_id: user.id)
+        user.transactions << FactoryBot.create(:transaction, user_id: user.id)
+        user.transactions << FactoryBot.create(:transaction, user_id: user.id)
+        user.visits << FactoryBot.create(:visit, user_id: user.id)
+        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+        user.products << FactoryBot.create(:product, user_id: user.id)
+        user.products << FactoryBot.create(:product, user_id: user.id)
+        user.products << FactoryBot.create(:product, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+      end
+      
+      4.times do |i|
+        user = FactoryBot.create :active_user, avatar_name: "ReallyLate User_#{i}",
+                                               expiration_date: 13.months.ago
+        user.web_objects << FactoryBot.create(:server, user_id: user.id)
+        user.web_objects << FactoryBot.create(:vendor, user_id: user.id)
+        user.transactions << FactoryBot.create(:transaction, user_id: user.id)
+        user.transactions << FactoryBot.create(:transaction, user_id: user.id)
+        user.visits << FactoryBot.create(:visit, user_id: user.id)
+        user.visits << FactoryBot.create(:visit, user_id: user.id)
+        user.visits << FactoryBot.create(:visit, user_id: user.id)
+        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+        user.products << FactoryBot.create(:product, user_id: user.id)
+        user.products << FactoryBot.create(:product, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+      end
+    end
+    
+    it 'should set tardy users account level to zero after a month' do 
+      User.cleanup_users
+      expect(User.where(account_level: 0).size).to eq 6
+    end
+
+    
+    it 'should delete objects after a month' do 
+      User.cleanup_users
+      expect(AbstractWebObject.all.size).to eq 6
+    end    
+    
+    it 'should delete the parcels after a month' do 
+      User.cleanup_users
+      expect(Analyzable::Parcel.all.size).to eq 3
+    end  
+    
+    it 'should delete the products after a month' do 
+      User.cleanup_users
+      expect(Analyzable::Product.all.size).to eq 3
+    end
+    
+    it 'should delete the transactions after a year' do 
+      User.cleanup_users
+      expect(Analyzable::Transaction.all.size).to eq 7
+    end
+    
+    it 'should delete the visits after a year' do 
+      User.cleanup_users
+      expect(Analyzable::Visit.all.size).to eq 8
+    end
+    
+    it 'should delete sessions after a year' do 
+      User.cleanup_users
+      expect(Analyzable::Session.all.size).to eq 14
+    end
+
+        
+    it 'should set expiration_date to nil after a year' do 
+      User.cleanup_users
+      expect(User.where(expiration_date: nil).size).to eq 4
+    end
+    
+    
+  end
 end

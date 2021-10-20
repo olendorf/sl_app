@@ -25,5 +25,8 @@ module SlApp
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
 
     config.time_zone = 'America/Los_Angeles'
+    
+    
+    config.active_job.queue_adapter = :sidekiq
   end
 end

@@ -73,7 +73,7 @@ module Async
       visits.each do |visit|
         h = visit.start_time.strftime('%k').to_i
         d = visit.start_time.strftime('%w').to_i
-        data[(d * 24) + h][2] = data[(d * 24) + h][2] + visit.duration / 60.0
+        data[(d * 24) + h][2] = data[(d * 24) + h][2] + (visit.duration / 60.0)
       end
       data
     end
@@ -88,7 +88,7 @@ module Async
           pos = JSON.parse(det.position).transform_values(&:floor)
           pos['x'] = 255 if pos['x'] > 255
           pos['y'] = 255 if pos['y'] > 255
-          data[256 * pos['x'] + pos['y']][2] += 0.5
+          data[(256 * pos['x']) + pos['y']][2] += 0.5
         end
       end
       { data: data, max: data.collect { |d| d[2] }.max }

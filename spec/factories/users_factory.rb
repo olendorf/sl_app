@@ -9,9 +9,8 @@ FactoryBot.define do
     avatar_name { "#{first_name} #{last_name}" }
     avatar_key { SecureRandom.uuid }
     password { 'Pa$sW0rd' }
-    
-    factory :inactive_user do 
-      
+
+    factory :inactive_user do
     end
 
     factory :active_user do

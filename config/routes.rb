@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'api_constraints'
-require'sidekiq/web' 
+require 'sidekiq/web'
 
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
@@ -13,13 +13,11 @@ Rails.application.routes.draw do
   get 'pages/pricing' => 'pages#pricing'
   get 'pages/documentation' => 'pages#documentation'
   get 'pages/faqs' => 'pages#faqs'
-  
-  
+
   devise_for :users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-  
-  
-  mount Sidekiq::Web => '/sidekiq' 
+
+  mount Sidekiq::Web => '/sidekiq'
 
   namespace :async, defaults: { format: 'json' } do
     resources :donations, only: [:index]

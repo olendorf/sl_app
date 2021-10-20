@@ -155,8 +155,8 @@ class User < ApplicationRecord
     update_column(:expiration_date, Time.now) and return if account_level.zero?
 
     update_column(:expiration_date,
-                  Time.now + (expiration_date - Time.now) *
-                  (account_level_was.to_f / account_level))
+                  Time.now + ((expiration_date - Time.now) *
+                  (account_level_was.to_f / account_level)))
   end
 
   def add_time
@@ -212,36 +212,34 @@ class User < ApplicationRecord
     target = User.find_by_avatar_key(share.target_key)
     add_transaction_to_target(target, amount) if target
   end
-  
+
   def self.cleanup_users
-    puts "Cleaning Up Users"
+    puts 'Cleaning Up Users'
     clean_up_inactive_users
     clean_up_delinquent_users
-    
-
   end
 
-  private
-  
   def self.clean_up_inactive_users
-    users = User.where("expiration_date < ?", 
-                  Settings.default.account.inactive_days.days.ago)
-    ids = users.collect { |user| user.id }
+    users = User.where('expiration_date < ?',
+                       Settings.default.account.inactive_days.days.ago)
+    ids = users.collect(&:id)
     AbstractWebObject.where(user_id: ids).destroy_all
     Analyzable::Parcel.where(user_id: ids).destroy_all
     Analyzable::Product.where(user_id: ids).destroy_all
     users.update_all(account_level: 0)
-  end 
-  
+  end
+
   def self.clean_up_delinquent_users
-    users = User.where("expiration_date < ? ", 
-                          Settings.default.account.delinquent_days.days.ago)
-    ids = users.collect{ |user| user.id }
+    users = User.where('expiration_date < ? ',
+                       Settings.default.account.delinquent_days.days.ago)
+    ids = users.collect(&:id)
     Analyzable::Transaction.where(user_id: ids).destroy_all
     Analyzable::Visit.where(user_id: ids).destroy_all
     Analyzable::Session.where(user_id: ids).destroy_all
     users.update_all(expiration_date: nil)
   end
+
+  private
 
   def add_transaction_to_user(transaction, amount, share)
     transactions << Analyzable::Transaction.new(

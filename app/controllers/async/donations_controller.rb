@@ -25,7 +25,7 @@ module Async
       end.to_h
       counts = current_user.donations.group(:target_name).count
       # amounts.collect { |k, v| { x: counts[k], y: v } }
-      amounts.collect { |k, v| [counts[k], v, k ] }
+      amounts.collect { |k, v| [counts[k], v, k] }
     end
   end
 end

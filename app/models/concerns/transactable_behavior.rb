@@ -63,7 +63,7 @@ module TransactableBehavior
   end
 
   def add_transaction_to_target(target, amount)
-    balance = target.balance + amount * -1
+    balance = target.balance + (amount * -1)
     Analyzable::Transaction.new(
       user_id: target.id,
       description: "Split from transaction with #{user.avatar_name}",

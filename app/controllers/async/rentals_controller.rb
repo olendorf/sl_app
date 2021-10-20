@@ -103,8 +103,9 @@ module Async
       end
       transactions.each do |transaction|
         data[transaction.parcel.region][
-          transaction.created_at.strftime('%B %Y')] += transaction.amount if data[transaction.parcel.region][
-          transaction.created_at.strftime('%B %Y')] 
+          transaction.created_at.strftime('%B %Y')] += transaction.amount if data[
+                                                        transaction.parcel.region][
+                                                          transaction.created_at.strftime('%B %Y')]
       end
       chart_data = { dates: dates, data: [], colors: generate_color_map(regions).values }
       data.each do |region, d|

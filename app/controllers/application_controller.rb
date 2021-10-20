@@ -3,11 +3,11 @@
 # Base controller class
 class ApplicationController < ActionController::Base
   include Pundit
-  
+
   # pp caller_locations
 
   before_action :set_paper_trail_whodunnit
-  
+
   def authenticate_admin_user!
     if user_signed_in? && !current_user.can_be_admin?
       redirect_to(

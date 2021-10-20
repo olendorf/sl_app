@@ -429,6 +429,10 @@ RSpec.describe User, type: :model do
 
   describe '.cleanup_users' do
     before(:each) do
+      Analyzable::Visit.all.destroy_all
+      Analyzable::Transaction.all.destroy_all
+      Analyzable::Parcel.all.destroy_all
+      AbstractWebObject.all.destroy_all
       3.times do |i|
         user = FactoryBot.create :active_user, avatar_name: "Active User_#{i}"
         user.web_objects << FactoryBot.create(:server, user_id: user.id)

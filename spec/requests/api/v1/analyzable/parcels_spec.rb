@@ -131,7 +131,6 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
       end
 
       it 'should update the expiration_date' do
-        puts Time.zone.to_s
         put path, params: atts.to_json, headers: headers(tier_station)
         expect(parcel.reload.expiration_date).to be_within(2.hours).of(4.weeks.from_now)
       end

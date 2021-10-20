@@ -51,7 +51,6 @@ module Async
         data: data.collect(&:last),
         colors: generate_color_map(data.collect(&:first)).values
       }
-      puts data
       data
     end
 

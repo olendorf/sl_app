@@ -214,7 +214,6 @@ class User < ApplicationRecord
   end
 
   def self.cleanup_users
-    puts 'Cleaning Up Users'
     clean_up_inactive_users
     clean_up_delinquent_users
   end

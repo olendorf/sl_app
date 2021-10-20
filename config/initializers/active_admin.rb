@@ -16,14 +16,14 @@ ActiveAdmin.setup do |config|
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
   #
-  config.site_title_link = "/"
+  config.site_title_link = '/'
 
   # Set an optional image to be displayed for the header
   # instead of a string (overrides :site_title)
   #
   # Note: Aim for an image that's 21px high so it fits in the header.
   #
-  config.site_title_image = "logo_32_no_bkgnd.png"
+  config.site_title_image = 'logo_32_no_bkgnd.png'
 
   # == Default Namespace
   #
@@ -391,11 +391,11 @@ ActiveAdmin.setup do |config|
 end
 
 ActiveAdmin::Devise::SessionsController.class_eval do
-  def after_sign_out_path_for(resource_or_scope)
-    "/"
+  def after_sign_out_path_for(_resource_or_scope)
+    '/'
   end
-  
-  def after_sign_in_path_for(resource_or_scope)
+
+  def after_sign_in_path_for(_resource_or_scope)
     if current_user.can_be_admin?
       admin_dashboard_path
     else

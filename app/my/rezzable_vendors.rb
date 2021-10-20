@@ -136,7 +136,6 @@ ActiveAdmin.register Rezzable::Vendor, as: 'Vendor', namespace: :my do
         render partial: 'vendor_sales_timeline'
       end
     end
-
   end
 
   permit_params :object_name, :description, :server_id, :inventory_name, :image_key

@@ -43,15 +43,12 @@ module Async
       data = current_user.transactions.joins(:parcel).where(
         category: %w[tier land_sale],
         created_at: (1.month.ago..Time.current)
-      )
-                         .group(:region).sum(:amount).sort_by { |_k, v| v }.reverse
-      puts generate_color_map(data.collect(&:first))
+      ).group(:region).sum(:amount).sort_by { |_k, v| v }.reverse
       data = {
         regions: data.collect(&:first),
         data: data.collect(&:last),
         colors: generate_color_map(data.collect(&:first)).values
       }
-      puts data
       data
     end
 
@@ -73,10 +70,10 @@ module Async
       states.each do |state|
         time_series_dates(state.created_at, state.closed_at).each do |date|
           data[state.state][date] += 1 if data[state.state][date]
-          if data[state.state][date].nil?
-            data[state.state][date] = 1 unless data[state.state][date]
-            puts "adding date #{date}"
-          end
+          # if data[state.state][date].nil?
+          #   data[state.state][date] = 1 unless data[state.state][date]
+          #   # puts "adding date #{date}"
+          # end
         end
       end
 
@@ -103,8 +100,9 @@ module Async
       end
       transactions.each do |transaction|
         data[transaction.parcel.region][
-          transaction.created_at.strftime('%B %Y')] += transaction.amount if data[transaction.parcel.region][
-          transaction.created_at.strftime('%B %Y')] 
+          transaction.created_at.strftime('%B %Y')] += transaction.amount if data[
+                                                        transaction.parcel.region][
+                                                          transaction.created_at.strftime('%B %Y')]
       end
       chart_data = { dates: dates, data: [], colors: generate_color_map(regions).values }
       data.each do |region, d|

@@ -227,7 +227,7 @@ RSpec.describe User, type: :model do
 
       it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 2 * 2.25
-        expected_expiration_date = Time.now + 1.month.to_i * 2.25
+        expected_expiration_date = Time.now + (1.month.to_i * 2.25)
         inactive_user.update(account_payment: amount, requesting_object: terminal)
         expect(inactive_user.expiration_date).to be_within(1.second).of(expected_expiration_date)
       end
@@ -239,7 +239,7 @@ RSpec.describe User, type: :model do
       }
       it 'should correctly update expiration_date' do
         amount = Settings.default.account.monthly_cost * 1 * 2.35
-        expected_expiration_date = Time.now + 1.month.to_i * 2.35
+        expected_expiration_date = Time.now + (1.month.to_i * 2.35)
         user.update(account_payment: amount, requesting_object: terminal)
         expect(user.expiration_date).to be_within(1.second).of(expected_expiration_date)
       end
@@ -252,7 +252,7 @@ RSpec.describe User, type: :model do
         let(:user) { FactoryBot.create :active_user, account_level: 1 }
 
         it 'should adjust the expiration_date correctly' do
-          expected_expiration_date = Time.now + (user.expiration_date - Time.now) / 2
+          expected_expiration_date = Time.now + ((user.expiration_date - Time.now) / 2)
           user.update(account_level: 2)
           expect(user.expiration_date).to be_within(1.second).of(expected_expiration_date)
         end
@@ -262,7 +262,8 @@ RSpec.describe User, type: :model do
         context 'to greater than zero' do
           let(:user) { FactoryBot.create :active_user, account_level: 3 }
           it 'should adjust the expiration_date correctly' do
-            expected_expiration_date = Time.now + (user.expiration_date - Time.now) * (3.to_f / 2)
+            expected_expiration_date = Time.now +
+                                       ((user.expiration_date - Time.now) * (3.to_f / 2))
             user.update(account_level: 2)
             expect(user.expiration_date).to be_within(1.second).of(expected_expiration_date)
           end
@@ -270,7 +271,8 @@ RSpec.describe User, type: :model do
         context 'to zero' do
           let(:user) { FactoryBot.create :active_user, account_level: 3 }
           it 'should adjust the expiration_date correctly' do
-            expected_expiration_date = Time.now + (user.expiration_date - Time.now) * (0.to_f / 2)
+            expected_expiration_date = Time.now +
+                                       ((user.expiration_date - Time.now) * (0.to_f / 2))
             user.update(account_level: 0)
             expect(user.expiration_date).to be_within(1.second).of(expected_expiration_date)
           end
@@ -422,6 +424,106 @@ RSpec.describe User, type: :model do
         user.transactions << FactoryBot.build(:transaction, amount: 100)
         expect(target_one.balance).to eq 5
       end
+    end
+  end
+
+  describe '.cleanup_users' do
+    before(:each) do
+      Analyzable::Visit.all.destroy_all
+      Analyzable::Transaction.all.destroy_all
+      Analyzable::Parcel.all.destroy_all
+      AbstractWebObject.all.destroy_all
+      Analyzable::Product.all.destroy_all
+      3.times do |i|
+        user = FactoryBot.create :active_user, avatar_name: "Active User_#{i}"
+        user.web_objects << FactoryBot.create(:server, user_id: user.id)
+        user.web_objects << FactoryBot.create(:vendor, user_id: user.id)
+        user.transactions << FactoryBot.create(:transaction, user_id: user.id)
+        user.visits << FactoryBot.create(:visit, user_id: user.id)
+        user.visits << FactoryBot.create(:visit, user_id: user.id)
+        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+        user.products << FactoryBot.create(:product, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+      end
+
+      2.times do |i|
+        user = FactoryBot.create :active_user, avatar_name: "Late User_#{i}",
+                                               expiration_date: 2.months.ago
+
+        user.web_objects << FactoryBot.create(:server, user_id: user.id)
+        user.web_objects << FactoryBot.create(:vendor, user_id: user.id)
+        user.transactions << FactoryBot.create(:transaction, user_id: user.id)
+        user.transactions << FactoryBot.create(:transaction, user_id: user.id)
+        user.visits << FactoryBot.create(:visit, user_id: user.id)
+        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+        user.products << FactoryBot.create(:product, user_id: user.id)
+        user.products << FactoryBot.create(:product, user_id: user.id)
+        user.products << FactoryBot.create(:product, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+      end
+
+      4.times do |i|
+        user = FactoryBot.create :active_user, avatar_name: "ReallyLate User_#{i}",
+                                               expiration_date: 13.months.ago
+        user.web_objects << FactoryBot.create(:server, user_id: user.id)
+        user.web_objects << FactoryBot.create(:vendor, user_id: user.id)
+        user.transactions << FactoryBot.create(:transaction, user_id: user.id)
+        user.transactions << FactoryBot.create(:transaction, user_id: user.id)
+        user.visits << FactoryBot.create(:visit, user_id: user.id)
+        user.visits << FactoryBot.create(:visit, user_id: user.id)
+        user.visits << FactoryBot.create(:visit, user_id: user.id)
+        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+        user.products << FactoryBot.create(:product, user_id: user.id)
+        user.products << FactoryBot.create(:product, user_id: user.id)
+        user.sessions << FactoryBot.create(:session, user_id: user.id)
+      end
+    end
+
+    it 'should set tardy users account level to zero after a month' do
+      User.cleanup_users
+      expect(User.where(account_level: 0).size).to eq 6
+    end
+
+    it 'should delete objects after a month' do
+      User.cleanup_users
+      expect(AbstractWebObject.all.size).to eq 6
+    end
+
+    it 'should delete the parcels after a month' do
+      User.cleanup_users
+      expect(Analyzable::Parcel.all.size).to eq 3
+    end
+
+    it 'should delete the products after a month' do
+      User.cleanup_users
+      expect(Analyzable::Product.all.size).to eq 3
+    end
+
+    it 'should delete the transactions after a year' do
+      User.cleanup_users
+      expect(Analyzable::Transaction.all.size).to eq 7
+    end
+
+    it 'should delete the visits after a year' do
+      User.cleanup_users
+      expect(Analyzable::Visit.all.size).to eq 8
+    end
+
+    it 'should delete sessions after a year' do
+      User.cleanup_users
+      expect(Analyzable::Session.all.size).to eq 14
+    end
+
+    it 'should set expiration_date to nil after a year' do
+      User.cleanup_users
+      expect(User.where(expiration_date: nil).size).to eq 4
     end
   end
 end

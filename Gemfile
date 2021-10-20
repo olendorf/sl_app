@@ -39,6 +39,11 @@ gem 'devise'
 # authorization
 gem 'pundit'
 
+# background jobs and scheduling
+gem 'sidekiq' 
+gem 'sidekiq-client-cli'
+gem 'whenever'
+
 # Track changes to your models, for auditing or versioning
 gem 'paper_trail'
 
@@ -104,4 +109,6 @@ group :test do
   gem 'webdrivers'
   gem 'webmock'   # Allows mocking of web apis for instance
   gem 'chromedriver-helper'
+  # Testing sidekiq workers
+  gem 'rspec-sidekiq'
 end

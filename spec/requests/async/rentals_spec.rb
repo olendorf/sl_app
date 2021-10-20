@@ -40,7 +40,7 @@ RSpec.describe 'Async::Rentals', type: :request do
       end
     end
 
-    context 'askign for parcel state timeline' do
+    context 'asking for parcel state timeline' do
       it 'should return ok status' do
         get path, params: { chart: 'parcel_status_timeline' }
         expect(response.status).to eq 200
@@ -52,7 +52,7 @@ RSpec.describe 'Async::Rentals', type: :request do
       end
     end
 
-    context 'askign for rental income timeline' do
+    context 'asking for rental income timeline' do
       it 'should return ok status' do
         get path, params: { chart: 'rental_income_timeline' }
         expect(response.status).to eq 200
@@ -61,6 +61,19 @@ RSpec.describe 'Async::Rentals', type: :request do
       it 'should return the data' do
         get path, params: { chart: 'rental_income_timeline' }
         expect(JSON.parse(response.body)['data'].size).to eq 6
+      end
+    end
+    
+    
+    context 'asking for region revenue barchart' do
+      it 'should return ok status' do
+        get path, params: { chart: 'region_revenue_bar_chart' }
+        expect(response.status).to eq 200
+      end
+
+      it 'should return the data' do
+        get path, params: { chart: 'region_revenue_bar_chart' }
+        expect(JSON.parse(response.body)['data'].size).to eq 5
       end
     end
   end

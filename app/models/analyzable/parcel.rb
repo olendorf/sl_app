@@ -72,7 +72,7 @@ module Analyzable
       added_time = tier_payment.to_f / weekly_tier
 
       self.expiration_date = Time.current if expiration_date.nil?
-      self.expiration_date = expiration_date + 1.week.to_i * added_time
+      self.expiration_date = expiration_date + (1.week.to_i * added_time)
       user.transactions << Analyzable::Transaction.create(
         amount: tier_payment,
         target_key: owner_key,

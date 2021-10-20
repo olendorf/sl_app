@@ -613,8 +613,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
         end
 
         it 'correctly alters time left' do
-          expected_time = Time.now + (
-            existing_user.expiration_date.to_i - Time.now.to_i) * (1.0 / 3)
+          expected_time = Time.now + ((
+            existing_user.expiration_date.to_i - Time.now.to_i) * (1.0 / 3))
           expected_time = Time.diff(expected_time, Time.now)
           put path, params: atts.to_json, headers: headers(terminal)
           expect(existing_user.reload.time_left).to eq expected_time

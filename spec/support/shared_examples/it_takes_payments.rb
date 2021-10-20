@@ -69,7 +69,7 @@ RSpec.shared_examples 'it takes payments' do |model_name, user_type, amount|
 
         it 'should have the correct balance for the user' do
           put path, params: atts.to_json, headers: headers(web_object)
-          expect(user.balance).to eq(amount - amount * 0.15)
+          expect(user.balance).to eq(amount - (amount * 0.15))
         end
       end
 
@@ -115,7 +115,7 @@ RSpec.shared_examples 'it takes payments' do |model_name, user_type, amount|
 
         it 'should have the correct balance for the user' do
           put path, params: atts.to_json, headers: headers(web_object)
-          expect(user.balance).to eq(amount - amount * 0.15)
+          expect(user.balance).to eq(amount - (amount * 0.15))
         end
       end
     end

@@ -7,7 +7,7 @@ module Analyzable
   class Product < ApplicationRecord
     before_save :add_link
 
-    has_many :product_links, class_name: 'Analyzable::ProductLink'
+    has_many :product_links, class_name: 'Analyzable::ProductLink', dependent: :destroy
     accepts_nested_attributes_for :product_links, allow_destroy: true
     has_many :sales, class_name: 'Analyzable::Transaction', dependent: :nullify
 

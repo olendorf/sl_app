@@ -24,9 +24,9 @@ cache:
 #   - npm install -g node-gyp
 install:
   - bundle install
-  - nvm install node
+  - nvm install 14
   - npm install bootstrap
-  # - node -v
+  - node -v
   # - npm i -g yarn
   # - yarn
 addons:

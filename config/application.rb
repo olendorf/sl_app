@@ -21,9 +21,11 @@ module SlApp
     # the framework and any gems in your application.
 
     config.active_record.belongs_to_required_by_default = false
-    
-    config.assets.paths << Rails.root.join("app", "assets", "fonts")
+
+    config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
 
     config.time_zone = 'America/Los_Angeles'
+
+    config.active_job.queue_adapter = :sidekiq
   end
 end

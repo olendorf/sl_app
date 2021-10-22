@@ -18,17 +18,19 @@ class AsyncController < ApplicationController
     dates
   end
 
+  # rubocop:disable Style/ParenthesesAroundCondition
   def time_series_months(start, stop, interval = 1.month)
     dates = []
     step_time = start
     stop = Time.current if stop.nil?
 
-    while step_time <= stop
+    while (step_time <= stop)
       dates << step_time.strftime('%B %Y')
       step_time += interval
     end
     dates
   end
+  # rubocop:enable Style/ParenthesesAroundCondition
 
   def generate_color_map(items)
     md5 = Digest::MD5.new

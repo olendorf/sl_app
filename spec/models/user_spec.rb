@@ -426,6 +426,13 @@ RSpec.describe User, type: :model do
       end
     end
   end
+  
+  describe '.message_users' do 
+    FactoryBot.create :active_user, expiration_date: 2.days.from_now
+    it 'should queue the background process' do
+      expect(User.message_users).to be_processed_in ""
+    end
+  end
 
   describe '.cleanup_users' do
     before(:each) do

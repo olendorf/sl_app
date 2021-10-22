@@ -426,6 +426,21 @@ RSpec.describe User, type: :model do
       end
     end
   end
+  
+  describe '.message_users' do 
+    let(:uri_regex) do
+      %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/message_user\?
+         auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
+    end
+
+    it 'should queue the background process' do
+      stub_request(:post, uri_regex)
+      FactoryBot.create :active_user, expiration_date: 2.days.from_now
+      owner = FactoryBot.create :owner
+      owner.web_objects << FactoryBot.create(:server)
+      expect(User.message_users).to be_processed_in ""
+    end
+  end
 
   describe '.cleanup_users' do
     before(:each) do

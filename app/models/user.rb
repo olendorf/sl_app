@@ -239,8 +239,8 @@ class User < ApplicationRecord
   end
 
   def self.message_users
-    User.where('expiration_date < ? AND expiration_date > ?', 3.days.from_now,
-               9.days.ago).each do |user|
+
+    User.where('expiration_date < ? AND expiration_date > ?', 3.days.from_now, 8.days.ago).each do |user|
       MessageUserWorker.perform_async(user.avatar_name, user.avatar_key, user.expiration_date)
     end
   end

@@ -44,12 +44,11 @@ module Async
         category: %w[tier land_sale],
         created_at: (1.month.ago..Time.current)
       ).group(:region).sum(:amount).sort_by { |_k, v| v }.reverse
-      data = {
+      {
         regions: data.collect(&:first),
         data: data.collect(&:last),
         colors: generate_color_map(data.collect(&:first)).values
       }
-      data
     end
 
     def parcel_status_timeline

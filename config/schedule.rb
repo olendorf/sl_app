@@ -27,13 +27,9 @@ set :environment, 'development'
 job_type :sidekiq, 'cd :path && :environment_variable=:environment bundle exec sidekiq-client push :task :output'
 
 every 1.minute do
-  sidekiq 'HelloWorldWorker'
+  sidekiq 'ProcessUsersWorker'
 end
 
 every 2.minutes do
   sidekiq 'UserCleanupWorker'
-end
-
-every 3.minutes do
-  sidekiq 'GoodbyeWorldWorker'
 end

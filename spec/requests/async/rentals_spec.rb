@@ -63,8 +63,7 @@ RSpec.describe 'Async::Rentals', type: :request do
         expect(JSON.parse(response.body)['data'].size).to eq 6
       end
     end
-    
-    
+
     context 'asking for region revenue barchart' do
       it 'should return ok status' do
         get path, params: { chart: 'region_revenue_bar_chart' }

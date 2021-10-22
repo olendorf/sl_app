@@ -23,7 +23,7 @@ class AsyncController < ApplicationController
     step_time = start
     stop = Time.current if stop.nil?
 
-    while(step_time <= stop)
+    while step_time <= stop
       dates << step_time.strftime('%B %Y')
       step_time += interval
     end

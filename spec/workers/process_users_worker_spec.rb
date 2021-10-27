@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+# require 'sidekiq/testing'
+
+Sidekiq::Testing.fake!
+
 RSpec.describe ProcessUsersWorker, type: :worker do
   describe 'queing the job' do
     it 'job in correct queue' do
@@ -12,7 +16,7 @@ RSpec.describe ProcessUsersWorker, type: :worker do
       expect do
         described_class.perform_async
       end.to change(described_class.jobs, :size).by(1)
-      described_class.new.perform
+      # described_class.new.perform
     end
   end
 end

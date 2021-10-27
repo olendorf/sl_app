@@ -20,7 +20,7 @@ RSpec.describe MessageUserWorker, type: :worker do
       stub_request(:post, uri_regex)
         .with(body:
         /"avatar_name":.*Random Citizen.*Your SLapp Data account expired .*maps.secondlife.com.*/)
-      described_class.perform_async('Random Citizen', SecureRandom.uuid, 3.days.ago)
+      described_class.perform_async(owner.servers.sample.id, 'Random Citizen', SecureRandom.uuid, 3.days.ago)
       assert_equal 'default', described_class.queue
     end
 
@@ -29,9 +29,9 @@ RSpec.describe MessageUserWorker, type: :worker do
         .with(body:
         /"avatar_name":.*Random Citizen.*Your SLapp Data account expired .*maps.secondlife.com.*/)
       expect do
-        described_class.perform_async('Random Citizen', SecureRandom.uuid, 3.days.ago)
+        described_class.perform_async(owner.servers.sample.id, 'Random Citizen', SecureRandom.uuid, 3.days.ago)
       end.to change(described_class.jobs, :size).by(1)
-      described_class.new.perform('Random Citizen', SecureRandom.uuid, 3.days.ago)
+      # described_class.new.perform(owner.servers.sample.id, 'Random Citizen', SecureRandom.uuid, 3.days.ago)
     end
   end
 end

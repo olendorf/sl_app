@@ -4,7 +4,7 @@
 class MessageUserWorker
   include Sidekiq::Worker
 
-  def perform(avatar_name, avatar_key, expiration_date)
-    ServerSlRequest.account_payment_message(avatar_name, avatar_key, expiration_date)
+  def perform(server_id, avatar_name, avatar_key, message)
+    ServerSlRequest.message_user(Rezzable::Server.find(server_id), avatar_name, avatar_key, message)
   end
 end

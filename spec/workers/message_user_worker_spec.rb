@@ -31,7 +31,7 @@ RSpec.describe MessageUserWorker, type: :worker do
       expect do
         described_class.perform_async(owner.servers.sample.id, 'Random Citizen', SecureRandom.uuid, 3.days.ago)
       end.to change(described_class.jobs, :size).by(1)
-      # described_class.new.perform(owner.servers.sample.id, 'Random Citizen', SecureRandom.uuid, 3.days.ago)
+      described_class.new.perform(owner.servers.sample.id, 'Random Citizen', SecureRandom.uuid, 3.days.ago)
     end
   end
 end

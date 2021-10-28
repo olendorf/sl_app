@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-# Queues up message_users for background processing
+# Removes objects and data from users who are behind and
+# on their account.
 class ProcessUsersWorker
   include Sidekiq::Worker
 
   def perform(*_args)
-    User.message_users
+    User.process_users
   end
 end

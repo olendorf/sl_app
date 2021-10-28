@@ -32,6 +32,25 @@
 en:
   hello: "Hello world"
   
+  background:
+    account:
+      reminder: >-
+        Hello %{avatar_name}. Thank you for using SLapp Data.
+        This is a gentle reminder your SLapp Data account will
+        expire in %{expiration_date}.Please visit our service center at
+        %{slurl} to pay and prevent any loss of data
+        and services.
+      warning: >-
+        Hello %{avatar_name}. Thank you for using SLapp Data. Your SLapp Data
+        account expired %{expiration_date} ago. Please visit our service center
+        at %{slurl} to pay and prevent any further loss of data and services.
+      termination: >-
+        Hello %{avatar_name}. Your SLapp Data account has been deactivated due
+        to nonpayment. Your data will be saved for one year, but all
+        your objects are deleted. If you would like to reactivate your account,
+        visit us at %{slurl} and make a payment."
+        
+  
   errors:
     auth_time: Invalid or missing auth_time.
     auth_digest: Invalid or missing auth_digest.

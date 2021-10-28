@@ -4,6 +4,8 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  
+  extend ActionView::Helpers::DateHelper
 
   validate :password_complexity
 
@@ -213,36 +215,80 @@ class User < ApplicationRecord
     add_transaction_to_target(target, amount) if target
   end
 
-  def self.cleanup_users
-    clean_up_inactive_users
-    clean_up_delinquent_users
+  # def self.cleanup_users
+  #   clean_up_inactive_users
+  #   clean_up_delinquent_users
+  # end
+
+  def self.clean_up_inactive_user(user)
+    user.web_objects.destroy_all
+    user.parcels.destroy_all
+    user.products.destroy_all
+    user.update(account_level: 0)
   end
 
-  def self.clean_up_inactive_users
-    users = User.where('expiration_date < ?',
-                       Settings.default.account.inactive_days.days.ago)
-    ids = users.collect(&:id)
-    AbstractWebObject.where(user_id: ids).destroy_all
-    Analyzable::Parcel.where(user_id: ids).destroy_all
-    Analyzable::Product.where(user_id: ids).destroy_all
-    users.update_all(account_level: 0)
+  def self.clean_up_delinquent_user(user)
+    user.transactions.destroy_all
+    user.visits.destroy_all
+    user.sessions.destroy_all
+    user.update(expiration_date: nil)
   end
 
-  def self.clean_up_delinquent_users
-    users = User.where('expiration_date < ? ',
-                       Settings.default.account.delinquent_days.days.ago)
-    ids = users.collect(&:id)
-    Analyzable::Transaction.where(user_id: ids).destroy_all
-    Analyzable::Visit.where(user_id: ids).destroy_all
-    Analyzable::Session.where(user_id: ids).destroy_all
-    users.update_all(expiration_date: nil)
-  end
+  def self.process_users
+    owner_ids = User.where(role: :owner).collect { |owner| owner.id }
+    server = AbstractWebObject.where(
+      user_id: owner_ids, actable_type: "Rezzable::Server").sample.actable
 
-  def self.message_users
-
-    User.where('expiration_date < ? AND expiration_date > ?', 3.days.from_now, 8.days.ago).each do |user|
-      MessageUserWorker.perform_async(user.avatar_name, user.avatar_key, user.expiration_date)
+    User.where('expiration_date < ?', 3.days.from_now). each do |user|
+      case user.expiration_date
+      
+      when Time.current..3.days.from_now
+        MessageUserWorker.perform_async(
+          server.id, 
+          user.avatar_name, 
+          user.avatar_key, 
+          I18n.t('background.account.reminder', 
+            avatar_name: user.avatar_name,
+            expiration_date: distance_of_time_in_words(
+              Time.current, user.expiration_date
+            ),
+            slurl: Settings.default.visit_us_slurl
+          )
+        )
+      when 7.days.ago..3.days.from_now
+        MessageUserWorker.perform_async(
+          server.id, 
+          user.avatar_name, 
+          user.avatar_key, 
+          I18n.t('background.account.warning', 
+            avatar_name: user.avatar_name,
+            expiration_date: distance_of_time_in_words(
+              Time.current, user.expiration_date
+            ),
+            slurl: Settings.default.visit_us_slurl
+          )
+        )
+      when(1.year.ago..7.days.ago)
+        clean_up_inactive_user(user)
+        MessageUserWorker.perform_async(
+          server.id, 
+          user.avatar_name, 
+          user.avatar_key, 
+          I18n.t('background.account.termination', 
+            avatar_name: user.avatar_name,
+            slurl: Settings.default.visit_us_slurl
+          )
+        )
+      else
+        clean_up_inactive_user(user) # Do this just in case. 
+        clean_up_delinquent_user(user)
+      end
     end
+
+
+    # User.where('expiration_date < ? AND expiration_date > ?', 3.days.from_now, 8.days.ago).each do |user|
+    #   MessageUserWorker.perform_async(user.avatar_name, user.avatar_key, user.expiration_date)
+    # end
   end
 
   private

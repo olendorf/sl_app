@@ -539,8 +539,23 @@ RSpec.describe User, type: :model do
       
       
       
-    
-      @stub = stub_request(:post, uri_regex)
+      reminder_regex_str = '{"avatar_name":.*,"message":.*gentle reminder' + 
+                           '.*maps.secondlife.com\/secondlife.*}'
+      @reminder_stub = stub_request(:post, uri_regex).
+                          with(body: /#{reminder_regex_str}/)
+                          
+      warning_regex_str = '{"avatar_name":.*,"message":.*account ' + 
+                          'expired.*maps.secondlife.com\/secondlife.*}'
+      @warning_stub = stub_request(:post, uri_regex).
+                          with(body: /#{warning_regex_str}/)
+                          
+      deactivated_regex_str = '{"avatar_name":.*,"message":.*deactivated due ' +
+                              'to nonpayment.*maps.secondlife.com' + 
+                              '\/secondlife.*}'
+      @deactivated_stub = stub_request(:post, uri_regex).
+                          with(body: /#{deactivated_regex_str}/)
+                          
+                          
     end
     
     let(:uri_regex) do
@@ -552,6 +567,21 @@ RSpec.describe User, type: :model do
     it 'should set tardy users account level to zero after a week' do
       User.process_users
       expect(User.where(account_level: 0).size).to eq 9
+    end
+    
+    it 'should message the reminded users' do 
+      User.process_users
+      expect(@reminder_stub).to have_been_requested.times(2)
+    end
+    
+    it 'should message the warned users' do 
+      User.process_users
+      expect(@warning_stub).to have_been_requested.times(3)
+    end   
+    
+    it 'should message the inactivated users' do 
+      User.process_users
+      expect(@deactivated_stub).to have_been_requested.times(4)
     end
 
     it 'should delete objects after a week' do

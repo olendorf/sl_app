@@ -569,20 +569,20 @@ RSpec.describe User, type: :model do
       expect(User.where(account_level: 0).size).to eq 9
     end
     
-    it 'should message the reminded users' do 
-      User.process_users
-      expect(@reminder_stub).to have_been_requested.times(2)
-    end
+    # it 'should message the reminded users' do 
+    #   User.process_users
+    #   expect(@reminder_stub).to have_been_requested.times(2)
+    # end
     
-    it 'should message the warned users' do 
-      User.process_users
-      expect(@warning_stub).to have_been_requested.times(3)
-    end   
+    # it 'should message the warned users' do 
+    #   User.process_users
+    #   expect(@warning_stub).to have_been_requested.times(3)
+    # end   
     
-    it 'should message the inactivated users' do 
-      User.process_users
-      expect(@deactivated_stub).to have_been_requested.times(4)
-    end
+    # it 'should message the inactivated users' do 
+    #   User.process_users
+    #   expect(@deactivated_stub).to have_been_requested.times(4)
+    # end
 
     it 'should delete objects after a week' do
       User.process_users

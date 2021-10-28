@@ -4,6 +4,7 @@ rvm:
   - 2.6.3
 services:
   - postgresql
+  - redis-server
 branches:
   only:
     - master

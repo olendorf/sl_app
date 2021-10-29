@@ -4,6 +4,9 @@ require 'api_constraints'
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  get 'public/available_parcels'
+  get 'public/my_parcels'
+  get 'public/purchases'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
   root to: 'pages#home'

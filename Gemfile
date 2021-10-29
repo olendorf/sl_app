@@ -44,6 +44,9 @@ gem 'sidekiq'
 gem 'sidekiq-client-cli'
 gem 'whenever'
 
+# image uploader
+# gem 'shrine'
+
 # Track changes to your models, for auditing or versioning
 gem 'paper_trail'
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_29_131958) do
+ActiveRecord::Schema.define(version: 2021_11_01_200031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(version: 2021_10_29_131958) do
     t.string "position"
     t.string "current_state"
     t.string "image_key"
+    t.string "rating", default: "UNKNOWN"
   end
 
   create_table "analyzable_product_links", force: :cascade do |t|
@@ -304,6 +305,7 @@ ActiveRecord::Schema.define(version: 2021_10_29_131958) do
     t.string "image_key"
     t.string "business_name"
     t.string "default_image_key"
+    t.string "visit_us_slurl"
     t.index ["account_level"], name: "index_users_on_account_level"
     t.index ["avatar_key"], name: "index_users_on_avatar_key", unique: true
     t.index ["avatar_name"], name: "index_users_on_avatar_name", unique: true

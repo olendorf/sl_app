@@ -2,8 +2,11 @@ require 'rails_helper'
 
 RSpec.describe "Publics", type: :request do
   describe "GET /available_parcels" do
+    let(:user) { FactoryBot.create :active_user }
     it "returns http success" do
-      get "/public/available_parcels"
+      get "/public/available_parcels", params: {
+        avatar_key: user.avatar_key
+      }
       expect(response).to have_http_status(:success)
     end
   end

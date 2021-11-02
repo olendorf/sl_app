@@ -135,5 +135,5 @@ Rails.application.configure do
 
   config.webpacker.check_yarn_integrity = false
 
-  config.web_console.permissions = '152.7.255.201'
+  config.web_console.permissions = '152.7.255.0/16'
 end

@@ -388,6 +388,8 @@ img {
   color: #222;
   background: transparent;
   transition: all 500ms ease;
+  font-weight: bold;
+  padding-bottom: 2px;
 }
 
 .pagination li a:hover,
@@ -4246,7 +4248,7 @@ div#mCSB_1_container{
 
 }
 
-.portfolio-page-section .pagination-weapper{
+.portfolio-page-section .pagination-wrapper{
   position: relative;
   display: block;
   margin-top: 40px;

@@ -17,4 +17,28 @@ RSpec.describe Analyzable::ParcelDecorator do
       )
     end
   end
+  
+  describe :image_url do 
+    let(:user) { FactoryBot.create :active_user }
+    let(:parcel) { FactoryBot.create :parcel, user_id: user.id }
+    context 'there is an image key specified' do 
+      it 'should return the correct url' do 
+        parcel.update(image_key: SecureRandom.uuid)
+        expect(parcel.decorate.image_url(1)).to eq "http://secondlife.com/app/image/#{parcel.image_key}/1"
+      end
+    end 
+    
+    context 'there is a default image specified' do
+      it 'should return the correct url' do 
+        user.update(default_image_key: SecureRandom.uuid)
+        expect(parcel.decorate.image_url(1)).to eq "http://secondlife.com/app/image/#{user.default_image_key}/1"
+      end
+    end 
+    
+    context 'there is no image specified' do 
+      it 'should return the correct url' do 
+        expect(parcel.decorate.image_url(1)).to eq 'no_image_available.jpg'
+      end
+    end
+  end
 end

@@ -3,16 +3,13 @@
 <!-- page wrapper -->
 <body class="boxed_wrapper ltr">
 
-   
-
-
     
     <!--Page Title-->
     <section class="page-title bg-color-1 text-center">
-        <div class="pattern-layer" style="background-image: url(assets/images/shape/pattern-18.png);"></div>
+        <div class="pattern-layer" style="background-image: <%= image_url('theme/shape/pattern-18.png') %>"></div>
         <div class="auto-container">
             <div class="content-box">
-                <h1>Available Parcels</h1>
+                <h1>Available Parcels for <%= @owner.decorate.business_display_name %></h1>
             </div>
         </div>
     </section>
@@ -24,179 +21,38 @@
         <div class="auto-container">
             <div class="sortable-masonry">
                 <div class="items-container row clearfix">
-                    <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
-                        <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <div class="inner-box">
-                                <div class="image-holder">
-                                    <figure class="image-box"><img src="assets/images/news/news-9.jpg" alt=""></figure>
-                                    <div class="post-date"><i class="fas fa-calendar-alt"></i><p>Dec 28</p></div>
-                                    <div class="link"><a href="blog-details.html"><i class="fas fa-arrow-right"></i></a></div>
-                                </div>
-                                <div class="lower-content">
-                                    <ul class="post-info">
-                                        <li><span>by</span>&nbsp;<a href="blog-details.html">Nicolas</a></li>
-                                        <li><a href="blog-details.html">3 Comments</a></li>
-                                    </ul>
-                                    <h3><a href="blog-details.html">How to become a sucess- ful businessman.</a></h3>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt labore.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
-                        <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <div class="inner-box">
-                                <div class="image-holder">
-                                    <figure class="image-box"><img src="assets/images/news/news-10.jpg" alt=""></figure>
-                                    <div class="post-date"><i class="fas fa-calendar-alt"></i><p>Dec 27</p></div>
-                                    <div class="link"><a href="blog-details.html"><i class="fas fa-arrow-right"></i></a></div>
-                                </div>
-                                <div class="lower-content">
-                                    <ul class="post-info">
-                                        <li><span>by</span>&nbsp;<a href="blog-details.html">Hinter</a></li>
-                                        <li><a href="blog-details.html">5 Comments</a></li>
-                                    </ul>
-                                    <h3><a href="blog-details.html">Services that will Grow Your Business for you!</a></h3>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt labore.</p>
+                    <% @parcels.each do |parcel| %>
+                        <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
+                            <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
+                                <div class="inner-box">
+                                    <div class="image-holder">
+                                        <figure class="image-box"><%= image_tag(parcel.decorate.image_url(1)) %></figure>
+                                        <div class="post-date"><p><%= parcel.area %> m<sup>2</sup></p></div>
+                                        <div class="link">
+                                            <%= link_to(parcel.decorate.slurl) do %>
+                                                <i class="fas fa-arrow-right"></i>
+                                            <% end %>
+                                        </div>
+                                        <div class="link">
+                                        </div>
+                                    </div>
+                                    <div class="lower-content">
+                                        <ul class="post-info">
+                                            <li><%= link_to parcel.region, parcel.decorate.slurl %></li>
+                                            <li><%= link_to parcel.rating, parcel.decorate.slurl %></li>
+                                        </ul>
+                                        <h3><%= link_to parcel.parcel_name, parcel.decorate.slurl %></h3>
+                                        <p><%= parcel.description %></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
-                        <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <div class="inner-box">
-                                <div class="image-holder">
-                                    <figure class="image-box"><img src="assets/images/news/news-11.jpg" alt=""></figure>
-                                    <div class="post-date"><i class="fas fa-calendar-alt"></i><p>Dec 26</p></div>
-                                    <div class="link"><a href="blog-details.html"><i class="fas fa-arrow-right"></i></a></div>
-                                </div>
-                                <div class="lower-content">
-                                    <ul class="post-info">
-                                        <li><span>by</span>&nbsp;<a href="blog-details.html">Tailor</a></li>
-                                        <li><a href="blog-details.html">4 Comments</a></li>
-                                    </ul>
-                                    <h3><a href="blog-details.html">Online Trends That Have Gone Stale.</a></h3>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt labore.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
-                        <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <div class="inner-box">
-                                <div class="image-holder">
-                                    <figure class="image-box"><img src="assets/images/news/news-13.jpg" alt=""></figure>
-                                    <div class="post-date"><i class="fas fa-calendar-alt"></i><p>Dec 25</p></div>
-                                    <div class="link"><a href="blog-details.html"><i class="fas fa-arrow-right"></i></a></div>
-                                </div>
-                                <div class="lower-content">
-                                    <ul class="post-info">
-                                        <li><span>by</span>&nbsp;<a href="blog-details.html">Nicolas</a></li>
-                                        <li><a href="blog-details.html">4 Comments</a></li>
-                                    </ul>
-                                    <h3><a href="blog-details.html">Throwback Old Online Trends That Have....</a></h3>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt labore.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
-                        <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <div class="inner-box">
-                                <div class="image-holder">
-                                    <figure class="image-box"><img src="assets/images/news/news-12.jpg" alt=""></figure>
-                                    <div class="post-date"><i class="fas fa-calendar-alt"></i><p>Dec 24</p></div>
-                                    <div class="link"><a href="blog-details.html"><i class="fas fa-arrow-right"></i></a></div>
-                                </div>
-                                <div class="lower-content">
-                                    <ul class="post-info">
-                                        <li><span>by</span>&nbsp;<a href="blog-details.html">Tailor</a></li>
-                                        <li><a href="blog-details.html">4 Comments</a></li>
-                                    </ul>
-                                    <h3><a href="blog-details.html">Additional Services that will Grow Your...</a></h3>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt labore.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
-                        <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <div class="inner-box">
-                                <div class="image-holder">
-                                    <figure class="image-box"><img src="assets/images/news/news-14.jpg" alt=""></figure>
-                                    <div class="post-date"><i class="fas fa-calendar-alt"></i><p>Dec 23</p></div>
-                                    <div class="link"><a href="blog-details.html"><i class="fas fa-arrow-right"></i></a></div>
-                                </div>
-                                <div class="lower-content">
-                                    <ul class="post-info">
-                                        <li><span>by</span>&nbsp;<a href="blog-details.html">Tailor</a></li>
-                                        <li><a href="blog-details.html">4 Comments</a></li>
-                                    </ul>
-                                    <h3><a href="blog-details.html">Google indeing Issue not really an issue</a></h3>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt labore.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
-                        <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <div class="inner-box">
-                                <div class="image-holder">
-                                    <figure class="image-box"><img src="assets/images/news/news-15.jpg" alt=""></figure>
-                                    <div class="post-date"><i class="fas fa-calendar-alt"></i><p>Dec 22</p></div>
-                                    <div class="link"><a href="blog-details.html"><i class="fas fa-arrow-right"></i></a></div>
-                                </div>
-                                <div class="lower-content">
-                                    <ul class="post-info">
-                                        <li><span>by</span>&nbsp;<a href="blog-details.html">Nicolas</a></li>
-                                        <li><a href="blog-details.html">4 Comments</a></li>
-                                    </ul>
-                                    <h3><a href="blog-details.html">Invalid Data Markup did cause Action</a></h3>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt labore.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
-                        <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <div class="inner-box">
-                                <div class="image-holder">
-                                    <figure class="image-box"><img src="assets/images/news/news-16.jpg" alt=""></figure>
-                                    <div class="post-date"><i class="fas fa-calendar-alt"></i><p>Dec 21</p></div>
-                                    <div class="link"><a href="blog-details.html"><i class="fas fa-arrow-right"></i></a></div>
-                                </div>
-                                <div class="lower-content">
-                                    <ul class="post-info">
-                                        <li><span>by</span>&nbsp;<a href="blog-details.html">Hinter</a></li>
-                                        <li><a href="blog-details.html">4 Comments</a></li>
-                                    </ul>
-                                    <h3><a href="blog-details.html">Google might be having issues with...</a></h3>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt labore.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
-                        <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <div class="inner-box">
-                                <div class="image-holder">
-                                    <figure class="image-box"><img src="assets/images/news/news-17.jpg" alt=""></figure>
-                                    <div class="post-date"><i class="fas fa-calendar-alt"></i><p>Dec 20</p></div>
-                                    <div class="link"><a href="blog-details.html"><i class="fas fa-arrow-right"></i></a></div>
-                                </div>
-                                <div class="lower-content">
-                                    <ul class="post-info">
-                                        <li><span>by</span>&nbsp;<a href="blog-details.html">Hinter</a></li>
-                                        <li><a href="blog-details.html">4 Comments</a></li>
-                                    </ul>
-                                    <h3><a href="blog-details.html">Google might be having issues with...</a></h3>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt labore.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <% end %>
                 </div>
             </div>
+        </div>
+        <div class="paginated-wrapper text-center">
+            <%= paginate @parcels %>
         </div>
     </section>
     <!-- blog-masonry end -->
@@ -205,125 +61,17 @@
     <!-- cta-section -->
     <section class="cta-section bg-color-2">
         <div class="pattern-box">
-            <div class="pattern-1" style="background-image: url(assets/images/shape/pattern-7.png);"></div>
-            <div class="pattern-2" style="background-image: url(assets/images/shape/pattern-8.png);"></div>
+            <div class="pattern-1" style="background-image: <%= image_url('theme/shape/pattern-7.png') %>"></div>
+            <div class="pattern-2" style="background-image: <%= image_url('theme/shape/pattern-8.png') %>"></div>
         </div>
         <div class="auto-container">
             <div class="content-box text-center wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                <h2>Get Ready to Started It’s Fast, Free & Very Easy</h2>
-                <a href="blog-masonry.html" class="theme-btn style-three">Learn More</a>
+                <h2>Visit <%= @owner.decorate.business_display_name %> in world. </h2>
+                <%= link_to "Visit", @owner.visit_us_slurl, class: "theme-btn style-three" %>
             </div>
         </div>
     </section>
     <!-- cta-sectione end -->
 
 
-    <!-- main-footer -->
-    <footer class="main-footer">
-        <div class="auto-container">
-            <div class="footer-top">
-                <div class="widget-section wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                    <div class="row clearfix">
-                        <div class="col-lg-3 col-md-6 col-sm-12 footer-column">
-                            <div class="footer-widget logo-widget">
-                                <figure class="footer-logo"><a href="index.html"><img src="assets/images/footer-logo.png" alt=""></a></figure>
-                                <div class="text">
-                                    <p>Lorem ipsum dolor amet consectetur adipielit sed eiusm tempor incididunt ut labore dolore.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12 footer-column">
-                            <div class="footer-widget links-widget">
-                                <div class="widget-title">
-                                    <h3>Quick Link</h3>
-                                </div>
-                                <div class="widget-content">
-                                    <ul>
-                                        <li><a href="blog-masonry.html">Company History</a></li>
-                                        <li><a href="blog-masonry.html">About Us</a></li>
-                                        <li><a href="blog-masonry.html">Contact Us</a></li>
-                                        <li><a href="blog-masonry.html">Services</a></li>
-                                        <li><a href="blog-masonry.html">Privacy Policy</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12 footer-column">
-                            <div class="footer-widget links-widget">
-                                <div class="widget-title">
-                                    <h3>Services</h3>
-                                </div>
-                                <div class="widget-content">
-                                    <ul>
-                                        <li><a href="blog-masonry.html">Company History</a></li>
-                                        <li><a href="blog-masonry.html">About Us</a></li>
-                                        <li><a href="blog-masonry.html">Contact Us</a></li>
-                                        <li><a href="blog-masonry.html">Services</a></li>
-                                        <li><a href="blog-masonry.html">Privacy Policy</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12 footer-column">
-                            <div class="footer-widget contact-widget">
-                                <div class="widget-title">
-                                    <h3>Contact Info</h3>
-                                </div>
-                                <div class="widget-content">
-                                    <ul>
-                                        <li>Flat 20, Reynolds Neck, North Hele naville, FV77 8WS</li>
-                                        <li><a href="tel:23055873407">+2(305) 587-3407</a></li>
-                                        <li><a href="mailto:info@example.com">info@example.com</a></li>
-                                    </ul>
-                                </div>
-                                <ul class="social-links clearfix">
-                                    <li><a href="blog-masonry.html"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a href="blog-masonry.html"><i class="fab fa-twitter"></i></a></li>
-                                    <li><a href="blog-masonry.html"><i class="fab fa-vimeo-v"></i></a></li>
-                                    <li><a href="blog-masonry.html"><i class="fab fa-linkedin-in"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom clearfix">
-                <div class="copyright pull-left">
-                    <p><a href="index.html">Detox</a> &copy; 2020 All Right Reserved</p>
-                </div>
-                <ul class="footer-nav pull-right">
-                    <li><a href="blog-masonry.html">Terms of Service</a></li>
-                    <li><a href="blog-masonry.html">Privacy Policy</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
-    <!-- main-footer end -->
-
-
-
-<!--Scroll to top-->
-<button class="scroll-top scroll-to-target" data-target="html">
-    <span class="fa fa-arrow-up"></span>
-</button>
-
-
-<!-- jequery plugins -->
-<script src="assets/js/jquery.js"></script>
-<script src="assets/js/popper.min.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
-<script src="assets/js/owl.js"></script>
-<script src="assets/js/wow.js"></script>
-<script src="assets/js/validation.js"></script>
-<script src="assets/js/jquery.fancybox.js"></script>
-<script src="assets/js/appear.js"></script>
-<script src="assets/js/isotope.js"></script>
-<script src="assets/js/scrollbar.js"></script>
-<script src="assets/js/tilt.jquery.js"></script>
-<script src="assets/js/jQuery.style.switcher.min.js"></script>
-
-<!-- main-js -->
-<script src="assets/js/script.js"></script>
-
-</body><!-- End of .page_wrapper -->
-</html>
+  

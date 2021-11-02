@@ -11,9 +11,8 @@ RSpec.describe Analyzable::ParcelDecorator do
 
   describe :slurl do
     it 'returns the correct url' do
-      expect(parcel.decorate.slurl).to eq(
-        '<a href="https://maps.secondlife.com/secondlife/' \
-        'Foo Man Choo/10/20/30/">Foo Man Choo (10, 20, 30)</a>'
+      expect(parcel.decorate.slurl).to eq('https://maps.secondlife.com/secondlife/'\
+        'Foo Man Choo/10/20/30/'
       )
     end
   end

@@ -42,12 +42,12 @@ module Api
         ).actable
       end
 
-      def validate_package
+      def validate_package(time_limit = 30)
         # puts auth_digest
         # puts create_digest
         # puts api_key
 
-        unless (Time.now.to_i - auth_time).abs < 30
+        unless (Time.now.to_i - auth_time).abs < time_limit
           raise(
             ActionController::BadRequest, I18n.t('errors.auth_time')
           )

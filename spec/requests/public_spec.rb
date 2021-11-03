@@ -10,18 +10,102 @@ RSpec.describe "Publics", type: :request do
       expect(response).to have_http_status(:success)
     end
   end
-
-  describe "GET /my_parcels" do
-    it "returns http success" do
-      get "/public/my_parcels"
-      expect(response).to have_http_status(:success)
+  
+  let(:user) { FactoryBot.create :active_user }
+  let(:web_object) { FactoryBot.create :server, user_id: user.id }
+  
+  describe 'public pages with authorization' do 
+    context 'valid params sent' do 
+      let(:auth_time) { Time.now.to_i }
+    
+      
+      let(:digest) {
+        Digest::SHA1.hexdigest(
+          auth_time.to_s + web_object.api_key
+        )
+      }
+  
+      describe "GET /my_parcels" do
+        it "returns http success" do
+          get "/public/my_parcels", params: {
+            object_key: web_object.object_key,
+            auth_digest: digest,
+            auth_time: auth_time
+          }
+          expect(response).to have_http_status(:success)
+        end
+      end
+    
+      describe "GET /my_purchases" do
+        it "returns http success" do
+          get "/public/my_purchases", params: {
+            object_key: web_object.object_key,
+            auth_digest: digest,
+            auth_time: auth_time
+          }
+          expect(response).to have_http_status(:success)
+        end
+      end
     end
-  end
-
-  describe "GET /purchases" do
-    it "returns http success" do
-      get "/public/purchases"
-      expect(response).to have_http_status(:success)
+    
+    context 'stale time sent' do 
+      let(:auth_time) { 70.seconds.ago.to_i }
+    
+      
+      let(:digest) {
+        Digest::SHA1.hexdigest(
+          auth_time.to_s + web_object.api_key
+        )
+      }
+  
+      describe "GET /my_parcels" do
+        it "returns http redirect" do
+          get "/public/my_parcels", params: {
+            object_key: web_object.object_key,
+            auth_digest: digest,
+            auth_time: auth_time
+          }
+          expect(response).to have_http_status(400)
+        end
+      end
+    
+      describe "GET /my_purchases" do
+        it "returns http redirect" do
+          get "/public/my_purchases", params: {
+            object_key: web_object.object_key,
+            auth_digest: digest,
+            auth_time: auth_time
+          }
+          expect(response).to have_http_status(400)
+        end
+      end
+    end
+    
+    context 'invalid hash sent' do 
+      let(:auth_time) { Time.current.to_i }
+    
+  
+      describe "GET /my_parcels" do
+        it "returns http redirect" do
+          get "/public/my_parcels", params: {
+            object_key: web_object.object_key,
+            auth_digest: 'foo',
+            auth_time: auth_time
+          }
+          expect(response).to have_http_status(404)
+        end
+      end
+    
+      describe "GET /my_purchases" do
+        it "returns http redirect" do
+          get "/public/my_purchases", params: {
+            object_key: web_object.object_key,
+            auth_digest: 'foo',
+            auth_time: auth_time
+          }
+          expect(response).to have_http_status(404)
+        end
+      end
     end
   end
 

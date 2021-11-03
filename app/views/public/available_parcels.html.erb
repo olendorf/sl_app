@@ -42,6 +42,8 @@
                                             <li><%= link_to parcel.rating, parcel.decorate.slurl %></li>
                                         </ul>
                                         <h3><%= link_to parcel.parcel_name, parcel.decorate.slurl %></h3>
+                                        <p><b>Purchase Price: <%= parcel.purchase_price %></b></p>
+                                        <p><b>Weekly tier: <%= parcel.weekly_tier %></b></p>
                                         <p><%= parcel.description %></p>
                                     </div>
                                 </div>
@@ -51,7 +53,7 @@
                 </div>
             </div>
         </div>
-        <div class="paginated-wrapper text-center">
+        <div class="paginated-wrapper text-center round">
             <%= paginate @parcels %>
         </div>
     </section>

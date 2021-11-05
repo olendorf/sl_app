@@ -60,6 +60,9 @@ Rails.application.configure do
     Bullet.add_safelist type: :n_plus_one_query,
                         class_name: 'AbstractWebObject',
                         association: :transactions
+    Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: 'Analyzable::Inventory',
+                        association: :user
     Bullet.add_safelist type: :counter_cache, class_name: 'User', association: :web_objects
     Bullet.add_safelist type: :n_plus_one_query,
                         class_name: 'AbstractWebObject',

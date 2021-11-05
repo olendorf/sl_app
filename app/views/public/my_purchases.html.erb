@@ -1,2 +1,73 @@
-<h1>Public#purchases</h1>
-<p>Find me in app/views/public/purchases.html.erb</p>
+
+
+
+    
+    <!--Page Title-->
+    <section class="page-title bg-color-1 text-center">
+        <div class="pattern-layer" style="background-image: <%= image_url('theme/shape/pattern-18.png') %>"></div>
+        <div class="auto-container">
+            <div class="content-box">
+                <h1>Your Purchases Most Recent First</h1>
+                <h2>Redelivery only available for copy items.</h2>
+            </div>
+        </div>
+    </section>
+    <!--End Page Title-->
+
+    <!-- blog-masonry -->
+    <section class="blog-masonry">
+        <div class="auto-container">
+            <div class="sortable-masonry">
+                <div class="items-container row clearfix">
+                    <% @purchases.each do |purchase| %>
+                        <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
+                            <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
+                                <div class="inner-box">
+                                    <% if purchase.inventory && purchase.inventory.next_can_copy? %>
+                                        <div class="image-holder">
+                                    <% else %>
+                                        <div class="image-holder no-circle">
+                                    <% end %>
+                                        <figure class="image-box"><%= image_tag(purchase.inventory.decorate.image_url(1)) %></figure>
+                                        <% if purchase.inventory && purchase.inventory.next_can_copy? %>
+                                            <div class="post-date">
+                                                <p>
+                                                    <%= link_to 'Redeliver', 
+                                                                    background_jobs_give_inventory_path(
+                                                                        avatar_key: params['avatar_key'], 
+                                                                        inventory_id: purchase.inventory.id) %>
+                                                </p>
+                                            </div>
+                                            <div class="link">
+                                                <%= link_to(background_jobs_give_inventory_path(
+                                                                    avatar_key: params['avatar_key'], 
+                                                                    inventory_id: purchase.inventory.id)) do %>
+                                                    <i class="fas fa-arrow-right"></i>
+                                                <% end %>
+                                            </div>
+                                            <div class="link">
+                                            </div>
+                                        <% else %>
+                                            <div class="post-date"><p>Redelivery Unavailable</p></div>
+                                        <% end %>
+                                    </div>
+                                    <div class="lower-content">
+                                        <ul class="post-info">
+                                            <li>Purchased on <%= purchase.created_at.to_formatted_s(:long) %></li>
+                                        </ul>
+                                        <h3><%= purchase.inventory.inventory_name %></h3>
+                                        <p><b>Price: L$ <%= purchase.inventory.price %> </b></p>
+                                        <p><b>Permissions: <%= purchase.inventory.decorate.pretty_perms('next') %></b></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+        <div class="paginated-wrapper text-center round">
+            <%= paginate @purchases %>
+        </div>
+    </section>
+    <!-- blog-masonry end -->

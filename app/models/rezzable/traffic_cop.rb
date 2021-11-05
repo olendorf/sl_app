@@ -149,7 +149,7 @@ module Rezzable
                                                                .return_message_delay.days
 
         inventory = server.inventories.find_by_inventory_name(inventory_to_give)
-        InventorySlRequest.give_inventory(inventory, detection[:avatar_name])
+        InventorySlRequest.give_inventory(inventory.id, detection[:avatar_key])
       end
     end
   end

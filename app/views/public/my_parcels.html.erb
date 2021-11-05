@@ -23,25 +23,18 @@
                 <div class="items-container row clearfix">
                     <% @parcels.each do |parcel| %>
                         <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
-                            <div class="news-block-one wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
+                            <div class="news-block-one" data-wow-delay="0ms" data-wow-duration="1500ms">
                                 <div class="inner-box">
-                                    <div class="image-holder">
+                                    <div class="image-holder no-circle">
                                         <figure class="image-box"><%= image_tag(parcel.decorate.image_url(1)) %></figure>
                                         <div class="post-date"><p><%= parcel.area %> m<sup>2</sup></p></div>
-                                        <div class="link">
-                                            <%= link_to(parcel.decorate.slurl) do %>
-                                                <i class="fas fa-arrow-right"></i>
-                                            <% end %>
-                                        </div>
-                                        <div class="link">
-                                        </div>
                                     </div>
                                     <div class="lower-content">
                                         <ul class="post-info">
-                                            <li><%= link_to parcel.region, parcel.decorate.slurl %></li>
-                                            <li><%= link_to parcel.rating, parcel.decorate.slurl %></li>
+                                            <li><%= parcel.region %></li>
+                                            <li><%= parcel.rating %></li>
                                         </ul>
-                                        <h3><%= link_to parcel.parcel_name, parcel.decorate.slurl %></h3>
+                                        <h3><%= parcel.parcel_name %></h3>
                                         <% if parcel.expiration_date < Time.current %>
                                           <p><b>Expired : <%= distance_of_time_in_words(Time.current, parcel.expiration_date) %> ago</b></p>
                                         <% else %>

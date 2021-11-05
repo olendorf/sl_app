@@ -27,6 +27,14 @@ module Analyzable
       gesture: 21,
       setting: 56
     }
+    
+    def product
+      begin
+        return self.user.product_links.find_by_link_name(self.inventory_name).product
+      rescue
+        return nil
+      end
+    end
 
     # Some metaprogramming here to generate methods to determine
     # the perms of an inventory along the lines of owner_can_modify? or

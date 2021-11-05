@@ -22,6 +22,10 @@ class PublicController < ApplicationController
 
   def my_purchases
     authorize_request
+    @user = User.find_by_avatar_key(params['avatar_key'])
+    @purchases = Analyzable::Transaction.where(
+      category: 'sale', target_key: params['avatar_key']
+      ).includes([:inventory]).order(:created_at).reverse_order.page(params[:page]).per(18)
   end
   
   def authorize_request(time_limit = 60)

@@ -2366,6 +2366,22 @@ div#mCSB_1_container{
   -o-transition: all .35s ease;
   transition: all .35s ease;
 }
+.news-block-one .inner-box .image-holder.no-circle:before{
+  content: "";
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -20px;
+  right: -10px;
+  opacity: 0;
+  z-index: 1;
+  -webkit-transition: all .35s ease;
+  -moz-transition: all .35s ease;
+  -ms-transition: all .35s ease;
+  -o-transition: all .35s ease;
+  transition: all .35s ease;
+}
 
 .news-block-one .inner-box:hover .image-holder .link a{
   transform: scale(1);

@@ -53,6 +53,9 @@ Rails.application.configure do
                         class_name: 'AbstractWebObject',
                         association: :user
     Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: 'Analyzable::Inventory',
+                        association: :user
+    Bullet.add_safelist type: :n_plus_one_query,
                         class_name: 'AbstractWebObject',
                         association: :server
   end

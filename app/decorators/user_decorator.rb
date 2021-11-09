@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
+# Decorates user model to provide display helpers and such
 class UserDecorator < Draper::Decorator
   delegate_all
-  
-  
+
   def business_display_name
-    self.business_name.nil? ? user.avatar_name : user.business_name
+    business_name.nil? ? user.avatar_name : user.business_name
   end
 
   # Define presentation-specific methods here. Helpers are accessed through
@@ -14,5 +16,4 @@ class UserDecorator < Draper::Decorator
   #       object.created_at.strftime("%a %m/%d/%y")
   #     end
   #   end
-
 end

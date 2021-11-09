@@ -13,6 +13,6 @@ FactoryBot.define do
     parcel_key { SecureRandom.uuid }
     weekly_tier { rand(10..2000) }
     purchase_price { rand(10..2000) }
-    rating { ['General', 'Moderate', 'Adult'].sample }
+    rating { %w[General Moderate Adult].sample }
   end
 end

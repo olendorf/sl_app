@@ -1,5 +1,7 @@
+
+# Controller for public pages.
 class PublicController < ApplicationController
-  include ExceptionHandler
+  # include ExceptionHandler
   
 
   

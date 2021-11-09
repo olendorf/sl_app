@@ -71,7 +71,7 @@ RSpec.describe InventorySlRequest do
     let(:avatar_key) { SecureRandom.uuid }
     it 'should make the request' do
       stub = stub_request(:post, give_regex)
-             .with(body: '{"avatar_key":"' + avatar_key + '"}')
+             .with(body: "{\"avatar_key\":\"#{avatar_key}\"}")
       InventorySlRequest.give_inventory(
         server.inventories.sample.id, avatar_key
       )

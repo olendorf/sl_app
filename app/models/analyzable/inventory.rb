@@ -27,13 +27,11 @@ module Analyzable
       gesture: 21,
       setting: 56
     }
-    
+
     def product
-      begin
-        return self.user.product_links.find_by_link_name(self.inventory_name).product
-      rescue
-        return nil
-      end
+      user.product_links.find_by_link_name(inventory_name).product
+    rescue StandardError
+      nil
     end
 
     # Some metaprogramming here to generate methods to determine

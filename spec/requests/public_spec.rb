@@ -91,6 +91,7 @@ RSpec.describe "Publics", type: :request do
         it "returns http redirect" do
           get "/public/my_parcels", params: {
             object_key: web_object.object_key,
+            renter_key: renter.avatar_key,
             auth_digest: 'foo',
             auth_time: auth_time
           }
@@ -103,6 +104,7 @@ RSpec.describe "Publics", type: :request do
           get "/public/my_purchases", params: {
             object_key: web_object.object_key,
             auth_digest: 'foo',
+            avatar_key: renter.avatar_key,
             auth_time: auth_time
           }
           expect(response).to have_http_status(404)

@@ -22,10 +22,9 @@ module ExceptionHandler
     #   json_response({ message: e.message }, :unprocessable_entity)
     # end
 
-    rescue_from ActionController::BadRequest do |e|
+    rescue_from ActionController::BadRequest do |_e|
       redirect_to errors_bad_request_path
     end
-
 
     # rescue_from ActiveRecord::RecordNotUnique do |e|
     #   if controller_name == 'users'

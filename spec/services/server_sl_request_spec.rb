@@ -42,25 +42,25 @@ RSpec.describe ServerSlRequest do
         owner.web_objects << FactoryBot.create(:server)
       end
     end
-    
+
     let(:user) { FactoryBot.build :avatar }
-    
-    
+
     let(:uri_regex) do
       %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/message_user\?
          auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
     end
-    
-    it 'should send the message to the user' do 
+
+    it 'should send the message to the user' do
       reg_str = '{|"avatar_name\":\".*,\"avatar_key\":.*\",\"message":"foo"}'
-      
+
       stub = stub_request(:post, uri_regex)
-               .with(body: "abcd").with(
-                 body: /#{reg_str}/)
+             .with(body: 'abcd').with(
+               body: /#{reg_str}/
+             )
       ServerSlRequest.message_user(
-        owner.servers.sample, user.avatar_name, user.avatar_key, "foo")
+        owner.servers.sample, user.avatar_name, user.avatar_key, 'foo'
+      )
       expect(stub).to have_been_requested
     end
-
   end
 end

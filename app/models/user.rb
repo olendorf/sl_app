@@ -4,7 +4,7 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  
+
   extend ActionView::Helpers::DateHelper
 
   validate :password_complexity
@@ -234,62 +234,60 @@ class User < ApplicationRecord
     user.update(expiration_date: nil)
   end
 
+  # rubocop:disable Metrics/BlockLength, Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def self.process_users
-    owner_ids = User.where(role: :owner).collect { |owner| owner.id }
+    owner_ids = User.where(role: :owner).collect(&:id)
     server = AbstractWebObject.where(
-      user_id: owner_ids, actable_type: "Rezzable::Server").sample.actable
+      user_id: owner_ids, actable_type: 'Rezzable::Server'
+    ).sample.actable
 
-    User.where('expiration_date < ?', 3.days.from_now). each do |user|
+    User.where('expiration_date < ?', 3.days.from_now).each do |user|
       case user.expiration_date
-      
+
       when Time.current..3.days.from_now
         MessageUserWorker.perform_async(
-          server.id, 
-          user.avatar_name, 
-          user.avatar_key, 
-          I18n.t('background.account.reminder', 
-            avatar_name: user.avatar_name,
-            expiration_date: distance_of_time_in_words(
-              Time.current, user.expiration_date
-            ),
-            slurl: Settings.default.visit_us_slurl
-          )
+          server.id,
+          user.avatar_name,
+          user.avatar_key,
+          I18n.t('background.account.reminder',
+                 avatar_name: user.avatar_name,
+                 expiration_date: distance_of_time_in_words(
+                   Time.current, user.expiration_date
+                 ),
+                 slurl: Settings.default.visit_us_slurl)
         )
       when 7.days.ago..3.days.from_now
         MessageUserWorker.perform_async(
-          server.id, 
-          user.avatar_name, 
-          user.avatar_key, 
-          I18n.t('background.account.warning', 
-            avatar_name: user.avatar_name,
-            expiration_date: distance_of_time_in_words(
-              Time.current, user.expiration_date
-            ),
-            slurl: Settings.default.visit_us_slurl
-          )
+          server.id,
+          user.avatar_name,
+          user.avatar_key,
+          I18n.t('background.account.warning',
+                 avatar_name: user.avatar_name,
+                 expiration_date: distance_of_time_in_words(
+                   Time.current, user.expiration_date
+                 ),
+                 slurl: Settings.default.visit_us_slurl)
         )
-      when(1.year.ago..7.days.ago)
+      when (1.year.ago..7.days.ago)
         clean_up_inactive_user(user)
         MessageUserWorker.perform_async(
-          server.id, 
-          user.avatar_name, 
-          user.avatar_key, 
-          I18n.t('background.account.termination', 
-            avatar_name: user.avatar_name,
-            slurl: Settings.default.visit_us_slurl
-          )
+          server.id,
+          user.avatar_name,
+          user.avatar_key,
+          I18n.t('background.account.termination',
+                 avatar_name: user.avatar_name,
+                 slurl: Settings.default.visit_us_slurl)
         )
       else
-        clean_up_inactive_user(user) # Do this just in case. 
+        clean_up_inactive_user(user) # Do this just in case.
         clean_up_delinquent_user(user)
       end
     end
-
-
-    # User.where('expiration_date < ? AND expiration_date > ?', 3.days.from_now, 8.days.ago).each do |user|
-    #   MessageUserWorker.perform_async(user.avatar_name, user.avatar_key, user.expiration_date)
-    # end
   end
+
+  # rubocop:enable Metrics/BlockLength, Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   private
 

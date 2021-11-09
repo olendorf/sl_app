@@ -6,7 +6,7 @@ require 'rails_helper'
 Sidekiq::Testing.fake!
 
 RSpec.describe ProcessUsersWorker, type: :worker do
-  before(:each) do 
+  before(:each) do
     owners = FactoryBot.create_list(:owner, 3)
     3.times do
       owners.sample.web_objects << FactoryBot.create(:server)

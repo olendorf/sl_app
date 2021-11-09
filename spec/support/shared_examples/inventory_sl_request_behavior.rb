@@ -17,7 +17,7 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     server.save
     server
   }
-  
+
   let(:avatar) { FactoryBot.create :avatar }
   # let(:uri_regex) do
   #   %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}\?
@@ -107,7 +107,6 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     expect(stub).to have_been_requested.times(2)
   end
 
-
   scenario 'User gives copy inventory to an avatar' do
     inventory = server.inventories.sample
     inventory.owner_perms = Analyzable::Inventory::PERMS[:transfer] +
@@ -149,7 +148,7 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     inventory.save
 
     stub_request(:post, give_regex)
-      .with(body:"{\"avatar_key\":\"#{avatar.avatar_key}\"}")
+      .with(body: "{\"avatar_key\":\"#{avatar.avatar_key}\"}")
       .to_return(body: 'foo', status: 400)
 
     visit(send("#{namespace}_inventory_path", inventory))

@@ -1,23 +1,24 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
-RSpec.describe GiveInventoryWorker, type: :worker do  
-  require "erb"
+RSpec.describe GiveInventoryWorker, type: :worker do
+  require 'erb'
   include ERB::Util
-  
+
   let(:user) { FactoryBot.create :active_user }
   let(:server) { FactoryBot.create :server, user_id: user.id }
-  let(:inventory) do 
+  let(:inventory) do
     inventory = FactoryBot.create(:inventory, user_id: user.id)
     server.inventories << inventory
     inventory
   end
   let(:avatar) { FactoryBot.create :avatar }
-  
+
   let(:uri_regex) do
     %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/inventory/give/#{url_encode(inventory.inventory_name)}\?
        auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
-  
-  
+
   describe 'queing the job' do
     it 'job in correct queue' do
       stub_request(:post, uri_regex)

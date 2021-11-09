@@ -1,34 +1,35 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe "Publics", type: :request do
-  describe "GET /available_parcels" do
+RSpec.describe 'Publics', type: :request do
+  describe 'GET /available_parcels' do
     let(:user) { FactoryBot.create :active_user }
-    it "returns http success" do
-      get "/public/available_parcels", params: {
+    it 'returns http success' do
+      get '/public/available_parcels', params: {
         avatar_key: user.avatar_key
       }
       expect(response).to have_http_status(:success)
     end
   end
-  
+
   let(:user) { FactoryBot.create :active_user }
   let(:web_object) { FactoryBot.create :server, user_id: user.id }
   let(:renter) { FactoryBot.create :avatar }
-  
-  describe 'public pages with authorization' do 
-    context 'valid params sent' do 
+
+  describe 'public pages with authorization' do
+    context 'valid params sent' do
       let(:auth_time) { Time.now.to_i }
-    
-      
+
       let(:digest) {
         Digest::SHA1.hexdigest(
           auth_time.to_s + web_object.api_key
         )
       }
-  
-      describe "GET /my_parcels" do
-        it "returns http success" do
-          get "/public/my_parcels", params: {
+
+      describe 'GET /my_parcels' do
+        it 'returns http success' do
+          get '/public/my_parcels', params: {
             object_key: web_object.object_key,
             renter_key: renter.avatar_key,
             auth_digest: digest,
@@ -37,10 +38,10 @@ RSpec.describe "Publics", type: :request do
           expect(response).to have_http_status(:success)
         end
       end
-    
-      describe "GET /my_purchases" do
-        it "returns http success" do
-          get "/public/my_purchases", params: {
+
+      describe 'GET /my_purchases' do
+        it 'returns http success' do
+          get '/public/my_purchases', params: {
             object_key: web_object.object_key,
             auth_digest: digest,
             auth_time: auth_time
@@ -49,20 +50,19 @@ RSpec.describe "Publics", type: :request do
         end
       end
     end
-    
-    context 'stale time sent' do 
+
+    context 'stale time sent' do
       let(:auth_time) { 70.seconds.ago.to_i }
-    
-      
+
       let(:digest) {
         Digest::SHA1.hexdigest(
           auth_time.to_s + web_object.api_key
         )
       }
-  
-      describe "GET /my_parcels" do
-        it "returns http redirect" do
-          get "/public/my_parcels", params: {
+
+      describe 'GET /my_parcels' do
+        it 'returns http redirect' do
+          get '/public/my_parcels', params: {
             object_key: web_object.object_key,
             auth_digest: digest,
             auth_time: auth_time
@@ -70,10 +70,10 @@ RSpec.describe "Publics", type: :request do
           expect(response).to have_http_status(400)
         end
       end
-    
-      describe "GET /my_purchases" do
-        it "returns http redirect" do
-          get "/public/my_purchases", params: {
+
+      describe 'GET /my_purchases' do
+        it 'returns http redirect' do
+          get '/public/my_purchases', params: {
             object_key: web_object.object_key,
             auth_digest: digest,
             auth_time: auth_time
@@ -82,14 +82,13 @@ RSpec.describe "Publics", type: :request do
         end
       end
     end
-    
-    context 'invalid hash sent' do 
+
+    context 'invalid hash sent' do
       let(:auth_time) { Time.current.to_i }
-    
-  
-      describe "GET /my_parcels" do
-        it "returns http redirect" do
-          get "/public/my_parcels", params: {
+
+      describe 'GET /my_parcels' do
+        it 'returns http redirect' do
+          get '/public/my_parcels', params: {
             object_key: web_object.object_key,
             renter_key: renter.avatar_key,
             auth_digest: 'foo',
@@ -98,10 +97,10 @@ RSpec.describe "Publics", type: :request do
           expect(response).to have_http_status(404)
         end
       end
-    
-      describe "GET /my_purchases" do
-        it "returns http redirect" do
-          get "/public/my_purchases", params: {
+
+      describe 'GET /my_purchases' do
+        it 'returns http redirect' do
+          get '/public/my_purchases', params: {
             object_key: web_object.object_key,
             auth_digest: 'foo',
             avatar_key: renter.avatar_key,
@@ -112,5 +111,4 @@ RSpec.describe "Publics", type: :request do
       end
     end
   end
-
 end

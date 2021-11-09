@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Analyzable
-  # Decorates Analyzabel::Product to provide helper functions for 
+  # Decorates Analyzabel::Product to provide helper functions for
   # display and such.
   class ProductDecorator < Draper::Decorator
     delegate_all

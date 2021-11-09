@@ -13,6 +13,7 @@ RSpec.describe "Publics", type: :request do
   
   let(:user) { FactoryBot.create :active_user }
   let(:web_object) { FactoryBot.create :server, user_id: user.id }
+  let(:renter) { FactoryBot.create :avatar }
   
   describe 'public pages with authorization' do 
     context 'valid params sent' do 
@@ -29,6 +30,7 @@ RSpec.describe "Publics", type: :request do
         it "returns http success" do
           get "/public/my_parcels", params: {
             object_key: web_object.object_key,
+            renter_key: renter.avatar_key,
             auth_digest: digest,
             auth_time: auth_time
           }

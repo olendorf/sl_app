@@ -1,6 +1,8 @@
 class PublicController < ApplicationController
   include ExceptionHandler
   
+
+  
   
   def available_parcels
     @owner = User.find_by_avatar_key(params['avatar_key'])
@@ -12,7 +14,7 @@ class PublicController < ApplicationController
 
   def my_parcels
     authorize_request
-    @owner = User.find_by_avatar_key(params['user_key'])
+    @owner = requesting_object.user
     @renter = Avatar.find_by_avatar_key(params['renter_key'])
     @parcels = Analyzable::Parcel.where(
       owner_key: params['renter_key'], 
@@ -32,11 +34,11 @@ class PublicController < ApplicationController
     return if Rails.env.development?
     
     unless (Time.now.to_i - auth_time).abs < time_limit
-      render status: :bad_request and return
+      render 'errors/bad_request', status: :bad_request and return
     end
     
     unless auth_digest == create_digest
-      render status: :not_found and return
+      render 'errors/not_found', status: :not_found and return
     end
     
   end
@@ -59,6 +61,9 @@ class PublicController < ApplicationController
   end
   
   def requesting_object
-    AbstractWebObject.find_by_object_key(params['object_key'])
+      @requesting_object = AbstractWebObject.find_by_object_key(
+        params['object_key']
+      ) unless @requesting_object
+      @requesting_object
   end
 end

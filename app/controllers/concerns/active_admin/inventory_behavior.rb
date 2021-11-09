@@ -9,7 +9,7 @@ module ActiveAdmin
     def self.included(base)
       base.instance_eval do
         member_action :give, method: :post do
-          InventorySlRequest.give_inventory(resource, params['avatar_name'])
+          InventorySlRequest.give_inventory(resource.id, params['avatar_name'])
           flash.notice = "Inventory given to #{params['avatar_name']}"
           if resource.owner_can_copy?
             redirect_back(

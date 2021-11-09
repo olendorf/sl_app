@@ -17,6 +17,8 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     server.save
     server
   }
+  
+  let(:avatar) { FactoryBot.create :avatar }
   # let(:uri_regex) do
   #   %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}\?
   #     auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
@@ -146,7 +148,7 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     inventory.save
 
     stub_request(:post, give_regex)
-      .with(body: '{"avatar_name":"Random Citizen"}')
+      .with(body: '{"avatar_key":"Random Citizen"}')
       .to_return(body: 'foo', status: 400)
 
     visit(send("#{namespace}_inventory_path", inventory))

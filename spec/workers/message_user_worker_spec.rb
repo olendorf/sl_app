@@ -29,9 +29,9 @@ RSpec.describe MessageUserWorker, type: :worker do
       stub_request(:post, uri_regex)
         .with(body:
         "{\"avatar_name\":\"Random Citizen\",\"avatar_key\":\"#{uuid}\",\"message\":\"foo\"}")
-      expect{
+      expect {
         described_class.perform_async(owner.servers.sample.id, 'Random Citizen', uuid, 'foo')
-      }.to change{ described_class.jobs.size}.by(1)
+      }.to change { described_class.jobs.size }.by(1)
       described_class.new.perform(owner.servers.sample.id, 'Random Citizen', uuid, 'foo')
     end
   end

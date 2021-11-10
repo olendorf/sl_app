@@ -13,11 +13,11 @@ RSpec.describe InventorySlRequest do
 
   let(:uri_regex) do
     %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/
-    inventory/[a-zA-Z\s%0-9]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+}x
+    inventory/[a-zA-Z\s%0-9]+\?auth_digest=[-a-f0-9]+&auth_time=[0-9]+}x
   end
   let(:give_regex) do
     %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/
-    inventory/give/[a-zA-Z\s%0-9]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+}x
+    inventory/give/[a-zA-Z\s%0-9]+\?auth_digest=[-a-f0-9]+&auth_time=[0-9]+}x
   end
 
   describe '.delete_inventory' do
@@ -53,7 +53,7 @@ RSpec.describe InventorySlRequest do
     it 'should send the request ' do
       body_regex = /{"server_key":"[-a-f0-9]+"}/
       stub = stub_request(:put, uri_regex).with(body: body_regex)
-      InventorySlRequest.move_inventory(server.inventories.sample, server.id)
+      InventorySlRequest.move_inventory(server.inventories.sample, server_two.id)
       expect(stub).to have_been_requested
     end
 
@@ -68,11 +68,12 @@ RSpec.describe InventorySlRequest do
   end
 
   describe '.give' do
+    let(:avatar_key) { SecureRandom.uuid }
     it 'should make the request' do
       stub = stub_request(:post, give_regex)
-             .with(body: '{"avatar_name":"Random Citizen"}')
+             .with(body: "{\"avatar_key\":\"#{avatar_key}\"}")
       InventorySlRequest.give_inventory(
-        server.inventories.sample, 'Random Citizen'
+        server.inventories.sample.id, avatar_key
       )
       expect(stub).to have_been_requested
     end
@@ -82,7 +83,7 @@ RSpec.describe InventorySlRequest do
         stub_request(:post, give_regex).to_return(body: 'abc', status: 400)
         expect {
           InventorySlRequest.give_inventory(
-            server.inventories.sample, 'Random Citizen'
+            server.inventories.sample.id, SecureRandom.uuid
           )
         }.to raise_error(RestClient::ExceptionWithResponse)
       end

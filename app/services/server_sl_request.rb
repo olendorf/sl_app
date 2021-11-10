@@ -25,7 +25,7 @@ class ServerSlRequest
       payload: {
         avatar_name: avatar_name,
         avatar_key: avatar_key,
-        message: message,
+        message: message
       }.to_json,
       content_type: :json,
       accept: :json,

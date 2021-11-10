@@ -60,6 +60,9 @@ Rails.application.configure do
     Bullet.add_safelist type: :n_plus_one_query,
                         class_name: 'AbstractWebObject',
                         association: :transactions
+    Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: 'Analyzable::Inventory',
+                        association: :user
     Bullet.add_safelist type: :counter_cache, class_name: 'User', association: :web_objects
     Bullet.add_safelist type: :n_plus_one_query,
                         class_name: 'AbstractWebObject',
@@ -135,5 +138,5 @@ Rails.application.configure do
 
   config.webpacker.check_yarn_integrity = false
 
-  config.web_console.permissions = '152.7.255.201'
+  config.web_console.permissions = '152.7.255.0/16'
 end

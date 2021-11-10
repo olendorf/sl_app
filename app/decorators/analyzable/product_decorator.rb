@@ -1,17 +1,10 @@
 # frozen_string_literal: true
 
 module Analyzable
-  # Decorotor with helper functions for parcels.
-  class ParcelDecorator < Draper::Decorator
+  # Decorates Analyzabel::Product to provide helper functions for
+  # display and such.
+  class ProductDecorator < Draper::Decorator
     delegate_all
-
-    def slurl
-      position = JSON.parse(self.position)
-      "https://maps.secondlife.com/secondlife/#{region}/#{position['x'].round}/" \
-        "#{position['y'].round}/#{position['z'].round}/"
-      # text = "#{region} (#{position['x'].round}, " \
-      #       "#{position['y'].round}, #{position['z'].round})"
-    end
 
     def image_url(size)
       return "http://secondlife.com/app/image/#{image_key}/#{size}" if image_key

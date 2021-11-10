@@ -1,2 +1,76 @@
-<h1>Public#my_parcels</h1>
-<p>Find me in app/views/public/my_parcels.html.erb</p>
+
+
+<!-- page wrapper -->
+<body class="boxed_wrapper ltr">
+
+    
+    <!--Page Title-->
+    <section class="page-title bg-color-1 text-center">
+        <div class="pattern-layer" style="background-image: <%= image_url('theme/shape/pattern-18.png') %>"></div>
+        <div class="auto-container">
+            <div class="content-box">
+                <h1>Your parcels with <%= @owner.decorate.business_display_name %></h1>
+            </div>
+        </div>
+    </section>
+    <!--End Page Title-->
+
+
+    <!-- blog-masonry -->
+    <section class="blog-masonry">
+        <div class="auto-container">
+            <div class="sortable-masonry">
+                <div class="items-container row clearfix">
+                    <% @parcels.each do |parcel| %>
+                        <div class="col-lg-4 col-md-6 col-sm-12 news-block masonry-item small-column">
+                            <div class="news-block-one" data-wow-delay="0ms" data-wow-duration="1500ms">
+                                <div class="inner-box">
+                                    <div class="image-holder no-circle">
+                                        <figure class="image-box"><%= image_tag(parcel.decorate.image_url(1)) %></figure>
+                                        <div class="post-date"><p><%= parcel.area %> m<sup>2</sup></p></div>
+                                    </div>
+                                    <div class="lower-content">
+                                        <ul class="post-info">
+                                            <li><%= parcel.region %></li>
+                                            <li><%= parcel.rating %></li>
+                                        </ul>
+                                        <h3><%= parcel.parcel_name %></h3>
+                                        <% if parcel.expiration_date < Time.current %>
+                                          <p><b>Expired : <%= distance_of_time_in_words(Time.current, parcel.expiration_date) %> ago</b></p>
+                                        <% else %>
+                                          <p><b>Expires in : <%= distance_of_time_in_words(Time.current, parcel.expiration_date) %></b></p>
+                                        <% end %>
+                                        <p><b>Weekly tier: <%= parcel.weekly_tier %></b></p>
+                                        <p><%= parcel.description %></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+        <div class="paginated-wrapper text-center">
+            <%= paginate @parcels %>
+        </div>
+    </section>
+    <!-- blog-masonry end -->
+
+
+    <!-- cta-section -->
+    <section class="cta-section bg-color-2">
+        <div class="pattern-box">
+            <div class="pattern-1" style="background-image: <%= image_url('theme/shape/pattern-7.png') %>"></div>
+            <div class="pattern-2" style="background-image: <%= image_url('theme/shape/pattern-8.png') %>"></div>
+        </div>
+        <div class="auto-container">
+            <div class="content-box text-center wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
+                <h2>Visit <%= @owner.decorate.business_display_name %> in world. </h2>
+                <%= link_to "Visit", @owner.visit_us_slurl, class: "theme-btn style-three" %>
+            </div>
+        </div>
+    </section>
+    <!-- cta-sectione end -->
+
+
+  

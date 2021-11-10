@@ -32,6 +32,11 @@
 en:
   hello: "Hello world"
   
+  web_site:
+    mission_statement: >-
+      We provide real time data collection, integration visualization and analysis
+      to maximize the value of your business data.
+  
   background:
     account:
       reminder: >-

@@ -17,6 +17,8 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     server.save
     server
   }
+
+  let(:avatar) { FactoryBot.create :avatar }
   # let(:uri_regex) do
   #   %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}\?
   #     auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
@@ -111,13 +113,13 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
                             Analyzable::Inventory::PERMS[:copy]
     inventory.save
     stub = stub_request(:post, give_regex)
-           .with(body: '{"avatar_name":"Random Citizen"}')
+           .with(body: "{\"avatar_key\":\"#{avatar.avatar_key}\"}")
     server
 
     visit(send("#{namespace}_inventory_path", inventory))
-    fill_in('give_inventory-avatar_name', with: 'Random Citizen')
+    fill_in('give_inventory-avatar_key', with: avatar.avatar_key)
     click_on 'Give Inventory'
-    expect(page).to have_text('Inventory given to Random Citizen')
+    expect(page).to have_text("Inventory given to #{avatar.avatar_key}")
     expect(stub).to have_been_requested
 
     expect(Analyzable::Inventory.find(inventory.id)).to_not be_nil
@@ -129,12 +131,12 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     inventory.save
 
     stub = stub_request(:post, give_regex)
-           .with(body: '{"avatar_name":"Random Citizen"}')
+           .with(body: "{\"avatar_key\":\"#{avatar.avatar_key}\"}")
 
     visit(send("#{namespace}_inventory_path", inventory))
-    fill_in('give_inventory-avatar_name', with: 'Random Citizen')
+    fill_in('give_inventory-avatar_key', with: avatar.avatar_key)
     click_on 'Give Inventory'
-    expect(page).to have_text('Inventory given to Random Citizen')
+    expect(page).to have_text("Inventory given to #{avatar.avatar_key}")
     expect(stub).to have_been_requested
 
     expect(Analyzable::Inventory.where(id: inventory.id)).to_not exist
@@ -146,11 +148,11 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     inventory.save
 
     stub_request(:post, give_regex)
-      .with(body: '{"avatar_name":"Random Citizen"}')
+      .with(body: "{\"avatar_key\":\"#{avatar.avatar_key}\"}")
       .to_return(body: 'foo', status: 400)
 
     visit(send("#{namespace}_inventory_path", inventory))
-    fill_in('give_inventory-avatar_name', with: 'Random Citizen')
+    fill_in('give_inventory-avatar_key', with: avatar.avatar_key)
     click_on 'Give Inventory'
     expect(page).to have_text('Unable to give inventory: foo')
 

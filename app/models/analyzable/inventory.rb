@@ -28,6 +28,12 @@ module Analyzable
       setting: 56
     }
 
+    def product
+      user.product_links.find_by_link_name(inventory_name).product
+    rescue StandardError
+      nil
+    end
+
     # Some metaprogramming here to generate methods to determine
     # the perms of an inventory along the lines of owner_can_modify? or
     # next_can_transfer?

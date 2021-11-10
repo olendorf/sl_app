@@ -12,5 +12,11 @@ module Analyzable
       end
       output.join('|')
     end
+
+    def image_url(size)
+      return 'no_image_available.jpg' unless product
+
+      product.decorate.image_url(size)
+    end
   end
 end

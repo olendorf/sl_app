@@ -426,8 +426,8 @@ RSpec.describe User, type: :model do
       end
     end
   end
-  
-  # describe '.message_users' do 
+
+  # describe '.message_users' do
   #   let(:uri_regex) do
   #     %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/message_user\?
   #       auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
@@ -443,32 +443,29 @@ RSpec.describe User, type: :model do
   # end
 
   describe '.cleanup_users' do
-    
     before(:each) do
       Analyzable::Visit.all.destroy_all
       Analyzable::Transaction.all.destroy_all
       Analyzable::Parcel.all.destroy_all
       AbstractWebObject.all.destroy_all
       Analyzable::Product.all.destroy_all
-      
+
       owners = FactoryBot.create_list(:owner, 3)
-      4.times do 
+      4.times do
         owners.sample.web_objects << FactoryBot.create(:server)
       end
-      
-      1.times do |i|
-        user = FactoryBot.create :active_user, avatar_name: "Active User_#{i}"
-        user.web_objects << FactoryBot.create(:server, user_id: user.id)
-        user.web_objects << FactoryBot.create(:vendor, user_id: user.id)
-        user.transactions << FactoryBot.create(:transaction, user_id: user.id)
-        user.visits << FactoryBot.create(:visit, user_id: user.id)
-        user.visits << FactoryBot.create(:visit, user_id: user.id)
-        user.parcels << FactoryBot.create(:parcel, user_id: user.id)
-        user.products << FactoryBot.create(:product, user_id: user.id)
-        user.sessions << FactoryBot.create(:session, user_id: user.id)
-        user.sessions << FactoryBot.create(:session, user_id: user.id)
-      end
-      
+
+      user = FactoryBot.create :active_user, avatar_name: 'Active User_0'
+      user.web_objects << FactoryBot.create(:server, user_id: user.id)
+      user.web_objects << FactoryBot.create(:vendor, user_id: user.id)
+      user.transactions << FactoryBot.create(:transaction, user_id: user.id)
+      user.visits << FactoryBot.create(:visit, user_id: user.id)
+      user.visits << FactoryBot.create(:visit, user_id: user.id)
+      user.parcels << FactoryBot.create(:parcel, user_id: user.id)
+      user.products << FactoryBot.create(:product, user_id: user.id)
+      user.sessions << FactoryBot.create(:session, user_id: user.id)
+      user.sessions << FactoryBot.create(:session, user_id: user.id)
+
       2.times do |i|
         user = FactoryBot.create :active_user, avatar_name: "Reminded User_#{i}",
                                                expiration_date: 2.days.from_now
@@ -481,7 +478,7 @@ RSpec.describe User, type: :model do
         user.sessions << FactoryBot.create(:session, user_id: user.id)
         user.sessions << FactoryBot.create(:session, user_id: user.id)
       end
-      
+
       3.times do |i|
         user = FactoryBot.create :active_user, avatar_name: "Late User_#{i}",
                                                expiration_date: 4.days.ago
@@ -519,7 +516,7 @@ RSpec.describe User, type: :model do
         user.products << FactoryBot.create(:product, user_id: user.id)
         user.sessions << FactoryBot.create(:session, user_id: user.id)
       end
-      
+
       2.times do |i|
         user = FactoryBot.create :active_user, avatar_name: "Delinquent User_#{i}",
                                                expiration_date: 368.days.ago
@@ -536,28 +533,23 @@ RSpec.describe User, type: :model do
         user.products << FactoryBot.create(:product, user_id: user.id)
         user.sessions << FactoryBot.create(:session, user_id: user.id)
       end
-      
-      
-      
-      reminder_regex_str = '{"avatar_name":.*,"message":.*gentle reminder' + 
+
+      reminder_regex_str = '{"avatar_name":.*,"message":.*gentle reminder' +
                            '.*maps.secondlife.com\/secondlife.*}'
-      @reminder_stub = stub_request(:post, uri_regex).
-                          with(body: /#{reminder_regex_str}/)
-                          
-      warning_regex_str = '{"avatar_name":.*,"message":.*account ' + 
+      @reminder_stub = stub_request(:post, uri_regex)
+                       .with(body: /#{reminder_regex_str}/)
+
+      warning_regex_str = '{"avatar_name":.*,"message":.*account ' +
                           'expired.*maps.secondlife.com\/secondlife.*}'
-      @warning_stub = stub_request(:post, uri_regex).
-                          with(body: /#{warning_regex_str}/)
-                          
+      @warning_stub = stub_request(:post, uri_regex)
+                      .with(body: /#{warning_regex_str}/)
+
       deactivated_regex_str = '{"avatar_name":.*,"message":.*deactivated due ' +
-                              'to nonpayment.*maps.secondlife.com' + 
-                              '\/secondlife.*}'
-      @deactivated_stub = stub_request(:post, uri_regex).
-                          with(body: /#{deactivated_regex_str}/)
-                          
-                          
+                              'to nonpayment.*maps.secondlife.com\\/secondlife.*}'
+      @deactivated_stub = stub_request(:post, uri_regex)
+                          .with(body: /#{deactivated_regex_str}/)
     end
-    
+
     let(:uri_regex) do
       %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/
         [-a-f0-9]{36}/message_user\?
@@ -568,18 +560,18 @@ RSpec.describe User, type: :model do
       User.process_users
       expect(User.where(account_level: 0).size).to eq 9
     end
-    
-    # it 'should message the reminded users' do 
+
+    # it 'should message the reminded users' do
     #   User.process_users
     #   expect(@reminder_stub).to have_been_requested.times(2)
     # end
-    
-    # it 'should message the warned users' do 
+
+    # it 'should message the warned users' do
     #   User.process_users
     #   expect(@warning_stub).to have_been_requested.times(3)
-    # end   
-    
-    # it 'should message the inactivated users' do 
+    # end
+
+    # it 'should message the inactivated users' do
     #   User.process_users
     #   expect(@deactivated_stub).to have_been_requested.times(4)
     # end

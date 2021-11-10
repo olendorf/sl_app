@@ -66,7 +66,7 @@ RSpec.describe Analyzable::Parcel, type: :model do
         state.save
         parcel.update(owner_key: renter.avatar_key, owner_name: renter.avatar_name)
         expect(parcel.states.first.closed_at).to be_within(10.seconds).of(Time.current)
-        expect(parcel.states.first.duration).to be_within(10.seconds).of(1.week)
+        expect(parcel.states.first.duration).to be_within(2.hours).of(1.week)
       end
 
       it 'should remove the parcel box' do
@@ -103,7 +103,8 @@ RSpec.describe Analyzable::Parcel, type: :model do
         last_state = parcel.states.last
         parcel.update(owner_key: nil, owner_name: nil)
         expect(last_state.reload.closed_at).to be_within(1.second).of(Time.current)
-        expect(last_state.reload.duration).to be_within(1.second).of(1.week)
+        # allows testing over day light savings things
+        expect(last_state.reload.duration).to be_within(2.hours).of(1.week)
       end
     end
 
@@ -139,8 +140,8 @@ RSpec.describe Analyzable::Parcel, type: :model do
       it 'should update the previous state duration and closed_at' do
         last_state = parcel.states.last
         parcel.update(parcel_box_key: new_parcel_box.object_key)
-        expect(last_state.reload.closed_at).to be_within(10.second).of(Time.current)
-        expect(last_state.reload.duration).to be_within(10.second).of(1.week)
+        expect(last_state.reload.closed_at).to be_within(2.hours).of(Time.current)
+        expect(last_state.reload.duration).to be_within(2.hours).of(1.week)
       end
     end
   end

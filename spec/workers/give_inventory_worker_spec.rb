@@ -28,13 +28,13 @@ RSpec.describe GiveInventoryWorker, type: :worker do
       assert_equal 'default', described_class.queue
     end
 
-    # it 'goes into the jobs array for testing environment' do
-    #   stub_request(:post, uri_regex)
-    #     .with(body:
-    #     "{\"avatar_key\":\"#{avatar.avatar_key}\"}")
-    #   described_class.perform_async(inventory.id, avatar.avatar_key)
-    #   expect(described_class.jobs.size).to eq 1
-    #   described_class.new.perform(inventory.id, avatar.avatar_key)
-    # end
+    it 'goes into the jobs array for testing environment' do
+      stub_request(:post, uri_regex)
+        .with(body:
+        "{\"avatar_key\":\"#{avatar.avatar_key}\"}")
+      described_class.perform_async(inventory.id, avatar.avatar_key)
+      expect(described_class.jobs.size).to eq 1
+      described_class.new.perform(inventory.id, avatar.avatar_key)
+    end
   end
 end

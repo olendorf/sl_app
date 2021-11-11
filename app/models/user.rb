@@ -45,6 +45,7 @@ class User < ApplicationRecord
                            dependent: :destroy
   has_many :parcels, class_name: 'Analyzable::Parcel', dependent: :destroy
   has_many :parcel_states, class_name: 'Analyzable::ParcelState', dependent: :destroy
+  has_many :service_tickets, dependent: :destroy
 
   # THese two methods need to be overridden to deal with Devise's need for emails.
   def email_required?

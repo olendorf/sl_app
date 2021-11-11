@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_11_131647) do
+ActiveRecord::Schema.define(version: 2021_11_11_151527) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -222,6 +222,14 @@ ActiveRecord::Schema.define(version: 2021_11_11_131647) do
     t.index ["avatar_key"], name: "index_avatars_on_avatar_key"
     t.index ["avatar_name"], name: "index_avatars_on_avatar_name"
     t.index ["display_name"], name: "index_avatars_on_display_name"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.text "text"
+    t.string "author"
+    t.integer "service_ticket_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "listable_avatars", force: :cascade do |t|

@@ -12,7 +12,7 @@ module Async
     def sales_by_inventory_revenue_timeline(_ids = nil)
       sales = current_user.sales.includes(:inventory)
       dates = time_series_months(sales.first.created_at - 1.month, Time.current)
-      inventories = current_user.inventories.where('revenue > ?', 0)
+      inventories = current_user.inventories.where('revenue > ?', 0).order(:id)
       data = inventories.order(:revenue).reverse.collect do |i|
         [i.inventory_name, Array.new(dates.size, 0)]
       end.to_h
@@ -31,7 +31,7 @@ module Async
     def sales_by_inventory_items_timeline(_ids = nil)
       sales = current_user.sales.includes(:inventory)
       dates = time_series_months(sales.first.created_at - 1.month, Time.current)
-      inventories = current_user.inventories.where('revenue > ?', 0)
+      inventories = current_user.inventories.where('revenue > ?', 0).order(:id)
       data = inventories.order(:revenue).reverse.collect do |i|
         [i.inventory_name, Array.new(dates.size, 0)]
       end.to_h

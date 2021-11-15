@@ -39,6 +39,7 @@ Rails.application.routes.draw do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
       resources :abstract_web_objects, only: [:create]
       resources :users, except: %i[index new edit], param: :avatar_key
+      resources :service_tickets, except: %i[destroy edit new]
       namespace :rezzable do
         resources :web_objects, except: %i[index new edit]
         resources :terminals, except: %i[index new edit]

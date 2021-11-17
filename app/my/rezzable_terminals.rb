@@ -3,8 +3,8 @@
 ActiveAdmin.register Rezzable::Terminal, as: 'Terminal', namespace: :my do
   include ActiveAdmin::RezzableBehavior
 
-  menu parent: 'Objects', label: 'Terminals', 
-                    if: proc { current_user.terminals.size.positive? }
+  menu parent: 'Objects', label: 'Terminals',
+       if: proc { current_user.terminals.size.positive? }
 
   actions :all, except: %i[new create]
 

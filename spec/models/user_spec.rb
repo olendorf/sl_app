@@ -51,11 +51,10 @@ RSpec.describe User, type: :model do
     should have_many(:parcel_states).class_name('Analyzable::ParcelState')
                                     .dependent(:destroy)
   }
-  
+
   it {
     should have_many(:service_tickets).dependent(:destroy)
   }
-  
 
   describe '#servers' do
     it 'should return the servers and nothing else' do

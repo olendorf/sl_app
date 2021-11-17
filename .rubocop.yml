@@ -81,4 +81,7 @@ Style/LineEndConcatenation:
   
 Style/MultilineIfModifier:
   Enabled: false
+  
+Style/StringConcatenation:
+  Enabled: false
 

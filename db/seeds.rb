@@ -383,3 +383,31 @@ end
     user.web_objects << FactoryBot.build(:web_object)
   end
 end
+
+100.times do
+  ticket = FactoryBot.create(:service_ticket, user_id: owner.id)
+  num = rand
+  if num < 0.1
+    ticket.update(
+      client_key: owner.avatar_key,
+      client_name: owner.avatar_name
+    )
+  elsif num < 0.3
+    user = User.all.sample
+    ticket.update(
+      client_key: user.avatar_key,
+      client_name: user.avatar_name
+    )
+  else
+    user = avatars.sample
+    ticket.update(
+      client_key: user.avatar_key,
+      client_name: user.avatar_name
+    )
+  end
+
+  while rand < 0.8
+    author = rand < 0.5 ? owner.avatar_name : ticket.client_name
+    ticket.comments << FactoryBot.create(:comment, author: author)
+  end
+end

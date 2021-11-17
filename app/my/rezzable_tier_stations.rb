@@ -3,11 +3,11 @@
 ActiveAdmin.register Rezzable::TierStation, namespace: 'my', as: 'Tier Station' do
   include ActiveAdmin::RezzableBehavior
 
-  menu parent: 'Objects', label: 'Tier Stations', 
-                      if: proc { current_user.tier_stations.size.positive? }
+  menu parent: 'Objects', label: 'Tier Stations',
+       if: proc { current_user.tier_stations.size.positive? }
 
   actions :all, except: %i[new create]
-  
+
   scope_to :current_user, association_method: :tier_stations
 
   decorate_with Rezzable::TierStationDecorator

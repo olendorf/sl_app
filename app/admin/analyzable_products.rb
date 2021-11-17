@@ -103,8 +103,8 @@ ActiveAdmin.register Analyzable::Product, as: 'Product' do
   #   permitted
   # end
   controller do
-    # def scoped_collection
-    # super.includes(:user)
-    # end
+    def scoped_collection
+      super.includes(:user)
+    end
   end
 end

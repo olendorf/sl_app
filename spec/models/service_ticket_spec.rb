@@ -11,4 +11,12 @@ RSpec.describe ServiceTicket, type: :model do
     should define_enum_for(:status).
         with_values(closed: 0, open: 1)
   end
+  
+  describe :close! do 
+    it 'shouild close the ticket' do 
+      ticket = FactoryBot.create :open_ticket
+      ticket.close!
+      expect(ticket.status).to eq 'closed'
+    end
+  end
 end

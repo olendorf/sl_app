@@ -3,12 +3,11 @@
 ActiveAdmin.register Analyzable::Transaction, as: 'Transaction' do
   menu label: 'Transactions'
 
-  actions :all, except: %i[destroy7]
+  actions :all, except: %i[destroy]
 
   config.sort_order = 'created_at_desc'
 
   index title: 'Transactions' do
-    selectable_column
     column :created_at
     column 'Payer/Payee' do |transaction|
       avatar = Avatar.find_by_avatar_key(transaction.target_key)

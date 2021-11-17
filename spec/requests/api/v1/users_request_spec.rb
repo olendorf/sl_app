@@ -77,7 +77,6 @@ RSpec.describe 'Api::V1::Users', type: :request do
           expect(User.last.expiration_date).to be_within(30).of(Time.now + 1.month.to_i)
         end
 
-        # rubocop:disable Style/StringConcatenation
         it 'should return a nice message' do
           post path, params: atts.to_json,
                      headers: headers(
@@ -91,8 +90,6 @@ RSpec.describe 'Api::V1::Users', type: :request do
             'view your account.'
           )
         end
-        # rubocop:enable Style/StringConcatenation
-
         it 'should return the correct data' do
           post path, params: atts.to_json,
                      headers: headers(

@@ -5,8 +5,6 @@ ActiveAdmin.register_page 'Donations', namespace: :my do
        priority: 1,
        if: proc { current_user.donations.size.positive? }
 
-  # scope_to :current_user, association_method: :donations
-
   content title: proc { I18n.t('active_admin.donations') } do
     panel '' do
       donations = current_user.donations.order('created_at DESC')

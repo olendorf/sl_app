@@ -33,6 +33,7 @@ ActiveAdmin.register ServiceTicket, namespace: :my do
     end
   end
 
+
   filter :title
   filter :description
   filter :created_at, lable: 'Date Started'

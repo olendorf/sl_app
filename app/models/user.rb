@@ -106,6 +106,10 @@ class User < ApplicationRecord
   def tier_stations
     Rezzable::TierStation.where(user_id: id)
   end
+  
+  def my_service_tickets
+    ServiceTicket.where(status: 'open', client_key: self.avatar_key)
+  end
 
   def time_left
     expiration_date.nil? ? 0 : Time.diff(expiration_date, Time.now)

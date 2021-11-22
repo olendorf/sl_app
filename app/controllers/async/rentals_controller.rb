@@ -56,7 +56,8 @@ module Async
         'open' => '#EC2500', 'for_sale' => '#EC9800', 'occupied' => '#9EDE00'
       }
       states = Analyzable::RentalState.where(
-        rentable_id: current_user.parcels.collect(&:id)
+        rentable_id: current_user.parcels.collect(&:id),
+        rentable_type: 'Analyzable::Parcel'
       )
       dates = time_series_dates((states.minimum(:created_at) - 3.days), Time.current)
       data = {}

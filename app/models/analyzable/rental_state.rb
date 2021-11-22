@@ -3,8 +3,8 @@
 module Analyzable
   # Keeps track of parcel states and their duration to allow
   # analysis of parcel use, turnover etc.
-  class ParcelState < ApplicationRecord
-    belongs_to :parcel, class_name: 'Analyzable::Parcel'
+  class RentalState < ApplicationRecord
+    belongs_to :rentable, polymorphic: true
     belongs_to :user
 
     enum state: %i[open for_sale occupied]

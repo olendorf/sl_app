@@ -14,7 +14,7 @@ module Async
       color_map = {
         'open' => '#FF0D0D', 'for_sale' => '#FAB733', 'occupied' => '#ACB334'
       }
-      states = Analyzable::ParcelState.states.keys
+      states = Analyzable::RentalState.states.keys
       regions = {}
       parcels = current_user.parcels
       parcels.select(:region).distinct.collect do |v|
@@ -55,14 +55,14 @@ module Async
       color_map = {
         'open' => '#EC2500', 'for_sale' => '#EC9800', 'occupied' => '#9EDE00'
       }
-      states = Analyzable::ParcelState.where(
-        parcel_id: current_user.parcels.collect(&:id)
+      states = Analyzable::RentalState.where(
+        rentable_id: current_user.parcels.collect(&:id)
       )
       dates = time_series_dates((states.minimum(:created_at) - 3.days), Time.current)
       data = {}
       date_data = {}
       dates.each { |date| date_data[date] = 0 }
-      Analyzable::ParcelState.states.each_key do |state|
+      Analyzable::RentalState.states.each_key do |state|
         data[state] = date_data.clone
       end
 

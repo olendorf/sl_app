@@ -44,7 +44,7 @@ class User < ApplicationRecord
   has_many :product_links, class_name: 'Analyzable::ProductLink',
                            dependent: :destroy
   has_many :parcels, class_name: 'Analyzable::Parcel', dependent: :destroy
-  has_many :parcel_states, class_name: 'Analyzable::ParcelState', dependent: :destroy
+  has_many :rental_states, class_name: 'Analyzable::RentalState', dependent: :destroy
   has_many :service_tickets, dependent: :destroy
 
   # THese two methods need to be overridden to deal with Devise's need for emails.

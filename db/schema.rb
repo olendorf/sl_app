@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_11_174130) do
+ActiveRecord::Schema.define(version: 2021_11_22_133537) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,15 +105,6 @@ ActiveRecord::Schema.define(version: 2021_11_11_174130) do
     t.integer "revenue", default: 0
   end
 
-  create_table "analyzable_parcel_states", force: :cascade do |t|
-    t.datetime "closed_at"
-    t.integer "state"
-    t.integer "parcel_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.integer "user_id"
-  end
-
   create_table "analyzable_parcels", force: :cascade do |t|
     t.string "parcel_name"
     t.string "description"
@@ -151,6 +142,16 @@ ActiveRecord::Schema.define(version: 2021_11_11_174130) do
     t.integer "product_links_count"
     t.integer "transactions_count", default: 0
     t.integer "revenue", default: 0
+  end
+
+  create_table "analyzable_rental_states", force: :cascade do |t|
+    t.datetime "closed_at"
+    t.integer "state"
+    t.integer "rentable_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "user_id"
+    t.string "rentable_type"
   end
 
   create_table "analyzable_sessions", force: :cascade do |t|

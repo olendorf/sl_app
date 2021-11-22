@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Analyzable::Parcel, type: :model do
   it { should have_one(:parcel_box).class_name('Rezzable::ParcelBox') }
   it { should belong_to(:user) }
-  it { should have_many(:states).class_name('Analyzable::ParcelState').dependent(:destroy) }
+  it { should have_many(:states).dependent(:destroy) }
   it { should have_many(:transactions).class_name('Analyzable::Transaction').dependent(:nullify) }
 
   let(:user) { FactoryBot.create :active_user }
@@ -21,7 +21,7 @@ RSpec.describe Analyzable::Parcel, type: :model do
       FactoryBot.create :parcel, user_id: user.id, region: 'foo', requesting_object: parcel_box
     end
     FactoryBot.create :parcel, user_id: user.id, region: 'foo', owner_key: renter.avatar_key,
-                               owner_name: renter.avatar_name, expiration_date: 1.week.from_now
+                              owner_name: renter.avatar_name, expiration_date: 1.week.from_now
   end
 
   describe 'parcel life cycle' do
@@ -30,7 +30,7 @@ RSpec.describe Analyzable::Parcel, type: :model do
       before(:each) do
         @parcel = Analyzable::Parcel.create(
           FactoryBot.attributes_for(:parcel, user_id: user.id,
-                                             requesting_object: parcel_box)
+                                            requesting_object: parcel_box)
         )
       end
       it 'should add the parcel box' do
@@ -176,7 +176,7 @@ RSpec.describe Analyzable::Parcel, type: :model do
       it 'should return the empty parcels' do
         2.times do |i|
           FactoryBot.create :parcel, user_id: user.id, owner_key: nil, region: 'foo',
-                                     parcel_name: "parcel #{i}"
+                                    parcel_name: "parcel #{i}"
         end
 
         expect(Analyzable::Parcel.open_parcels(user, 'foo').size).to eq 2

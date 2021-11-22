@@ -48,7 +48,7 @@ RSpec.describe User, type: :model do
   }
 
   it {
-    should have_many(:parcel_states).class_name('Analyzable::ParcelState')
+    should have_many(:rental_states).class_name('Analyzable::RentalState')
                                     .dependent(:destroy)
   }
 

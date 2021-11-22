@@ -38,7 +38,7 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel', namespace: :my do
   filter :weekly_tier
   filter :expiration_date
   filter :current_state, as: :check_boxes,
-                         collection: Analyzable::ParcelState
+                         collection: Analyzable::RentalState
                            .states.keys.collect { |k| [k.humanize, k] }
 
   show title: :parcel_name do

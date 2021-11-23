@@ -6,5 +6,5 @@ RSpec.describe Analyzable::RentalState, type: :model do
   it { should belong_to(:rentable) }
   it { should belong_to(:user) }
 
-  it { should define_enum_for(:state).with_values(%i[open for_sale occupied]) }
+  it { should define_enum_for(:state).with_values(%i[open for_sale occupied for_rent]) }
 end

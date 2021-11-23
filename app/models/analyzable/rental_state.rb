@@ -7,7 +7,7 @@ module Analyzable
     belongs_to :rentable, polymorphic: true
     belongs_to :user
 
-    enum state: %i[open for_sale occupied]
+    enum state: %i[open for_sale occupied for_rent]
 
     def duration
       end_time = closed_at.nil? ? Time.current : closed_at

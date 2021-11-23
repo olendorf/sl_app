@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_22_133537) do
+ActiveRecord::Schema.define(version: 2021_11_22_152752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -264,6 +264,18 @@ ActiveRecord::Schema.define(version: 2021_11_22_133537) do
   end
 
   create_table "rezzable_servers", force: :cascade do |t|
+  end
+
+  create_table "rezzable_shop_rental_boxes", force: :cascade do |t|
+    t.integer "weekly_rent"
+    t.integer "allowed_land_impact"
+    t.integer "current_land_impact"
+    t.datetime "expiration_date"
+    t.string "renter_name"
+    t.string "renter_key"
+    t.string "current_state", default: "open"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "rezzable_terminals", force: :cascade do |t|

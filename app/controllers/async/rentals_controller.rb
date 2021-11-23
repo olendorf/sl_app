@@ -14,7 +14,7 @@ module Async
       color_map = {
         'open' => '#FF0D0D', 'for_sale' => '#FAB733', 'occupied' => '#ACB334'
       }
-      states = Analyzable::RentalState.states.keys
+      states = Analyzable::RentalState.states.except('for_rent').keys
       regions = {}
       parcels = current_user.parcels
       parcels.select(:region).distinct.collect do |v|
@@ -63,7 +63,7 @@ module Async
       data = {}
       date_data = {}
       dates.each { |date| date_data[date] = 0 }
-      Analyzable::RentalState.states.each_key do |state|
+      Analyzable::RentalState.states.except('for_rent').each_key do |state|
         data[state] = date_data.clone
       end
 

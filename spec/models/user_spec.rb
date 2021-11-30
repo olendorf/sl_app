@@ -297,29 +297,29 @@ RSpec.describe User, type: :model do
       expect(user.balance).to eq 53
     end
   end
-  
-  describe :my_service_tickets do 
+
+  describe :my_service_tickets do
     let(:owner) { FactoryBot.create :owner }
     let(:user) { FactoryBot.create :active_user }
-    before(:each) do 
-      3.times do 
+    before(:each) do
+      3.times do
         FactoryBot.create :closed_ticket, user_id: owner.id,
                                           client_key: user.avatar_key,
                                           client_name: user.avatar_name
       end
-      
-      2.times do 
+
+      2.times do
         FactoryBot.create :open_ticket, user_id: owner.id,
-                                          client_key: user.avatar_key,
-                                          client_name: user.avatar_name
+                                        client_key: user.avatar_key,
+                                        client_name: user.avatar_name
       end
       4.times do |i|
         FactoryBot.create :service_ticket, user_id: owner.id,
-                                          client_key: "Foo #{i}",
-                                          client_name: SecureRandom.uuid
+                                           client_key: "Foo #{i}",
+                                           client_name: SecureRandom.uuid
       end
     end
-    it 'should return the users open tickets' do 
+    it 'should return the users open tickets' do
       expect(user.my_service_tickets.size).to eq 2
     end
   end

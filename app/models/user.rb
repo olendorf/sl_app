@@ -106,9 +106,9 @@ class User < ApplicationRecord
   def tier_stations
     Rezzable::TierStation.where(user_id: id)
   end
-  
+
   def my_service_tickets
-    ServiceTicket.where(status: 'open', client_key: self.avatar_key)
+    ServiceTicket.where(status: 'open', client_key: avatar_key)
   end
 
   def time_left

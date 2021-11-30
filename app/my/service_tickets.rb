@@ -2,7 +2,7 @@
 
 ActiveAdmin.register ServiceTicket, namespace: :my do
   menu priority: 30
-  
+
   scope_to :current_user, association_method: :my_service_tickets
 
   actions :all, except: %i[destroy]
@@ -32,7 +32,6 @@ ActiveAdmin.register ServiceTicket, namespace: :my do
       link_to 'Close', close_admin_service_ticket_path(ticket), method: :put
     end
   end
-
 
   filter :title
   filter :description

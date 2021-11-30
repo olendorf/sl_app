@@ -3,9 +3,8 @@
 module Analyzable
   # Model for inworld parcels for rent.
   class Parcel < ApplicationRecord
-    
     include RentableBehavior
-    
+
     after_create :handle_parcel_opening
 
     before_update :handle_tier_payment, if: :tier_payment
@@ -15,7 +14,7 @@ module Analyzable
     has_one :parcel_box, class_name: 'Rezzable::ParcelBox', inverse_of: :parcel
     belongs_to :user
     # has_many :states, as: :rentable, dependent: :destroy,
-    #                   after_add: :set_current_state, 
+    #                   after_add: :set_current_state,
     #                   class_name: 'Analyzable::RentalState'
 
     has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify
@@ -39,7 +38,6 @@ module Analyzable
       end
     end
 
-    # rubocop:disable Naming/AccessorMethodName
     def set_parcel_for_sale
       self.requesting_object = user.parcel_boxes.where(object_key: parcel_box_key).first
       states.last.update(closed_at: Time.current)
@@ -70,8 +68,6 @@ module Analyzable
     # def set_current_state(state)
     #   self.current_state = state.state
     # end
-    # rubocop:enable Naming/AccessorMethodName
-
     def handle_tier_payment
       added_time = tier_payment.to_f / weekly_tier
 

@@ -3,9 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe Analyzable::Parcel, type: :model do
+  it_behaves_like 'it has rentable behavior', :parcel
+
   it { should have_one(:parcel_box).class_name('Rezzable::ParcelBox') }
   it { should belong_to(:user) }
-  it { should have_many(:states).class_name('Analyzable::ParcelState').dependent(:destroy) }
+  # it { should have_many(:states).dependent(:destroy) }
   it { should have_many(:transactions).class_name('Analyzable::Transaction').dependent(:nullify) }
 
   let(:user) { FactoryBot.create :active_user }

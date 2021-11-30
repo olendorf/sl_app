@@ -44,7 +44,7 @@ class User < ApplicationRecord
   has_many :product_links, class_name: 'Analyzable::ProductLink',
                            dependent: :destroy
   has_many :parcels, class_name: 'Analyzable::Parcel', dependent: :destroy
-  has_many :parcel_states, class_name: 'Analyzable::ParcelState', dependent: :destroy
+  has_many :rental_states, class_name: 'Analyzable::RentalState', dependent: :destroy
   has_many :service_tickets, dependent: :destroy
 
   # THese two methods need to be overridden to deal with Devise's need for emails.
@@ -106,9 +106,9 @@ class User < ApplicationRecord
   def tier_stations
     Rezzable::TierStation.where(user_id: id)
   end
-  
+
   def my_service_tickets
-    ServiceTicket.where(status: 'open', client_key: self.avatar_key)
+    ServiceTicket.where(status: 'open', client_key: avatar_key)
   end
 
   def time_left

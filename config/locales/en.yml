@@ -108,3 +108,11 @@ en:
         success: "This object has been updated."
       destroy:
         success: "This object has been deleted."
+        
+  rezzable:
+    shop_rental_box:
+      land_impact_exceeded: >-
+        Your shop rental at %{region_name} has exceeded its allowed land impact
+        of %{allowed_land_impact} LI and current is using %{current_land_impact}
+        LI. Please reduce the number of objects or your objects will be returned to
+        you.

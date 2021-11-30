@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register_page 'Rentals', namespace: :my do
-  menu parent: 'Data', label: 'Rentals',
+ActiveAdmin.register_page 'Parcel Rentals', namespace: :my do
+  menu parent: 'Data', label: 'Parcel Rentals',
        priority: 3,
        if: proc { current_user.tier_payments.size.positive? }
 

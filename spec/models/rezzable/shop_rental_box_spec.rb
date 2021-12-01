@@ -106,8 +106,8 @@ RSpec.describe Rezzable::ShopRentalBox, type: :model do
                                             renter_key: avatar.avatar_key,
                                             renter_name: avatar.avatar_name,
                                             allowed_land_impact: 100,
-                                            current_land_impact: 101,
                                             user_id: user.id
+        shop_rental_box.new_land_impact = 101                                    
         shop_rental_box.check_land_impact
         expect(MessageUserWorker).to have_enqueued_sidekiq_job(
           user.servers.last.id, avatar.avatar_name, avatar.avatar_key,

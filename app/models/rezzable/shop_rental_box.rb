@@ -9,9 +9,9 @@ module Rezzable
 
     after_create -> { add_state('for_rent') }
     before_update :handle_rent_payment, if: :rent_payment
-    after_update :check_land_impact, if: :current_land_impact
+    after_update :check_land_impact, if: :new_land_impact
 
-    attr_accessor :rent_payment, :target_name, :target_key
+    attr_accessor :rent_payment, :target_name, :target_key, :new_land_impact
 
     OBJECT_WEIGHT = 1
 
@@ -42,6 +42,9 @@ module Rezzable
     def check_land_impact
       return unless user
       return if user.servers.size.zero?
+      self.current_land_impact = new_land_impact
+      self.new_land_impact = nil
+      self.save
 
       if current_land_impact > allowed_land_impact
         server_id = user.servers.sample.id

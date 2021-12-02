@@ -10,7 +10,9 @@ module RentableBehavior
                       class_name: 'Analyzable::RentalState'
   end
 
+  # rubocop:disable Naming/AccessorMethodName
   def set_current_state(state)
     self.current_state = state.state
   end
+  # rubocop:enable Naming/AccessorMethodName
 end

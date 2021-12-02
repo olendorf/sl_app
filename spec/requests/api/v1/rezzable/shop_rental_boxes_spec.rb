@@ -107,8 +107,8 @@ RSpec.describe 'Api::V1::Rezzable::ShopRentalBoxes', type: :request do
       it 'send the a message to the suer' do
         expect {
           put api_rezzable_shop_rental_box_path(rental_box),
-            params: atts.to_json, headers: headers(rental_box)
-        }.to change {MessageUserWorker.jobs.size}.by(1)
+              params: atts.to_json, headers: headers(rental_box)
+        }.to change { MessageUserWorker.jobs.size }.by(1)
         # expect(@stub).to have_been_requested
       end
     end

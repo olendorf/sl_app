@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Rezzable
+  # Models in world shop rental boxes that allow users
+  # to run shop rental business
   class ShopRentalBox < ApplicationRecord
     acts_as :abstract_web_object
 
@@ -9,9 +11,9 @@ module Rezzable
 
     after_create -> { add_state('for_rent') }
     before_update :handle_rent_payment, if: :rent_payment
-    after_update :check_land_impact, if: :current_land_impact
+    after_update :check_land_impact, if: :new_land_impact
 
-    attr_accessor :rent_payment, :target_name, :target_key
+    attr_accessor :rent_payment, :target_name, :target_key, :new_land_impact
 
     OBJECT_WEIGHT = 1
 
@@ -19,6 +21,7 @@ module Rezzable
     #   self.states << Analyzable::RentalState.new(state: 'for_rent', user_id: self.user_id)
     # end
 
+    # rubocop:disable Metrics/AbcSize
     def handle_rent_payment
       amount = rent_payment
       self.rent_payment = nil
@@ -38,21 +41,26 @@ module Rezzable
       )
       user.transactions << transaction
     end
+    # rubocop:enable Metrics/AbcSize
 
     def check_land_impact
       return unless user
       return if user.servers.size.zero?
 
-      if current_land_impact > allowed_land_impact
-        server_id = user.servers.sample.id
-        MessageUserWorker.perform_async(
-          server_id, renter_name, renter_key,
-          I18n.t('rezzable.shop_rental_box.land_impact_exceeded',
-                 region_name: region,
-                 allowed_land_impact: allowed_land_impact,
-                 current_land_impact: current_land_impact)
-        ) unless Rails.env.development?
-      end
+      self.current_land_impact = new_land_impact
+      self.new_land_impact = nil
+      save
+
+      return if current_land_impact <= allowed_land_impact
+
+      server_id = user.servers.sample.id
+      MessageUserWorker.perform_async(
+        server_id, renter_name, renter_key,
+        I18n.t('rezzable.shop_rental_box.land_impact_exceeded',
+               region_name: region,
+               allowed_land_impact: allowed_land_impact,
+               current_land_impact: current_land_impact)
+      ) unless Rails.env.development?
     end
 
     def add_state(state)

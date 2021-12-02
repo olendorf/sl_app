@@ -42,9 +42,10 @@ module Rezzable
     def check_land_impact
       return unless user
       return if user.servers.size.zero?
+
       self.current_land_impact = new_land_impact
       self.new_land_impact = nil
-      self.save
+      save
 
       if current_land_impact > allowed_land_impact
         server_id = user.servers.sample.id

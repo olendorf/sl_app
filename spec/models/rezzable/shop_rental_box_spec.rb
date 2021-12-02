@@ -97,6 +97,20 @@ RSpec.describe Rezzable::ShopRentalBox, type: :model do
     end
     context 'land impact not exceeded' do
       it 'should not do anything' do
+        shop_rental_box = FactoryBot.create :shop_rental_box,
+                                            renter_key: avatar.avatar_key,
+                                            renter_name: avatar.avatar_name,
+                                            allowed_land_impact: 100,
+                                            user_id: user.id
+        shop_rental_box.new_land_impact = 100
+        shop_rental_box.check_land_impact        
+        expect(MessageUserWorker).to_not have_enqueued_sidekiq_job(
+          user.servers.last.id, avatar.avatar_name, avatar.avatar_key,
+          I18n.t('rezzable.shop_rental_box.land_impact_exceeded',
+                 region_name: shop_rental_box.region,
+                 allowed_land_impact: shop_rental_box.allowed_land_impact,
+                 current_land_impact: shop_rental_box.current_land_impact)
+        )
       end
     end
 
@@ -107,7 +121,7 @@ RSpec.describe Rezzable::ShopRentalBox, type: :model do
                                             renter_name: avatar.avatar_name,
                                             allowed_land_impact: 100,
                                             user_id: user.id
-        shop_rental_box.new_land_impact = 101                                    
+        shop_rental_box.new_land_impact = 101
         shop_rental_box.check_land_impact
         expect(MessageUserWorker).to have_enqueued_sidekiq_job(
           user.servers.last.id, avatar.avatar_name, avatar.avatar_key,

@@ -2,12 +2,14 @@
 
 require 'rails_helper'
 
+Sidekiq::Testing.fake!
+
 RSpec.describe Analyzable::Parcel, type: :model do
   it_behaves_like 'it has rentable behavior', :parcel
 
   it { should have_one(:parcel_box).class_name('Rezzable::ParcelBox') }
   it { should belong_to(:user) }
-  # it { should have_many(:states).dependent(:destroy) }
+  it { should have_many(:states).dependent(:destroy) }
   it { should have_many(:transactions).class_name('Analyzable::Transaction').dependent(:nullify) }
 
   let(:user) { FactoryBot.create :active_user }
@@ -183,6 +185,75 @@ RSpec.describe Analyzable::Parcel, type: :model do
 
         expect(Analyzable::Parcel.open_parcels(user, 'foo').size).to eq 2
       end
+    end
+  end
+
+  describe '.process_rentals' do
+    before(:each) do
+      user.parcels.destroy_all  # made some parcels previously that need gone
+      user.web_objects << FactoryBot.create(:server)
+      2.times do
+        renter = FactoryBot.build :avatar
+        parcel = FactoryBot.create(:parcel,
+                                   expiration_date: 1.week.from_now,
+                                   user_id: user.id,
+                                   owner_name: renter.avatar_name,
+                                   owner_key: renter.avatar_key)
+        parcel.states << Analyzable::RentalState.new(
+          user_id: user.id,
+          state: 'occupied'
+        )
+        user.parcels << parcel
+      end
+      3.times do
+        renter = FactoryBot.build :avatar
+        parcel = FactoryBot.create(:parcel,
+                                   expiration_date: 1.day.from_now,
+                                   user_id: user.id,
+                                   owner_name: renter.avatar_name,
+                                   owner_key: renter.avatar_key)
+        parcel.states << Analyzable::RentalState.new(
+          user_id: user.id,
+          state: 'occupied'
+        )
+        user.parcels << parcel
+      end
+      5.times do
+        renter = FactoryBot.build :avatar
+        parcel = FactoryBot.create(:parcel,
+                                   expiration_date: 1.day.ago,
+                                   user_id: user.id,
+                                   owner_name: renter.avatar_name,
+                                   owner_key: renter.avatar_key)
+        parcel.states << Analyzable::RentalState.new(
+          user_id: user.id,
+          state: 'occupied'
+        )
+        user.parcels << parcel
+      end
+      7.times do
+        renter = FactoryBot.build :avatar
+        parcel = FactoryBot.create(:parcel,
+                                   expiration_date: 4.days.ago,
+                                   user_id: user.id,
+                                   owner_name: renter.avatar_name,
+                                   owner_key: renter.avatar_key)
+        parcel.states << Analyzable::RentalState.new(
+          user_id: user.id,
+          state: 'occupied'
+        )
+        user.parcels << parcel
+      end
+    end
+    it 'should message warning to users' do
+      expect {
+        Analyzable::Parcel.process_rentals('Analyzable::Parcel', 'open')
+      }.to change { MessageUserWorker.jobs.size }.by(15)
+    end
+
+    it 'should set the evicted parcels to open' do
+      Analyzable::Parcel.process_rentals('Analyzable::Parcel', 'open')
+      expect(user.parcels.where(current_state: 'open').size).to eq 7
     end
   end
 end

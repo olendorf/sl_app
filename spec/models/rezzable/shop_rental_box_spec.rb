@@ -133,4 +133,76 @@ RSpec.describe Rezzable::ShopRentalBox, type: :model do
       end
     end
   end
+
+  describe '.process_rentals' do
+    before(:each) do
+      user.web_objects.destroy_all
+      user.web_objects << FactoryBot.create(:server)
+      2.times do
+        renter = FactoryBot.build :avatar
+        shop_box = FactoryBot.create(:shop_rental_box,
+                                     server_id: user.web_objects.first,
+                                     renter_name: renter.avatar_name,
+                                     renter_key: renter.avatar_key,
+                                     expiration_date: 1.week.from_now)
+        shop_box.states << Analyzable::RentalState.new(
+          user_id: user.id,
+          state: 'occupied'
+        )
+        user.web_objects << shop_box
+      end
+      3.times do
+        renter = FactoryBot.build :avatar
+        shop_box = FactoryBot.create(:shop_rental_box,
+                                     server_id: user.web_objects.first,
+                                     renter_name: renter.avatar_name,
+                                     renter_key: renter.avatar_key,
+                                     expiration_date: 1.day.from_now)
+        shop_box.states << Analyzable::RentalState.new(
+          user_id: user.id,
+          state: 'occupied'
+        )
+        user.web_objects << shop_box
+      end
+
+      5.times do
+        renter = FactoryBot.build :avatar
+        shop_box = FactoryBot.create(:shop_rental_box,
+                                     server_id: user.web_objects.first,
+                                     renter_name: renter.avatar_name,
+                                     renter_key: renter.avatar_key,
+                                     expiration_date: 1.day.ago)
+        shop_box.states << Analyzable::RentalState.new(
+          user_id: user.id,
+          state: 'occupied'
+        )
+        user.web_objects << shop_box
+      end
+      7.times do
+        renter = FactoryBot.build :avatar
+        shop_box = FactoryBot.create(:shop_rental_box,
+                                     server_id: user.web_objects.first,
+                                     renter_name: renter.avatar_name,
+                                     renter_key: renter.avatar_key,
+                                     expiration_date: 4.day.ago)
+        shop_box.states << Analyzable::RentalState.new(
+          user_id: user.id,
+          state: 'occupied'
+        )
+        user.web_objects << shop_box
+      end
+    end
+
+    it 'should message warning to users' do
+      expect {
+        Rezzable::ShopRentalBox.process_rentals('Rezzable::ShopRentalBox', 'for_rent')
+      }.to change { MessageUserWorker.jobs.size }.by(15)
+    end
+
+    it 'should set the evicted parcels to for_rent' do
+      Rezzable::ShopRentalBox.process_rentals('Rezzable::ShopRentalBox', 'for_rent')
+      puts
+      expect(user.shop_rental_boxes.where(current_state: 'for_rent').size).to eq 7
+    end
+  end
 end

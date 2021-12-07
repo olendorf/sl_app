@@ -107,6 +107,10 @@ class User < ApplicationRecord
     Rezzable::TierStation.where(user_id: id)
   end
 
+  def shop_rental_boxes
+    Rezzable::ShopRentalBox.where(user_id: id)
+  end
+
   def my_service_tickets
     ServiceTicket.where(status: 'open', client_key: avatar_key)
   end

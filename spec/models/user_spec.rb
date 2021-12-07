@@ -97,7 +97,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'tip_jars' do
+  describe 'vendors' do
     it 'should return the donation_boxes and nothing else' do
       owner.web_objects << FactoryBot.build(:web_object)
       owner.web_objects << FactoryBot.build(:vendor)
@@ -132,12 +132,22 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'tier_stations' do
+  describe '#tier_stations' do
     it 'should return the users tier stations' do
       owner.web_objects << FactoryBot.create(:tier_station)
       owner.web_objects << FactoryBot.create(:tier_station)
       owner.web_objects << FactoryBot.build(:web_object)
       expect(owner.tier_stations.size).to eq 2
+    end
+  end
+
+  describe '#shop_rental_boxes' do
+    it 'should return the users shop rental boxes' do
+      owner.web_objects << FactoryBot.create(:shop_rental_box)
+      owner.web_objects << FactoryBot.create(:shop_rental_box)
+      owner.web_objects << FactoryBot.create(:shop_rental_box)
+      owner.web_objects << FactoryBot.build(:web_object)
+      expect(owner.shop_rental_boxes.size).to eq 3
     end
   end
 

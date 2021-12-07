@@ -45,6 +45,7 @@ Metrics/BlockLength:
     - app/admin/**/*
     - app/my/**/*
     - app/controllers/concerns/**/*
+    - app/models/concerns/**/*
 
 Metrics/ClassLength:
   Max: 125

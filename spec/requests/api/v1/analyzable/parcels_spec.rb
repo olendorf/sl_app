@@ -163,12 +163,6 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
         get path, headers: headers(parcel_box)
         expect(JSON.parse(response.body)['data']['parcels'].size).to eq 9
       end
-
-      it 'should return the correct data' do
-        get path, headers: headers(parcel_box)
-        expect(JSON.parse(response.body)['data']['parcels']
-                        .first['parcel_name']).to include('parcel 0')
-      end
     end
 
     context '1st page' do

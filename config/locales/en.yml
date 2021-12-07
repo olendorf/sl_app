@@ -116,3 +116,19 @@ en:
         of %{allowed_land_impact} LI and current is using %{current_land_impact}
         LI. Please reduce the number of objects or your objects will be returned to
         you.
+  analyzable:
+    parcel:
+      eviction: >-
+        Your parcel rental at %{region_name} has expired. Your objects will be 
+        returned to you shortly. Thank you for your business and we hope you 
+        will return to us soon.
+      reminder: >-
+        Hello %{renter_name}. This is a friendly reminder your tier for your 
+        parcel at %{region_name} is due in %{time}. You can visit our tier
+        stations at %{slurl} to pay your tier.
+      warning: >-
+        Hello %{renter_name}. The tier for your 
+        parcel at %{region_name} is %{time} overdue! Please pay your tier  
+        soon or you will lose your parcel and your objects will be returned to
+        you. You can visit our tier stations at %{slurl} to pay your tier.
+        

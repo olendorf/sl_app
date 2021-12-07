@@ -68,5 +68,8 @@ module Rezzable
       states << Analyzable::RentalState.new(state: state, user_id: user_id)
       update(current_state: state)
     end
+
+    # def self.process_rentals
+    # end
   end
 end

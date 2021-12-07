@@ -26,7 +26,7 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
       path = api_analyzable_parcel_path(@parcel)
       get path, headers: headers(parcel_box)
       expect(JSON.parse(response.body)['data']).to include(
-        'parcel_name', 'description', 'owner_key', 'owner_name', 'area',
+        'parcel_name', 'description', 'renter_key', 'renter_name', 'area',
         'parcel_key', 'weekly_tier', 'purchase_price', 'region', 'expiration_date'
       )
     end
@@ -88,7 +88,7 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
                                        parcel_id: parcel.id
       }
       let(:avatar) { FactoryBot.create :avatar }
-      let(:atts) { { owner_key: avatar.avatar_key, owner_name: avatar.avatar_name } }
+      let(:atts) { { renter_key: avatar.avatar_key, renter_name: avatar.avatar_name } }
       let(:path) { api_analyzable_parcel_path(parcel) }
       before(:each) do
         parcel.states << FactoryBot.create(:state, state: 'for_sale')
@@ -115,8 +115,8 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
       let(:parcel) {
         FactoryBot.create :parcel, user_id: user.id,
                                    expiration_date: 1.week.from_now,
-                                   owner_key: avatar.avatar_key,
-                                   owner_name: avatar.avatar_name
+                                   renter_key: avatar.avatar_key,
+                                   renter_name: avatar.avatar_name
       }
       let(:avatar) { FactoryBot.create :avatar }
       let(:atts) { { tier_payment: 3 * parcel.weekly_tier } }

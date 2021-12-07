@@ -233,50 +233,64 @@ def give_vendors_to_user(user, avatars, number_of_vendors, number_of_sales)
   end
 end
 
-def add_events_to_parcel(parcel)
+def add_events_to_rentable(rentable)
   # parcel.parcel_box.destroy
   owner = FactoryBot.build :avatar
-  event_time = rand(parcel.states.last.created_at..Time.current)
+  # need to check if its a web object or not, if so, need to pull
+  # the actable so that we can get the states
+  rentable = rentable.actable if rentable.respond_to?(:actable_id)
+  event_time = rand(rentable.states.last.created_at..Time.current)
 
-  previous_state = parcel.states.last
+  previous_state = rentable.states.last
 
-  parcel.update(
-    owner_key: owner.avatar_key,
-    owner_name: owner.avatar_name
+  rentable.update(
+    renter_key: owner.avatar_key,
+    renter_name: owner.avatar_name
   )
 
   previous_state.closed_at = event_time
   previous_state.save
-  last_state = parcel.states.last
+  last_state = rentable.states.last
   last_state.created_at = event_time
   last_state.save
 
-  parcel.expiration_date = rand(1..4).weeks.from_now
-  parcel.save
+  rentable.expiration_date = rand(1..4).weeks.from_now
+  rentable.save
 
   rand(1..4).times do
-    parcel.update(tier_payment: parcel.weekly_tier, requesting_object: parcel.user.tier_stations.sample)
-    payment = parcel.user.tier_payments.last
+    rentable.update(tier_payment: rentable.weekly_tier, requesting_object: rentable.user.tier_stations.sample)
+    payment = rentable.user.tier_payments.last
     payment.created_at = event_time
     payment.save
   end
 
   if rand < 0.2
-    event_time = rand(parcel.states.last.created_at..Time.current)
-    parcel.update(
+    event_time = rand(rentable.states.last.created_at..Time.current)
+    rentable.update(
       owner_key: nil,
       owner_name: nil,
       created_at: event_time
     )
 
-    previous_state = parcel.states[-2]
+    previous_state = rentable.states[-2]
     previous_state.closed_at = event_time
     previous_state.save
-    last_state = parcel.states.last
+    last_state = rentable.states.last
     last_state.created_at = event_time
     last_state.save
   end
-  add_events_to_parcel(parcel) if rand < 0.9
+  add_events_to_rentable(rentable) if rand < 0.9
+end
+
+def give_regions(num_regions)
+    regions = []
+
+  num_regions.times do
+    regions << Faker::Lorem.words(
+      number: rand(1..3)
+    ).map(&:capitalize).join(' ')
+  end
+  regions
 end
 
 def setup_parcel_data_for_user(user, num_tier_stations: 2, num_regions: 5, num_parcels: 10)
@@ -284,13 +298,7 @@ def setup_parcel_data_for_user(user, num_tier_stations: 2, num_regions: 5, num_p
     user.web_objects << FactoryBot.build(:tier_station)
   end
 
-  regions = []
-
-  num_regions.times do
-    regions << Faker::Lorem.words(
-      number: rand(1..3)
-    ).map(&:capitalize).join(' ')
-  end
+  regions = give_regions(num_regions)
 
   num_parcels.times do |_i|
     parcel_box = FactoryBot.create :parcel_box, user_id: user.id, region: regions.sample
@@ -299,8 +307,25 @@ def setup_parcel_data_for_user(user, num_tier_stations: 2, num_regions: 5, num_p
     state.created_at = rand(1.year.ago..Time.current)
     state.save
 
-    add_events_to_parcel(user.parcels.last) if rand < 0.9
+    add_events_to_rentable(user.parcels.last) if rand < 0.9
   end
+end
+
+def add_events_to_shop(shop_box)
+end
+
+def setup_shop_rentals_for_user(user, num_regions: 5, num_shops: 10)
+  regions = give_regions(num_regions)
+  num_shops.times do 
+    user.web_objects << FactoryBot.create(
+      :shop_rental_box, user_id: user.id, 
+      region: regions.sample,
+      server_id: user.servers.sample.id
+    )
+    
+    
+  end
+  add_events_to_rentable(user.web_objects.last) if rand < 0.9
 end
 
 # rubocop:enable Metrics/AbcSize, Metrics/ParameterLists
@@ -338,6 +363,9 @@ give_vendors_to_user(owner, avatars, 50, 20)
 puts 'setting up land rental system for owner'
 setup_parcel_data_for_user(owner, num_parcels: 75)
 
+puts 'setting up shop rentals for owner'
+setup_shop_rentals_for_user(owner, num_shops: 75)
+
 4.times do |i|
   FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident"
 end
@@ -374,6 +402,9 @@ puts 'creating users'
 
   puts "setting up land rental system for user #{i}"
   setup_parcel_data_for_user(user)
+  
+  puts "settng up shop rentals for user #{i}"
+  setup_shop_rentals_for_user(user)
 end
 
 20.times do |i|

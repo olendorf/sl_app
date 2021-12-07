@@ -12,15 +12,15 @@ RSpec.describe 'Async::Rentals', type: :request do
         parcel_box = FactoryBot.create(:parcel_box, user_id: @user.id)
         @user.parcels << FactoryBot.create(:parcel, requesting_object: parcel_box)
         avatar = FactoryBot.build(:avatar)
-        @user.parcels.last.update(owner_key: avatar.avatar_key, owner_name: avatar.avatar_name)
-        @user.parcels.last.update(owner_key: nil, owner_name: nil)
+        @user.parcels.last.update(renter_key: avatar.avatar_key, renter_name: avatar.avatar_name)
+        @user.parcels.last.update(renter_key: nil, renter_name: nil)
       end
 
       3.times do
         parcel_box = FactoryBot.create(:parcel_box, user_id: @user.id)
         @user.parcels << FactoryBot.create(:parcel, requesting_object: parcel_box)
         avatar = FactoryBot.build(:avatar)
-        @user.parcels.last.update(owner_key: avatar.avatar_key, owner_name: avatar.avatar_name)
+        @user.parcels.last.update(renter_key: avatar.avatar_key, renter_name: avatar.avatar_name)
       end
     end
 

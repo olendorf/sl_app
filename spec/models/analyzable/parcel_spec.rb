@@ -187,6 +187,7 @@ RSpec.describe Analyzable::Parcel, type: :model do
       end
     end
   end
+  #trigger a build
 
   describe '.process_rentals' do
     before(:each) do

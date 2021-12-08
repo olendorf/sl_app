@@ -235,7 +235,7 @@ end
 
 def add_events_to_rentable(rentable)
   # parcel.parcel_box.destroy
-  owner = FactoryBot.build :avatar
+  renter = FactoryBot.build :avatar
   # need to check if its a web object or not, if so, need to pull
   # the actable so that we can get the states
   rentable = rentable.actable if rentable.respond_to?(:actable_id)
@@ -244,8 +244,8 @@ def add_events_to_rentable(rentable)
   previous_state = rentable.states.last
 
   rentable.update(
-    renter_key: owner.avatar_key,
-    renter_name: owner.avatar_name
+    renter_key: renter.avatar_key,
+    renter_name: renter.avatar_name
   )
 
   previous_state.closed_at = event_time
@@ -258,7 +258,16 @@ def add_events_to_rentable(rentable)
   rentable.save
 
   rand(1..4).times do
-    rentable.update(tier_payment: rentable.weekly_rent, requesting_object: rentable.user.tier_stations.sample)
+    rentable.update(
+      rent_payment: rentable.weekly_rent, 
+      requesting_object: rentable.user.tier_stations.sample
+      ) if rentable.respond_to?(:requesting_object)
+    rentable.update(
+      rent_payment: rentable.weekly_rent, 
+      target_name: renter.avatar_name,
+      target_key: renter.avatar_key,
+      current_land_impact: rand(0..rentable.allowed_land_impact)
+    ) if rentable.class.name == "Rezzable::ShopRentalBox"
     payment = rentable.user.tier_payments.last
     payment.created_at = event_time
     payment.save

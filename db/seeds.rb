@@ -258,7 +258,7 @@ def add_events_to_rentable(rentable)
   rentable.save
 
   rand(1..4).times do
-    rentable.update(tier_payment: rentable.weekly_tier, requesting_object: rentable.user.tier_stations.sample)
+    rentable.update(tier_payment: rentable.weekly_rent, requesting_object: rentable.user.tier_stations.sample)
     payment = rentable.user.tier_payments.last
     payment.created_at = event_time
     payment.save

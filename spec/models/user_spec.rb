@@ -185,7 +185,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#tier_payments' do
+  describe '#rent_payments' do
     it 'should return the tier payments' do
       3.times do
         user.parcels << FactoryBot.build(:parcel)
@@ -194,7 +194,7 @@ RSpec.describe User, type: :model do
       15.times do
         parcel = user.parcels.sample
         parcel.update(
-          tier_payment: parcel.weekly_rent,
+          rent_payment: parcel.weekly_rent,
           requesting_object: user.tier_stations.sample
         )
       end

@@ -8,7 +8,7 @@ module Analyzable
 
     after_create :handle_parcel_opening
 
-    before_update :handle_tier_payment, if: :tier_payment
+    before_update :handle_rent_payment, if: :rent_payment
     before_update :handle_parcel_owner_change, if: :renter_key_changed?
     before_update :set_parcel_for_sale, if: :parcel_box_key
 
@@ -20,7 +20,7 @@ module Analyzable
 
     has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify
 
-    attr_accessor :tier_payment, :requesting_object, :parcel_box_key
+    attr_accessor :rent_payment, :requesting_object, :parcel_box_key
 
 
     def self.open_parcels(user, region)
@@ -71,13 +71,13 @@ module Analyzable
     #   self.current_state = state.state
     # end
 
-    def handle_tier_payment
-      added_time = tier_payment.to_f / weekly_rent
+    def handle_rent_payment
+      added_time = rent_payment.to_f / weekly_rent
 
       self.expiration_date = Time.current if expiration_date.nil?
       self.expiration_date = expiration_date + (1.week.to_i * added_time)
       user.transactions << Analyzable::Transaction.create(
-        amount: tier_payment,
+        amount: rent_payment,
         target_key: renter_key,
         target_name: renter_name,
         source_key: requesting_object.object_key,

@@ -119,7 +119,7 @@ RSpec.describe 'Api::V1::Analyzable::Parcels', type: :request do
                                    renter_name: avatar.avatar_name
       }
       let(:avatar) { FactoryBot.create :avatar }
-      let(:atts) { { tier_payment: 3 * parcel.weekly_rent } }
+      let(:atts) { { rent_payment: 3 * parcel.weekly_rent } }
       let(:path) { api_analyzable_parcel_path(parcel) }
       before(:each) do
         parcel.states << FactoryBot.create(:state, state: 'occupied')

@@ -155,7 +155,7 @@ RSpec.describe Analyzable::Parcel, type: :model do
 
     it 'should update the expiration date' do
       parcel = user.parcels.find_by_renter_key(renter.avatar_key)
-      parcel.update(tier_payment: (3 * parcel.weekly_rent), requesting_object: tier_station)
+      parcel.update(rent_payment: (3 * parcel.weekly_rent), requesting_object: tier_station)
       # Test fails when the extension spans over daylights savings time shift.
       expect(parcel.expiration_date).to be_within(2.hours).of(
         4.weeks.from_now
@@ -164,7 +164,7 @@ RSpec.describe Analyzable::Parcel, type: :model do
 
     it 'should add the transaction' do
       parcel = user.parcels.find_by_renter_key(renter.avatar_key)
-      parcel.update(tier_payment: (3 * parcel.weekly_rent), requesting_object: tier_station)
+      parcel.update(rent_payment: (3 * parcel.weekly_rent), requesting_object: tier_station)
       expect(user.transactions.size).to eq 1
     end
   end

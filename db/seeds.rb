@@ -267,8 +267,8 @@ def add_events_to_rentable(rentable)
   if rand < 0.2
     event_time = rand(rentable.states.last.created_at..Time.current)
     rentable.update(
-      owner_key: nil,
-      owner_name: nil,
+      renter_key: nil,
+      renter_name: nil,
       created_at: event_time
     )
 

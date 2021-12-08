@@ -72,7 +72,7 @@ module Analyzable
     # end
 
     def handle_tier_payment
-      added_time = tier_payment.to_f / weekly_tier
+      added_time = tier_payment.to_f / weekly_rent
 
       self.expiration_date = Time.current if expiration_date.nil?
       self.expiration_date = expiration_date + (1.week.to_i * added_time)

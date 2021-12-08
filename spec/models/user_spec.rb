@@ -194,7 +194,7 @@ RSpec.describe User, type: :model do
       15.times do
         parcel = user.parcels.sample
         parcel.update(
-          tier_payment: parcel.weekly_tier,
+          tier_payment: parcel.weekly_rent,
           requesting_object: user.tier_stations.sample
         )
       end

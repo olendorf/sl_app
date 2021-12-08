@@ -112,7 +112,7 @@ ActiveRecord::Schema.define(version: 2021_12_07_185819) do
     t.string "renter_name"
     t.integer "area"
     t.string "parcel_key"
-    t.integer "weekly_tier"
+    t.integer "weekly_rent"
     t.integer "purchase_price"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

@@ -35,7 +35,7 @@ module Rezzable
       )
       transaction = Analyzable::Transaction.new(
         amount: amount,
-        category: 'rent',
+        category: 'shop_rent',
         target_name: target_name,
         target_key: target_key
       )

@@ -185,7 +185,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#rent_payments' do
+  describe '#tier_payments' do
     it 'should return the tier payments' do
       3.times do
         user.parcels << FactoryBot.build(:parcel)

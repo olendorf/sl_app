@@ -235,61 +235,76 @@ end
 
 def add_events_to_rentable(rentable)
   # parcel.parcel_box.destroy
-  renter = FactoryBot.build :avatar
+  # renter = FactoryBot.build :avatar
   # need to check if its a web object or not, if so, need to pull
   # the actable so that we can get the states
-  rentable = rentable.actable if rentable.respond_to?(:actable_id)
-  event_time = rand(rentable.states.last.created_at..Time.current)
+  # rentable = rentable.actable if rentable.respond_to?(:actable_id)
+  # event_time = rand(rentable.states.last.created_at..Time.current)
 
-  previous_state = rentable.states.last
+  # previous_state = rentable.states.last
+  
+  
 
+  # rentable.update(
+  #   renter_key: renter.avatar_key,
+  #   renter_name: renter.avatar_name
+  # )
+
+  # previous_state.closed_at = event_time
+  # previous_state.save
+  # last_state = rentable.states.last
+  # last_state.created_at = event_time
+  # last_state.save
+
+  # rentable.expiration_date = rand(1..4).weeks.from_now
+  # rentable.save
+
+  # rand(1..4).times do
+  #   update_parcel(rentable, event_time) if rentable.class.name == "Analyzable::Parcel"
+  #   update_shop_rental(rentable, event_time, renter) if rentable.class.name == "Rezzable::ShopRentalBox"
+  # end
+
+  # if rand < 0.2
+  #   event_time = rand(rentable.states.last.created_at..Time.current)
+  #   rentable.update(
+  #     renter_key: nil,
+  #     renter_name: nil,
+  #     created_at: event_time
+  #   )
+
+  #   previous_state = rentable.states[-2]
+  #   previous_state.closed_at = event_time
+  #   previous_state.save
+  #   last_state = rentable.states.last
+  #   last_state.created_at = event_time
+  #   last_state.save
+  # end
+  add_events_to_rentable(rentable) if rand < 0.9
+end
+
+def update_shop_rental(rentable, event_time, renter)    
   rentable.update(
-    renter_key: renter.avatar_key,
-    renter_name: renter.avatar_name
-  )
-
-  previous_state.closed_at = event_time
-  previous_state.save
-  last_state = rentable.states.last
-  last_state.created_at = event_time
-  last_state.save
-
-  rentable.expiration_date = rand(1..4).weeks.from_now
-  rentable.save
-
-  rand(1..4).times do
-    rentable.update(
-      rent_payment: rentable.weekly_rent, 
-      requesting_object: rentable.user.tier_stations.sample
-      ) if rentable.respond_to?(:requesting_object)
-    rentable.update(
       rent_payment: rentable.weekly_rent, 
       target_name: renter.avatar_name,
       target_key: renter.avatar_key,
       current_land_impact: rand(0..rentable.allowed_land_impact)
-    ) if rentable.class.name == "Rezzable::ShopRentalBox"
-    payment = rentable.user.tier_payments.last
+    ) 
+    payment = rentable.user.shop_rental_payments.last
     payment.created_at = event_time
     payment.save
-  end
-
-  if rand < 0.2
-    event_time = rand(rentable.states.last.created_at..Time.current)
-    rentable.update(
-      renter_key: nil,
-      renter_name: nil,
-      created_at: event_time
-    )
-
-    previous_state = rentable.states[-2]
-    previous_state.closed_at = event_time
-    previous_state.save
-    last_state = rentable.states.last
-    last_state.created_at = event_time
-    last_state.save
-  end
-  add_events_to_rentable(rentable) if rand < 0.9
 end
+
+def update_parcel(rentable, event_time, renter)
+  rentable.update(
+    rent_payment: rentable.weekly_rent, 
+    requesting_object: rentable.user.tier_stations.sample
+  )
+  payment = rentable.user.parcel_payments.last
+  payment.created_at = event_time
+  payment.save
+end
+
+
 
 def give_regions(num_regions)
     regions = []
@@ -311,17 +326,15 @@ def setup_parcel_data_for_user(user, num_tier_stations: 2, num_regions: 5, num_p
 
   num_parcels.times do |_i|
     parcel_box = FactoryBot.create :parcel_box, user_id: user.id, region: regions.sample
-    user.parcels << FactoryBot.create(:parcel, requesting_object: parcel_box)
+    user.parcels << FactoryBot.create(:parcel, requesting_object: parcel_box, created_at: rand(1.year.ago..Time.current))
     state = user.parcels.last.states.last
-    state.created_at = rand(1.year.ago..Time.current)
+    state.created_at = user.parcels.last.created_at
     state.save
 
     add_events_to_rentable(user.parcels.last) if rand < 0.9
   end
 end
 
-def add_events_to_shop(shop_box)
-end
 
 def setup_shop_rentals_for_user(user, num_regions: 5, num_shops: 10)
   regions = give_regions(num_regions)
@@ -329,12 +342,17 @@ def setup_shop_rentals_for_user(user, num_regions: 5, num_shops: 10)
     user.web_objects << FactoryBot.create(
       :shop_rental_box, user_id: user.id, 
       region: regions.sample,
-      server_id: user.servers.sample.id
+      server_id: user.servers.sample.id,
+      created_at: rand(1.year.ago..Time.current)
     )
     
+   
+    state = user.shop_rental_boxes.last.states.last
+    state.created_at = user.shop_rental_boxes.last.created_at
+    state.save 
     
+    add_events_to_rentable(user.shop_rental_boxes.last) if rand < 0.9
   end
-  add_events_to_rentable(user.web_objects.last) if rand < 0.9
 end
 
 # rubocop:enable Metrics/AbcSize, Metrics/ParameterLists
@@ -350,27 +368,27 @@ give_splits(owner, avatars)
 puts 'giving servers to owner'
 give_servers_to_user(owner)
 
-puts 'giving terminals to owner'
-give_terminals(owner, avatars)
+# puts 'giving terminals to owner'
+# give_terminals(owner, avatars)
 
-puts 'giving donation_boxes to owner'
-give_donation_boxes_to_user(owner, avatars)
+# puts 'giving donation_boxes to owner'
+# give_donation_boxes_to_user(owner, avatars)
 
-# puts 'giving transactions to owner'
-# give_transactions_to_user(owner, avatars)
+# # puts 'giving transactions to owner'
+# # give_transactions_to_user(owner, avatars)
 
-puts 'giving traffic_cops to owner'
-give_traffic_cops_to_user(owner, avatars, 200)
+# puts 'giving traffic_cops to owner'
+# give_traffic_cops_to_user(owner, avatars, 200)
 
-puts 'giving tip_jars to owner'
-give_tip_jars_to_user(owner, avatars, 20)
+# puts 'giving tip_jars to owner'
+# give_tip_jars_to_user(owner, avatars, 20)
 
-puts 'giving vendors to owner'
-give_products_to_user(owner, 10)
-give_vendors_to_user(owner, avatars, 50, 20)
+# puts 'giving vendors to owner'
+# give_products_to_user(owner, 10)
+# give_vendors_to_user(owner, avatars, 50, 20)
 
-puts 'setting up land rental system for owner'
-setup_parcel_data_for_user(owner, num_parcels: 75)
+# puts 'setting up land rental system for owner'
+# setup_parcel_data_for_user(owner, num_parcels: 75)
 
 puts 'setting up shop rentals for owner'
 setup_shop_rentals_for_user(owner, num_shops: 75)

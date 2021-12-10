@@ -1,14 +1,15 @@
-ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental', namespace: :my do
-  
+# frozen_string_literal: true
+
+ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental',
+                                              namespace: :my do
   include ActiveAdmin::RezzableBehavior
-  
-  
+
   menu parent: 'Rentals', label: 'Shops'
 
   actions :all, except: %i[new create]
-  
+
   decorate_with Rezzable::ShopRentalBoxDecorator
-  
+
   index title: 'Shop Rentals' do
     selectable_column
     column 'Object Name', sortable: :object_name do |shop_rental|
@@ -26,17 +27,15 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental', namespace: :my 
     column :allowed_land_impact
     column :current_land_impact
     column :current_state
-    column 'Renter', sortable: :renter_name do |shop_rental|
-      shop_rental.renter_name
-    end
+    column 'Renter', sortable: :renter_name, &:renter_name
     column :expiration_date
-    
+
     actions defaults: true do |shop_rental|
-      link_to 'Evict', evict_my_shop_rental_path(shop_rental), method: :put unless shop_rental.renter_key.nil?
+      link_to 'Evict', evict_my_shop_rental_path(shop_rental),
+              method: :put unless shop_rental.renter_key.nil?
     end
-    
   end
-  
+
   filter :abstract_web_object_object_name, as: :string, label: 'Object Name'
   filter :abstract_web_object_description, as: :string, label: 'Description'
   filter :abstract_web_object_region, as: :string, label: 'Region'
@@ -44,14 +43,11 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental', namespace: :my 
   filter :allowed_land_impact
   filter :weekly_rent
   filter :expiration_date
-  
-  
+
   show title: :object_name do
     attributes_table do
       row :description
-      row 'State' do |shop|
-        shop.current_state
-      end
+      row 'State', &:current_state
       row 'Current Renter' do |shop|
         shop.renter_name.nil? ? 'Empty' : shop.renter_name
       end
@@ -78,9 +74,9 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental', namespace: :my 
       end
     end
   end
-  
-  permit_params :object_name, :description, 
-                :expiration_date, :allowed_land_impact, 
+
+  permit_params :object_name, :description,
+                :expiration_date, :allowed_land_impact,
                 :weekly_rent
 
   form title: proc { "Edit parcel #{resource.object_name}" } do |f|
@@ -93,45 +89,30 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental', namespace: :my 
     end
     f.actions
   end
-  
-  member_action :evict, method: :put do 
-    server =  resource.user.servers.sample
+
+  member_action :evict, method: :put do
+    server = resource.user.servers.sample
     resource.evict_renter(server, 'for_rent')
-    redirect_back fall_back_location: my_shop_rentals_path, notice: "Tenant evicted."
+    redirect_back fall_back_location: my_shop_rentals_path,
+                  notice: 'Tenant evicted.'
   end
-  
-  action_item :evict, only: [:show, :edit] do 
-    link_to 'Evict', evict_my_shop_rental_path(shop_rental), method: :put unless shop_rental.renter_key.nil?
+
+  action_item :evict, only: %i[show edit] do
+    link_to 'Evict', evict_my_shop_rental_path(shop_rental),
+            method: :put unless shop_rental.renter_key.nil?
   end
-  
+
   batch_action :evict do |ids|
     batch_action_collection.find(ids).each do |shop_rental|
       server = shop_rental.user.servers.sample
       shop_rental.evict_renter(server, 'for_rent')
     end
-    redirect_to collection_path, alert: "The users have been evicted."
-
+    redirect_to collection_path, alert: 'The users have been evicted.'
   end
 
-  controller do
-    # def scoped_collection
-    #   super.includes(%i[user])
-    # end
-  end
-
-  # See permitted parameters documentation:
-  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-  #
-  # Uncomment all parameters which should be permitted for assignment
-  #
-  # permit_params :object_name, :object_key, :description, :region, :position, :url, :api_key, :user_id, :pinged_at, :major_version, :minor_version, :patch_version, :server_id, :transactions_count, :weekly_rent, :allowed_land_impact, :current_land_impact, :expiration_date, :renter_name, :renter_key, :current_state
-  #
-  # or
-  #
-  # permit_params do
-  #   permitted = [:object_name, :object_key, :description, :region, :position, :url, :api_key, :user_id, :pinged_at, :major_version, :minor_version, :patch_version, :server_id, :transactions_count, :weekly_rent, :allowed_land_impact, :current_land_impact, :expiration_date, :renter_name, :renter_key, :current_state]
-  #   permitted << :other if params[:action] == 'create' && current_user.admin?
-  #   permitted
+  # controller do
+  #   # def scoped_collection
+  #   #   super.includes(%i[user])
+  #   # end
   # end
-  
 end

@@ -80,8 +80,8 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel' do
     end
   end
 
-  permit_params :parcel_name, :description, 
-                :expiration_date, :area, 
+  permit_params :parcel_name, :description,
+                :expiration_date, :area,
                 :weekly_rent, :purchase_price
 
   form title: proc { "Edit parcel #{resource.parcel_name}" } do |f|

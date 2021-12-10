@@ -1,3 +1,3 @@
-if Rails.env.development?
-  `rake log:clear`
-end
+# frozen_string_literal: true
+
+`rake log:clear` if Rails.env.development?

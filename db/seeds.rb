@@ -236,12 +236,12 @@ end
 def add_events_to_rentable(rentable)
   event_time = rand(rentable.states.last.created_at..Time.current)
   rentable.states.last.update_column(:closed_at, event_time)
-  
-  add_parcel_event(rentable) if rentable.class.name == "Analyzable::Parcel"
-  add_shop_rental_event(rentable) if rentable.class.name == "Rezzable::ShopRentalBox"
-  
+
+  add_parcel_event(rentable) if rentable.instance_of?(Analyzable::Parcel)
+  add_shop_rental_event(rentable) if rentable.instance_of?(Rezzable::ShopRentalBox)
+
   rentable.states.last.update(created_at: event_time)
-  
+
   add_events_to_rentable(rentable) if rand < 0.9
 end
 
@@ -251,45 +251,41 @@ def add_shop_rental_event(rentable)
     rentable.evict_renter(server, 'for_rent')
   else
     renter = FactoryBot.build :avatar
-    rand(1..5).times do 
+    rand(1..5).times do
       rentable.update(
         target_key: renter.avatar_key,
         target_name: renter.avatar_name,
         rent_payment: rentable.weekly_rent
-        )
+      )
     end
   end
-      
-
 end
 
 def add_parcel_event(rentable)
-  if rentable.current_state == 'open'
+  case rentable.current_state
+  when 'open'
     rentable.states << Analyzable::RentalState.new(
       state: 'for_rent'
-      )
-  elsif rentable.current_state == 'for_rent'
-    renter = FactoryBot.build :avatar 
-    
-    rand(1..5).times do 
+    )
+  when 'for_rent'
+    renter = FactoryBot.build :avatar
+
+    rand(1..5).times do
       rentable.update(
         rent_payment: rentable.weekly_rent,
         renter_key: renter.avatar_key,
         renter_name: renter.avatar_name,
         requesting_object: rentable.user.tier_stations.sample
-        )
+      )
     end
   else
     server = rentable.user.servers.sample
     rentable.evict_renter(server, 'open')
   end
-      
 end
 
-
-
 def give_regions(num_regions)
-    regions = []
+  regions = []
 
   num_regions.times do
     regions << Faker::Lorem.words(
@@ -317,22 +313,20 @@ def setup_parcel_data_for_user(user, num_tier_stations: 2, num_regions: 5, num_p
   end
 end
 
-
 def setup_shop_rentals_for_user(user, num_regions: 5, num_shops: 10)
   regions = give_regions(num_regions)
-  num_shops.times do 
+  num_shops.times do
     user.web_objects << FactoryBot.create(
-      :shop_rental_box, user_id: user.id, 
-      region: regions.sample,
-      server_id: user.servers.sample.id,
-      created_at: rand(1.year.ago..Time.current)
+      :shop_rental_box, user_id: user.id,
+                        region: regions.sample,
+                        server_id: user.servers.sample.id,
+                        created_at: rand(1.year.ago..Time.current)
     )
-    
-   
+
     state = user.shop_rental_boxes.last.states.last
     state.created_at = user.shop_rental_boxes.last.created_at
-    state.save 
-    
+    state.save
+
     add_events_to_rentable(user.shop_rental_boxes.last) if rand < 0.9
   end
 end
@@ -411,7 +405,7 @@ puts 'creating users'
 
   puts "setting up land rental system for user #{i}"
   setup_parcel_data_for_user(user)
-  
+
   puts "settng up shop rentals for user #{i}"
   setup_shop_rentals_for_user(user)
 end

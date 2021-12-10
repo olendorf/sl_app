@@ -63,8 +63,6 @@ module Rezzable
       ) unless Rails.env.development?
     end
 
-
-
     # def self.process_rentals
     # end
   end

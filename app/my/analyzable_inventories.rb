@@ -3,7 +3,10 @@
 ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
   include ActiveAdmin::InventoryBehavior
 
-  menu parent: 'Sales', label: 'Inventory', priority: 2, if: proc { current_user.inventories.size.positive? }
+  menu parent: 'Sales', label: 'Inventory',
+       priority: 2, if: proc {
+                          current_user.inventories.size.positive?
+                        }
 
   scope_to :current_user, association_method: :inventories
 

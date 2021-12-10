@@ -22,28 +22,27 @@ module RentableBehavior
     # self.current_state = state.state
   end
   # rubocop:enable Naming/AccessorMethodName
-  
-  
+
   def add_state(state)
     states.last.update(closed_at: Time.current) if states.size.positive?
     states << Analyzable::RentalState.new(state: state, user_id: user_id)
     update(current_state: state)
   end
-  
+
   def evict_renter(server, eviction_state)
     MessageUserWorker.perform_async(
       server.id,
-      self.renter_name,
-      self.renter_name,
-      I18n.t('analyzable.parcel.eviction', region_name: self.region)
+      renter_name,
+      renter_name,
+      I18n.t('analyzable.parcel.eviction', region_name: region)
     )
-    self.states << Analyzable::RentalState.new(
+    states << Analyzable::RentalState.new(
       state: eviction_state,
-      user_id: self.user.id
+      user_id: user.id
     )
-    self.update_column(:renter_name, nil)
-    self.update_column(:renter_key, nil)
-    self.update_column(:expiration_date, nil)
+    update_column(:renter_name, nil)
+    update_column(:renter_key, nil)
+    update_column(:expiration_date, nil)
   end
 
   class_methods do
@@ -60,8 +59,6 @@ module RentableBehavior
         end
       end
     end
-
-
 
     def remind_renter(rental, server)
       MessageUserWorker.perform_async(

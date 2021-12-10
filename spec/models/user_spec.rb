@@ -150,6 +150,24 @@ RSpec.describe User, type: :model do
       expect(owner.shop_rental_boxes.size).to eq 3
     end
   end
+  
+  describe '#shop_rental_payments' do 
+    it 'should return the shop rental payments' do 
+      owner.web_objects << FactoryBot.create(:shop_rental_box)
+      owner.web_objects << FactoryBot.create(:shop_rental_box)      
+      4.times do
+        FactoryBot.create(:shop_payment, user_id: owner.id,
+                                transactable_id: owner.shop_rental_boxes.first.id,
+                                transactable_type: 'Rezzable::ShopRentalBox')
+        FactoryBot.create(:shop_payment, user_id: owner.id,
+                                transactable_id: owner.shop_rental_boxes.last.id,
+                                transactable_type: 'Rezzable::ShopRentalBox')
+      end
+      
+      expect(owner.shop_rental_payments.size).to eq 8
+    end
+    
+  end
 
   describe '#tips' do
     it 'should return the users tips' do

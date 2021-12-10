@@ -21,7 +21,7 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel' do
     column 'State' do |parcel|
       parcel.current_state.humanize
     end
-    column 'Current Renter', &:owner_name
+    column 'Current Renter', &:renter_name
     column :expiration_date
     column :area
     column :weekly_tier
@@ -33,7 +33,7 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel' do
 
   filter :parcel_name
   filter :description
-  filter :owner_name, label: 'Renter Name'
+  filter :renter_name
   filter :area
   filter :region
   filter :weekly_tier
@@ -53,7 +53,7 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel' do
         parcel.states.last.state.humanize
       end
       row 'Current Renter' do |parcel|
-        parcel.owner_name.nil? ? 'Empty' : parcel.owner_name
+        parcel.renter_name.nil? ? 'Empty' : parcel.renter_name
       end
       row :expiration_date
       row :area
@@ -80,7 +80,9 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel' do
     end
   end
 
-  permit_params :parcel_name, :description, :expiration_date, :area, :weekly_tier, :purchase_price
+  permit_params :parcel_name, :description,
+                :expiration_date, :area,
+                :weekly_rent, :purchase_price
 
   form title: proc { "Edit parcel #{resource.parcel_name}" } do |f|
     f.inputs do
@@ -88,7 +90,7 @@ ActiveAdmin.register Analyzable::Parcel, as: 'Parcel' do
       f.input :description
       f.input :expiration_date, as: :datetime_picker
       f.input :area
-      f.input :weekly_tier
+      f.input :weekly_rent
       f.input :purchase_price
     end
     f.actions

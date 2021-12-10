@@ -35,7 +35,7 @@ module Rezzable
       )
       transaction = Analyzable::Transaction.new(
         amount: amount,
-        category: 'rent',
+        category: 'shop_rent',
         target_name: target_name,
         target_key: target_key
       )
@@ -61,12 +61,6 @@ module Rezzable
                allowed_land_impact: allowed_land_impact,
                current_land_impact: current_land_impact)
       ) unless Rails.env.development?
-    end
-
-    def add_state(state)
-      states.last.update(closed_at: Time.current) if states.size.positive?
-      states << Analyzable::RentalState.new(state: state, user_id: user_id)
-      update(current_state: state)
     end
 
     # def self.process_rentals

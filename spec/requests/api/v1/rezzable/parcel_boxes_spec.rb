@@ -29,7 +29,7 @@ RSpec.describe 'Api::V1::Rezzable::ParcelBoxes', type: :request do
       before(:each) do
         3.times do |i|
           FactoryBot.create :parcel, region: 'foo', parcel_name: "parcel #{i}", user_id: user.id,
-                                     owner_key: nil, owner_name: nil
+                                     renter_key: nil, renter_name: nil
         end
         2.times do |i|
           parcel = FactoryBot.create :parcel, region: 'foo', parcel_name: "taken #{i}",

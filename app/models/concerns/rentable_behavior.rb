@@ -23,6 +23,28 @@ module RentableBehavior
   end
   # rubocop:enable Naming/AccessorMethodName
 
+  def add_state(state)
+    states.last.update(closed_at: Time.current) if states.size.positive?
+    states << Analyzable::RentalState.new(state: state, user_id: user_id)
+    update(current_state: state)
+  end
+
+  def evict_renter(server, eviction_state)
+    MessageUserWorker.perform_async(
+      server.id,
+      renter_name,
+      renter_name,
+      I18n.t('analyzable.parcel.eviction', region_name: region)
+    )
+    states << Analyzable::RentalState.new(
+      state: eviction_state,
+      user_id: user.id
+    )
+    update_column(:renter_name, nil)
+    update_column(:renter_key, nil)
+    update_column(:expiration_date, nil)
+  end
+
   class_methods do
     def process_rentals(class_name, eviction_state)
       rentals = class_name.constantize.where('expiration_date <= ?', 3.days.from_now)
@@ -33,22 +55,9 @@ module RentableBehavior
         elsif rental.expiration_date < Time.current && rental.expiration_date > 3.days.ago
           warn_renter(rental, server)
         else
-          evict_renter(rental, server, eviction_state)
+          rental.evict_renter(server, eviction_state)
         end
       end
-    end
-
-    def evict_renter(rental, server, eviction_state)
-      rental.states << Analyzable::RentalState.new(
-        state: eviction_state,
-        user_id: rental.user.id
-      )
-      MessageUserWorker.perform_async(
-        server.id,
-        rental.renter_name,
-        rental.renter_name,
-        I18n.t('analyzable.parcel.eviction', region_name: rental.region)
-      )
     end
 
     def remind_renter(rental, server)

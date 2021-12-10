@@ -11,7 +11,7 @@ FactoryBot.define do
     description { Faker::Hipster.sentence(word_count: 3) }
     area { rand(16..8192) }
     parcel_key { SecureRandom.uuid }
-    weekly_tier { rand(10..2000) }
+    weekly_rent { rand(10..2000) }
     purchase_price { rand(10..2000) }
     rating { %w[General Moderate Adult].sample }
   end

@@ -16,7 +16,7 @@ class PublicController < ApplicationController
     @owner = requesting_object.user
     @renter = Avatar.find_by_avatar_key(params['renter_key'])
     @parcels = Analyzable::Parcel.where(
-      owner_key: params['renter_key'],
+      renter_key: params['renter_key'],
       user_id: @owner.id
     ).includes(:user).page(params[:page]).per(9)
   end

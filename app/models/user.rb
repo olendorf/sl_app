@@ -79,8 +79,12 @@ class User < ApplicationRecord
     transactions.where(transactable_id: ids)
   end
 
-  def tier_payments
+  def parcel_payments
     transactions.where(category: :tier)
+  end
+
+  def shop_rental_payments
+    transactions.where(category: :shop_rent)
   end
 
   def tip_jars

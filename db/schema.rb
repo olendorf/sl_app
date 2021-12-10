@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_22_152752) do
+ActiveRecord::Schema.define(version: 2021_12_07_185819) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,11 +108,11 @@ ActiveRecord::Schema.define(version: 2021_11_22_152752) do
   create_table "analyzable_parcels", force: :cascade do |t|
     t.string "parcel_name"
     t.string "description"
-    t.string "owner_key"
-    t.string "owner_name"
+    t.string "renter_key"
+    t.string "renter_name"
     t.integer "area"
     t.string "parcel_key"
-    t.integer "weekly_tier"
+    t.integer "weekly_rent"
     t.integer "purchase_price"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

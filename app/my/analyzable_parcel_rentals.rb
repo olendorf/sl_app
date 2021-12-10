@@ -3,7 +3,7 @@
 ActiveAdmin.register_page 'Parcel Rentals', namespace: :my do
   menu parent: 'Data', label: 'Parcel Rentals',
        priority: 3,
-       if: proc { current_user.tier_payments.size.positive? }
+       if: proc { current_user.parcel_payments.size.positive? }
 
   content do
     panel 'Recent Tier Payments' do

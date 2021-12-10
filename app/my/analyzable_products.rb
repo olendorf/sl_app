@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Analyzable::Product, namespace: :my, as: 'Product' do
-  menu label: 'Products'
+  menu parent: 'Sales', label: 'Products'
 
   index titles: 'Products' do
     selectable_column

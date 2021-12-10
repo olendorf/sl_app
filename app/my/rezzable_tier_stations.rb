@@ -3,7 +3,7 @@
 ActiveAdmin.register Rezzable::TierStation, namespace: 'my', as: 'Tier Station' do
   include ActiveAdmin::RezzableBehavior
 
-  menu parent: 'Objects', label: 'Tier Stations',
+  menu parent: 'Rentals', label: 'Tier Stations',
        if: proc { current_user.tier_stations.size.positive? }
 
   actions :all, except: %i[new create]

@@ -1,9 +1,9 @@
-ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental' do
+ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental', namespace: :my do
   
   include ActiveAdmin::RezzableBehavior
   
   
-  menu label: 'Shop Rentals'
+  menu parent: 'Rentals', label: 'Shops'
 
   actions :all, except: %i[new create]
   
@@ -12,7 +12,7 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental' do
   index title: 'Shop Rentals' do
     selectable_column
     column 'Object Name', sortable: :object_name do |shop_rental|
-      link_to shop_rental.object_name, admin_shop_rental_path(shop_rental)
+      link_to shop_rental.object_name, my_shop_rental_path(shop_rental)
     end
     column 'Description', sortable: :description do |shop_rental|
       truncate(shop_rental.description, length: 10, separator: ' ')
@@ -20,14 +20,7 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental' do
     column 'Location', sortable: :region, &:slurl
     column 'Server', sortable: 'server.object_name' do |shop_rental|
       link_to shop_rental.server.object_name,
-              admin_server_path(shop_rental.server) if shop_rental.server
-    end
-    column 'Owner', sortable: 'users.avatar_name' do |shop_rental|
-      if shop_rental.user
-        link_to shop_rental.user.avatar_name, admin_user_path(shop_rental.user)
-      else
-        'Orphan'
-      end
+              my_server_path(shop_rental.server) if shop_rental.server
     end
     column :weekly_rent
     column :allowed_land_impact
@@ -39,14 +32,13 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental' do
     column :expiration_date
     
     actions defaults: true do |shop_rental|
-      link_to 'Evict', evict_admin_shop_rental_path(shop_rental), method: :put unless shop_rental.renter_key.nil?
+      link_to 'Evict', evict_my_shop_rental_path(shop_rental), method: :put unless shop_rental.renter_key.nil?
     end
     
   end
   
   filter :abstract_web_object_object_name, as: :string, label: 'Object Name'
   filter :abstract_web_object_description, as: :string, label: 'Description'
-  filter :abstract_web_object_user_avatar_name, as: :string, label: 'Owner'
   filter :abstract_web_object_region, as: :string, label: 'Region'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :allowed_land_impact
@@ -56,9 +48,6 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental' do
   
   show title: :object_name do
     attributes_table do
-      row 'Renter' do |shop|
-        link_to shop.user.avatar_name, admin_user_path(shop.user)
-      end
       row :description
       row 'State' do |shop|
         shop.current_state
@@ -108,11 +97,11 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental' do
   member_action :evict, method: :put do 
     server =  resource.user.servers.sample
     resource.evict_renter(server, 'for_rent')
-    redirect_to resource_path, notice: "Tenant evicted."
+    redirect_back fall_back_location: my_shop_rentals_path, notice: "Tenant evicted."
   end
   
   action_item :evict, only: [:show, :edit] do 
-    link_to 'Evict', evict_admin_shop_rental_path(shop_rental), method: :put unless shop_rental.renter_key.nil?
+    link_to 'Evict', evict_my_shop_rental_path(shop_rental), method: :put unless shop_rental.renter_key.nil?
   end
   
   batch_action :evict do |ids|

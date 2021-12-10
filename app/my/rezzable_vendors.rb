@@ -3,7 +3,7 @@
 ActiveAdmin.register Rezzable::Vendor, as: 'Vendor', namespace: :my do
   include ActiveAdmin::RezzableBehavior
 
-  menu parent: 'Objects', label: 'Vendors', if: proc {
+  menu parent: 'Sales', label: 'Vendors', if: proc {
                                                   current_user.vendors.size.positive?
                                                 }
 

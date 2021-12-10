@@ -63,11 +63,7 @@ module Rezzable
       ) unless Rails.env.development?
     end
 
-    def add_state(state)
-      states.last.update(closed_at: Time.current) if states.size.positive?
-      states << Analyzable::RentalState.new(state: state, user_id: user_id)
-      update(current_state: state)
-    end
+
 
     # def self.process_rentals
     # end

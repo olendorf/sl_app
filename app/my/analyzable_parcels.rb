@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Analyzable::Parcel, as: 'Parcel', namespace: :my do
-  menu label: 'Parcels', if: proc { current_user.parcels.size.positive? }
+  menu parent: 'Rentals', label: 'Parcels', if: proc { current_user.parcels.size.positive? }
 
   decorate_with Analyzable::ParcelDecorator
 

@@ -56,7 +56,7 @@ module RentableBehavior
         elsif rental.expiration_date < Time.current && rental.expiration_date > 3.days.ago
           warn_renter(rental, server)
         else
-          rental.evict_renter(rental, server, eviction_state)
+          rental.evict_renter(server, eviction_state)
         end
       end
     end

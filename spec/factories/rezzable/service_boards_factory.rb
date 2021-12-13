@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :rezzable_service_board, aliases: [:service_board], class: 'Rezzable::ServiceBoard' do
     association :abstract_web_object, factory: :abstract_web_object
     weekly_rent { rand(100..1000) }
-    
-    factory :rented_service_board do 
+
+    factory :rented_service_board do
       transient do
         first_name { Faker::Name.first_name }
         last_name { rand < 0.5 ? Faker::Name.last_name : 'Resident' }

@@ -114,7 +114,7 @@ class User < ApplicationRecord
   def shop_rental_boxes
     Rezzable::ShopRentalBox.where(user_id: id)
   end
-  
+
   def service_boards
     Rezzable::ServiceBoard.where(user_id: id)
   end

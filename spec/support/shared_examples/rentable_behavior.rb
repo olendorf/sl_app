@@ -1,24 +1,19 @@
 # frozen_string_literal: true
 
-
-
-
 RSpec.shared_examples 'it has rentable behavior' do |model_name|
-  
   Sidekiq::Testing.fake!
   # let(:user) { FactoryBot.create :user }
   # let(:web_object) { FactoryBot.create model_name.to_sym }
 
   it { should have_many(:states).dependent(:destroy) }
-  
+
   let(:user) { FactoryBot.create :active_user }
   let(:renter) { FactoryBot.build :avatar }
-  
-  let(:rentable)  { FactoryBot.create model_name.to_sym, user_id: user.id }
-  
-  describe 'service board life cycle' do 
-    
-    context "rezzing the shop rental box" do 
+
+  let(:rentable) { FactoryBot.create model_name.to_sym, user_id: user.id }
+
+  describe 'service board life cycle' do
+    context 'rezzing the shop rental box' do
       it 'should add the for_rent state' do
         expect(rentable.states.last.state).to eq 'for_rent'
       end
@@ -26,7 +21,7 @@ RSpec.shared_examples 'it has rentable behavior' do |model_name|
         expect(rentable.current_state).to eq 'for_rent'
       end
     end
-    
+
     context 'shop box is for_rent then rented' do
       before(:each) do
         rentable.update(
@@ -55,7 +50,7 @@ RSpec.shared_examples 'it has rentable behavior' do |model_name|
         expect(rentable.renter_key).to eq renter.avatar_key
       end
     end
-    
+
     context 'renter renews the rent' do
       before(:each) do
         rentable.update(
@@ -90,7 +85,7 @@ RSpec.shared_examples 'it has rentable behavior' do |model_name|
       end
     end
   end
-  
+
   describe '.process_rentals' do
     before(:each) do
       user.web_objects.destroy_all
@@ -149,8 +144,8 @@ RSpec.shared_examples 'it has rentable behavior' do |model_name|
         user.web_objects << rentable
       end
     end
-    
-    let(:klass) do 
+
+    let(:klass) do
       object = FactoryBot.build(model_name.to_sym)
       object.class
     end

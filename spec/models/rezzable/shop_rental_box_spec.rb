@@ -12,7 +12,6 @@ RSpec.describe Rezzable::ShopRentalBox, type: :model do
   let(:user) { FactoryBot.create :active_user }
   let(:avatar) { FactoryBot.build :avatar }
 
-
   describe :check_land_impact do
     let(:uri_regex) do
       %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/message_user\?

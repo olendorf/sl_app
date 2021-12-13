@@ -33,8 +33,8 @@ FactoryBot.define do
       category { 'sale' }
       amount { rand(1..1000) }
     end
-    
-    factory :shop_payment do 
+
+    factory :shop_payment do
       category { 'shop_rent' }
       amount { rand(1..1000) }
     end

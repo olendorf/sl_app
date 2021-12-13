@@ -40,6 +40,7 @@ module RentableBehavior
       state: eviction_state,
       user_id: user.id
     )
+  
     update_column(:renter_name, nil)
     update_column(:renter_key, nil)
     update_column(:expiration_date, nil)

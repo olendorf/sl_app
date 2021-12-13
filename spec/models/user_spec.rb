@@ -168,6 +168,17 @@ RSpec.describe User, type: :model do
     end
     
   end
+  
+  describe '#service_boards' do 
+    it 'should return the service boards' do 
+      owner.web_objects << FactoryBot.create(:service_board)
+      owner.web_objects << FactoryBot.create(:service_board)
+      owner.web_objects << FactoryBot.create(:service_board)
+      owner.web_objects << FactoryBot.build(:web_object)
+      expect(owner.service_boards.size).to eq 3
+      
+    end
+  end
 
   describe '#tips' do
     it 'should return the users tips' do

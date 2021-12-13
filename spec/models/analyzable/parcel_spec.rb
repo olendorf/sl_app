@@ -5,7 +5,6 @@ require 'rails_helper'
 Sidekiq::Testing.fake!
 
 RSpec.describe Analyzable::Parcel, type: :model do
-  it_behaves_like 'it has rentable behavior', :parcel
 
   it { should have_one(:parcel_box).class_name('Rezzable::ParcelBox') }
   it { should belong_to(:user) }
@@ -14,6 +13,9 @@ RSpec.describe Analyzable::Parcel, type: :model do
 
   let(:user) { FactoryBot.create :active_user }
   let(:renter) { FactoryBot.build :avatar }
+  
+  
+  it { should have_many(:states).dependent(:destroy) }
 
   before(:each) do
     3.times do

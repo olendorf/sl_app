@@ -45,6 +45,12 @@ ActiveAdmin.register_page 'Parcel Rentals', namespace: :my do
         render partial: 'parcel_status_timeline'
       end
     end
+    
+    panel '' do
+      div class: 'column lg' do
+        render partial: 'parcel_status_ratio_timeline'
+      end
+    end
 
     panel '' do
       div class: 'column lg' do

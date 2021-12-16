@@ -76,6 +76,52 @@ module Async
           # end
         end
       end
+      
+
+      chart_data = { dates: dates, data: [] }
+
+      data.each do |state, d|
+        chart_data[:data] << { name: state.humanize, data: d.values, color: color_map[state] }
+      end
+      chart_data
+    end
+    
+    def parcel_status_ratio_timeline      
+      color_map = {
+        'open' => '#EC2500', 'for_sale' => '#EC9800', 'occupied' => '#9EDE00'
+      }
+      states = Analyzable::RentalState.where(
+        rentable_id: current_user.parcels.collect(&:id),
+        rentable_type: 'Analyzable::Parcel'
+      )
+      dates = time_series_dates((states.minimum(:created_at) - 3.days), Time.current)
+      data = {}
+      date_data = {}
+      date_totals  = {}
+      dates.each do |date| 
+        date_data[date] = 0 
+        date_totals[date] = 0
+      end
+      Analyzable::RentalState.states.except('for_rent').each_key do |state|
+        data[state] = date_data.clone
+      end
+
+      states.each do |state|
+        time_series_dates(state.created_at, state.closed_at).each do |date|
+          data[state.state][date] += 1 if data[state.state][date]
+          date_totals[date] += 1 if date_totals[date]
+          # if data[state.state][date].nil?
+          #   data[state.state][date] = 1 unless data[state.state][date]
+          #   # puts "adding date #{date}"
+          # end
+        end
+      end
+      
+      date_totals.each do |date, total|
+        color_map.keys.each do |state|
+          data[state][date] = (100 * data[state][date].to_f/total.to_f)
+        end
+      end
 
       chart_data = { dates: dates, data: [] }
 

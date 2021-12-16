@@ -9,11 +9,15 @@ module Async
       authorize :async, :index?
       render json: send(params['chart']).to_json
     end
-
-    def parcel_status_treemap
-      color_map = {
+    
+    def color_map
+      {
         'open' => '#FF0D0D', 'for_sale' => '#FAB733', 'occupied' => '#ACB334'
       }
+    end
+
+    def parcel_status_treemap
+
       states = Analyzable::RentalState.states.except('for_rent').keys
       regions = {}
       parcels = current_user.parcels
@@ -52,9 +56,7 @@ module Async
     end
 
     def parcel_status_timeline
-      color_map = {
-        'open' => '#EC2500', 'for_sale' => '#EC9800', 'occupied' => '#9EDE00'
-      }
+
       states = Analyzable::RentalState.where(
         rentable_id: current_user.parcels.collect(&:id),
         rentable_type: 'Analyzable::Parcel'
@@ -87,9 +89,7 @@ module Async
     end
     
     def parcel_status_ratio_timeline      
-      color_map = {
-        'open' => '#EC2500', 'for_sale' => '#EC9800', 'occupied' => '#9EDE00'
-      }
+
       states = Analyzable::RentalState.where(
         rentable_id: current_user.parcels.collect(&:id),
         rentable_type: 'Analyzable::Parcel'

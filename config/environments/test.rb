@@ -61,6 +61,9 @@ Rails.application.configure do
     Bullet.add_safelist type: :n_plus_one_query,
                         class_name: 'AbstractWebObject',
                         association: :server
+    Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: 'Analyzable::Transaction',
+                        association: :transactable
   end
 
   # Settings specified here will take precedence over those in config/application.rb.

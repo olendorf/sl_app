@@ -86,7 +86,7 @@ module Async
     end
 
     def rental_income_timeline
-      transactions = current_user.transactions.includes(:parcel).where(category: %w[tier
+      transactions = current_user.transactions.where(category: %w[tier
                                                                                     land_sale])
       regions = current_user.parcels.select(:region).distinct.collect(&:region)
       dates = time_series_months((transactions.minimum(:created_at) - 2.days), Time.current)
@@ -99,9 +99,9 @@ module Async
         data[region] = date_data.clone
       end
       transactions.each do |transaction|
-        data[transaction.parcel.region][
+        data[transaction.transactable.region][
           transaction.created_at.strftime('%B %Y')] += transaction.amount if data[
-                                                        transaction.parcel.region][
+                                                        transaction.transactable.region][
                                                           transaction.created_at.strftime('%B %Y')]
       end
       chart_data = { dates: dates, data: [], colors: generate_color_map(regions).values }

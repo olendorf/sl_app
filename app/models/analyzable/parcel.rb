@@ -4,6 +4,7 @@ module Analyzable
   # Model for inworld parcels for rent.
   class Parcel < ApplicationRecord
     include RentableBehavior
+    include TransactableBehavior
     # include ActionView::Helpers::DateHelper
 
     after_create :handle_parcel_opening
@@ -18,13 +19,23 @@ module Analyzable
     #                   after_add: :set_current_state,
     #                   class_name: 'Analyzable::RentalState'
 
-    has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify
+    # has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify
+    
+   
 
     attr_accessor :rent_payment, :requesting_object, :parcel_box_key
 
     def self.open_parcels(user, region)
       user.parcels.includes(:parcel_box).where(renter_key: nil, region: region,
                                                rezzable_parcel_boxes: { parcel_id: nil })
+    end
+    
+    def transaction_description(transaction)
+      'foo'
+    end
+    
+    def transaction_category(transaction=nil)
+      'tier'
     end
 
     def handle_parcel_opening
@@ -60,7 +71,9 @@ module Analyzable
           category: :land_sale,
           target_name: renter_name,
           target_key: renter_key,
-          parcel_id: id
+          transactable_id: self.id,
+          transactable_type: 'Analyzable::Parcel',
+          description: "Parcel purchase from #{renter_name}"
         )
         self.expiration_date = 1.week.from_now
       end
@@ -83,9 +96,8 @@ module Analyzable
         source_name: requesting_object.object_name,
         source_type: 'tier_station',
         category: 'tier',
-        transactable_id: requesting_object.id,
-        transactable_type: 'Rezzable::TierStation',
-        parcel_id: id,
+        transactable_id: self.id,
+        transactable_type: 'Analyzable::Parcel',
         description: "Tier payment from #{renter_name}"
       )
     end

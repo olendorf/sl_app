@@ -237,15 +237,15 @@ def add_events_to_rentable(rentable)
   event_time = rand(rentable.states.last.created_at..Time.current)
   rentable.states.last.update_column(:closed_at, event_time)
 
-  add_parcel_event(rentable) if rentable.instance_of?(Analyzable::Parcel)
-  add_shop_rental_event(rentable) if rentable.instance_of?(Rezzable::ShopRentalBox)
+  add_parcel_event(rentable, event_time) if rentable.instance_of?(Analyzable::Parcel)
+  add_shop_rental_event(rentable, event_time) if rentable.instance_of?(Rezzable::ShopRentalBox)
 
   rentable.states.last.update(created_at: event_time)
 
   add_events_to_rentable(rentable) if rand < 0.9
 end
 
-def add_shop_rental_event(rentable)
+def add_shop_rental_event(rentable, event_time)
   if rentable.current_state == 'occupied'
     server = rentable.user.servers.sample
     rentable.evict_renter(server, 'for_rent')
@@ -257,17 +257,19 @@ def add_shop_rental_event(rentable)
         target_name: renter.avatar_name,
         rent_payment: rentable.weekly_rent
       )
+      rentable.user.transactions.where(
+        category: 'shop_rent').last.update(created_at: event_time)
     end
   end
 end
 
-def add_parcel_event(rentable)
+def add_parcel_event(rentable, event_time)
   case rentable.current_state
   when 'open'
     rentable.states << Analyzable::RentalState.new(
-      state: 'for_rent'
+      state: 'for_sale'
     )
-  when 'for_rent'
+  when 'for_sale'
     renter = FactoryBot.build :avatar
 
     rand(1..5).times do
@@ -277,6 +279,11 @@ def add_parcel_event(rentable)
         renter_name: renter.avatar_name,
         requesting_object: rentable.user.tier_stations.sample
       )
+      
+      rentable.user.transactions.where(
+        category: 'land_sale').last.update(created_at: event_time)
+      rentable.user.transactions.where(
+        category: 'tier').last.update(created_at: event_time)
     end
   else
     server = rentable.user.servers.sample
@@ -344,24 +351,24 @@ give_splits(owner, avatars)
 puts 'giving servers to owner'
 give_servers_to_user(owner)
 
-puts 'giving terminals to owner'
-give_terminals(owner, avatars)
+# puts 'giving terminals to owner'
+# give_terminals(owner, avatars)
 
-puts 'giving donation_boxes to owner'
-give_donation_boxes_to_user(owner, avatars)
+# puts 'giving donation_boxes to owner'
+# give_donation_boxes_to_user(owner, avatars)
 
-# puts 'giving transactions to owner'
-# give_transactions_to_user(owner, avatars)
+# # puts 'giving transactions to owner'
+# # give_transactions_to_user(owner, avatars)
 
-puts 'giving traffic_cops to owner'
-give_traffic_cops_to_user(owner, avatars, 200)
+# puts 'giving traffic_cops to owner'
+# give_traffic_cops_to_user(owner, avatars, 200)
 
-puts 'giving tip_jars to owner'
-give_tip_jars_to_user(owner, avatars, 20)
+# puts 'giving tip_jars to owner'
+# give_tip_jars_to_user(owner, avatars, 20)
 
-puts 'giving vendors to owner'
-give_products_to_user(owner, 10)
-give_vendors_to_user(owner, avatars, 50, 20)
+# puts 'giving vendors to owner'
+# give_products_to_user(owner, 10)
+# give_vendors_to_user(owner, avatars, 50, 20)
 
 puts 'setting up land rental system for owner'
 setup_parcel_data_for_user(owner, num_parcels: 75)

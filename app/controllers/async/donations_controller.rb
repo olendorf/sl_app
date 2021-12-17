@@ -20,12 +20,7 @@ module Async
     end
 
     def donor_scatter_plot
-      amounts = current_user.donations.group(:target_name).sum(:amount).sort_by do |_key, value|
-        -value
-      end.to_h
-      counts = current_user.donations.group(:target_name).count
-      # amounts.collect { |k, v| { x: counts[k], y: v } }
-      amounts.collect { |k, v| [counts[k], v, k] }
+      DonationData.donor_scatter_plot(current_user)
     end
   end
 end

@@ -8,6 +8,7 @@ module Rezzable
 
     include RezzableBehavior
     include RentableBehavior
+    include TransactableBehavior
 
     after_create -> { add_state('for_rent') }
     before_update :handle_rent_payment, if: :rent_payment
@@ -39,7 +40,7 @@ module Rezzable
         target_name: target_name,
         target_key: target_key
       )
-      user.transactions << transaction
+      self.transactions << transaction
     end
     # rubocop:enable Metrics/AbcSize
 
@@ -61,6 +62,14 @@ module Rezzable
                allowed_land_impact: allowed_land_impact,
                current_land_impact: current_land_impact)
       ) unless Rails.env.development?
+    end
+    
+    def transaction_category
+      'shop_rent'
+    end
+    
+    def transaction_description(transaction)
+      "Shop rent from #{transaction.target_name} for #{self.object_name}"
     end
 
     # def self.process_rentals

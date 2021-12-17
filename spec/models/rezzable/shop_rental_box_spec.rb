@@ -6,8 +6,8 @@ Sidekiq::Testing.fake!
 
 RSpec.describe Rezzable::ShopRentalBox, type: :model do
   it_behaves_like 'a rezzable object', :shop_rental_box, 1
-
   it_behaves_like 'it has rentable behavior', :shop_rental_box
+  it_behaves_like 'it is a transactable', :shop_rental_box
 
   let(:user) { FactoryBot.create :active_user }
   let(:avatar) { FactoryBot.build :avatar }

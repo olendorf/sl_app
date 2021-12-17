@@ -21,6 +21,8 @@ module Analyzable
 
       'no_image_available.jpg'
     end
+    
+    
     # Define presentation-specific methods here. Helpers are accessed through
     # `helpers` (aka `h`). You can override attributes, for example:
     #

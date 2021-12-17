@@ -118,7 +118,7 @@ class ParcelData
       end
       
       date_totals.each do |date, total|
-        color_map.keys.each do |state|
+        stop_light_color_map.keys.each do |state|
           data[state][date] = (100 * data[state][date].to_f/total.to_f)
         end
       end

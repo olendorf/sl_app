@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental',
+ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop',
                                               namespace: :my do
   include ActiveAdmin::RezzableBehavior
 
@@ -9,11 +9,14 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental',
   actions :all, except: %i[new create]
 
   decorate_with Rezzable::ShopRentalBoxDecorator
+  
+  scope :all, default: true
+  scope :for_rent
 
   index title: 'Shop Rentals' do
     selectable_column
     column 'Object Name', sortable: :object_name do |shop_rental|
-      link_to shop_rental.object_name, my_shop_rental_path(shop_rental)
+      link_to shop_rental.object_name, my_shop_path(shop_rental)
     end
     column 'Description', sortable: :description do |shop_rental|
       truncate(shop_rental.description, length: 10, separator: ' ')
@@ -31,7 +34,7 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental',
     column :expiration_date
 
     actions defaults: true do |shop_rental|
-      link_to 'Evict', evict_my_shop_rental_path(shop_rental),
+      link_to 'Evict', evict_my_shop_path(shop_rental),
               method: :put unless shop_rental.renter_key.nil?
     end
   end
@@ -93,19 +96,19 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop Rental',
   member_action :evict, method: :put do
     server = resource.user.servers.sample
     resource.evict_renter(server, 'for_rent')
-    redirect_back fall_back_location: my_shop_rentals_path,
+    redirect_back fall_back_location: my_shops_path,
                   notice: 'Tenant evicted.'
   end
 
   action_item :evict, only: %i[show edit] do
-    link_to 'Evict', evict_my_shop_rental_path(shop_rental),
-            method: :put unless shop_rental.renter_key.nil?
+    link_to 'Evict', evict_my_shop_path(shop),
+            method: :put unless shop.renter_key.nil?
   end
 
   batch_action :evict do |ids|
-    batch_action_collection.find(ids).each do |shop_rental|
-      server = shop_rental.user.servers.sample
-      shop_rental.evict_renter(server, 'for_rent')
+    batch_action_collection.find(ids).each do |shop|
+      server = shop.user.servers.sample
+      shop.evict_renter(server, 'for_rent')
     end
     redirect_to collection_path, alert: 'The users have been evicted.'
   end

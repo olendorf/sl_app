@@ -1,0 +1,69 @@
+<div id="shop_status_timeline_container" style="width:1500; height:900px;" %></div>
+
+<script type="text/javascript">
+
+$(function() {
+  $.getJSON('/async/shop_rentals',
+              {
+                  chart: 'shop_status_timeline'
+              },
+              function(data){
+                
+        $('#shop_status_timeline_container').highcharts({
+            chart: {
+                type: 'area',
+                marginBottom: 100,
+                zoomType: 'x',
+                style: {
+                  fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                }  
+            },
+            title: {
+              text: 'Status of Parcels over Time'
+            },
+            // colors: data.colors,
+            xAxis: {
+              allowDecimals: false,
+              type: 'category',
+              crosshair: true,
+              categories: data.dates,
+              labels: {
+                // align: 'left',
+                reserveSpace: true
+                // rotation: 270
+              }
+            },
+          yAxis: {
+            title: {
+              text: 'Number of Shops'
+            },
+            min: 0
+            // visible: false,
+            // startOnTick: false,
+            // endOnTick: false
+          },
+          legend: {
+            enabled: true
+          },
+          plotOptions: {
+              area: {
+                  stacking: 'normal'
+              },
+              series: {
+                  label: {
+                      minFontSize: 5,
+                      maxFontSize: 15,
+                      style: {
+                          color: 'rgba(255,255,255,0.75)'
+                      }
+                  }
+              }
+          },
+          series: data.data
+        })
+    });
+});
+
+
+</script>
+

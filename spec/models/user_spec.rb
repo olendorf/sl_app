@@ -164,7 +164,7 @@ RSpec.describe User, type: :model do
                                          transactable_type: 'Rezzable::ShopRentalBox')
       end
 
-      expect(owner.shop_rental_payments.size).to eq 8
+      expect(owner.shop_payments.size).to eq 8
     end
   end
 

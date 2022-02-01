@@ -15,6 +15,7 @@ module Rezzable
     after_update :check_land_impact, if: :new_land_impact
 
     attr_accessor :rent_payment, :target_name, :target_key, :new_land_impact
+    scope :for_rent, -> { where(current_state: :for_rent)}
 
     OBJECT_WEIGHT = 1
 

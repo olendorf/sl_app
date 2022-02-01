@@ -24,6 +24,7 @@ module Analyzable
    
 
     attr_accessor :rent_payment, :requesting_object, :parcel_box_key
+    
 
     def self.open_parcels(user, region)
       user.parcels.includes(:parcel_box).where(renter_key: nil, region: region,

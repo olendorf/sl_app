@@ -7,7 +7,7 @@ module DataHelper
   included do
     def self.stop_light_color_map
       {
-        'open' => '#FF0D0D', 'for_sale' => '#FAB733', 'occupied' => '#ACB334'
+        'open' => '#FF0D0D', 'for_sale' => '#FAB733', 'occupied' => '#ACB334', 'for_rent' => '#FAB733'
       }
     end
     

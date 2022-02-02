@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Async::Visits', type: :request do
+RSpec.describe 'Async::ShopBoxes', type: :request do
   describe 'GET' do
     
     before(:all) do
@@ -57,120 +57,6 @@ RSpec.describe 'Async::Visits', type: :request do
       end
     end
 
-    # context 'asking for data from a single vendor' do
-    #   describe 'sales timeline data' do
-    #     it 'should return OK status' do
-    #       get path, params: { chart: 'vendor_sales_timeline', ids: [@user.vendors.first.id] }
-    #       expect(response.status).to eq 200
-    #     end
-
-    #     it 'should return the data' do
-    #       get path, params: { chart: 'vendor_sales_timeline', ids: [@user.vendors.first.id] }
-    #       expect(JSON.parse(response.body)['counts']).to eq [0, 0, 0, 3]
-    #     end
-    #   end
-    # end
-
-    # context 'asking for data from a single inventory' do
-    #   describe 'inventory sales timeline data' do
-    #     it 'should return OK status' do
-    #       get path,
-    #           params: { chart: 'inventory_sales_timeline', ids: [@user.inventories.first.id] }
-    #       expect(response.status).to eq 200
-    #     end
-
-    #     it 'should return the data' do
-    #       get path,
-    #           params: { chart: 'inventory_sales_timeline', ids: [@user.inventories.first.id] }
-    #       expect(JSON.parse(response.body)['counts']).to eq [0, 0, 0, 3]
-    #     end
-    #   end
-    # end
-
-    # context 'asking for data from a single product' do
-    #   describe 'product sales timeline data' do
-    #     it 'should return OK status' do
-    #       get path, params: { chart: 'product_sales_timeline', ids: [@user.products.first.id] }
-    #       expect(response.status).to eq 200
-    #     end
-
-    #     it 'should return the data' do
-    #       get path, params: { chart: 'product_sales_timeline', ids: [@user.products.first.id] }
-    #       expect(JSON.parse(response.body)['counts']).to eq [0, 0, 0, 3]
-    #     end
-    #   end
-    # end
-
-    # describe 'asking for product revenue timeline data' do
-    #   it 'should return ok status' do
-    #     get path, params: { chart: 'sales_by_product_revenue_timeline' }
-    #     expect(response.status).to eq 200
-    #   end
-
-    #   it 'should return the data' do
-    #     get path, params: { chart: 'sales_by_product_revenue_timeline' }
-    #     expect(JSON.parse(response.body).with_indifferent_access).to eq(
-    #       { 'colors' => ['#c7e10f', '#ac70f3', '#dcfe90'],
-    #         'data' => [{ 'data' => [0, 300], 'name' => 'product 2' },
-    #                   { 'data' => [0, 300], 'name' => 'product 1' },
-    #                   { 'data' => [0, 300], 'name' => 'product 0' }],
-    #         'dates' => [1.month.ago.strftime('%B %Y'), Time.current.strftime('%B %Y')] }
-    #     )
-    #   end
-    # end
-
-    # describe 'asking for product items timeline data' do
-    #   it 'should return ok status' do
-    #     get path, params: { chart: 'sales_by_product_items_timeline' }
-    #     expect(response.status).to eq 200
-    #   end
-
-    #   it 'should return the data' do
-    #     get path, params: { chart: 'sales_by_product_items_timeline' }
-    #     expect(JSON.parse(response.body).with_indifferent_access).to eq(
-    #       { 'colors' => ['#c7e10f', '#ac70f3', '#dcfe90'],
-    #         'data' => [{ 'data' => [0, 3], 'name' => 'product 2' },
-    #                   { 'data' => [0, 3], 'name' => 'product 1' },
-    #                   { 'data' => [0, 3], 'name' => 'product 0' }],
-    #         'dates' => [1.month.ago.strftime('%B %Y'), Time.current.strftime('%B %Y')] }
-    #     )
-    #   end
-    # end
-
-    # describe 'asking for inventory revenue timeline data' do
-    #   it 'should return ok status' do
-    #     get path, params: { chart: 'sales_by_inventory_revenue_timeline' }
-    #     expect(response.status).to eq 200
-    #   end
-
-    #   it 'should return the data' do
-    #     get path, params: { chart: 'sales_by_inventory_revenue_timeline' }
-    #     expect(JSON.parse(response.body).with_indifferent_access).to eq(
-    #       { 'colors' => ['#255828', '#fc5fc2', '#368986'],
-    #         'data' => [{ 'data' => [0, 300], 'name' => 'inventory 2' },
-    #                   { 'data' => [0, 300], 'name' => 'inventory 1' },
-    #                   { 'data' => [0, 300], 'name' => 'inventory 0' }],
-    #         'dates' => [1.month.ago.strftime('%B %Y'), Time.current.strftime('%B %Y')] }
-    #     )
-    #   end
-    # end
-
-    # describe 'asking for inventory items timeline data' do
-    #   it 'should return ok status' do
-    #     get path, params: { chart: 'sales_by_product_items_timeline' }
-    #     expect(response.status).to eq 200
-    #   end
-
-    #   it 'should return the data' do
-    #     get path, params: { chart: 'sales_by_inventory_items_timeline' }
-    #     expect(JSON.parse(response.body).with_indifferent_access).to eq(
-    #       { 'colors' => ['#255828', '#fc5fc2', '#368986'],
-    #         'data' => [{ 'data' => [0, 3], 'name' => 'inventory 2' },
-    #                   { 'data' => [0, 3], 'name' => 'inventory 1' },
-    #                   { 'data' => [0, 3], 'name' => 'inventory 0' }],
-    #         'dates' => [1.month.ago.strftime('%B %Y'), Time.current.strftime('%B %Y')] }
-    #     )
-    #   end
-    # end
+   
   end
 end

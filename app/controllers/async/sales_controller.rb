@@ -8,7 +8,6 @@ module Async
       render json: send(params['chart'], params['ids']).to_json
     end
 
-    # rubocop:disable Metrics/AbcSize
     def sales_by_inventory_revenue_timeline(_ids=nil)
       SalesData.sales_by_inventory_revenue_timeline(current_user)
     end
@@ -25,8 +24,6 @@ module Async
     def sales_by_product_revenue_timeline(_ids = nil)
       SalesData.sales_by_product_revenue_timeline(current_user)
     end
-
-    # rubocop:enable Metrics/AbcSize
 
     def vendor_sales_timeline(ids)
       SalesData.vendor_sales_timeline(ids)

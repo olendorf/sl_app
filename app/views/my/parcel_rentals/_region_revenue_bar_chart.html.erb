@@ -1,4 +1,5 @@
-<div id="region_revenue_bar_chart_container" style="width:1500; height:900px;"></div>
+<div id="region_revenue_bar_chart_container" 
+     style="width:1500; height:900px; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center"></div>
 
 <script type="text/javascript">
 
@@ -14,7 +15,12 @@ $(function() {
                type: 'bar',
                style: {
                     fontFamily: 'Arial, Helvetica, Clean, sans-serif'
-               }   
+               },
+               events: {
+                 load: function() {
+	                        document.getElementById('container').style.background = 'none';
+                        }
+               }
             },
             
             colors: data.colors,

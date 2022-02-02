@@ -1,4 +1,5 @@
-<div id="parcel_status_treemap_containter" style="width:1500; height:900px;"></div>
+<div id="parcel_status_treemap_containter" 
+     style="width:1500; height:900px; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center"></div>
 
 <script type="text/javascript">
 
@@ -13,7 +14,12 @@ $(function() {
           chart: {
               style: {
                 fontFamily: 'Arial, Helvetica, Clean, sans-serif'
-              }  
+              },
+              events: {
+                load: function() {
+	                        document.getElementById('container').style.background = 'none';
+                        }
+              }
           },
           series: [{
             type: "treemap",

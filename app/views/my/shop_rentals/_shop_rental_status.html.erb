@@ -1,0 +1,100 @@
+<div id="shop_rental_status_chart_container" style="width:1500; height:900px;"></div>
+
+<script type="text/javascript">
+
+$(function() {
+  $.getJSON('/async/shop_rentals',
+              {
+                  chart: 'shop_rental_status_chart'
+              },
+              function(data){
+                
+        $('#shop_rental_status_chart_container').highcharts({
+                chart: {
+                    type: 'column',
+                    style: {
+                        fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                    }   
+                },
+                title: {
+                    text: 'Shop Rental Statuses By Region'
+                },
+                xAxis: {
+                    categories: data.regions,
+                    crosshair: true,
+                    title: {
+                        text: 'Region'
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Number of Shops'
+                    }
+                },
+
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: data.data
+        //   chart: {
+        //       type: 'column',
+        //       style: {
+        //             fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+        //       }   
+        //     },
+            
+        //     colors: data.colors,
+        //     title: {
+        //         // text: 'Shop Rental Statuses By Region'
+        //         text: data.data
+        //     },
+        //     xAxis: {
+        //         categories: data.regions,
+        //         colors: data.colors,
+        //         labels: {
+        //           style: {
+        //             fontSize: '28px'
+        //           }
+        //         },
+        //         title: {
+        //             text: null
+        //         }
+        //     },
+        //     yAxis: {
+        //         min: 0,
+        //         title: {
+        //             text: '$L',
+        //             style: {
+        //               fontSize: '28px'
+        //             }
+        //         }
+        //     },
+        //     tooltip: {
+        //         valueSuffix: ' $L'
+        //     },
+        //     legend: {
+        //       enabled: false
+        //     },
+        //     plotOptions: {
+        //         bar: {
+        //             dataLabels: {
+        //                 enabled: true
+        //             },
+        //             colorByPoint: true,
+        //         },
+        //     },
+        //     credits: {
+        //         enabled: false
+        //     },
+        //     series: [{data: data.data}]
+        })
+    });
+});
+
+
+</script>
+

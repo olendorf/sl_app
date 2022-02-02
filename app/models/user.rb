@@ -83,7 +83,7 @@ class User < ApplicationRecord
     transactions.where(category: :tier)
   end
 
-  def shop_rental_payments
+  def shop_payments
     transactions.where(category: :shop_rent)
   end
 

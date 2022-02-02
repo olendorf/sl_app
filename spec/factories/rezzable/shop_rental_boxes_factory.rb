@@ -12,8 +12,16 @@ FactoryBot.define do
         first_name { Faker::Name.first_name }
         last_name { rand < 0.5 ? Faker::Name.last_name : 'Resident' }
       end
+      renter_name { "#{first_name} #{last_name}" }
+      renter_key { SecureRandom.uuid }
+      current_state { 'rented' }
       current_land_impact { rand(0..100) }
       expiration_date { 1.week.from_now }
+    end
+    
+    factory :for_rent_shop_rental_box do 
+      
+      
     end
   end
 end

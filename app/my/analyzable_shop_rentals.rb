@@ -21,7 +21,7 @@ ActiveAdmin.register_page 'Shop Rentals', namespace: :my do
           column 'Renter', &:target_name
           column 'Shop' do |shop_payment|
             link_to shop_payment.transactable.object_name,
-                    my_shop_path(shop_payment.transactable)
+                    my_shop_rental_box_path(shop_payment.transactable)
           end
           column :amount
           column 'Location' do |shop_payment|

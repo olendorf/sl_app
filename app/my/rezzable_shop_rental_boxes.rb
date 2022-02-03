@@ -33,7 +33,7 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'ShopRentalBox', namespace: :m
     column :expiration_date
 
     actions defaults: true do |shop_rental|
-      link_to 'Evict', evict_my_shop_path(shop_rental),
+      link_to 'Evict', evict_my_shop_rental_box_path(shop_rental),
               method: :put unless shop_rental.renter_key.nil?
     end
   end

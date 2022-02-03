@@ -1,5 +1,6 @@
 
-<div id="visits_heatmap_container" style="width:600px; height:600px;" %></div>
+<div id="visits_heatmap_container" 
+     style="width:600px; height:600px;; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center"></div>
 
 <script type="text/javascript">
 
@@ -18,6 +19,11 @@
                             type: 'heatmap',
                             style: {
                               fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                            },
+                            events: {
+                              load: function() {
+            	                        document.getElementById('container').style.background = 'none';
+                                    }
                             }
 
                         },
@@ -40,21 +46,9 @@
                                             '8 PM', '9 PM', '10 PM', '11 PM', '12 PM'
                                         ],
                             title: null
-                            // reversed: true
                         },
                     
-                        // accessibility: {
-                        //     point: {
-                        //         descriptionFormatter: function (point) {
-                        //             var ix = point.index + 1,
-                        //                 xName = getPointCategoryName(point, 'x'),
-                        //                 yName = getPointCategoryName(point, 'y'),
-                        //                 val = point.value;
-                        //             return ix + '. ' + xName + ' sales ' + yName + ', ' + val + '.';
-                        //         }
-                        //     }
-                        // },
-                    
+     
                         colorAxis: {
                             min: 0,
                             minColor: '#FFFFFF',
@@ -70,21 +64,13 @@
                             symbolHeight: 280
                         },
                     
-                        // tooltip: {
-                        //     formatter: function () {
-                        //         return '<b>' + getPointCategoryName(this.point, 'x') + '</b> sold <br><b>' +
-                        //             this.point.value + '</b> items on <br><b>' + getPointCategoryName(this.point, 'y') + '</b>';
-                        //     }
-                        // },
+
                     
                         series: [{
                             name: 'Number of Visits By Time and Day',
                             borderWidth: 1,
                             data: data
-                            // dataLabels: {
-                            //     enabled: true,
-                            //     color: '#000000'
-                            // }
+
                         }]
 
                     }); 

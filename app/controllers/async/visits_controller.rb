@@ -27,11 +27,9 @@ module Async
       counts.collect { |k, v| { x: v, y: durations[k] / 60.0, name: k } }
     end
 
-    # rubocop:disable Metrics/AbcSize
     def visits_timeline(ids)
       VisitData.visits_timeline(ids)
     end
-    # rubocop:enable Metrics/AbcSize
 
     def visits_heatmap(ids)
       VisitData.visits_heatmap(ids)
@@ -41,10 +39,8 @@ module Async
       VisitData.duration_heatmap(ids)
     end
 
-    # rubocop:disable Metrics/AbcSize
     def visit_location_heatmap(ids)
       VisitData.visit_location_heatmap(ids)
     end
-    # rubocop:enable Metrics/AbcSize
   end
 end

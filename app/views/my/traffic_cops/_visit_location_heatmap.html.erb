@@ -1,18 +1,16 @@
 
-<div id="visit_location_container" class='centered' style="width:800px; height:800px;" %></div>
+<div id="visit_location_container" class='centered' 
+    style="width:800px; height:800px;; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center"></div>
 
 <script type="text/javascript">
 
-        $(function () {
-                // var processed_json = new Array();   
+        $(function () { 
                 $.getJSON('/async/visits', 
                                 {
                                     ids: gon.ids,
                                     chart: 'visit_location_heatmap'
                                 },
                                 function(data) {
-
-                    // draw chart
                      $('#visit_location_container').highcharts({ 
                         chart: {
                             type: 'heatmap',
@@ -20,6 +18,11 @@
                             style: {
                               fontFamily: 'Arial, Helvetica, Clean, sans-serif'
                             },
+                            events: {
+                              load: function() {
+            	                        document.getElementById('container').style.background = 'none';
+                                    }
+                            }
                         },
                         boost: {
                             useGPUTranslations: true
@@ -51,12 +54,6 @@
                         colorAxis: {
                             minColor: '#367bc7',
                             maxColor: '#F99F4A',
-                            // stops: [
-                            //     [0, '#3060cf'],
-                            //     [0.5, '#fffbbc'],
-                            //     [0.9, '#c4463a'],
-                            //     [1, '#c4463a']
-                            // ],
                             min: 0,
                             max: data.max,
                             startOnTick: false,

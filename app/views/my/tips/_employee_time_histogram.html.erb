@@ -1,5 +1,6 @@
 
-<div id="employee_time_histogram_containter" style="width:600px; height:400px;" %>></div>
+<div id="employee_time_histogram_containter" 
+     style="width:600px; height:400px; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center">></div>
 
 <script type="text/javascript">
 
@@ -16,7 +17,12 @@
                         chart: {
                             style: {
                               fontFamily: 'Arial, Helvetica, Clean, sans-serif'
-                            }  
+                            },
+                            events: {
+                              load: function() {
+            	                        document.getElementById('container').style.background = 'none';
+                                    }
+                            }
                         },
                     
                         title: {

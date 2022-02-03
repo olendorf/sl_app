@@ -15,7 +15,8 @@ module Rezzable
     after_update :check_land_impact, if: :new_land_impact
 
     attr_accessor :rent_payment, :target_name, :target_key, :new_land_impact
-    scope :for_rent, -> { where(current_state: :for_rent)}
+
+    scope :for_rent, -> { where(current_state: :for_rent) }
 
     OBJECT_WEIGHT = 1
 
@@ -23,7 +24,6 @@ module Rezzable
     #   self.states << Analyzable::RentalState.new(state: 'for_rent', user_id: self.user_id)
     # end
 
-    # rubocop:disable Metrics/AbcSize
     def handle_rent_payment
       amount = rent_payment
       self.rent_payment = nil
@@ -41,9 +41,8 @@ module Rezzable
         target_name: target_name,
         target_key: target_key
       )
-      self.transactions << transaction
+      transactions << transaction
     end
-    # rubocop:enable Metrics/AbcSize
 
     def check_land_impact
       return unless user
@@ -64,13 +63,13 @@ module Rezzable
                current_land_impact: current_land_impact)
       ) unless Rails.env.development?
     end
-    
+
     def transaction_category
       'shop_rent'
     end
-    
+
     def transaction_description(transaction)
-      "Shop rent from #{transaction.target_name} for #{self.object_name}"
+      "Shop rent from #{transaction.target_name} for #{object_name}"
     end
 
     # def self.process_rentals

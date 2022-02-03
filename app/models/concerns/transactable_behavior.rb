@@ -11,7 +11,7 @@ module TransactableBehavior
                             before_add: :process_transaction,
                             after_add: :handle_splits
     accepts_nested_attributes_for :transactions
-    
+
     has_many :splits, dependent: :destroy, as: :splittable
     accepts_nested_attributes_for :splits, allow_destroy: true
   end
@@ -20,8 +20,8 @@ module TransactableBehavior
     transaction.user_id = user.id
     transaction.description = transaction_description(transaction)
     transaction.category = transaction_category
-    transaction.source_key = object_key if self.respond_to?(:object_key)
-    transaction.source_name = object_name if self.respond_to?(:object_name)
+    transaction.source_key = object_key if respond_to?(:object_key)
+    transaction.source_name = object_name if respond_to?(:object_name)
     transaction.balance = compute_balance(transaction)
     transaction.save
   end
@@ -34,9 +34,9 @@ module TransactableBehavior
       handle_split(transaction, split)
     end
   end
-  
+
   def request_handler
-    self.respond_to?(:url) ? self : self.user.servers.sample
+    respond_to?(:url) ? self : user.servers.sample
   end
 
   def handle_split(transaction, split)

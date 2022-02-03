@@ -35,6 +35,5 @@ module Async
     def tips_timeline
       TipData.tips_timeline(current_user)
     end
-
   end
 end

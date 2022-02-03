@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register_page 'Shop Rentals', namespace: :my do
-  
   # include ShopData
   menu parent: 'Data', label: 'Shop Rentals',
        priority: 3,
@@ -21,7 +20,7 @@ ActiveAdmin.register_page 'Shop Rentals', namespace: :my do
           column 'Renter', &:target_name
           column 'Shop' do |shop_payment|
             link_to shop_payment.transactable.object_name,
-                    my_shop_path(shop_payment.transactable)
+                    my_shop_rental_box_path(shop_payment.transactable)
           end
           column :amount
           column 'Location' do |shop_payment|
@@ -30,27 +29,25 @@ ActiveAdmin.register_page 'Shop Rentals', namespace: :my do
         end
       end
     end
-    
-    panel 'Current Shop Renters' do 
-      data = Kaminari.paginate_array(ShopData.shop_renters(current_user)).
-                  page(params[:renter_page]).per(10)
-      paginated_collection(data, param_name: 'renter_page', 
+
+    panel 'Current Shop Renters' do
+      data = Kaminari.paginate_array(ShopData.shop_renters(current_user))
+                     .page(params[:renter_page]).per(10)
+      paginated_collection(data, param_name: 'renter_page',
                                  entry_name: 'Renter',
-                                 download_links: false) do 
-        table_for data do 
+                                 download_links: false) do
+        table_for data do
           column 'Renter' do |renter|
             renter[:renter_name]
           end
           column 'Shops Rented' do |renter|
             renter[:shops]
-          end 
+          end
           column 'Weekly Rent' do |renter|
             renter[:weekly_rent]
           end
         end
       end
-      
-      
     end
 
     panel '' do
@@ -64,7 +61,7 @@ ActiveAdmin.register_page 'Shop Rentals', namespace: :my do
         render partial: 'shop_status_timeline'
       end
     end
-    
+
     panel '' do
       div class: 'column lg' do
         render partial: 'shop_status_ratio_timeline'
@@ -83,6 +80,4 @@ ActiveAdmin.register_page 'Shop Rentals', namespace: :my do
       end
     end
   end
-
-
 end

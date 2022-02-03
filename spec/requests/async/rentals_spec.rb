@@ -75,7 +75,7 @@ RSpec.describe 'Async::Rentals', type: :request do
         expect(JSON.parse(response.body)['data'].size).to eq 5
       end
     end
-    
+
     context 'asking for parcel status ratio timeline' do
       it 'should return ok status' do
         get path, params: { chart: 'parcel_status_ratio_timeline' }

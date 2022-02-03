@@ -5,7 +5,6 @@ class ParcelData
   include DataHelper
 
   def self.parcel_status_treemap(current_user)
-
     states = Analyzable::RentalState.states.except('for_rent').keys
     regions = {}
     parcels = current_user.parcels
@@ -30,7 +29,7 @@ class ParcelData
     end
     chart_data
   end
-  
+
   def self.region_revenue_bar_chart(current_user)
     data = current_user.transactions.joins(:parcel).where(
       category: %w[tier land_sale],
@@ -42,7 +41,7 @@ class ParcelData
       colors: generate_color_map(data.collect(&:first)).values
     }
   end
-  
+
   # def self.region_revenue_bar_chart(current_user)
   #   data = current_user.transactions.joins(:parcel).where(
   #     category: %w[tier land_sale],
@@ -54,9 +53,8 @@ class ParcelData
   #     colors: generate_color_map(data.collect(&:first)).values
   #   }
   # end
-  
-  def self.parcel_status_timeline(current_user)
 
+  def self.parcel_status_timeline(current_user)
     states = Analyzable::RentalState.where(
       rentable_id: current_user.parcels.collect(&:id),
       rentable_type: 'Analyzable::Parcel'
@@ -78,18 +76,17 @@ class ParcelData
         # end
       end
     end
-    
 
     chart_data = { dates: dates, data: [] }
 
     data.each do |state, d|
-      chart_data[:data] << { name: state.humanize, data: d.values, color: stop_light_color_map[state] }
+      chart_data[:data] << { name: state.humanize, data: d.values,
+                             color: stop_light_color_map[state] }
     end
     chart_data
   end
-  
-  def self.parcel_status_ratio_timeline(current_user)     
 
+  def self.parcel_status_ratio_timeline(current_user)
     states = Analyzable::RentalState.where(
       rentable_id: current_user.parcels.collect(&:id),
       rentable_type: 'Analyzable::Parcel'
@@ -97,9 +94,9 @@ class ParcelData
     dates = time_series_dates((states.minimum(:created_at) - 3.days), Time.current)
     data = {}
     date_data = {}
-    date_totals  = {}
-    dates.each do |date| 
-      date_data[date] = 0 
+    date_totals = {}
+    dates.each do |date|
+      date_data[date] = 0
       date_totals[date] = 0
     end
     Analyzable::RentalState.states.except('for_rent').each_key do |state|
@@ -116,21 +113,22 @@ class ParcelData
         # end
       end
     end
-    
+
     date_totals.each do |date, total|
-      stop_light_color_map.keys.each do |state|
-        data[state][date] = (100 * data[state][date].to_f/total.to_f) if data[state]
+      stop_light_color_map.each_key do |state|
+        data[state][date] = (100 * data[state][date].to_f / total.to_f) if data[state]
       end
     end
 
     chart_data = { dates: dates, data: [] }
 
     data.each do |state, d|
-      chart_data[:data] << { name: state.humanize, data: d.values, color: stop_light_color_map[state] }
+      chart_data[:data] << { name: state.humanize, data: d.values,
+                             color: stop_light_color_map[state] }
     end
     chart_data
   end
-  
+
   def self.rental_income_timeline(current_user)
     transactions = current_user.transactions.where(category: %w[tier land_sale])
     regions = current_user.parcels.select(:region).distinct.collect(&:region)
@@ -155,6 +153,4 @@ class ParcelData
     end
     chart_data
   end
-    
-
 end

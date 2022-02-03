@@ -1,10 +1,10 @@
 
-<div id="visitors_counts_container" style="width:600px; height:400px;" %></div>
+<div id="visitors_counts_container" 
+     style="width:600px; height:400px;; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center"></div>
 
 <script type="text/javascript">
 
         $(function () {
-                // var processed_json = new Array();   
                 $.getJSON('/async/visits', 
                                 {
                                     ids: gon.ids,
@@ -17,6 +17,11 @@
                         chart: {
                             style: {
                               fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                            },
+                            events: {
+                              load: function() {
+            	                        document.getElementById('container').style.background = 'none';
+                                    }
                             }
                         },
                     

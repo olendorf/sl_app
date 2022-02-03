@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop',
-                                              namespace: :my do
+ActiveAdmin.register Rezzable::ShopRentalBox, as: 'ShopRentalBox', namespace: :my do
   include ActiveAdmin::RezzableBehavior
 
   menu parent: 'Rentals', label: 'Shops'
@@ -9,14 +8,14 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop',
   actions :all, except: %i[new create]
 
   decorate_with Rezzable::ShopRentalBoxDecorator
-  
+
   scope :all, default: true
   scope :for_rent
 
   index title: 'Shop Rentals' do
     selectable_column
     column 'Object Name', sortable: :object_name do |shop_rental|
-      link_to shop_rental.object_name, my_shop_path(shop_rental)
+      link_to shop_rental.object_name, my_shop_rental_box_path(shop_rental)
     end
     column 'Description', sortable: :description do |shop_rental|
       truncate(shop_rental.description, length: 10, separator: ' ')
@@ -34,7 +33,7 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop',
     column :expiration_date
 
     actions defaults: true do |shop_rental|
-      link_to 'Evict', evict_my_shop_path(shop_rental),
+      link_to 'Evict', evict_my_shop_rental_box_path(shop_rental),
               method: :put unless shop_rental.renter_key.nil?
     end
   end
@@ -101,8 +100,8 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'Shop',
   end
 
   action_item :evict, only: %i[show edit] do
-    link_to 'Evict', evict_my_shop_path(shop),
-            method: :put unless shop.renter_key.nil?
+    link_to 'Evict', evict_my_shop_rental_box_path(shop_rental_box),
+            method: :put unless shop_rental_box.renter_key.nil?
   end
 
   batch_action :evict do |ids|

@@ -21,7 +21,7 @@ ActiveAdmin.register Rezzable::TierStation, namespace: 'my', as: 'Tier Station' 
   index title: 'Tier Stations' do
     selectable_column
     column 'Object Name', sortable: :object_name do |tier_station|
-      link_to tier_station.object_name, admin_tier_station_path(tier_station)
+      link_to tier_station.object_name, my_tier_station_path(tier_station)
     end
     column 'Description' do |tier_station|
       truncate(tier_station.description, length: 10, separator: ' ')
@@ -29,7 +29,7 @@ ActiveAdmin.register Rezzable::TierStation, namespace: 'my', as: 'Tier Station' 
     column 'Location', sortable: :region, &:slurl
     column 'Server', sortable: 'server.object_name' do |tier_station|
       link_to tier_station.server.object_name,
-              admin_server_path(tier_station.server) if tier_station.server
+              my_server_path(tier_station.server) if tier_station.server
     end
     column 'Version', &:semantic_version
     column :status, &:pretty_active
@@ -40,27 +40,27 @@ ActiveAdmin.register Rezzable::TierStation, namespace: 'my', as: 'Tier Station' 
 
   show title: :object_name do
     attributes_table do
-      row 'Image' do |tier_station|
-        if tier_station.image_key
-          image_tag "http://secondlife.com/app/image/#{tier_station.image_key}/1"
-        else
-          image_tag 'no_image_available'
-        end
-      end
-      row :object_name, &:object_name
+      # row 'Image' do |tier_station|
+      #   if tier_station.image_key
+      #     image_tag "http://secondlife.com/app/image/#{tier_station.image_key}/1"
+      #   else
+      #     image_tag 'no_image_available'
+      #   end
+      # end
+      # row :object_name, &:object_name
       row :object_key, &:object_key
       row :description
       row 'Owner', sortable: 'users.avatar_name' do |tier_station|
         if tier_station.user
-          link_to tier_station.user.avatar_name, admin_user_path(tier_station.user)
+          link_to tier_station.user.avatar_name, my_user_path(tier_station.user)
         else
           'Orphan'
         end
       end
       row :location, &:slurl
-      row 'Sales' do |tier_station|
-        "#{tier_station.revenue} $L (#{tier_station.transactions_count} sales)"
-      end
+      # row 'Sales' do |tier_station|
+      #   "#{tier_station.revenue} $L (#{tier_station.transactions_count} sales)"
+      # end
       row :created_at
       row :updated_at
       row :pinged_at

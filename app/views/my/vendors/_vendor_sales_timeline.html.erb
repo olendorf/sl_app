@@ -1,4 +1,5 @@
-<div id="vendor_sales_timeline_container" class: 'centered' style="width:1600px; height:800px;" %></div>
+<div id="vendor_sales_timeline_container" class: 'centered' 
+     style="width:1600px; height:800px; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center"></div>
 
 <script type="text/javascript">
 
@@ -18,6 +19,11 @@
               zoomType: 'x',
               style: {
                   fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+              },
+              events: {
+                load: function() {
+	                        document.getElementById('container').style.background = 'none';
+                        }
               }
             },
             title: {

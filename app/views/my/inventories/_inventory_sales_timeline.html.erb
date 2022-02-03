@@ -1,14 +1,10 @@
-<div id="inventory_sales_timeline_container" class= 'centered' style="width:1300px; height:800px;" %></div>
+<div id="inventory_sales_timeline_container" class= 'centered' 
+     style="width:1300px; height:800px; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center"></div>
 
 
 
 <script type="text/javascript">
-// data = {
-// 	dates: ["2021-04-18", "2021-04-19", "2021-04-20", "2021-04-21"], 
-//   counts: [4, 15, 30, 20], 
-//   visitors: [3, 10, 27, 16],
-//   durations: [50,126, 450, 300]
-// }
+
 $(function () {
         // var processed_json = new Array();   
   $.getJSON('/async/sales/', 
@@ -25,11 +21,19 @@ $(function () {
             zoomType: 'x',
             style: {
               fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+            },
+            events: {
+               load: function() {
+                        document.getElementById('container').style.background = 'none';
+                      }
             }
           },
           title: {
             text: 'Sales Over Time'
           },
+          // lang: {
+          //     noData: "There have been no sales of this inventory."
+          // },
           xAxis: {
             allowDecimals: false,
             type: 'datetime',

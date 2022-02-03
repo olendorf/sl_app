@@ -1,5 +1,6 @@
 
-<div id="donor_scatter_plot_container" style="width: 1000; height:400px;" %></div>
+<div id="donor_scatter_plot_container" 
+     style="width: 1000; height:400px; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center"></div>
 
 
 <script type="text/javascript">
@@ -14,6 +15,11 @@
                             zoomType: 'xy',
                             style: {
                               fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                            },
+                            events: {
+                              load: function() {
+            	                        document.getElementById('container').style.background = 'none';
+                                    }
                             }
                         },
                         title: {

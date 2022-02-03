@@ -1,24 +1,27 @@
 
-<div id="duration_heatmap_container" style="width:600px; height:600px;" %></div>
+<div id="duration_heatmap_container" 
+     style="width:600px; height:600px;; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center"></div>
 
 <script type="text/javascript">
 
         $(function () {
-                // var processed_json = new Array();   
                 $.getJSON('/async/visits', 
                                 {
                                     ids: gon.ids,
                                     chart: 'duration_heatmap'
                                 },
                                 function(data) {
-
-                    // draw chart
                      $('#duration_heatmap_container').highcharts({ 
                         chart: {
                             type: 'heatmap',
                             style: {
                               fontFamily: 'Arial, Helvetica, Clean, sans-serif'
                             },
+                            events: {
+                              load: function() {
+            	                        document.getElementById('container').style.background = 'none';
+                                    }
+                            }
                         },
                     
                     

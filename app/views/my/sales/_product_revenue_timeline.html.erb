@@ -1,4 +1,5 @@
-<div id="sales_by_product_revenue_timeline_container" style="height:900px;" %></div>
+<div id="sales_by_product_revenue_timeline_container" 
+     style="height:900px; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center" %></div>
 
 <script type="text/javascript">
 
@@ -16,7 +17,12 @@ $(function() {
                 zoomType: 'x',
                 style: {
                   fontFamily: 'Arial, Helvetica, Clean, sans-serif'
-                }  
+                },
+                events: {
+                   load: function() {
+  	                        document.getElementById('container').style.background = 'none';
+                          }
+                }
             },
             title: {
               text: 'Sales Revenue Over Time Broken Down By Product'

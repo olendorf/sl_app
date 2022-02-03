@@ -16,10 +16,11 @@ module Analyzable
     belongs_to :inventory, class_name: 'Analyzable::Inventory', optional: true
     belongs_to :product, class_name: 'Analyzable::Product', optional: true
     belongs_to :parcel, class_name: 'Analyzable::Parcel', optional: true
-    
-    
-    
-    belongs_to :parcel, -> { where( transactions: { transactable_type: 'Analyzable::Parcel' } ).includes( :transactions ) }, foreign_key: 'transactable_id'
+
+    belongs_to :parcel, lambda {
+                          where(transactions: { transactable_type: 'Analyzable::Parcel' })
+                            .includes(:transactions)
+                        }, foreign_key: 'transactable_id'
 
     # belongs_to :web_object, class_name: 'AbstractWebObject', optional: true
 

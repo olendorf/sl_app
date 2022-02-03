@@ -18,10 +18,8 @@ FactoryBot.define do
       current_land_impact { rand(0..100) }
       expiration_date { 1.week.from_now }
     end
-    
-    factory :for_rent_shop_rental_box do 
-      
-      
+
+    factory :for_rent_shop_rental_box do
     end
   end
 end

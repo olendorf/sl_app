@@ -21,8 +21,8 @@ module Async
     def parcel_status_timeline
       ParcelData.parcel_status_timeline(current_user)
     end
-    
-    def parcel_status_ratio_timeline   
+
+    def parcel_status_ratio_timeline
       ParcelData.parcel_status_ratio_timeline(current_user)
     end
 

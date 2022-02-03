@@ -9,14 +9,13 @@ RSpec.shared_examples 'it is a transactable' do |model_name|
 
   let(:user) { FactoryBot.create :active_user }
   let(:server) { FactoryBot.create :server, user_id: user.id }
-  # let(:transactable) { FactoryBot.create model_name.to_sym, user_id: user.id, server_id: server.id }
   let(:transactable) { FactoryBot.create model_name.to_sym, user_id: user.id }
 
   let(:uri_regex) do
     %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/give_money\?
        auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
-  
+
   before(:each) { server }
 
   describe 'adding transactions' do
@@ -66,8 +65,8 @@ RSpec.shared_examples 'it is a transactable' do |model_name|
         target = FactoryBot.create(:active_user)
         user.splits << FactoryBot.build(:split, percent: 5)
         transactable.splits << FactoryBot.build(:split, target_name: target.avatar_name,
-                                                      target_key: target.avatar_key,
-                                                      percent: 10)
+                                                        target_key: target.avatar_key,
+                                                        percent: 10)
         transactable.splits << FactoryBot.build(:split, percent: 20)
         transactable.transactions << FactoryBot.build(:transaction, amount: 100)
         expect(target.transactions.size).to eq 1
@@ -76,8 +75,8 @@ RSpec.shared_examples 'it is a transactable' do |model_name|
         target = FactoryBot.create(:active_user)
         user.splits << FactoryBot.build(:split, percent: 5)
         transactable.splits << FactoryBot.build(:split, target_name: target.avatar_name,
-                                                      target_key: target.avatar_key,
-                                                      percent: 10)
+                                                        target_key: target.avatar_key,
+                                                        percent: 10)
         transactable.splits << FactoryBot.build(:split, percent: 20)
         transactable.transactions << FactoryBot.build(:transaction, amount: 100)
         expect(target.balance).to eq 10

@@ -5,13 +5,11 @@ require 'rails_helper'
 Sidekiq::Testing.fake!
 
 RSpec.describe Analyzable::Parcel, type: :model do
-  
-  it_behaves_like "it is a transactable", :parcel
-  
+  it_behaves_like 'it is a transactable', :parcel
+
   it { should have_one(:parcel_box).class_name('Rezzable::ParcelBox') }
   it { should belong_to(:user) }
   it { should have_many(:states).dependent(:destroy) }
-  # it { should have_many(:transactions).class_name('Analyzable::Transaction').dependent(:nullify) }
 
   let(:user) { FactoryBot.create :active_user }
   let(:renter) { FactoryBot.build :avatar }
@@ -23,12 +21,16 @@ RSpec.describe Analyzable::Parcel, type: :model do
       FactoryBot.create :parcel, user_id: user.id
     end
     4.times do
-      # parcel_box = FactoryBot.create :parcel_box, user_id: user.id, region: 'foo'
       parcel_box = FactoryBot.create(:parcel_box, user_id: user.id)
-      FactoryBot.create :parcel, user_id: user.id, region: 'foo', requesting_object: parcel_box
+      FactoryBot.create :parcel, user_id: user.id,
+                                 region: 'foo',
+                                 requesting_object: parcel_box
     end
-    FactoryBot.create :parcel, user_id: user.id, region: 'foo', renter_key: renter.avatar_key,
-                               renter_name: renter.avatar_name, expiration_date: 1.week.from_now
+    FactoryBot.create :parcel, user_id: user.id,
+                               region: 'foo',
+                               renter_key: renter.avatar_key,
+                               renter_name: renter.avatar_name,
+                               expiration_date: 1.week.from_now
   end
 
   describe 'parcel life cycle' do
@@ -55,10 +57,14 @@ RSpec.describe Analyzable::Parcel, type: :model do
 
     context 'parcel is sold' do
       let(:parcel_box) { FactoryBot.create :parcel_box, user_id: user.id }
-      let(:parcel) { FactoryBot.create :parcel, user_id: user.id, requesting_object: parcel_box }
+      let(:parcel) {
+        FactoryBot.create :parcel, user_id: user.id,
+                                   requesting_object: parcel_box
+      }
 
       it 'should add a state' do
-        parcel.update(renter_key: renter.avatar_key, renter_name: renter.avatar_name)
+        parcel.update(renter_key: renter.avatar_key,
+                      renter_name: renter.avatar_name)
         expect(parcel.states.size).to eq 2
       end
 

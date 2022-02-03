@@ -36,6 +36,7 @@ Metrics/AbcSize:
   Exclude:
     - app/controllers/concerns/**/*
     - app/controllers/async/rentals_controller.rb
+    - app/services/**/*
     
 Metrics/BlockLength:
   Exclude:
@@ -46,19 +47,22 @@ Metrics/BlockLength:
     - app/my/**/*
     - app/controllers/concerns/**/*
     - app/models/concerns/**/*
+    - app/services/concerns/**/*
 
 Metrics/ClassLength:
   Max: 125
   Exclude:
     - app/models/user.rb
     - app/models/rezzable/traffic_cop.rb
+    - app/services/**/*
     
 Metrics/MethodLength:
   Max: 20
   Exclude:
     - db/**/*
     - app/controllers/concerns/**/*
-    - app/controllers/async/rentals_controller.rb
+    - app/controllers/async/rentals_controller.rb 
+    - app/services/**/*
     
 Metrics/PerceivedComplexity:
   Max: 15

@@ -8,14 +8,13 @@ module Async
       render json: send(params['chart'], params['ids']).to_json
     end
 
-    def sales_by_inventory_revenue_timeline(_ids=nil)
+    def sales_by_inventory_revenue_timeline(_ids = nil)
       SalesData.sales_by_inventory_revenue_timeline(current_user)
     end
 
     def sales_by_inventory_items_timeline(_ids = nil)
       SalesData.sales_by_inventory_items_timeline(current_user)
     end
-
 
     def sales_by_product_items_timeline(_ids = nil)
       SalesData.sales_by_product_items_timeline(current_user)
@@ -36,6 +35,5 @@ module Async
     def product_sales_timeline(ids)
       SalesData.product_sales_timeline(ids)
     end
-
   end
 end

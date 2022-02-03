@@ -258,7 +258,8 @@ def add_shop_rental_event(rentable, event_time)
         rent_payment: rentable.weekly_rent
       )
       rentable.user.transactions.where(
-        category: 'shop_rent').last.update(created_at: event_time)
+        category: 'shop_rent'
+      ).last.update(created_at: event_time)
     end
   end
 end
@@ -279,11 +280,13 @@ def add_parcel_event(rentable, event_time)
         renter_name: renter.avatar_name,
         requesting_object: rentable.user.tier_stations.sample
       )
-      
+
       rentable.user.transactions.where(
-        category: 'land_sale').last.update(created_at: event_time)
+        category: 'land_sale'
+      ).last.update(created_at: event_time)
       rentable.user.transactions.where(
-        category: 'tier').last.update(created_at: event_time)
+        category: 'tier'
+      ).last.update(created_at: event_time)
     end
   else
     server = rentable.user.servers.sample

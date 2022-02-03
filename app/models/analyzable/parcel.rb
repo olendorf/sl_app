@@ -20,22 +20,19 @@ module Analyzable
     #                   class_name: 'Analyzable::RentalState'
 
     # has_many :transactions, class_name: 'Analyzable::Transaction', dependent: :nullify
-    
-   
 
     attr_accessor :rent_payment, :requesting_object, :parcel_box_key
-    
 
     def self.open_parcels(user, region)
       user.parcels.includes(:parcel_box).where(renter_key: nil, region: region,
                                                rezzable_parcel_boxes: { parcel_id: nil })
     end
-    
-    def transaction_description(transaction)
+
+    def transaction_description(_transaction)
       'foo'
     end
-    
-    def transaction_category(transaction=nil)
+
+    def transaction_category(_transaction = nil)
       'tier'
     end
 
@@ -72,7 +69,7 @@ module Analyzable
           category: :land_sale,
           target_name: renter_name,
           target_key: renter_key,
-          transactable_id: self.id,
+          transactable_id: id,
           transactable_type: 'Analyzable::Parcel',
           description: "Parcel purchase from #{renter_name}"
         )
@@ -97,7 +94,7 @@ module Analyzable
         source_name: requesting_object.object_name,
         source_type: 'tier_station',
         category: 'tier',
-        transactable_id: self.id,
+        transactable_id: id,
         transactable_type: 'Analyzable::Parcel',
         description: "Tier payment from #{renter_name}"
       )

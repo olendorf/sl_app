@@ -52,6 +52,7 @@ Rails.application.routes.draw do
         resources :parcel_boxes, except: %i[index new edit]
         resources :tier_stations, except: %i[index new edit]
         resources :shop_rental_boxes, except: %i[index new edit]
+        resources :service_boards, except: %i[index new edit]
       end
       namespace :analyzable do
         resources :inventories, except: %i[new edit]

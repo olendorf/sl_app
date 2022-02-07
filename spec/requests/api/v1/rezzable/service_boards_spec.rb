@@ -70,5 +70,4 @@ RSpec.describe 'Api::V1::Rezzable::ShopRentalBoxes', type: :request do
       expect(service_board.reload.expiration_date).to be_within(2.hours).of(3.weeks.from_now)
     end
   end
-
 end

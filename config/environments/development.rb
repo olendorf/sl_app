@@ -37,6 +37,9 @@ Rails.application.configure do
                         class_name: 'Rezzable::ShopRentalBox',
                         association: :abstract_web_object
     Bullet.add_safelist type: :unused_eager_loading,
+                        class_name: 'Rezzable::ServiceBoard',
+                        association: :abstract_web_object
+    Bullet.add_safelist type: :unused_eager_loading,
                         class_name: 'Analyzable::Inventory',
                         association: :user
     Bullet.add_safelist type: :unused_eager_loading,

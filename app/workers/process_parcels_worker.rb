@@ -5,7 +5,7 @@
 class ProcessParcelsWorker
   include Sidekiq::Worker
 
-  def perform(*_args)
-    Analyzable::Parcel.process_rentals('Analyzable::Parcel', 'open')
+  def perform(user)
+    Analyzable::Parcel.process_rentals('Analyzable::Parcel', 'open', user.visit_us_slurl)
   end
 end

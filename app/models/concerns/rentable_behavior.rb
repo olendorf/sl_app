@@ -51,7 +51,7 @@ module RentableBehavior
     def process_rentals(class_name, eviction_state, tier_slurl = nil)
       rentals = class_name.constantize.where('expiration_date <= ?', 3.days.from_now)
       rentals.each do |rental|
-        tier_slurl = if rental.decorate.slurl.nil?
+        tier_slurl = if tier_slurl
                        rental.user.visit_us_slurl
                      else
                        rental.decorate.slurl

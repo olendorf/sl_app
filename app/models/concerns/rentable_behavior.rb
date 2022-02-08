@@ -47,21 +47,28 @@ module RentableBehavior
   end
 
   class_methods do
-    def process_rentals(class_name, eviction_state)
+    # rubocop:disable Metrics/AbcSize
+    def process_rentals(class_name, eviction_state, tier_slurl = nil)
       rentals = class_name.constantize.where('expiration_date <= ?', 3.days.from_now)
       rentals.each do |rental|
+        tier_slurl = if tier_slurl
+                       rental.user.visit_us_slurl
+                     else
+                       rental.decorate.slurl
+                     end
         server = rental.user.servers.sample
         if rental.expiration_date < 3.days.from_now && rental.expiration_date > Time.current
-          remind_renter(rental, server)
+          remind_renter(rental, server, tier_slurl)
         elsif rental.expiration_date < Time.current && rental.expiration_date > 3.days.ago
-          warn_renter(rental, server)
+          warn_renter(rental, server, tier_slurl)
         else
           rental.evict_renter(server, eviction_state)
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
-    def remind_renter(rental, server)
+    def remind_renter(rental, server, tier_slurl)
       MessageUserWorker.perform_async(
         server.id,
         rental.renter_name,
@@ -70,11 +77,11 @@ module RentableBehavior
                region_name: rental.region,
                renter_name: rental.renter_name,
                time: rental.time_left,
-               slurl: rental.user.visit_us_slurl)
+               slurl: tier_slurl)
       )
     end
 
-    def warn_renter(rental, server)
+    def warn_renter(rental, server, tier_slurl)
       MessageUserWorker.perform_async(
         server.id,
         rental.renter_name,
@@ -83,7 +90,7 @@ module RentableBehavior
                region_name: rental.region,
                renter_name: rental.renter_name,
                time: rental.time_left,
-               slurl: rental.user.visit_us_slurl)
+               slurl: tier_slurl)
       )
     end
   end

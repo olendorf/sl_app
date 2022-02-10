@@ -239,6 +239,7 @@ def add_events_to_rentable(rentable)
 
   add_parcel_event(rentable, event_time) if rentable.instance_of?(Analyzable::Parcel)
   add_shop_rental_event(rentable, event_time) if rentable.instance_of?(Rezzable::ShopRentalBox)
+  add_shop_rental_event(rentable, event_time) if rentable.instance_of?(Rezzable::ServiceBoard)
 
   rentable.states.last.update(created_at: event_time)
 
@@ -341,6 +342,22 @@ def setup_shop_rentals_for_user(user, num_regions: 5, num_shops: 10)
   end
 end
 
+def setup_service_boards_for_user(user, num_regions: 5, num_boards: 20)
+  regions = give_regions(num_regions)
+  num_boards.times do
+    user.web_objects << FactoryBot.create(
+      :service_board, region: regions.sample,
+                      server_id: user.servers.sample.id,
+                      created_at: rand(1.year.ago..Time.current)
+    )
+
+    state = user.service_boards.last.states.last
+    state.created_at = user.service_boards.last.created_at
+    state.save
+
+    add_events_to_rentable(user.service_boards.last) if rand < 0.9
+  end
+end
 # rubocop:enable Metrics/AbcSize, Metrics/ParameterLists
 
 puts 'creating owner'
@@ -378,6 +395,9 @@ setup_parcel_data_for_user(owner, num_parcels: 75)
 
 puts 'setting up shop rentals for owner'
 setup_shop_rentals_for_user(owner, num_shops: 75)
+
+puts 'setting up service boards for owner'
+setup_service_boards_for_user(owner, num_boards: 75)
 
 4.times do |i|
   FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident"
@@ -418,6 +438,9 @@ puts 'creating users'
 
   puts "settng up shop rentals for user #{i}"
   setup_shop_rentals_for_user(user)
+
+  puts 'setting up service boards for owner'
+  setup_service_boards_for_user(user)
 end
 
 20.times do |i|

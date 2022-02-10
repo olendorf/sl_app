@@ -1,18 +1,21 @@
 # frozen_string_literal: true
 
-ActiveAdmin.register Rezzable::ServiceBoard, as: 'Service Board' do
+ActiveAdmin.register Rezzable::ServiceBoard, as: 'Service Board', namespace: :my do
   include ActiveAdmin::RezzableBehavior
 
-  menu label: 'Service Boards'
+  menu parent: 'Rentals', label: 'Service Boards'
 
   actions :all, except: %i[new create]
 
   decorate_with Rezzable::ServiceBoardDecorator
 
+  scope :all, default: true
+  scope :for_rent
+
   index title: 'Shop Rentals' do
     selectable_column
     column 'Object Name', sortable: :object_name do |service_board|
-      link_to service_board.object_name, admin_service_board_path(service_board)
+      link_to service_board.object_name, my_service_board_path(service_board)
     end
     column 'Description', sortable: :description do |service_board|
       truncate(service_board.description, length: 10, separator: ' ')
@@ -20,29 +23,22 @@ ActiveAdmin.register Rezzable::ServiceBoard, as: 'Service Board' do
     column 'Location', sortable: :region, &:slurl
     column 'Server', sortable: 'server.object_name' do |service_board|
       link_to service_board.server.object_name,
-              admin_server_path(service_board.server) if service_board.server
+              my_server_path(service_board.server) if service_board.server
     end
-    column 'Owner', sortable: 'users.avatar_name' do |service_board|
-      if service_board.user
-        link_to service_board.user.avatar_name, admin_user_path(service_board.user)
-      else
-        'Orphan'
-      end
-    end
+
     column :weekly_rent
     column :current_state
     column 'Renter', sortable: :renter_name, &:renter_name
     column :expiration_date
 
     actions defaults: true do |service_board|
-      link_to 'Evict', evict_admin_service_board_path(service_board),
+      link_to 'Evict', evict_my_service_board_path(service_board),
               method: :put unless service_board.renter_key.nil?
     end
   end
 
   filter :abstract_web_object_object_name, as: :string, label: 'Object Name'
   filter :abstract_web_object_description, as: :string, label: 'Description'
-  filter :abstract_web_object_user_avatar_name, as: :string, label: 'Owner'
   filter :abstract_web_object_region, as: :string, label: 'Region'
   filter :web_object_pinged_at, as: :date_range, label: 'Last Ping'
   filter :weekly_rent
@@ -50,9 +46,6 @@ ActiveAdmin.register Rezzable::ServiceBoard, as: 'Service Board' do
 
   show title: :object_name do
     attributes_table do
-      row 'Owner' do |service_board|
-        link_to service_board.user.avatar_name, admin_user_path(service_board.user)
-      end
       row :description
       row 'State', &:current_state
       row 'Current Renter' do |service_board|
@@ -101,7 +94,7 @@ ActiveAdmin.register Rezzable::ServiceBoard, as: 'Service Board' do
   end
 
   action_item :evict, only: %i[show edit] do
-    link_to 'Evict', evict_admin_service_board_path(service_board),
+    link_to 'Evict', evict_my_service_board_path(service_board),
             method: :put unless service_board.renter_key.nil?
   end
 

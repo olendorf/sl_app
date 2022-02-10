@@ -14,6 +14,8 @@ module Rezzable
 
     attr_accessor :rent_payment, :target_name, :target_key
 
+    scope :for_rent, -> { where(current_state: :for_rent) }
+
     OBJECT_WEIGHT = 1
 
     # rubocop:disable Metrics/AbcSize

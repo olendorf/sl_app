@@ -342,24 +342,23 @@ def setup_shop_rentals_for_user(user, num_regions: 5, num_shops: 10)
   end
 end
 
-# rubocop:enable Metrics/AbcSize, Metrics/ParameterLists
-
 def setup_service_boards_for_user(user, num_regions: 5, num_boards: 20)
   regions = give_regions(num_regions)
-  num_boards.times do 
+  num_boards.times do
     user.web_objects << FactoryBot.create(
       :service_board, region: regions.sample,
                       server_id: user.servers.sample.id,
                       created_at: rand(1.year.ago..Time.current)
     )
-    
+
     state = user.service_boards.last.states.last
     state.created_at = user.service_boards.last.created_at
     state.save
-    
+
     add_events_to_rentable(user.service_boards.last) if rand < 0.9
   end
 end
+# rubocop:enable Metrics/AbcSize, Metrics/ParameterLists
 
 puts 'creating owner'
 owner = FactoryBot.create :owner, avatar_name: 'Random Citizen'
@@ -439,7 +438,7 @@ puts 'creating users'
 
   puts "settng up shop rentals for user #{i}"
   setup_shop_rentals_for_user(user)
-  
+
   puts 'setting up service boards for owner'
   setup_service_boards_for_user(user)
 end

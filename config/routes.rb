@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     resources :sales, only: [:index]
     resources :rentals, only: [:index]
     resources :shop_rentals, only: [:index]
+    resources :service_board_rentals, only: [:index]
   end
 
   namespace :api, defaults: { format: 'json' } do

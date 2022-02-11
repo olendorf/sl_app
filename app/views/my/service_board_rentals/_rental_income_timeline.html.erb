@@ -1,33 +1,35 @@
-<div id="shop_status_timeline_container" 
-     style="width:1500; height:900px;; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center" %></div>
+<div id="rental_income_timeline_container" 
+     style="width:1500; height:900px; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center" %></div>
 
 <script type="text/javascript">
 
 $(function() {
-  $.getJSON('/async/shop_rentals',
+  $.getJSON('/async/service_board_rentals',
               {
-                  chart: 'shop_status_timeline'
+                  chart: 'rental_income_timeline'
               },
               function(data){
                 
-        $('#shop_status_timeline_container').highcharts({
+        $('#rental_income_timeline_container').highcharts({
             chart: {
                 type: 'area',
                 marginBottom: 100,
                 zoomType: 'x',
                 style: {
-                  fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+                    fontFamily: 'Arial, Helvetica, Clean, sans-serif'
                 },
                 events: {
-                  load: function() {
-  	                        document.getElementById('container').style.background = 'none';
-                          }
+                 load: function() {
+	                        document.getElementById('container').style.background = 'none';
+                        }
                 }
             },
             title: {
-              text: 'Status of Shops over Time'
+              floating: true,
+              align: 'left', 
+              text: 'Service Board Rental Income over Time'
             },
-            // colors: data.colors,
+            colors: data.colors,
             xAxis: {
               allowDecimals: false,
               type: 'category',
@@ -41,7 +43,7 @@ $(function() {
             },
           yAxis: {
             title: {
-              text: 'Number of Shops'
+              text: 'Revenue ($L)'
             },
             min: 0
             // visible: false,
@@ -49,7 +51,8 @@ $(function() {
             // endOnTick: false
           },
           legend: {
-            enabled: true
+            enabled: true,
+            verticalAlign: 'top'
           },
           plotOptions: {
               area: {

@@ -4,7 +4,7 @@ ActiveAdmin.register_page 'Shop Rentals', namespace: :my do
   # include ShopData
   menu parent: 'Data', label: 'Shop Rentals',
        priority: 3,
-       if: proc { current_user.parcel_payments.size.positive? }
+       if: proc { current_user.shop_payments.size.positive? }
 
   content do
     panel 'Recent Shop Rental Payments' do

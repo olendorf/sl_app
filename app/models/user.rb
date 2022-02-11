@@ -86,6 +86,10 @@ class User < ApplicationRecord
   def shop_payments
     transactions.where(category: :shop_rent)
   end
+  
+  def service_board_payments
+    transactions.where(category: :service_board_rent)
+  end
 
   def tip_jars
     Rezzable::TipJar.where(user_id: id)

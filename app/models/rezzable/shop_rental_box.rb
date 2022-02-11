@@ -39,7 +39,9 @@ module Rezzable
         amount: amount,
         category: 'shop_rent',
         target_name: target_name,
-        target_key: target_key
+        target_key: target_key,
+        transactable_id: self.id,
+        transactable_type: self.class.name
       )
       transactions << transaction
     end

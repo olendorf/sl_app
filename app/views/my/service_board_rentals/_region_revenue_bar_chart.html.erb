@@ -1,0 +1,78 @@
+
+
+<div id="region_revenue_bar_chart_container" 
+     style="width:1500; height:900px; background: url('/assets/512px-Loader.gif'); background-repeat:no-repeat; background-position: center"></div>
+
+<script type="text/javascript">
+
+
+$(function() {
+  $.getJSON('/async/service_board_rentals',
+              {
+                  chart: 'region_revenue_bar_chart'
+              },
+              function(data){
+                
+        $('#region_revenue_bar_chart_container').highcharts({
+           chart: {
+               type: 'bar',
+               style: {
+                    fontFamily: 'Arial, Helvetica, Clean, sans-serif'
+               },
+               events: {
+                 load: function() {
+	                        document.getElementById('container').style.background = 'none';
+                        }
+               }
+            },
+            
+            colors: data.colors,
+            title: {
+                text: 'Service Board Revenue By Region, Last 30 Days'
+            },
+            xAxis: {
+                categories: data.regions,
+                colors: data.colors,
+                labels: {
+                  style: {
+                    fontSize: '28px'
+                  }
+                },
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '$L',
+                    style: {
+                      fontSize: '28px'
+                    }
+                }
+            },
+            tooltip: {
+                valueSuffix: ' $L'
+            },
+            legend: {
+              enabled: false
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    colorByPoint: true,
+                },
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{data: data.data}]
+        })
+    });
+});
+
+
+</script>
+

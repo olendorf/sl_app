@@ -36,7 +36,7 @@ module Rezzable
         category: 'service_board_rent',
         target_name: target_name,
         target_key: target_key,
-        transactable_id: self.id,
+        transactable_id: id,
         transactable_type: self.class.name
       )
       user.transactions << transaction

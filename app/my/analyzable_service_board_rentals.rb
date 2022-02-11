@@ -8,7 +8,8 @@ ActiveAdmin.register_page 'Service Board Rentals', namespace: :my do
 
   content do
     panel 'Recent Service Board Payments' do
-      rent_payments = current_user.service_board_payments.includes(:transactable).order('created_at DESC')
+      rent_payments = current_user.service_board_payments
+                                  .includes(:transactable).order('created_at DESC')
       paginated_collection(
         rent_payments.page(params[:board_payment_page]).per(20),
         param_name: 'board_payment_page',
@@ -31,11 +32,13 @@ ActiveAdmin.register_page 'Service Board Rentals', namespace: :my do
     end
 
     panel 'Current Service Board Renters' do
-      data = Kaminari.paginate_array(ServiceBoardData.service_board_renters(current_user))
-                    .page(params[:renter_page]).per(10)
+      data = Kaminari.paginate_array(
+        ServiceBoardData.service_board_renters(current_user)
+      )
+                     .page(params[:renter_page]).per(10)
       paginated_collection(data, param_name: 'renter_page',
-                                entry_name: 'Renter',
-                                download_links: false) do
+                                 entry_name: 'Renter',
+                                 download_links: false) do
         table_for data do
           column 'Renter' do |renter|
             renter[:renter_name]

@@ -14,8 +14,6 @@
 
 DatabaseCleaner.clean_with :truncation if Rails.env.development?
 
-
-
 avatars = FactoryBot.create_list(:avatar, 100)
 
 def give_splits(target, avatars)
@@ -242,8 +240,12 @@ def add_events_to_rentable(rentable, avatars)
   rentable.states.last.update_column(:closed_at, event_time)
 
   add_parcel_event(rentable, event_time, avatars) if rentable.instance_of?(Analyzable::Parcel)
-  add_shop_rental_event(rentable, event_time, avatars, 'shop_rent') if rentable.instance_of?(Rezzable::ShopRentalBox)
-  add_shop_rental_event(rentable, event_time, avatars, 'service_board_rent') if rentable.instance_of?(Rezzable::ServiceBoard)
+  if rentable.instance_of?(Rezzable::ShopRentalBox)
+    add_shop_rental_event(rentable, event_time, avatars, 'shop_rent')
+  end
+  if rentable.instance_of?(Rezzable::ServiceBoard)
+    add_shop_rental_event(rentable, event_time, avatars, 'service_board_rent')
+  end
 
   rentable.states.last.update(created_at: event_time)
 

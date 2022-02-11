@@ -24,6 +24,7 @@ module Rezzable
     #   self.states << Analyzable::RentalState.new(state: 'for_rent', user_id: self.user_id)
     # end
 
+    # rubocop:disable Metrics/AbcSize
     def handle_rent_payment
       amount = rent_payment
       self.rent_payment = nil
@@ -40,11 +41,12 @@ module Rezzable
         category: 'shop_rent',
         target_name: target_name,
         target_key: target_key,
-        transactable_id: self.id,
+        transactable_id: id,
         transactable_type: self.class.name
       )
       transactions << transaction
     end
+    # rubocop:enable Metrics/AbcSize
 
     def check_land_impact
       return unless user

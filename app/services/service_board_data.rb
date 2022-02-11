@@ -29,9 +29,9 @@ class ServiceBoardData
   def self.service_board_renters(current_user)
     data = []
     service_board_rent = current_user.service_boards.where.not(renter_name: nil)
-                            .group(:renter_key).sum(:weekly_rent)
+                                     .group(:renter_key).sum(:weekly_rent)
     service_board_count = current_user.service_boards.where.not(renter_name: nil)
-                              .group(:renter_name, :renter_key).count
+                                      .group(:renter_name, :renter_key).count
     service_board_count.each do |renter|
       data << {
         renter_name: renter.first.first,
@@ -66,7 +66,7 @@ class ServiceBoardData
 
     data.each do |state, d|
       chart_data[:data] << { name: state.humanize, data: d.values,
-                            color: stop_light_color_map[state] }
+                             color: stop_light_color_map[state] }
     end
     chart_data
   end
@@ -105,7 +105,7 @@ class ServiceBoardData
 
     data.each do |state, d|
       chart_data[:data] << { name: state.humanize, data: d.values,
-                            color: stop_light_color_map[state] }
+                             color: stop_light_color_map[state] }
     end
     chart_data
   end
@@ -114,7 +114,7 @@ class ServiceBoardData
     data = {}
 
     payments = current_user.transactions.where(category: 'service_board_rent')
-                          .where(created_at: (1.month.ago..Time.current))
+                           .where(created_at: (1.month.ago..Time.current))
     # shops = payments.collect { |payment| payment.transactable }
     boards = current_user.service_boards.where(id: payments.collect(&:transactable_id))
     regions = boards.collect(&:region).uniq

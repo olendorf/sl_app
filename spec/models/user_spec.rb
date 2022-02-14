@@ -55,11 +55,11 @@ RSpec.describe User, type: :model do
   it {
     should have_many(:service_tickets).dependent(:destroy)
   }
-  
+
   it {
     should have_many(:employees).class_name('Analyzable::Employee').dependent(:destroy)
   }
-  
+
   it {
     should have_many(:work_sessions).class_name('Analyzable::WorkSession').through(:employees)
   }

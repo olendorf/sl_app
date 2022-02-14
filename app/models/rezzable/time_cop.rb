@@ -1,7 +1,12 @@
-class Rezzable::TimeCop < ApplicationRecord
-  acts_as :abstract_web_object
+# frozen_string_literal: true
 
-  include RezzableBehavior
-  
-  OBJECT_WEIGHT = 4
+module Rezzable
+  # Handles model for Rezzable Timecops
+  class TimeCop < ApplicationRecord
+    acts_as :abstract_web_object
+
+    include RezzableBehavior
+
+    OBJECT_WEIGHT = 4
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :analyzable_employee, class: 'Analyzable::Employee' do\
     transient do

@@ -56,6 +56,14 @@ RSpec.describe User, type: :model do
     should have_many(:service_tickets).dependent(:destroy)
   }
 
+  it {
+    should have_many(:employees).class_name('Analyzable::Employee').dependent(:destroy)
+  }
+
+  it {
+    should have_many(:work_sessions).class_name('Analyzable::WorkSession').through(:employees)
+  }
+
   describe '#servers' do
     it 'should return the servers and nothing else' do
       user.web_objects << FactoryBot.build(:web_object)

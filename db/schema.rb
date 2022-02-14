@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_14_155158) do
+ActiveRecord::Schema.define(version: 2022_02_14_175802) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,6 +86,18 @@ ActiveRecord::Schema.define(version: 2022_02_14_155158) do
   create_table "analyzable_detections", force: :cascade do |t|
     t.integer "visit_id"
     t.string "position"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "analyzable_employees", force: :cascade do |t|
+    t.string "avatar_name"
+    t.string "avatar_key"
+    t.integer "hourly_pay"
+    t.integer "max_hours"
+    t.integer "pay_owed", default: 0
+    t.float "hours_worked", default: 0.0
+    t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -211,6 +223,18 @@ ActiveRecord::Schema.define(version: 2022_02_14_155158) do
     t.integer "duration"
     t.integer "user_id"
     t.string "region"
+  end
+
+  create_table "analyzable_work_sessions", force: :cascade do |t|
+    t.integer "employee_id"
+    t.string "employee_name"
+    t.string "employee_key"
+    t.integer "duration"
+    t.datetime "start_time"
+    t.datetime "stop_time"
+    t.integer "pay"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "avatars", force: :cascade do |t|

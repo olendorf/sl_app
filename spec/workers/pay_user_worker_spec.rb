@@ -26,13 +26,13 @@ RSpec.describe PayUserWorker, type: :worker do
       assert_equal 'default', described_class.queue
     end
 
-    # it 'goes into the jobs array for testing environment' do
-    #   stub_request(:post, uri_regex)
-    #     .with(body:
-    #     "{\"avatar_key\":\"#{avatar.avatar_key}\"}")
-    #   described_class.perform_async(inventory.id, avatar.avatar_key)
-    #   expect(described_class.jobs.size).to eq 1
-    #   described_class.new.perform(inventory.id, avatar.avatar_key)
-    # end
+    it 'goes into the jobs array for testing environment' do
+      reg_str = '{|"avatar_name\":\".*,\"avatar_key\":.*\",\"amount":"100"}'
+      stub_request(:put, uri_regex)
+        .with(body: /#{reg_str}/)
+      described_class.perform_async(server.id, avatar.avatar_name, avatar.avatar_key, 100)
+      expect(described_class.jobs.size).to eq 1
+      described_class.new.perform(server.id, avatar.avatar_name, avatar.avatar_key, 100)
+    end
   end
 end

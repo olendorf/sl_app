@@ -9,16 +9,16 @@ RSpec.describe PayUserWorker, type: :worker do
   let(:server) { FactoryBot.create :server, user_id: user.id }
   let(:avatar) { FactoryBot.create :avatar }
 
-  let(:uri_regex) do 
-      %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/pay_user\?
-         auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
+  let(:uri_regex) do
+    %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/pay_user\?
+       auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
 
   describe 'queing the job' do
     it 'job in correct queue' do
-      reg_str = '{|"avatar_name\":\".*,\"avatar_key\":.*\",\"amount":"100"}'      
+      reg_str = '{|"avatar_name\":\".*,\"avatar_key\":.*\",\"amount":"100"}'
       stub_request(:put, uri_regex)
-              .with(body: /#{reg_str}/)
+        .with(body: /#{reg_str}/)
       # ServerSlRequest.pay_user(
       #   user.servers.sample.id, employee.avatar_name, employee.avatar_key, employee.pay_owed
       # )

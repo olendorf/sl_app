@@ -18,5 +18,9 @@ class Api::V1::Analyzable::EmployeePolicy < ApplicationPolicy
   def destroy?
     create?
   end
+  
+  def pay?
+    create?
+  end
 
 end

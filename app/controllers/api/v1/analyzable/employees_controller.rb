@@ -6,12 +6,15 @@ module Api
       # Controller for employees and the time cop apyments
       class EmployeesController < Api::V1::AnalyzableController
         
+        before_action :load_employee, except: %i[index pay_all]
+        
         def create
           authorize @requesting_object
-          ::Analyzable::Employee.create!(
+          @employee = ::Analyzable::Employee.create!(
             atts.merge(user_id: @requesting_object.user.id)
           )
-          render json: {message: 'Created'}, status: :created
+          
+          render json: {message: I18n.t('api.analyzable.employee.create'), avatar: @employee.avatar_name}, status: :created
         end
         
         def index 
@@ -25,7 +28,6 @@ module Api
         
         def show
           authorize @requesting_object
-          @employee = @requesting_object.user.employees.find_by_avatar_key(params['id'])
           render json: {
             message: 'Found', 
             data: @employee.attributes.except(
@@ -38,19 +40,51 @@ module Api
         
         def update
           authorize @requesting_object
-          @employee = @requesting_object.user.employees.find_by_avatar_key(params['id'])
+          raise ActiveRecord::RecordNotFound.new(I18n.t('api.analyzable.employee.not_found')) unless @employee
           @employee.update!(atts)
-          render json: {message: 'Updated'}, status: :ok
+          render json: {message: update_message}, status: :ok
         end
         
         def destroy 
           authorize @requesting_object
-          @employee = @requesting_object.user.employees.find_by_avatar_key(params['id'])
           @employee.destroy!
-          render json: {message: 'Employee terminated'}, status: :ok
+          render json: {
+            message: I18n.t('api.analyzable.employee.destroy', 
+            avatar: @employee.avatar_name)
+          }, status: :ok
+        end
+        
+        def pay 
+          authorize @requesting_object
+          @employee.update_columns(hours_worked: 0, pay_owed: 0)
+          PayUserWorker.perform_async(
+            @requesting_object.user.servers.sample.id,
+            @employee.avatar_name, @employee.avatar_key, @employee.pay_owed)
+          @requesting_object.user.transactions << ::Analyzable::Transaction.new(
+            amount: -1 * @employee.pay_owed,
+            category: 'employee_payment',
+            target_name: @employee.avatar_name,
+            target_key: @employee.avatar_key
+          )
+          render json: {
+            message: I18n.t('api.analyzable.employee.pay', 
+            avatar: @employee.avatar_name)
+          }, status: :ok
         end
         
         private
+        
+        def load_employee
+          @employee = @requesting_object.user.employees.find_by_avatar_key(params['id'])
+        end
+        
+        def update_message
+          if atts['work_session']
+            I18n.t('api.analyzable.employee.clocked_in')
+          else
+            'Updated'
+          end
+        end
 
         def paged_data(page)
           {
@@ -60,65 +94,16 @@ module Api
             current_page: page.current_page,
             next_page: page.next_page,
             prev_page: page.prev_page,
-            total_pages: page.total_pages
+            total_pages: page.total_pages,
+            total_pay: total_pay
+            
           }
         end
         
-        # def create
-        #   authorize @requesting_object
-        #   ::Analyzable::Parcel.create(
-        #     atts.merge({ requesting_object: @requesting_object,
-        #                 user_id: @requesting_object.user.id })
-        #   )
-        #   # parcel.parcel_box = @requesting_object
-        #   # @requesting_object.user.parcels << parcel
-        #   # parcel.states << ::Analyzable::ParcelState.new(state: 'for_sale')
-        #   render json: { message: 'Created' }, status: :created
-        # end
-
-        # def show
-        #   authorize @requesting_object
-        #   data = @requesting_object.parcel.attributes.except(
-        #     'id', 'user_id', 'parcel_box_id', 'updated_at', 'created_at'
-        #   )
-        #   render json: { message: 'OK', data: data }, status: :ok
-        # end
-
-        # def update
-        #   authorize @requesting_object
-        #   @parcel = ::Analyzable::Parcel.find(params['id'])
-        #   @parcel.update(atts.merge(requesting_object: @requesting_object))
-        #   render json: { message: 'Updated' }, status: :ok
-        # end
-
-        # # rubocop:disable Metrics/AbcSize
-        # def index
-        #   authorize @requesting_object
-        #   params['parcel_page'] ||= 1
-        #   params['scope'] ||= 'region'
-        #   parcels = @requesting_object.user.parcels.where(
-        #     region: @requesting_object.region
-        #   ) if params['scope'] == 'region'
-        #   parcels = @requesting_object.user.parcels.where(
-        #     owner_key: params['owner_key']
-        #   ) if params['scope'] == 'renter'
-        #   page = parcels.page(params['parcel_page']).per(9)
-        #   data = paged_data(page)
-        #   render json: { message: 'OK', data: data }, status: :ok
-        # end
-        # # rubocop:enable Metrics/AbcSize
-
-        # private
-
-        # def paged_data(page)
-        #   {
-        #     parcels: page.collect { |p| { parcel_name: p.parcel_name, id: p.id } },
-        #     current_page: page.current_page,
-        #     next_page: page.next_page,
-        #     prev_page: page.prev_page,
-        #     total_pages: page.total_pages
-        #   }
-        # end
+        def total_pay
+          @requesting_object.user.work_sessions.sum(:pay)
+        end
+        
       end
     end
   end

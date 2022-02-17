@@ -5,7 +5,7 @@ RSpec.describe Api::V1::Analyzable::EmployeePolicy, type: :policy do
 
   let(:employee) { FactoryBot.build :employee }
 
-  permissions :create?, :update?, :destroy?, :show?, :index? do
+  permissions :create?, :update?, :destroy?, :show?, :index?, :pay? do
     it 'should grant permission to active users' do
       user = FactoryBot.create :active_user
       expect(subject).to permit user, employee

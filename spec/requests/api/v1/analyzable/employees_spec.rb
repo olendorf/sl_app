@@ -81,7 +81,10 @@ RSpec.describe 'Api::V1::Analyzable::EmployeesController', type: :request do
   describe 'index' do 
     before(:each) do 
       32.times do |i|
-        FactoryBot.create(:employee, avatar_name: "Random avie#{i}", user_id: user.id)
+        employee = FactoryBot.create(:employee, hourly_pay: 10, avatar_name: "Random avie#{i}", user_id: user.id)
+        4.times do 
+          employee.work_sessions << FactoryBot.build(:work_session, duration: 2.0, pay: 2.0 * employee.hourly_pay)
+        end
       end
     end
     
@@ -96,6 +99,11 @@ RSpec.describe 'Api::V1::Analyzable::EmployeesController', type: :request do
       it 'returns the first page of data' do 
         get path, headers: headers(time_cop)
         expect(JSON.parse(response.body)['data']['employees'].size).to eq 9
+      end
+      
+      it 'returns the total amount owed' do 
+        get path, headers: headers(time_cop)
+        expect(JSON.parse(response.body)['data']['total_pay']).to eq(2 * 10 * 4 * 32)
       end
     end
     
@@ -162,224 +170,154 @@ RSpec.describe 'Api::V1::Analyzable::EmployeesController', type: :request do
     end
     
   end
+  
+  describe 'clocking in and out' do 
+    let(:employee) { FactoryBot.create :employee, user_id: time_cop.user.id }
+    let(:atts) { {
+      work_session:  true 
+    } }
+    let(:path) { api_analyzable_employee_path(employee.avatar_key)}
+    let(:non_employee_path) { api_analyzable_employee_path(SecureRandom.uuid) }
+    
+    context 'user is logging in' do 
+      context 'avatar is an employee' do
+        it 'should return ok status' do 
+          put path, params: atts.to_json, headers: headers(time_cop)
+          expect(response.status).to eq 200
+        end
+        
+        it 'should create an open a work sesson' do 
+          expect{
+            put path, params: atts.to_json, headers: headers(time_cop)
+          }.to change{employee.work_sessions.count}.by(1)
+        end
+        
+        it 'should send the correct message' do 
+          put path, params: atts.to_json, headers: headers(time_cop)
+          expect(JSON.parse(response.body)['message']).to eq 'You are clocked in.'
+        end
+      end 
+      
+      context 'avatar is not an employee' do
+        it 'should return not found status' do 
+          put non_employee_path, params: atts.to_json, headers: headers(time_cop)
+          expect(response.status).to eq 404
+        end
+        
+        it 'should not create a work sesson' do 
+          expect{
+            put non_employee_path, params: atts.to_json, headers: headers(time_cop)
+          }.to_not change{employee.work_sessions.count}
+        end
+        
+        it 'should return the correct message' do 
+          put non_employee_path, params: atts.to_json, headers: headers(time_cop)
+          expect(JSON.parse(response.body)['message']).to eq 'You are not an employee here.'
+        end
+      end
+    end
+    
+    context 'user is logging out' do 
+      before(:each) do 
+        employee.update(work_session: true)
+        employee.reload.work_sessions.last.update(created_at: 2.hours.ago)
+      end
+      
+      it 'should return ok status' do 
+        put path, params: atts.to_json, headers: headers(time_cop)
+        expect(response.status).to eq 200
+      end
+      
+      it 'should not create a work session' do 
+          expect{
+            put path, params: atts.to_json, headers: headers(time_cop)
+          }.to_not change{employee.work_sessions.count}
+      end
+      
+      it 'should set the data correctly' do 
+        put path, params: atts.to_json, headers: headers(time_cop)
+        expect(
+          employee.work_sessions.last.stop_time
+          ).to be_within(30.seconds).of(Time.current)
+        expect(
+          employee.work_sessions.last.duration
+          ).to be_within(0.1).of(2.0)
+        expect(
+          employee.work_sessions.last.pay
+          ).to be_within(1).of(2.0 * employee.hourly_pay)
+      end
+    end
+  end
+  
+  describe 'paying employees' do 
+    context 'paying one employee' do 
+      let(:employee) { FactoryBot.create(:employee, hourly_pay: 10, user_id: user.id) }
+      before(:each) do 
+        4.times do 
+          employee.work_sessions << FactoryBot.build(:work_session, duration: 2.0, pay: 2.0 * employee.hourly_pay)
+          employee.update_columns(pay_owed: 80, hours_worked: 8)
+        end
+      end
+      
+      let(:uri_regex) do 
+        %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/pay_user\?
+           auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
+      end
+      
+      let(:reg_str) { '{|"avatar_name\":\".*,\"avatar_key\":.*\",\"amount":"80"}' }
+      
+      let(:path) {  pay_api_analyzable_employee_path(employee.avatar_key) }
+      
+      before(:each) do 
+        3.times do 
+          user.web_objects << FactoryBot.build(:server)
+        end 
+      end
+      
+      before(:each) do 
+        @stub = stub_request(:put, uri_regex)
+              .with(body: /#{reg_str}/)
+      end
+      
+      it 'should return ok status' do       
+        put path, headers: headers(time_cop)
+        expect(response.status).to eq 200
+      end
+      
+      it 'should set the hours to zero' do 
+        put path, headers: headers(time_cop)
+        expect(employee.reload.hours_worked).to eq 0
+      end
+      
+      it 'should set the pay_owed to zero' do 
+        put path, headers: headers(time_cop)
+        expect(employee.reload.pay_owed).to eq 0
+      end
+      
+      it 'should pay the employee' do 
+        put path, headers: headers(time_cop)
+        expect(@stub).to have_been_requested
+      end
+      
+      it 'should create a transaction' do 
+        expect{
+          put path, headers: headers(time_cop)
+        }.to change{user.transactions.count}.by(1)
+      end
+    end 
+    
+    
+    context 'pay all employees' do    
+      before(:each) do 
+        4.times do |i|
+          employee = FactoryBot.create(:employee, hourly_pay: 10, avatar_name: "Random avie#{i}", user_id: user.id)
+          4.times do 
+            employee.work_sessions << FactoryBot.build(:work_session, duration: 2.0, pay: 2.0 * employee.hourly_pay)
+          end
+        end
+      end
+
+    end
+  end
  
-  # let(:user) { FactoryBot.create :active_user }
-  # let(:parcel_box) { FactoryBot.create :parcel_box, user_id: user.id, region: 'foo' }
-
-  # describe 'show' do
-  #   before(:each) do
-  #     @parcel = FactoryBot.create :parcel, user_id: user.id
-  #     @parcel.parcel_box = parcel_box
-  #   end
-
-  #   it 'should return ok status' do
-  #     path = api_analyzable_parcel_path(@parcel)
-  #     get path, headers: headers(parcel_box)
-  #     expect(response.status).to eq 200
-  #   end
-
-  #   it 'should return the correct data' do
-  #     path = api_analyzable_parcel_path(@parcel)
-  #     get path, headers: headers(parcel_box)
-  #     expect(JSON.parse(response.body)['data']).to include(
-  #       'parcel_name', 'description', 'renter_key', 'renter_name', 'area',
-  #       'parcel_key', 'weekly_rent', 'purchase_price', 'region', 'expiration_date'
-  #     )
-  #   end
-  # end
-
-  # describe 'parcel life cycle requests' do
-  #   describe 'setting out a parcel box' do
-  #     context 'on a new parcel' do
-  #       let(:path) { api_analyzable_parcels_path }
-  #       let(:atts) {
-  #         {
-  #           parcel_name: 'parcel one',
-  #           description: 'test parcel',
-  #           area: 8912,
-  #           parcel_key: SecureRandom.uuid,
-  #           weekly_rent: 3000,
-  #           purchase_price: 2000,
-  #           region: 'my nice region'
-  #         }
-  #       }
-  #       it 'should create a new parcel' do
-  #         post path, params: atts.to_json, headers: headers(parcel_box)
-  #         expect(user.parcels.size).to eq 1
-  #       end
-  #       it 'should set the parcel for sale' do
-  #         post path, params: atts.to_json, headers: headers(parcel_box)
-  #         expect(user.parcels.last.states.last.state).to eq 'for_sale'
-  #       end
-  #     end
-
-  #     context 'on an existing parcel' do
-  #       let(:parcel) { FactoryBot.create :parcel, user_id: user.id }
-  #       let(:atts) { { parcel_box_key: parcel_box.object_key } }
-  #       let(:path) { api_analyzable_parcel_path(parcel) }
-  #       before(:each) do
-  #         parcel.states << FactoryBot.create(
-  #           :state, state: 'open', created_at: 1.day.ago, user_id: user.id
-  #         )
-  #       end
-
-  #       it 'should not create a parcel' do
-  #         put path, params: atts.to_json, headers: headers(parcel_box)
-  #         expect(user.parcels.size).to eq 1
-  #       end
-  #       it 'should set the parcel for sale' do
-  #         put path, params: atts.to_json, headers: headers(parcel_box)
-  #         expect(user.parcels.last.states.last.state).to eq 'for_sale'
-  #       end
-  #       it 'should update the previous states duration' do
-  #         put path, params: atts.to_json, headers: headers(parcel_box)
-  #         expect(user.parcels.last.states.second.reload.duration).to be_within(1.second).of(1.day)
-  #       end
-  #     end
-  #   end
-  #   context 'someone buys parcel' do
-  #     let(:parcel) { FactoryBot.create :parcel, user_id: user.id }
-  #     let(:parcel_box) {
-  #       FactoryBot.create :parcel_box, user_id: user.id,
-  #                                     parcel_id: parcel.id
-  #     }
-  #     let(:avatar) { FactoryBot.create :avatar }
-  #     let(:atts) { { renter_key: avatar.avatar_key, renter_name: avatar.avatar_name } }
-  #     let(:path) { api_analyzable_parcel_path(parcel) }
-  #     before(:each) do
-  #       parcel.states << FactoryBot.create(:state, state: 'for_sale')
-  #     end
-
-  #     it 'should add a state to the parcel' do
-  #       put path, params: atts.to_json, headers: headers(parcel_box)
-  #       expect(parcel.states.size).to eq 3
-  #     end
-
-  #     it 'should set the state to occupied' do
-  #       put path, params: atts.to_json, headers: headers(parcel_box)
-  #       expect(parcel.states.last.state).to eq 'occupied'
-  #     end
-
-  #     it 'should remove the parcel_box' do
-  #       put path, params: atts.to_json, headers: headers(parcel_box)
-  #       expect(parcel.parcel_box).to be_nil
-  #     end
-  #   end
-
-  #   context 'user pays tier' do
-  #     let(:tier_station) { FactoryBot.create :tier_station, user_id: user.id }
-  #     let(:parcel) {
-  #       FactoryBot.create :parcel, user_id: user.id,
-  #                                 expiration_date: 1.week.from_now,
-  #                                 renter_key: avatar.avatar_key,
-  #                                 renter_name: avatar.avatar_name
-  #     }
-  #     let(:avatar) { FactoryBot.create :avatar }
-  #     let(:atts) { { rent_payment: 3 * parcel.weekly_rent } }
-  #     let(:path) { api_analyzable_parcel_path(parcel) }
-  #     before(:each) do
-  #       parcel.states << FactoryBot.create(:state, state: 'occupied')
-  #     end
-
-  #     it 'should return ok status' do
-  #       put path, params: atts.to_json, headers: headers(tier_station)
-  #       expect(response.status).to eq 200
-  #     end
-
-  #     it 'should update the expiration_date' do
-  #       put path, params: atts.to_json, headers: headers(tier_station)
-  #       expect(parcel.reload.expiration_date).to be_within(2.hours).of(4.weeks.from_now)
-  #     end
-
-  #     it 'should add a transaction to the user' do
-  #       put path, params: atts.to_json, headers: headers(tier_station)
-  #       expect(user.reload.transactions.size).to eq 1
-  #     end
-  #   end
-  # end
-
-  # describe 'index' do
-  #   let(:path) { api_analyzable_parcels_path }
-  #   before(:each) do
-  #     24.times do |i|
-  #       user.parcels << FactoryBot.build(:parcel, parcel_name: "parcel #{i}", region: 'foo')
-  #     end
-  #     3.times do |_i|
-  #       user.parcels << FactoryBot.build(:parcel)
-  #     end
-  #   end
-
-  #   context 'no page sent' do
-  #     it 'returns ok status' do
-  #       get path, headers: headers(parcel_box)
-  #       expect(response.status).to eq 200
-  #     end
-
-  #     it 'returns the first page' do
-  #       get path, headers: headers(parcel_box)
-  #       expect(JSON.parse(response.body)['data']['parcels'].size).to eq 9
-  #     end
-  #   end
-
-  #   context '1st page' do
-  #     it 'returns ok status' do
-  #       get path, params: { parcel_page: 1 }, headers: headers(parcel_box)
-  #       expect(response.status).to eq 200
-  #     end
-
-  #     it 'returns the first page' do
-  #       get path, params: { parcel_page: 1 }, headers: headers(parcel_box)
-  #       expect(JSON.parse(response.body)['data']['parcels'].size).to eq 9
-  #     end
-
-  #     # it 'should return the correct data' do
-  #     #   get path, params: { parcel_page: 1 }, headers: headers(parcel_box)
-  #     #   data = JSON.parse(response.body)['data']['parcels'].collect do |d|
-  #     #     d['parcel_name']
-  #     #   end
-  #     #   # expect(JSON.parse(response.body)['data']['parcels'].collect).to eq 'parcel 0'
-  #     #   expect(data).to include(
-  #     #     'parcel 0', 'parcel 1', 'parcel 2', 'parcel 3', 'parcel 4',
-  #     #     'parcel 5', 'parcel 6', 'parcel 7', 'parcel 8'
-  #     #     )
-
-  #     # end
-  #   end
-
-  #   context '2nd page' do
-  #     it 'returns ok status' do
-  #       get path, params: { parcel_page: 2 }, headers: headers(parcel_box)
-  #       expect(response.status).to eq 200
-  #     end
-
-  #     it 'returns the first page' do
-  #       get path, params: { parcel_page: 2 }, headers: headers(parcel_box)
-  #       expect(JSON.parse(response.body)['data']['parcels'].size).to eq 9
-  #     end
-
-  #     # it 'should return the correct data' do
-  #     #   get path, params: { parcel_page: 2 }, headers: headers(parcel_box)
-  #     #   expected = []
-  #     #   9.times do |i|
-  #     #     expected << "parcel #{i + 9}"
-  #     #   end
-  #     #   data = JSON.parse(response.body)['data']['parcels'].collect do |d|
-  #     #     d['parcel_name']
-  #     #   end
-  #     #   expect(data).to include(*expected)
-  #     # end
-  #   end
-
-  #   context 'last page' do
-  #     it 'returns ok status' do
-  #       get path, params: { parcel_page: 3 }, headers: headers(parcel_box)
-  #       expect(response.status).to eq 200
-  #     end
-
-  #     it 'returns the first page' do
-  #       get path, params: { parcel_page: 3 }, headers: headers(parcel_box)
-  #       expect(JSON.parse(response.body)['data']['parcels'].size).to eq 6
-  #     end
-  #   end
-  # end
 end

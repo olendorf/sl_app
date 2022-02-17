@@ -25,6 +25,6 @@ module Analyzable
     # belongs_to :web_object, class_name: 'AbstractWebObject', optional: true
 
     enum category: %i[other account donation tip sale tier shop_rent share land_sale
-                      service_board_rent]
+                      service_board_rent employee_payment]
   end
 end

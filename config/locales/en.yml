@@ -108,6 +108,13 @@ en:
         success: "This object has been updated."
       destroy:
         success: "This object has been deleted."
+    analyzable:
+      employee:
+        clocked_in: 'You are clocked in.'
+        not_found: 'You are not an employee here.'
+        create: 'Employee added.'
+        destroy: 'Employee %{avatar} terminated.'
+        pay: '%{avatar} has been paid.'
         
   rezzable:
     shop_rental_box:
@@ -116,7 +123,6 @@ en:
         of %{allowed_land_impact} LI and current is using %{current_land_impact}
         LI. Please reduce the number of objects or your objects will be returned to
         you.
-  analyzable:
     parcel:
       eviction: >-
         Your parcel rental at %{region_name} has expired. Your objects will be 

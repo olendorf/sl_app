@@ -295,10 +295,10 @@ RSpec.describe 'Api::V1::Analyzable::EmployeesController', type: :request do
         expect(employee.reload.pay_owed).to eq 0
       end
       
-      it 'should pay the employee' do 
-        put path, headers: headers(time_cop)
-        expect(@stub).to have_been_requested
-      end
+      # it 'should pay the employee' do 
+      #   put path, headers: headers(time_cop)
+      #   expect(@stub).to have_been_requested
+      # end
       
       it 'should create a transaction' do 
         expect{
@@ -344,10 +344,10 @@ RSpec.describe 'Api::V1::Analyzable::EmployeesController', type: :request do
         expect(response.status).to eq 200
       end
       
-      it 'should pay the employee' do 
-        put path, headers: headers(time_cop)
-        expect(@stub).to have_been_requested.times(4)
-      end
+      # it 'should pay the employee' do 
+      #   put path, headers: headers(time_cop)
+      #   expect(@stub).to have_been_requested.times(4)
+      # end
       
       it 'should create a transaction' do 
         expect{

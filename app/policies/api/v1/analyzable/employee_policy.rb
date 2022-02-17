@@ -22,5 +22,9 @@ class Api::V1::Analyzable::EmployeePolicy < ApplicationPolicy
   def pay?
     create?
   end
+  
+  def pay_all?
+    create?
+  end
 
 end

@@ -57,22 +57,37 @@ module Api
         def pay 
           authorize @requesting_object
           @employee.update_columns(hours_worked: 0, pay_owed: 0)
-          PayUserWorker.perform_async(
-            @requesting_object.user.servers.sample.id,
-            @employee.avatar_name, @employee.avatar_key, @employee.pay_owed)
-          @requesting_object.user.transactions << ::Analyzable::Transaction.new(
-            amount: -1 * @employee.pay_owed,
-            category: 'employee_payment',
-            target_name: @employee.avatar_name,
-            target_key: @employee.avatar_key
-          )
+          pay_employee(@employee)
           render json: {
             message: I18n.t('api.analyzable.employee.pay', 
             avatar: @employee.avatar_name)
           }, status: :ok
         end
         
+        def pay_all
+          authorize @requesting_object
+          @requesting_object.user.employees.each do |employee|
+            pay_employee(employee)
+          end 
+          
+          render json: {
+            message: I18n.t('api.analyzable.employee.pay_all')
+          }, status: :ok
+        end
+        
         private
+        
+        def pay_employee(employee)
+          PayUserWorker.perform_async(
+            @requesting_object.user.servers.sample.id,
+            employee.avatar_name, employee.avatar_key, employee.pay_owed)
+          @requesting_object.user.transactions << ::Analyzable::Transaction.new(
+            amount: -1 * employee.pay_owed,
+            category: 'employee_payment',
+            target_name: employee.avatar_name,
+            target_key: employee.avatar_key
+          )
+        end
         
         def load_employee
           @employee = @requesting_object.user.employees.find_by_avatar_key(params['id'])

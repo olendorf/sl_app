@@ -112,9 +112,10 @@ en:
       employee:
         clocked_in: 'You are clocked in.'
         not_found: 'You are not an employee here.'
-        create: 'Employee added.'
+        create: '%{avatar} added as employee.'
         destroy: 'Employee %{avatar} terminated.'
         pay: '%{avatar} has been paid.'
+        pay_all: 'The process of paying your employees has started. Consult your dashboard for progress.'
         
   rezzable:
     shop_rental_box:

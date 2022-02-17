@@ -250,14 +250,8 @@ RSpec.describe 'Api::V1::Analyzable::EmployeesController', type: :request do
   end
   
   describe 'paying employees' do 
+    
     context 'paying one employee' do 
-      let(:employee) { FactoryBot.create(:employee, hourly_pay: 10, user_id: user.id) }
-      before(:each) do 
-        4.times do 
-          employee.work_sessions << FactoryBot.build(:work_session, duration: 2.0, pay: 2.0 * employee.hourly_pay)
-          employee.update_columns(pay_owed: 80, hours_worked: 8)
-        end
-      end
       
       let(:uri_regex) do 
         %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/pay_user\?
@@ -266,18 +260,25 @@ RSpec.describe 'Api::V1::Analyzable::EmployeesController', type: :request do
       
       let(:reg_str) { '{|"avatar_name\":\".*,\"avatar_key\":.*\",\"amount":"80"}' }
       
-      let(:path) {  pay_api_analyzable_employee_path(employee.avatar_key) }
-      
+      let(:employee) { FactoryBot.create(:employee, hourly_pay: 10, user_id: user.id) }
       before(:each) do 
+        4.times do 
+          employee.work_sessions << FactoryBot.build(:work_session, duration: 2.0, pay: 2.0 * employee.hourly_pay)
+        end
+        employee.update_columns(pay_owed: 80, hours_worked: 8)
+        
+        
         3.times do 
           user.web_objects << FactoryBot.build(:server)
         end 
-      end
-      
-      before(:each) do 
+        
+        
         @stub = stub_request(:put, uri_regex)
               .with(body: /#{reg_str}/)
       end
+      
+      let(:path) {  pay_api_analyzable_employee_path(employee.avatar_key) }
+
       
       it 'should return ok status' do       
         put path, headers: headers(time_cop)
@@ -307,14 +308,51 @@ RSpec.describe 'Api::V1::Analyzable::EmployeesController', type: :request do
     end 
     
     
-    context 'pay all employees' do    
+    context 'pay all employees' do  
+      
+      
+        
+      let(:uri_regex) do 
+        %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/pay_user\?
+           auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
+      end
+      
+      let(:reg_str) { '{|"avatar_name\":\".*,\"avatar_key\":.*\",\"amount":"80"}' }
+      
+      
+      let(:path) {  pay_all_api_analyzable_employees_path }
+    
       before(:each) do 
         4.times do |i|
           employee = FactoryBot.create(:employee, hourly_pay: 10, avatar_name: "Random avie#{i}", user_id: user.id)
           4.times do 
             employee.work_sessions << FactoryBot.build(:work_session, duration: 2.0, pay: 2.0 * employee.hourly_pay)
           end
+          employee.update_columns(pay_owed: 80, hours_worked: 8)
         end
+        
+        3.times do 
+          user.web_objects << FactoryBot.build(:server)
+        end 
+        
+        @stub = stub_request(:put, uri_regex)
+              .with(body: /#{reg_str}/)
+      end
+      
+      it 'should return ok status' do       
+        put path, headers: headers(time_cop)
+        expect(response.status).to eq 200
+      end
+      
+      it 'should pay the employee' do 
+        put path, headers: headers(time_cop)
+        expect(@stub).to have_been_requested.times(4)
+      end
+      
+      it 'should create a transaction' do 
+        expect{
+          put path, headers: headers(time_cop)
+        }.to change{user.transactions.count}.by(4)
       end
 
     end

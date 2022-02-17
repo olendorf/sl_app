@@ -33,6 +33,7 @@ module Api
       end
 
       rescue_from ActiveRecord::RecordNotUnique do |e|
+        puts 'rescuing from not unique'
         if controller_name == 'users'
           json_response({ message: I18n.t('api.user.create.exists') }, :conflict)
         else

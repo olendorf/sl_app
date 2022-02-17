@@ -33,4 +33,21 @@ class ServerSlRequest
       headers: request_headers(server)
     ) unless Rails.env.development?
   end
+
+  def self.pay_user(server_id, avatar_name, avatar_key, amount)
+    server = Rezzable::Server.find(server_id)
+    RestClient::Request.execute(
+      url: "#{server.url}/pay_user",
+      method: :put,
+      payload: {
+        avatar_name: avatar_name,
+        avatar_key: avatar_key,
+        amount: amount
+      }.to_json,
+      content_type: :json,
+      accept: :json,
+      verify_ssl: false,
+      headers: request_headers(server)
+    ) unless Rails.env.development?
+  end
 end

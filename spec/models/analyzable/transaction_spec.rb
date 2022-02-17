@@ -19,7 +19,8 @@ RSpec.describe Analyzable::Transaction, type: :model do
   it {
     should define_enum_for(:category).with_values(%i[other account donation tip
                                                      sale tier shop_rent share
-                                                     land_sale service_board_rent])
+                                                     land_sale service_board_rent
+                                                     employee_payment])
   }
 
   describe 'balance' do

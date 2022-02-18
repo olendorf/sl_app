@@ -369,6 +369,16 @@ def setup_service_boards_for_user(user, avatars, num_regions: 5, num_boards: 20)
 end
 # rubocop:enable Metrics/AbcSize, Metrics/ParameterLists
 
+def setup_employees_for_user(user, avatars, num_employees: 10, num_work_sessions: 30)
+  num_employees.times do |i|
+    employee = FactoryBot.build(:employee, avatar_name: "employee #{1}")
+    user.employees << employee
+    num_work_sessions.times do 
+
+    end
+  end
+end
+
 puts 'creating owner'
 owner = FactoryBot.create :owner, avatar_name: 'Random Citizen'
 
@@ -405,6 +415,9 @@ setup_shop_rentals_for_user(owner, avatars, num_shops: 75)
 
 puts 'setting up service boards for owner'
 setup_service_boards_for_user(owner, avatars, num_boards: 75)
+
+put 'settign up employees for owner'
+setup_employees_for_user(owner, avatars, num_employees: 50)
 
 4.times do |i|
   FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident"

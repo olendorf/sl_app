@@ -3,7 +3,7 @@ class CreateAnalyzableWorkSessions < ActiveRecord::Migration[6.1]
     create_table :analyzable_work_sessions do |t|
       t.integer :employee_id
       t.integer :duration
-      t.datetime :stop_time
+      t.datetime :stopped_at
       t.integer :pay
 
       t.timestamps

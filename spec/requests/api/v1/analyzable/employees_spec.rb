@@ -240,7 +240,7 @@ RSpec.describe 'Api::V1::Analyzable::EmployeesController', type: :request do
       it 'should set the data correctly' do
         put path, params: atts.to_json, headers: headers(time_cop)
         expect(
-          employee.work_sessions.last.stop_time
+          employee.work_sessions.last.stopped_at
         ).to be_within(30.seconds).of(Time.current)
         expect(
           employee.work_sessions.last.duration

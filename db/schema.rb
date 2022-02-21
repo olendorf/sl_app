@@ -227,7 +227,7 @@ ActiveRecord::Schema.define(version: 2022_02_14_175802) do
 
   create_table "analyzable_work_sessions", force: :cascade do |t|
     t.integer "employee_id"
-    t.integer "duration"
+    t.float "duration"
     t.datetime "stopped_at"
     t.integer "pay"
     t.datetime "created_at", precision: 6, null: false

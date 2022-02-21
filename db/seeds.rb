@@ -367,32 +367,31 @@ def setup_service_boards_for_user(user, avatars, num_regions: 5, num_boards: 20)
     add_events_to_rentable(user.service_boards.last, avatars) if rand < 0.9
   end
 end
-# rubocop:enable Metrics/AbcSize, Metrics/ParameterLists
 
-def setup_employees_for_user(user, avatars, num_employees: 10, num_work_sessions: 30)
+def setup_employees_for_user(user, _avatars, num_employees: 10, num_work_sessions: 30)
   num_employees.times do |i|
     employee = FactoryBot.build(:employee, avatar_name: "employee #{i}")
     user.employees << employee
-    
-    while rand >= 0.03
-      if employee.work_sessions.size.zero?
-        created_at = rand(2.years.ago..Time.current)
-      else
-        created_at = rand(employee.work_sessions.last.stopped_at..Time.current)
-      end
-      
+
+    while rand >= 1 / num_work_sessions.to_f
+      created_at = if employee.work_sessions.size.zero?
+                     rand(2.years.ago..Time.current)
+                   else
+                     rand(employee.work_sessions.last.stopped_at..Time.current)
+                   end
+
       stopped_at = created_at + rand(1.0..8.0).hours
       stopped_at = nil if stopped_at >= Time.current
-      
+
       work_session = Analyzable::WorkSession.new(
         created_at: created_at,
         stopped_at: stopped_at
-        )
+      )
       if stopped_at
-        work_session.duration = (stopped_at - created_at)/1.hour.to_f
+        work_session.duration = (stopped_at - created_at) / 1.hour.to_f
         work_session.pay = work_session.duration * employee.hourly_pay
         work_session.save
-        
+
         if stopped_at > 1.week.ago
           employee.hours_worked += work_session.duration
           employee.pay_owed += work_session.pay
@@ -404,6 +403,7 @@ def setup_employees_for_user(user, avatars, num_employees: 10, num_work_sessions
     end
   end
 end
+# rubocop:enable Metrics/AbcSize, Metrics/ParameterLists
 
 puts 'creating owner'
 owner = FactoryBot.create :owner, avatar_name: 'Random Citizen'
@@ -487,7 +487,7 @@ puts 'creating users'
 
   puts 'setting up service boards for owner'
   setup_service_boards_for_user(user, avatars)
-  
+
   puts 'setting up employees for user'
   setup_employees_for_user(user, avatars, num_employees: 10)
 end

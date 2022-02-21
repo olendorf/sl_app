@@ -27,16 +27,16 @@ module Analyzable
 
     def clock_out
       self.work_session = nil
-      stop_time = Time.current
-      duration = (stop_time - work_sessions.last.created_at) / 1.hour
+      stopped_at = Time.current
+      duration = (stopped_at - work_sessions.last.created_at) / 1.hour
       pay = hourly_pay * duration
-      work_sessions.last.update(stop_time: stop_time, duration: duration, pay: pay)
+      work_sessions.last.update(stopped_at: stopped_at, duration: duration, pay: pay)
     end
 
     def on_the_clock?
       return false if work_sessions.size.zero?
 
-      work_sessions.last.stop_time.nil?
+      work_sessions.last.stopped_at.nil?
     end
   end
 end

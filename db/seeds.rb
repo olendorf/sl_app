@@ -367,6 +367,42 @@ def setup_service_boards_for_user(user, avatars, num_regions: 5, num_boards: 20)
     add_events_to_rentable(user.service_boards.last, avatars) if rand < 0.9
   end
 end
+
+def setup_employees_for_user(user, _avatars, num_employees: 10, num_work_sessions: 30)
+  num_employees.times do |i|
+    employee = FactoryBot.build(:employee, avatar_name: "employee #{i}")
+    user.employees << employee
+
+    while rand >= 1 / num_work_sessions.to_f
+      created_at = if employee.work_sessions.size.zero?
+                     rand(2.years.ago..Time.current)
+                   else
+                     rand(employee.work_sessions.last.stopped_at..Time.current)
+                   end
+
+      stopped_at = created_at + rand(1.0..8.0).hours
+      stopped_at = nil if stopped_at >= Time.current
+
+      work_session = Analyzable::WorkSession.new(
+        created_at: created_at,
+        stopped_at: stopped_at
+      )
+      if stopped_at
+        work_session.duration = (stopped_at - created_at) / 1.hour.to_f
+        work_session.pay = work_session.duration * employee.hourly_pay
+        work_session.save
+
+        if stopped_at > 1.week.ago
+          employee.hours_worked += work_session.duration
+          employee.pay_owed += work_session.pay
+          employee.save
+        end
+      end
+      employee.work_sessions << work_session
+      break if stopped_at.nil?
+    end
+  end
+end
 # rubocop:enable Metrics/AbcSize, Metrics/ParameterLists
 
 puts 'creating owner'
@@ -378,33 +414,36 @@ give_splits(owner, avatars)
 puts 'giving servers to owner'
 give_servers_to_user(owner)
 
-puts 'giving terminals to owner'
-give_terminals(owner, avatars)
+# puts 'giving terminals to owner'
+# give_terminals(owner, avatars)
 
-puts 'giving donation_boxes to owner'
-give_donation_boxes_to_user(owner, avatars)
+# puts 'giving donation_boxes to owner'
+# give_donation_boxes_to_user(owner, avatars)
 
-puts 'giving transactions to owner'
-give_transactions_to_user(owner, avatars)
+# puts 'giving transactions to owner'
+# give_transactions_to_user(owner, avatars)
 
-puts 'giving traffic_cops to owner'
-give_traffic_cops_to_user(owner, avatars, 200)
+# puts 'giving traffic_cops to owner'
+# give_traffic_cops_to_user(owner, avatars, 200)
 
-puts 'giving tip_jars to owner'
-give_tip_jars_to_user(owner, avatars, 20)
+# puts 'giving tip_jars to owner'
+# give_tip_jars_to_user(owner, avatars, 20)
 
-puts 'giving vendors to owner'
-give_products_to_user(owner, 10)
-give_vendors_to_user(owner, avatars, 50, 20)
+# puts 'giving vendors to owner'
+# give_products_to_user(owner, 10)
+# give_vendors_to_user(owner, avatars, 50, 20)
 
-puts 'setting up land rental system for owner'
-setup_parcel_data_for_user(owner, avatars, num_parcels: 75)
+# puts 'setting up land rental system for owner'
+# setup_parcel_data_for_user(owner, avatars, num_parcels: 75)
 
-puts 'setting up shop rentals for owner'
-setup_shop_rentals_for_user(owner, avatars, num_shops: 75)
+# puts 'setting up shop rentals for owner'
+# setup_shop_rentals_for_user(owner, avatars, num_shops: 75)
 
-puts 'setting up service boards for owner'
-setup_service_boards_for_user(owner, avatars, num_boards: 75)
+# puts 'setting up service boards for owner'
+# setup_service_boards_for_user(owner, avatars, num_boards: 75)
+
+puts 'setting up employees for owner'
+setup_employees_for_user(owner, avatars, num_employees: 50)
 
 4.times do |i|
   FactoryBot.create :admin, avatar_name: "Admin_#{i} Resident"
@@ -448,6 +487,9 @@ puts 'creating users'
 
   puts 'setting up service boards for owner'
   setup_service_boards_for_user(user, avatars)
+
+  puts 'setting up employees for user'
+  setup_employees_for_user(user, avatars, num_employees: 10)
 end
 
 20.times do |i|

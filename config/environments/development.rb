@@ -46,6 +46,9 @@ Rails.application.configure do
                         class_name: 'Analyzable::Inventory',
                         association: :user
     Bullet.add_safelist type: :unused_eager_loading,
+                        class_name: 'Analyzable::Employee',
+                        association: :user
+    Bullet.add_safelist type: :unused_eager_loading,
                         class_name: 'Rezzable::DonationBox',
                         association: :user
     Bullet.add_safelist type: :unused_eager_loading,

@@ -9,7 +9,7 @@ module Api
       before_action :load_user, except: %i[index create]
 
       def create
-        authorize User
+        authorize [:api, :v1, User]
 
         @user = User.new(
           parsed_params.except('account_payment')
@@ -25,14 +25,14 @@ module Api
       end
 
       def show
-        authorize @requesting_object
+        authorize [:api, :v1, @requesting_object]
         render json: {
           data: user_data
         }, status: :ok
       end
 
       def update
-        authorize @requesting_object
+        authorize [:api, :v1, @requesting_object]
         # adjust_expiration_date if parsed_params['account_level']
         # handle_transactions if parsed_params['account_payment']
         @user.update!(parsed_params.merge({ requesting_object: @requesting_object }))
@@ -44,7 +44,7 @@ module Api
       end
 
       def destroy
-        authorize @requesting_object
+        authorize [:api, :v1, @requesting_object]
         @user.destroy!
         render json: {
           message: I18n.t('api.user.destroy.success')

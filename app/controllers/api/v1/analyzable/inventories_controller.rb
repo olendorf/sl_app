@@ -6,7 +6,7 @@ module Api
       # Handles requests to the Inventory API
       class InventoriesController < Api::V1::AnalyzableController
         def create
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
 
           begin
             @inventory = @requesting_object.actable.inventories
@@ -19,14 +19,14 @@ module Api
         end
 
         def update
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           load_inventory unless @inventory
           @inventory.update(atts)
           render json: { message: 'Updated' }, status: :ok
         end
 
         def index
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
 
           params['inventory_page'] ||= 1
           page = @requesting_object.actable.inventories
@@ -36,14 +36,14 @@ module Api
         end
 
         def show
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           @inventory = ::Analyzable::Inventory.find_by_inventory_name!(params['id'])
           data = @inventory.attributes.except(:id, :user_id, :server_id, :created_at, :updated_at)
           render json: { message: 'OK', data: data }, status: :ok
         end
 
         def destroy
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           if params['id'] == 'all'
             @requesting_object.inventories.destroy_all
           else

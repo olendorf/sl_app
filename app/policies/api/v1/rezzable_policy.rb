@@ -7,6 +7,10 @@ module Api
       def show?
         true
       end
+      
+      def index?
+        show?
+      end
 
       def destroy?
         show?

@@ -2,7 +2,7 @@
 
 # Base controller class
 class ApplicationController < ActionController::Base
-  include Pundit
+  include Pundit::Authorization
 
   # pp caller_locations
 

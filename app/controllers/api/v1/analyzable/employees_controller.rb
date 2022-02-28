@@ -8,7 +8,7 @@ module Api
         before_action :load_employee, except: %i[index pay_all]
 
         def create
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           @employee = ::Analyzable::Employee.create!(
             atts.merge(user_id: @requesting_object.user.id)
           )
@@ -20,7 +20,7 @@ module Api
         end
 
         def index
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           employees = @requesting_object.user.employees.order(:avatar_name)
           params['employee_page'] ||= 1
           page = employees.page(params['employee_page']).per(9)
@@ -29,7 +29,7 @@ module Api
         end
 
         def show
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           render json: {
             message: 'Found',
             data: @employee.attributes.except(
@@ -42,7 +42,7 @@ module Api
         end
 
         def update
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           raise ActiveRecord::RecordNotFound,
                 I18n.t('api.analyzable.employee.not_found') unless @employee
 
@@ -51,7 +51,7 @@ module Api
         end
 
         def destroy
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           @employee.destroy!
           render json: {
             message: I18n.t('api.analyzable.employee.destroy',
@@ -60,7 +60,7 @@ module Api
         end
 
         def pay
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           @employee.update_columns(hours_worked: 0, pay_owed: 0)
           pay_employee(@employee)
           render json: {
@@ -70,7 +70,7 @@ module Api
         end
 
         def pay_all
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           @requesting_object.user.employees.each do |employee|
             pay_employee(employee)
           end

@@ -5,7 +5,7 @@ module Api
     # Handles API requests from SL
     class ServiceTicketsController < Api::V1::AnalyzableController
       def index
-        authorize @requesting_object
+        authorize [:api, :v1, @requesting_object]
         data = @requesting_object.user.service_tickets
                                  .where(status: 'open',
                                         client_key: params['avatar_key'])
@@ -17,7 +17,7 @@ module Api
       end
 
       def create
-        authorize @requesting_object
+        authorize [:api, :v1, @requesting_object]
         ticket = ServiceTicket.new(
           title: params['title'],
           description: params['description'],
@@ -31,7 +31,7 @@ module Api
 
       # rubocop:disable Metrics/AbcSize
       def show
-        authorize @requesting_object
+        authorize [:api, :v1, @requesting_object]
         ticket = ServiceTicket.where(
           client_key: params['avatar_key'],
           id: params['id']
@@ -54,7 +54,7 @@ module Api
       # The only update that should happen here is to add a comment or
       # close a ticket
       def update
-        authorize @requesting_object
+        authorize [:api, :v1, @requesting_object]
         ticket = ServiceTicket.where(
           client_key: params['avatar_key'],
           id: params['id']

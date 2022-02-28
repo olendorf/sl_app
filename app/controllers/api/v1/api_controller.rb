@@ -10,8 +10,7 @@ module Api
 
       before_action :load_requesting_object, except: [:create]
       before_action :validate_package
-
-      include Pundit
+      include Pundit::Authorization
 
       after_action :verify_authorized
 

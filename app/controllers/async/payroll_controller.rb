@@ -20,4 +20,5 @@ module Async
       PayrollData.payment_heatmap(current_user)
     end
   end
+  
 end

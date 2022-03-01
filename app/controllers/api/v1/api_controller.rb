@@ -10,15 +10,14 @@ module Api
 
       before_action :load_requesting_object, except: [:create]
       before_action :validate_package
-
-      include Pundit
+      include Pundit::Authorization
 
       after_action :verify_authorized
 
-      def policy(record)
-        policies[record] ||=
-          "#{controller_path.classify}Policy".constantize.new(pundit_user, record)
-      end
+      # def policy(record)
+      #   policies[record] ||=
+      #     "#{controller_path.classify}Policy".constantize.new(pundit_user, record)
+      # end
 
       private
 

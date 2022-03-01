@@ -59,7 +59,12 @@ form .alert h1 {
     &.sm {
       width: 30%;
       display: inline-block;
-      margin: 20px 30px;
+      margin: 20px 50px;
+      
+      &.right {
+        margin-right: 10px;
+        margin-left: auto;
+      }
     }
     &.md {
       width: 40%;

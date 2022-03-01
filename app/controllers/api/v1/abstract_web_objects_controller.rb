@@ -11,7 +11,7 @@ module Api
           load_requesting_object
           update
         else
-          authorize requesting_class
+          authorize [:api, :v1, requesting_class]
           @web_object = requesting_class.new(@atts)
           @web_object.save!
           render json: {
@@ -24,7 +24,7 @@ module Api
       def update
         @message ||= I18n.t('api.rezzable.update.success')
         load_requesting_object
-        authorize @requesting_object
+        authorize [:api, :v1, @requesting_object]
 
         @requesting_object.update! @atts
 
@@ -35,14 +35,14 @@ module Api
       end
 
       def show
-        authorize @requesting_object
+        authorize [:api, :v1, @requesting_object]
         render json: {
           data: @requesting_object.response_data
         }
       end
 
       def destroy
-        authorize @requesting_object
+        authorize [:api, :v1, @requesting_object]
         @requesting_object.destroy!
         render json: {
           message: I18n.t('api.rezzable.destroy.success')

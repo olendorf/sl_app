@@ -28,7 +28,7 @@ module Analyzable
     def clock_out
       self.work_session = nil
       stopped_at = Time.current
-      duration = (stopped_at - work_sessions.last.created_at) / 1.hour
+      duration = (stopped_at - work_sessions.last.created_at) / 1.hour.to_f
       pay = hourly_pay * duration
       work_sessions.last.update(stopped_at: stopped_at, duration: duration, pay: pay)
     end

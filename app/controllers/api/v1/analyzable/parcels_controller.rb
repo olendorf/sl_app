@@ -6,7 +6,7 @@ module Api
       # Controller for inworld parcels for rent
       class ParcelsController < Api::V1::AnalyzableController
         def create
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           ::Analyzable::Parcel.create(
             atts.merge({ requesting_object: @requesting_object,
                          user_id: @requesting_object.user.id })
@@ -18,7 +18,7 @@ module Api
         end
 
         def show
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           data = @requesting_object.parcel.attributes.except(
             'id', 'user_id', 'parcel_box_id', 'updated_at', 'created_at'
           )
@@ -26,7 +26,7 @@ module Api
         end
 
         def update
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           @parcel = ::Analyzable::Parcel.find(params['id'])
           @parcel.update(atts.merge(requesting_object: @requesting_object))
           render json: { message: 'Updated' }, status: :ok
@@ -34,7 +34,7 @@ module Api
 
         # rubocop:disable Metrics/AbcSize
         def index
-          authorize @requesting_object
+          authorize [:api, :v1, @requesting_object]
           params['parcel_page'] ||= 1
           params['scope'] ||= 'region'
           parcels = @requesting_object.user.parcels.where(

@@ -2,7 +2,7 @@
 
 # Parent class for controllers handling asynchronous requests.
 class AsyncController < ApplicationController
-  include Pundit
+  include Pundit::Authorization
 
   after_action :verify_authorized
 

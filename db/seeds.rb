@@ -414,33 +414,33 @@ give_splits(owner, avatars)
 puts 'giving servers to owner'
 give_servers_to_user(owner)
 
-# puts 'giving terminals to owner'
-# give_terminals(owner, avatars)
+puts 'giving terminals to owner'
+give_terminals(owner, avatars)
 
-# puts 'giving donation_boxes to owner'
-# give_donation_boxes_to_user(owner, avatars)
+puts 'giving donation_boxes to owner'
+give_donation_boxes_to_user(owner, avatars)
 
-# puts 'giving transactions to owner'
-# give_transactions_to_user(owner, avatars)
+puts 'giving transactions to owner'
+give_transactions_to_user(owner, avatars)
 
-# puts 'giving traffic_cops to owner'
-# give_traffic_cops_to_user(owner, avatars, 200)
+puts 'giving traffic_cops to owner'
+give_traffic_cops_to_user(owner, avatars, 200)
 
-# puts 'giving tip_jars to owner'
-# give_tip_jars_to_user(owner, avatars, 20)
+puts 'giving tip_jars to owner'
+give_tip_jars_to_user(owner, avatars, 20)
 
-# puts 'giving vendors to owner'
-# give_products_to_user(owner, 10)
-# give_vendors_to_user(owner, avatars, 50, 20)
+puts 'giving vendors to owner'
+give_products_to_user(owner, 10)
+give_vendors_to_user(owner, avatars, 50, 20)
 
-# puts 'setting up land rental system for owner'
-# setup_parcel_data_for_user(owner, avatars, num_parcels: 75)
+puts 'setting up land rental system for owner'
+setup_parcel_data_for_user(owner, avatars, num_parcels: 75)
 
-# puts 'setting up shop rentals for owner'
-# setup_shop_rentals_for_user(owner, avatars, num_shops: 75)
+puts 'setting up shop rentals for owner'
+setup_shop_rentals_for_user(owner, avatars, num_shops: 75)
 
-# puts 'setting up service boards for owner'
-# setup_service_boards_for_user(owner, avatars, num_boards: 75)
+puts 'setting up service boards for owner'
+setup_service_boards_for_user(owner, avatars, num_boards: 75)
 
 puts 'setting up employees for owner'
 setup_employees_for_user(owner, avatars, num_employees: 50)

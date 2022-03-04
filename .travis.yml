@@ -42,5 +42,6 @@ addons:
 before_script:
   - psql -c 'create database sl_app_test;' -U postgres
 script: 
+  - bundle exec rails webpacker:install
   - bundle exec rails webpacker:compile
   - bundle exec rails spec   # we should run all the tests in CI

@@ -26,7 +26,7 @@ cache:
 install:
   - bundle install
   - nvm install 14
-  - npm install bootstrap
+  # - npm install bootstrap
   - node -v
   # - npm i -g yarn
   # - yarn

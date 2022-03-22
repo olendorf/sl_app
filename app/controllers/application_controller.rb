@@ -4,7 +4,7 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
-  # pp caller_locations
+  pp caller_locations
 
   before_action :set_paper_trail_whodunnit
 

@@ -97,6 +97,7 @@ Rails.application.configure do
   # allows cloud nine
   config.hosts << 'be0f165895ee4035b9be940cc9687901.vfs.cloud9.us-east-2.amazonaws.com'
   config.hosts << '413abf999f1e4524aabe2462c2a6c318.vfs.cloud9.us-east-2.amazonaws.com'
+  config.hosts << "529f66fd190b410e93234fd7f7ee1e8e.vfs.cloud9.us-east-2.amazonaws.com"
 
   # Show full error reports.
   config.consider_all_requests_local = true

@@ -390,16 +390,16 @@ ActiveAdmin.setup do |config|
   # config.use_webpacker = true
 end
 
-ActiveAdmin::Devise::SessionsController.class_eval do
-  def after_sign_out_path_for(_resource_or_scope)
-    '/'
-  end
+# ActiveAdmin::Devise::SessionsController.class_eval do
+#   def after_sign_out_path_for(_resource_or_scope)
+#     '/'
+#   end
 
-  def after_sign_in_path_for(_resource_or_scope)
-    if current_user.can_be_admin?
-      admin_dashboard_path
-    else
-      my_dashboard_path
-    end
-  end
-end
+#   def after_sign_in_path_for(_resource_or_scope)
+#     if current_user.can_be_admin?
+#       admin_dashboard_path
+#     else
+#       my_dashboard_path
+#     end
+#   end
+# end

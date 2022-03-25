@@ -8,7 +8,8 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = '565d53f10f7f93abd7c6f9f33a54e642dc6254279cc62f2a545b2012e4c6073a3b37b8ddee474aba33ddbb97354ab443c991efada732f487fbb657dfbb365fcd'
+  # config.secret_key = "ba74c731b87eab15afcf5ed73bf09b6ef6673cd077fd43f79905b6972187221eedd45945a5e2aab49cbf93da31b195bbf7657aed82e8051923edcbb567f3d99c" 
+  config.secret_key = Rails.application.credentials.secret_key_base
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -70,7 +71,7 @@ Devise.setup do |config|
   # given strategies, for example, `config.http_authenticatable = [:database]` will
   # enable it only for database authentication. The supported strategies are:
   # :database      = Support basic authentication with authentication key + password
-  # config.http_authenticatable = false
+  config.http_authenticatable = false
 
   # If 401 status code should be returned for AJAX requests. True by default.
   # config.http_authenticatable_on_xhr = true

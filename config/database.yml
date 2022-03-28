@@ -19,9 +19,10 @@ test:
   <<: *default
   database: sl_app_test
   
+
 staging:
   <<: *default
-  database: sl_app_staging
+  database: sl_app_development
 
 production:
   <<: *default

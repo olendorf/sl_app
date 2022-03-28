@@ -11,6 +11,7 @@ class PayrollData
     hours = Array.new(dates.size, 0)
     work_sessions.each do |w|
       index = dates.index(w.created_at.strftime('%B %Y'))
+      # puts "index: #{index}"
       payments[index] += w.pay unless w.pay.nil?
       hours[index] += w.duration unless w.duration.nil?
     end 

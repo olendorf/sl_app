@@ -19,7 +19,6 @@ test:
   <<: *default
   database: sl_app_test
   
-  
 
 staging:
   <<: *default

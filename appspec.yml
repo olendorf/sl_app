@@ -4,4 +4,5 @@ files:
   - source: /
     destination: /var/www/slapp_data
 hooks:
-  - location: scripts/after_build.sh
+  AfterInstall:
+    - location: scripts/after_build.sh

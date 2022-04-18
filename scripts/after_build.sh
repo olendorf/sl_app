@@ -12,3 +12,5 @@ sudo gem install bundler -N
 
 sudo bundle install
 
+RAILS_ENV=production rails assets:precompile
+

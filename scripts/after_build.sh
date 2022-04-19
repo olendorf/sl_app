@@ -5,8 +5,8 @@ cd /var/www/slapp_data
 
 sudo chown -R ubuntu:ubuntu .
 
-sudo apt-get install make gcc libpq-dev build-essential g++
-sudo apt install nodejs npm
+sudo apt-get -y install make gcc libpq-dev build-essential g++
+sudo apt -y install nodejs npm
 
 npm install --global yarn
 

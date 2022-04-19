@@ -12,6 +12,8 @@ EDITOR="vim --wait" rails credentials:edit
 
 gem install bundler -N
 
+yarn add bootstrap jquery popper.js
+
 bundle install
 
 RAILS_ENV=staging rails assets:precompile

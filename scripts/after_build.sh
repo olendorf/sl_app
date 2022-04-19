@@ -7,6 +7,8 @@ sudo chown -R ubuntu:ubuntu .
 
 sudo apt-get -y install make gcc libpq-dev build-essential g++
 sudo apt -y install nodejs npm
+sudo npm install -g n
+sudo n 12.0.0
 
 sudo npm install --global yarn
 

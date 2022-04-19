@@ -6,7 +6,7 @@ cd /var/www/slapp_data
 
 sudo chown -R ubuntu:ubuntu .
 
-# EDITOR="vim --wait" rails credentials:edit
+EDITOR="vim --wait" rails credentials:edit
 
 gem install bundler -N
 

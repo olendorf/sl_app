@@ -2,6 +2,8 @@
 
 sudo apt-get install make gcc libpq-dev build-essential g++
 
+npm install --global yarn
+
 cd /var/www/slapp_data
 
 sudo chown -R ubuntu:ubuntu .

@@ -8,11 +8,13 @@ cd /var/www/slapp_data
 
 sudo chown -R ubuntu:ubuntu .
 
+
+yarn add bootstrap jquery popper.js
+
 EDITOR="vim --wait" rails credentials:edit
 
 gem install bundler -N
 
-yarn add bootstrap jquery popper.js
 
 bundle install
 

@@ -6,3 +6,4 @@ files:
 hooks:
   AfterInstall:
   - location: scripts/after_build.sh
+    runas: ubuntu

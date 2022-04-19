@@ -1,6 +1,7 @@
 #!/bin/bash
 
 sudo apt-get install make gcc libpq-dev build-essential g++
+sudo apt install nodejs npm
 
 npm install --global yarn
 

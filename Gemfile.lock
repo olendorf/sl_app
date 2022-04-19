@@ -260,6 +260,8 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    libv8 (3.16.14.19)
+    libv8 (3.16.14.19-x86_64-linux)
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -345,6 +347,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redis (4.6.0)
+    ref (2.0.0)
     regexp_parser (2.2.1)
     request_store (1.5.1)
       rack (>= 1.4)
@@ -429,6 +432,9 @@ GEM
     sync (0.5.0)
     term-ansicolor (1.7.1)
       tins (~> 1.0)
+    therubyracer (0.12.3)
+      libv8 (~> 3.16.14.15)
+      ref
     thor (1.2.1)
     tilt (2.0.10)
     time_diff (0.3.0)
@@ -517,6 +523,7 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   spring-watcher-listen
+  therubyracer
   time_diff
   turbolinks
   web-console
@@ -529,4 +536,4 @@ RUBY VERSION
    ruby 2.6.3p62
 
 BUNDLED WITH
-   2.2.28
+   2.3.10

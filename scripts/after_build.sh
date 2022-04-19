@@ -12,5 +12,5 @@ gem install bundler -N
 
 bundle install
 
-# RAILS_ENV=staging rails assets:precompile
+RAILS_ENV=staging rails assets:precompile
 

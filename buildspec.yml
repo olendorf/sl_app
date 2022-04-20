@@ -6,7 +6,7 @@ phases:
           - echo Pre building...
           - sudo apt update -y
           - sudo apt install -y ruby-full wget
-          - cd /home/ubuntu
+        #   - cd /home/ubuntu
           - wget https://bucket-name.s3.region-identifier.amazonaws.com/latest/install
           - chmod +x ./install
           - sudo ./install auto

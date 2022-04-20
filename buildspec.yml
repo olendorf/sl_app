@@ -4,3 +4,6 @@ phases:
     build:
       commands:
         - echo Building...
+artifacts:
+  files:
+    - '**/*'

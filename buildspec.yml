@@ -1,6 +1,6 @@
 version: 0.2
 
 phases:
-build:
-  commands:
-    - echo Building...
+    build:
+      commands:
+        - echo Building...

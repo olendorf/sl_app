@@ -2,9 +2,10 @@ version: 0.2
 
 phases:
     pre_build:
-        - echo Pre building...
-        - sudo apt update -y
-        - sudo apt install ruby-full
+        commands:
+          - echo Pre building...
+          - sudo apt update -y
+          - sudo apt install ruby-full
     build:
       commands:
         - echo Building...

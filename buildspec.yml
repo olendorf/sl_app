@@ -48,6 +48,7 @@ phases:
           - sudo apt update -y
           - sudo apt install -y ruby-full wget
           - ls /home
+          - ls -al
           # - whoami
           - pwd
           # - cd /home/ubuntu

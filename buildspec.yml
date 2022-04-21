@@ -55,7 +55,6 @@ phases:
           # - chmod +x ./install
           # - sudo ./install auto
           # - sudo service codedeploy-agent start
-    build:
 artifacts:
   files:
     - '**/*'

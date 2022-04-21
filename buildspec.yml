@@ -44,7 +44,7 @@ phases:
           # - sudo service codedeploy-agent start
     post_build:
       commands:
-        - echo Post Building...   
+          - echo Post Building...   
           # - sudo apt update -y
           # - sudo apt install -y ruby-full wget
           - ls /home

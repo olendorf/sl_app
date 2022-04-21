@@ -5,13 +5,13 @@ run-as: ubuntu
 phases:
     pre_build:
         commands:
-          - echo Pre building...
-          - sudo apt update -y
-          - sudo apt install -y ruby-full wget
-          - cd /home/ubuntu
-          - wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install
-          - chmod +x ./install
-          - sudo ./install auto
+          - sudo echo Pre building...
+          # - sudo apt update -y
+          # - sudo apt install -y ruby-full wget
+          # - cd /home/ubuntu
+          # - wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install
+          # - chmod +x ./install
+          # - sudo ./install auto
     build:
       commands:
         - echo Building...

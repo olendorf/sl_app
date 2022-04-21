@@ -3,22 +3,59 @@ version: 0.2
 run-as: ubuntu
 
 phases:
+    install:
+      commands:
+        - echo INstalling...   
+          # - sudo apt update -y
+          # - sudo apt install -y ruby-full wget
+          - ls /home
+          # - whoami
+          - pwd
+          # - cd /home/ubuntu
+          # - wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install
+          # - chmod +x ./install
+          # - sudo ./install auto
+          # - sudo service codedeploy-agent start
     pre_build:
         commands:
           - sudo echo Pre building...
-          - sudo apt update -y
-          - sudo apt install -y ruby-full wget
+          # - sudo apt update -y
+          # - sudo apt install -y ruby-full wget
           - ls /home
-          - whoami
+          # - whoami
           - pwd
-          - cd /home/ubuntu
-          - wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install
-          - chmod +x ./install
-          - sudo ./install auto
-          - sudo service codedeploy-agent start
+          # - cd /home/ubuntu
+          # - wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install
+          # - chmod +x ./install
+          # - sudo ./install auto
+          # - sudo service codedeploy-agent start
     build:
       commands:
-        - echo Building...
+        - echo Building...          
+          # - sudo apt update -y
+          # - sudo apt install -y ruby-full wget
+          - ls /home
+          # - whoami
+          - pwd
+          # - cd /home/ubuntu
+          # - wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install
+          # - chmod +x ./install
+          # - sudo ./install auto
+          # - sudo service codedeploy-agent start
+    post_build:
+      commands:
+        - echo Post Building...   
+          # - sudo apt update -y
+          # - sudo apt install -y ruby-full wget
+          - ls /home
+          # - whoami
+          - pwd
+          # - cd /home/ubuntu
+          # - wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install
+          # - chmod +x ./install
+          # - sudo ./install auto
+          # - sudo service codedeploy-agent start
+    build:
 artifacts:
   files:
     - '**/*'

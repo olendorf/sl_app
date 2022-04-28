@@ -12,7 +12,7 @@ git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
 source ~/.bashrc
-~/.rbenv/bin/rbenv init
+rbenv init
 eval "$(rbenv init - bash)"
 
 mkdir -p /home/ubuntu/.rbenv/plugins

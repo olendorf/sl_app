@@ -18,6 +18,10 @@ yarn add bootstrap jquery @popperjs/core
 
 whoami
 
+echo 'export GEM_HOME=~/.ruby/' >> ~/.bashrc
+echo 'export PATH="$PATH:~/.ruby/bin"' >> ~/.bashrc
+source ~/.bashrc
+
 gem install bundler -N
 
 

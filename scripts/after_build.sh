@@ -16,7 +16,7 @@ source ~/.bashrc
 eval "$(rbenv init - bash)"
 
 mkdir -p /home/ubuntu/.rbenv/plugins
-git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+git clone https://github.com/rbenv/ruby-build.git /home/ubuntu/plugins/ruby-build
 
 
 # cd /var/www/slapp_data

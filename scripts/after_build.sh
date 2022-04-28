@@ -15,7 +15,7 @@ source ~/.bashrc
 ~/.rbenv/bin/rbenv init
 eval "$(rbenv init - bash)"
 
-mkdir -p "$(rbenv root)"/plugins
+mkdir -p home/ubuntu/.rbenv/plugins
 git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
 
 

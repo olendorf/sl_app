@@ -16,6 +16,7 @@ sudo npm install --global yarn
 
 yarn add bootstrap jquery @popperjs/core
 
+whoami
 
 gem install bundler -N
 

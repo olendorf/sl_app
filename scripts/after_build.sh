@@ -16,7 +16,7 @@ source ~/.bashrc
 eval "$(rbenv init - bash)"
 
 mkdir -p /home/ubuntu/.rbenv/plugins
-git clone https://github.com/rbenv/ruby-build.git /home/ubuntu/plugins/ruby-build
+git clone https://github.com/rbenv/ruby-build.git /home/ubuntu/.rbenv/plugins/ruby-build
 
 rbenv install 2.6.3
 rbenv global 2.6.3

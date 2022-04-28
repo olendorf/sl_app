@@ -17,6 +17,8 @@ sudo npm install --global yarn
 yarn add bootstrap jquery @popperjs/core
 
 whoami
+pwd
+ls -al 
 
 echo 'export GEM_HOME=~/.ruby/' >> ~/.bashrc
 echo 'export PATH="$PATH:~/.ruby/bin"' >> ~/.bashrc

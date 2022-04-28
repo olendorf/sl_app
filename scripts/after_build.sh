@@ -6,6 +6,19 @@ echo "export DB_IP=slapp-data-dev.cbw3mio5zyeu.us-east-2.rds.amazonaws.com" >> /
 
 source /home/ubuntu/.profile
 
+rm -rf ~/.rbenv
+
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
+source ~/.bashrc
+~/.rbenv/bin/rbenv init
+eval "$(rbenv init - bash)"
+
+mkdir -p "$(rbenv root)"/plugins
+git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+
+
 # cd /var/www/slapp_data
 
 # sudo chown -R ubuntu:ubuntu .

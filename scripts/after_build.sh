@@ -6,7 +6,7 @@ sudo chown -R ubuntu:ubuntu .
 sudo apt-get update -y
 
 sudo apt-get -y libpq-dev build-essential g++
-sudo apt -y install nodejs npm
+sudo apt -y install nodejs npm libreadline-dev zlib1g-dev
 sudo npm install -g n
 sudo n 12.0.0
 

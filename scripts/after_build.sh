@@ -28,6 +28,11 @@ sudo apt-get -y install rbenv ruby-build
 rbenv install 2.6.3
 rbenv global 2.6.3
 
+ruby -v
+
+exec bash
+
+ruby -v
 
 gem install bundler -N
 

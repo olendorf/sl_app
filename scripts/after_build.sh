@@ -29,7 +29,7 @@ rbenv install 2.6.3
 rbenv global 2.6.3
 
 
-# gem install bundler -N
+gem install bundler -N
 
 
 

@@ -16,9 +16,9 @@ sudo npm install --global yarn
 
 
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-$ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-$ echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-$ exec $SHELL
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+exec $SHELL
 
 mkdir -p /home/ubuntu/.rbenv/plugins
 git clone https://github.com/rbenv/ruby-build.git /home/ubuntu/.rbenv/plugins/ruby-build

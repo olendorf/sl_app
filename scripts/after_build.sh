@@ -4,24 +4,26 @@ rm -rf ~/.rbenv
 
 
 sudo chown -R ubuntu:ubuntu /var/www/slapp_data
-sudo apt-get update -y
+sudo apt update -y
 
-sudo apt-get -y libpq-dev build-essential g++
+sudo apt install -y git curl autoconf bison build-essential \
+    libssl-dev libyaml-dev libreadline6-dev zlib1g-dev \
+    libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev g++
+
 sudo apt -y install nodejs npm libreadline-dev zlib1g-dev
 sudo npm install -g n
 sudo n 12.0.0
 
 sudo npm install --global yarn
 
+curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
 
-
-git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 source ~/.bashrc
 
-mkdir -p /home/ubuntu/.rbenv/plugins
-git clone https://github.com/rbenv/ruby-build.git /home/ubuntu/.rbenv/plugins/ruby-build
+# mkdir -p /home/ubuntu/.rbenv/plugins
+# git clone https://github.com/rbenv/ruby-build.git /home/ubuntu/.rbenv/plugins/ruby-build
 
 rbenv install 2.6.3
 rbenv global 2.6.3

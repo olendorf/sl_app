@@ -1,17 +1,10 @@
 #!/bin/bash
 
-echo "export USERNAME=postgres" >> /home/ubuntu/.profile
-echo "export PASSWORD=password" >> /home/ubuntu/.profile
-echo "export DB_IP=slapp-data-dev.cbw3mio5zyeu.us-east-2.rds.amazonaws.com" >> /home/ubuntu/.profile
-
-source /home/ubuntu/.profile
-
 rm -rf ~/.rbenv
 
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
-source ~/.bashrc
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
+source /home/ubuntu/.profile
 rbenv init
 eval "$(rbenv init - bash)"
 

@@ -20,8 +20,7 @@ curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer
 
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-source ~/.bashrc
-
+source /home/ubuntu/.bashrc
 
 rbenv install 2.6.3
 rbenv global 2.6.3

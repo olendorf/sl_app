@@ -19,7 +19,7 @@ sudo npm install --global yarn
 
 # curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
 
-sudo apt-get install rbenv ruby-build
+sudo apt-get -y install rbenv ruby-build
 
 # echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 # echo 'eval "$(rbenv init -)"' >> ~/.bashrc

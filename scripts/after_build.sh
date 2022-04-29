@@ -6,7 +6,7 @@ rm -rf ~/.rbenv
 sudo chown -R ubuntu:ubuntu /var/www/slapp_data
 sudo apt update -y
 
-sudo apt install -y git curl autoconf bison build-essential \
+sudo apt install -y git wget curl autoconf bison build-essential \
     libssl-dev libyaml-dev libreadline6-dev zlib1g-dev \
     libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev g++
 

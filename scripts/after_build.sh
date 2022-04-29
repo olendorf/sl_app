@@ -2,7 +2,8 @@
 
 rm -rf ~/.rbenv
 
-sudo chown -R ubuntu:ubuntu .
+
+sudo chown -R ubuntu:ubuntu /var/www/slapp_data
 sudo apt-get update -y
 
 sudo apt-get -y libpq-dev build-essential g++
@@ -15,10 +16,9 @@ sudo npm install --global yarn
 
 
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
-source /home/ubuntu/.profile
-rbenv init
-eval "$(rbenv init - bash)"
+$ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+$ echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+$ exec $SHELL
 
 mkdir -p /home/ubuntu/.rbenv/plugins
 git clone https://github.com/rbenv/ruby-build.git /home/ubuntu/.rbenv/plugins/ruby-build

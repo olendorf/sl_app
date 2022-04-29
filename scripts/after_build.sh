@@ -17,14 +17,13 @@ sudo n 12.0.0
 
 sudo npm install --global yarn
 
-curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+# curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
 
+sudo apt-get install rbenv ruby-build
 
-whoami
-
-echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-source /home/ubuntu/.bashrc
+# echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+# echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+# source /home/ubuntu/.bashrc
 
 rbenv install 2.6.3
 rbenv global 2.6.3

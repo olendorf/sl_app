@@ -1,6 +1,8 @@
 #!/bin/bash
 
-rm -rf ~/.rbenv
+# rm -rf ~/.rbenv
+
+whoami
 
 
 sudo chown -R ubuntu:ubuntu /var/www/slapp_data

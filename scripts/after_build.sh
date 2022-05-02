@@ -31,7 +31,7 @@ rbenv global 2.6.3
 
 exec bash
 
-sudo apt install apache2
+sudo apt install -y apache2
 
 sudo ufw allow 'Apache Full'
 sudo ufw allow 'OpenSSH'

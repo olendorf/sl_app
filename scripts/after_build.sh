@@ -25,8 +25,8 @@ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 source /home/ubuntu/.bashrc
 
-rbenv install 2.6.3
-rbenv global 2.6.3
+rbenv install 3.0.0
+rbenv global 3.0.0
 
 
 exec bash

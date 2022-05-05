@@ -25,11 +25,12 @@ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
 echo 'eval "$(rbenv init -)"' >> ~/.profile
 source /home/ubuntu/.profile
 
+exec bash
+
 rbenv install 3.0.0
 rbenv global 3.0.0
 
 
-exec bash
 
 sudo apt install -y apache2
 

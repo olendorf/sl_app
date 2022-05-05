@@ -21,9 +21,9 @@ curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer
 
 # sudo apt-get -y install rbenv ruby-build
 
-echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-source /home/ubuntu/.bashrc
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
+echo 'eval "$(rbenv init -)"' >> ~/.profile
+source /home/ubuntu/.profile
 
 rbenv install 3.0.0
 rbenv global 3.0.0

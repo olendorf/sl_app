@@ -25,6 +25,8 @@ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
 echo 'eval "$(rbenv init -)"' >> ~/.profile
 source /home/ubuntu/.profile
 
+echo 'did this work? ********************************'
+
 
 rbenv install 3.0.0
 rbenv global 3.0.0

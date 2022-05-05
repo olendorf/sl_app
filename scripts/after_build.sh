@@ -25,7 +25,6 @@ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
 echo 'eval "$(rbenv init -)"' >> ~/.profile
 source /home/ubuntu/.profile
 
-exec bash
 
 rbenv install 3.0.0
 rbenv global 3.0.0
@@ -50,6 +49,7 @@ sudo a2enmod passenger
 sudo apache2ctl restart
 
 # gem install bundler -N
+
 
 
 

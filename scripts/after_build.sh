@@ -51,12 +51,11 @@ sudo apt-get install -y libapache2-mod-passenger
 sudo a2enmod passenger
 sudo apache2ctl restart
 
-# gem install bundler -N
+cd /var/www/slapp_data
 
 
 
-
-# bundle install
+bundle install
 
 
 # EDITOR="vim --wait" rails credentials:edit

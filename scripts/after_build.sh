@@ -35,8 +35,9 @@ rbenv global 3.0.0
 
 sudo apt install -y apache2
 
-# sudo ufw allow 'Apache Full'
-# sudo ufw allow 'OpenSSH'
+sudo ufw enable
+sudo ufw allow 'Apache Full'
+sudo ufw allow 'OpenSSH'
 
 # sudo apt-get install -y dirmngr gnupg
 # sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7

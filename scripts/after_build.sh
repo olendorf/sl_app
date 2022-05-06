@@ -53,7 +53,7 @@ sudo apache2ctl restart
 
 cd /var/www/slapp_data
 
-sudo apt install libpq-dev
+sudo apt install -y libpq-dev
 
 bundle install
 

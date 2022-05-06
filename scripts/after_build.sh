@@ -58,7 +58,7 @@ sudo apt install -y libpq-dev
 bundle install
 
 
-# EDITOR="vim --wait" rails credentials:edit
+EDITOR="vim --wait" rails credentials:edit
 
-# RAILS_ENV=staging rails assets:precompile
+RAILS_ENV=staging rails assets:precompile
 

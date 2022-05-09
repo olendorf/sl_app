@@ -70,5 +70,5 @@ sudo cp /var/www/slapp_data/apache/slapp_data.conf /etc/apache2/sites-available/
 sudo chmod -R 775 /var/www/slapp_data/
 sudo a2dissite 000-default
 sudo a2ensite slapp_data
-sudo service apache2 start
+sudo service apache2 restart
 

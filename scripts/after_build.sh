@@ -55,10 +55,20 @@ cd /var/www/slapp_data
 
 sudo apt install -y libpq-dev
 
+yarn add active_material
+
 bundle install
 
 
 EDITOR="vim --wait" rails credentials:edit
 
 RAILS_ENV=staging rails assets:precompile
+
+sudo cp /var/www/slapp_data/apache/apache2.conf /etc/apache2/apache2.conf
+sudo cp /var/www/slapp_data/apache/slapp_data.conf /etc/apache2/sites-available/slapp_data.conf
+
+sudo chmod -R 775 /var/www/slapp_data/
+sudo a2dissite 000-default
+sudo a2ensite slapp_data
+sudo systemctl reload apache2
 

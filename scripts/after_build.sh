@@ -30,7 +30,7 @@ source /home/ubuntu/.profile
 rbenv install 3.0.0
 rbenv global 3.0.0
 
-
+exec bash
 
 sudo apt install -y apache2
 
@@ -57,6 +57,8 @@ sudo apt install -y libpq-dev
 yarn add active_material
 
 bundle install
+
+exec bash
 
 
 EDITOR="vim --wait" rails credentials:edit

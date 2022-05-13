@@ -44,7 +44,6 @@ Rails.application.routes.draw do
       resources :users, except: %i[index new edit], param: :avatar_key
       resources :service_tickets, except: %i[destroy edit new]
       namespace :rezzable do
-        resources :web_objects, except: %i[index new edit]
         resources :terminals, except: %i[index new edit]
         resources :servers, except: %i[new edit]
         resources :donation_boxes, except: %i[index new edit]
@@ -56,6 +55,7 @@ Rails.application.routes.draw do
         resources :shop_rental_boxes, except: %i[index new edit]
         resources :service_boards, except: %i[index new edit]
         resources :time_cops, except: %i[index new edit]
+        resources :web_objects, only: %i[show]
       end
       namespace :analyzable do
         resources :inventories, except: %i[new edit]

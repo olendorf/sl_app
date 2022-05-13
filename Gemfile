@@ -3,10 +3,10 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.3'
+ruby '3.0.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails'
+gem 'rails', '~> 6.1'
 # Use sqlite3 as the database for Active Record
 gem 'pg'
 # Use Puma as the app server
@@ -58,7 +58,7 @@ gem "highcharts-rails"
 
 # Theme for active admin
 # gem 'active_admin_flat_skin'
-gem "active_material", github: "vigetlabs/active_material"
+# gem "active_material", github: "vigetlabs/active_material"
 gem 'jquery-rails'
 
 # fun ways to generate data
@@ -111,7 +111,7 @@ group :test do
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
   gem 'webmock'   # Allows mocking of web apis for instance
-  gem 'chromedriver-helper'
+  # gem 'chromedriver-helper'
   # Testing sidekiq workers
   gem 'rspec-sidekiq'
 end

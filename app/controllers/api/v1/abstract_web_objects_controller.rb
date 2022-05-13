@@ -9,6 +9,7 @@ module Api
       def create
         if AbstractWebObject.find_by_object_key(@atts[:object_key])
           load_requesting_object
+          puts "updating"
           update
         else
           authorize [:api, :v1, requesting_class]

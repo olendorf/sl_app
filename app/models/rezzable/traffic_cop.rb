@@ -57,7 +57,7 @@ module Rezzable
     # rubocop:disable Style/RedundantSelf
     def response_data
       {
-        api_key: self.api_key,
+        api_key: self.reload.api_key,
         settings: {
           power: power,
           sensor_mode: sensor_mode,

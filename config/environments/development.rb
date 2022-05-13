@@ -43,6 +43,9 @@ Rails.application.configure do
                         class_name: 'Rezzable::TimeCop',
                         association: :abstract_web_object
     Bullet.add_safelist type: :unused_eager_loading,
+                        class_name: 'Rezzable::WebObject',
+                        association: :abstract_web_object
+    Bullet.add_safelist type: :unused_eager_loading,
                         class_name: 'Analyzable::Inventory',
                         association: :user
     Bullet.add_safelist type: :unused_eager_loading,
@@ -96,6 +99,8 @@ Rails.application.configure do
 
   # allows cloud nine
   config.hosts << "91c01eb68fee48328a63bc0d89bddcdc.vfs.cloud9.us-east-2.amazonaws.com"
+  config.hosts << "b3d7007fe08a4ebda9dd27dfdbf97300.vfs.cloud9.us-east-2.amazonaws.com"
+  config.hosts << "7444a926669d4c8e9fd4d9ee45984362.vfs.cloud9.us-east-2.amazonaws.com"
 
   # Show full error reports.
   config.consider_all_requests_local = true

@@ -78,6 +78,8 @@ yarn-debug.log*
 config/settings.local.yml
 config/settings/*.local.yml
 config/environments/*.local.yml
+config/master.key
+config/credentials.yml.enc
 
 /config/master.key
 

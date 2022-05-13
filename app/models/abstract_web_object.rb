@@ -45,7 +45,7 @@ class AbstractWebObject < ApplicationRecord
   end
 
   def response_data
-    { api_key: api_key }
+    { api_key: self.api_key }
   end
 
   def split_percent

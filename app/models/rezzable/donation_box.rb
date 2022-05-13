@@ -37,7 +37,7 @@ module Rezzable
     # rubocop:disable Style/RedundantSelf
     def response_data
       {
-        api_key: self.api_key,
+        api_key: self.reload.api_key,
         settings: {
           show_last_donation: show_last_donation,
           show_last_donor: show_last_donor,

@@ -17,7 +17,7 @@ module Rezzable
 
     # rubocop:disable Style/RedundantSelf
     def response_data
-      { api_key: self.api_key }
+      { api_key: self.reload.api_key }
     end
     # rubocop:enable Style/RedundantSelf
 

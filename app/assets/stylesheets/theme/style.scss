@@ -98,6 +98,10 @@ body {
   padding: 0px;
 }
 
+.page-container {
+  width: 75%;
+}
+
 .auto-container{
   position:static;
   max-width:1200px;
@@ -1498,7 +1502,9 @@ div#mCSB_1_container{
   right: 0px;
   width: 1085px;
   height: 760px;
-  background-repeat: no-repeat;
+  // background-repeat: no-repeat;
+  // background-image: image-url("theme/shape/pattern-1.png");
+  background-image: image-url("theme/shape/pattern-2.png");
 }
 
 .banner-section .pattern-box .pattern-2{
@@ -1510,6 +1516,7 @@ div#mCSB_1_container{
   background-repeat: no-repeat;
   -webkit-animation: zoom-fade 5s infinite linear;
   animation: zoom-fade 5s infinite linear;
+  background-image: image-url("theme/shape/pattern-1.png");
 }
 
 

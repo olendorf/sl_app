@@ -7,6 +7,8 @@ module Api
     class ApiController < ApplicationController
       include Api::ExceptionHandler
       include Api::ResponseHandler
+      
+      protect_from_forgery with: :null_session
 
       before_action :load_requesting_object, except: [:create]
       before_action :validate_package

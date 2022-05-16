@@ -7,9 +7,9 @@ module Api
     class ApiController < ApplicationController
       include Api::ExceptionHandler
       include Api::ResponseHandler
-      before_action :log_stuff 
       
       skip_before_action :verify_authenticity_token
+      before_action :log_stuff 
 
       before_action :load_requesting_object, except: [:create]
       before_action :validate_package
@@ -43,6 +43,9 @@ module Api
       end
 
       def load_requesting_object
+        
+
+      logger.info("loading requesting_object")
         @requesting_object = AbstractWebObject.find_by_object_key(
           request.headers['HTTP_X_SECONDLIFE_OBJECT_KEY']
         ).actable

@@ -24,9 +24,6 @@ module Api
 
       private
       
-      def log_stuff
-        logger.info("logging stuff")
-      end
 
       def api_key
         return Settings.default.web_object.api_key if action_name.downcase == 'create'
@@ -55,6 +52,10 @@ module Api
         # puts auth_digest
         # puts create_digest
         # puts api_key
+        logger.info(auth_digest)
+        logger.info(create_digest)
+        
+        logger.info(api_key)
 
         unless (Time.now.to_i - auth_time).abs < time_limit
           raise(

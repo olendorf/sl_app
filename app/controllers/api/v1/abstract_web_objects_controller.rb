@@ -8,6 +8,7 @@ module Api
       protect_from_forgery with: :null_session
 
       def create
+        puts "creating"
         if AbstractWebObject.find_by_object_key(@atts[:object_key])
           load_requesting_object
           puts "updating"

@@ -2,7 +2,10 @@
 
 # Class for controlling static pages in the application
 class PagesController < ApplicationController
-  def home; end
+  def home
+    
+    puts "homing"
+  end
 
   def products; end
 

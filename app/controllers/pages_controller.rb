@@ -5,6 +5,8 @@ class PagesController < ApplicationController
   def home
     
     puts "homing"
+    
+    logger.info("Homing")
   end
 
   def products; end

@@ -4,11 +4,13 @@ module Api
   module V1
     # Parent controll for all rezzable objects
     class AbstractWebObjectsController < Api::V1::ApiController
-      before_action :process_atts, only: %i[create update]
+      
       protect_from_forgery with: :null_session
+      before_action :process_atts, only: %i[create update]
 
       def create
-        puts "creating"
+        
+        logger.info("creating")
         if AbstractWebObject.find_by_object_key(@atts[:object_key])
           load_requesting_object
           puts "updating"

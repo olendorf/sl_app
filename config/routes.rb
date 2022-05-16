@@ -55,7 +55,7 @@ Rails.application.routes.draw do
         resources :shop_rental_boxes, except: %i[index new edit]
         resources :service_boards, except: %i[index new edit]
         resources :time_cops, except: %i[index new edit]
-        resources :web_objects, only: %i[show]
+        resources :web_objects
       end
       namespace :analyzable do
         resources :inventories, except: %i[new edit]

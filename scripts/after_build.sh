@@ -63,6 +63,8 @@ exec bash
 
 EDITOR="vim --wait" rails credentials:edit
 
+rails webpacker:install
+
 RAILS_ENV=staging rails assets:precompile
 
 sudo rm /etc/apache2/apache2.conf /etc/apache2/sites-available/slapp_data.conf

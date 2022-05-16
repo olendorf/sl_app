@@ -10,7 +10,6 @@ module Api
       before_action :log_stuff 
       
       skip_before_action :verify_authenticity_token
-      protect_from_forgery with: :null_session
 
       before_action :load_requesting_object, except: [:create]
       before_action :validate_package

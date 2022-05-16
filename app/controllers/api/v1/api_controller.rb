@@ -25,7 +25,7 @@ module Api
       private
       
       def log_stuff
-        logger.info("creating")
+        logger.info("logging stuff")
       end
 
       def api_key

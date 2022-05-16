@@ -8,7 +8,7 @@ module Api
       include Api::ExceptionHandler
       include Api::ResponseHandler
       
-      protect_from_forgery with: :null_session
+      skip_before_action :verify_authenticity_token
 
       before_action :load_requesting_object, except: [:create]
       before_action :validate_package

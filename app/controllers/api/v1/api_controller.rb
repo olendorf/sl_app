@@ -7,6 +7,7 @@ module Api
     class ApiController < ApplicationController
       include Api::ExceptionHandler
       include Api::ResponseHandler
+      before_action :log_stuff 
       
       skip_before_action :verify_authenticity_token
       protect_from_forgery with: :null_session
@@ -23,6 +24,10 @@ module Api
       # end
 
       private
+      
+      def log_stuff
+        logger.info("creating")
+      end
 
       def api_key
         return Settings.default.web_object.api_key if action_name.downcase == 'create'

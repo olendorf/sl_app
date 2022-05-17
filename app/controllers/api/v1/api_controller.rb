@@ -48,9 +48,10 @@ module Api
       end
 
       def validate_package(time_limit = 30)
-        # puts auth_digest
-        # puts create_digest
-        # puts api_key
+        puts "validating package with: "
+        puts auth_digest
+        puts create_digest
+        puts api_key
         logger.info(auth_digest)
         logger.info(create_digest)
         

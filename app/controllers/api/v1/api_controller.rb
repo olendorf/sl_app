@@ -27,6 +27,8 @@ module Api
       def api_key
         logger.info("action name: #{action_name}")
         return Settings.default.web_object.api_key if action_name.downcase == 'create'
+        
+        logger.info("api key object #{@requesting_object.api_key}")
 
         @requesting_object.api_key
       end

@@ -10,7 +10,7 @@ default:
     delinquent_days: 365
     inactive_days: 30
   web_object:
-    api_key: ENV["API_KEY"]         # The string used as a shared key for encryption
+    api_key:  <%= ENV.fetch('API_KEY') %>        # The string used as a shared key for encryption
     inactive_limit: 30              # How long from the last ping the object is considered active
   traffic_cop:
     sensor_time: 30                 # Timer for sensor sweeps

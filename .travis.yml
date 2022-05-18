@@ -14,6 +14,7 @@ env:
   
 before_script:
   - bundle exec rake db:create db:migrate RAILS_ENV=test
+  - echo "export API_KEY=change_me" >> /home/ubuntu/.profile
 
 cache:
   bundler: true

@@ -25,10 +25,10 @@ module Api
       
 
       def api_key
-        logger.info("action name: #{action_name}")
+        # logger.info("action name: #{action_name}")
         return Settings.default.web_object.api_key if action_name.downcase == 'create'
         
-        logger.info("api key object #{@requesting_object.api_key}")
+        # logger.info("api key object #{@requesting_object.api_key}")
 
         @requesting_object.api_key
       end
@@ -36,6 +36,7 @@ module Api
       def parsed_params
         JSON.parse(request.raw_post)
       end
+
 
       def pundit_user
         User.find_by_avatar_key!(request.headers['HTTP_X_SECONDLIFE_OWNER_KEY'])
@@ -49,11 +50,11 @@ module Api
       end
 
       def validate_package(time_limit = 30)
-        logger.info("validating package with: ")
-        logger.info("auth_digest client #{auth_digest}")
-        logger.info("auth_digest server #{create_digest}")
+        # logger.info("validating package with: ")
+        # logger.info("auth_digest client #{auth_digest}")
+        # logger.info("auth_digest server #{create_digest}")
         
-        logger.info("api_key server #{api_key}")
+        # logger.info("api_key server #{api_key}")
 
         unless (Time.now.to_i - auth_time).abs < time_limit
           raise(

@@ -2,6 +2,8 @@
 
 ActiveAdmin.register Analyzable::Product, namespace: :my, as: 'Product' do
   menu parent: 'Sales', label: 'Products'
+  
+  scope_to :current_user, association_method: :servers
 
   index titles: 'Products' do
     selectable_column

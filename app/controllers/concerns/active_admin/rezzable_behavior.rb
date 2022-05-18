@@ -9,26 +9,29 @@ module ActiveAdmin
     def self.included(base)
       base.controller do
         def update
-          RezzableSlRequest.update_web_object!(
-            resource,
-            params[resource.class.name.underscore.gsub('/', '_')]
-          )
-          super
-        rescue RestClient::ExceptionWithResponse => e
-          flash[:error] = t('active_admin.web_object.update.failure',
-                            message: e.response)
-          parts = request.url.split('/')[3, 2]
-          redirect_back(fallback_location: send("#{parts.first}_#{parts.last}_path"))
+          begin
+            RezzableSlRequest.update_web_object!(
+              resource,
+              params[resource.class.name.underscore.gsub('/', '_')]
+            )
+            super
+          rescue RestClient::ExceptionWithResponse => e
+            flash[:error] = t('active_admin.web_object.update.failure',
+                              message: e.response)
+            parts = request.url.split('/')[3, 2]
+            redirect_back(fallback_location: send("#{parts.first}_#{parts.last}_path"))
+          end
         end
 
         def destroy
-          RezzableSlRequest.derez_web_object!(resource)
-          super
-        rescue RestClient::ExceptionWithResponse => e
-          flash[:error] = t('active_admin.web_object.destroy.failure',
-                            message: e.response)
-          parts = request.url.split('/')[3, 2]
-          redirect_back(fallback_location: send("#{parts.first}_#{parts.last}_path"))
+          begin
+            RezzableSlRequest.derez_web_object!(resource)
+          rescue RestClient::ExceptionWithResponse => e
+            flash[:error] = t('active_admin.web_object.destroy.failure',
+                              message: e.response)
+          ensure
+            super   # No matter what, destory the object from the database.
+          end
         end
       end
     end

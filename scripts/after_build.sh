@@ -2,6 +2,10 @@
 
 # rm -rf ~/.rbenv
 
+command_exists () {
+  command "$1" &> /dev/null ;
+}
+
 
 
 sudo chown -R ubuntu:ubuntu /var/www/slapp_data
@@ -21,9 +25,16 @@ curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer
 
 # sudo apt-get -y install rbenv ruby-build
 
-echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
-echo 'eval "$(rbenv init -)"' >> ~/.profile
-source /home/ubuntu/.profile
+if command_exists rbenv
+then
+    echo 'rbenv found, no action needed'
+else
+    echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
+    echo 'eval "$(rbenv init -)"' >> ~/.profile
+    source /home/ubuntu/.profile
+fi
+
+
 
 
 
@@ -54,6 +65,7 @@ cd /var/www/slapp_data
 
 sudo apt install -y libpq-dev
 
+
 yarn add active_material
 
 bundle install
@@ -62,6 +74,8 @@ exec bash
 
 
 EDITOR="vim --wait" rails credentials:edit
+
+rails webpacker:install
 
 RAILS_ENV=staging rails assets:precompile
 

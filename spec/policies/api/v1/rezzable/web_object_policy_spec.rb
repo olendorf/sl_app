@@ -6,7 +6,7 @@ RSpec.describe Api::V1::Rezzable::WebObjectPolicy, type: :policy do
 
   subject { described_class }
 
-  permissions :show? do
+  permissions :show?, :create?, :update?, :index?, :destroy? do
     it 'grants permission to the user' do
       expect(subject).to permit(user, web_object)
     end

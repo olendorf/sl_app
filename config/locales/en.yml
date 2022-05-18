@@ -65,9 +65,14 @@ en:
     donations: 'Donations'
     web_object:
       update:
-        failure: 'There was an error updating the inworld object: %{message}'
+        failure: >- 
+         There was an error updating the inworld object: %{message}. Try again
+         in a few minutes. If the problem persists, please leave a service 
+         ticket.
       destroy:
-        failure: 'There was an error deleting the inworld object: %{message}'
+        failure: >-
+          There was an error deleting the inworld object: %{message}. You may 
+          have to delete in manually from inworld.
     server: 
       give_money: 
         success:  '%{amount} lindens given to %{avatar}'

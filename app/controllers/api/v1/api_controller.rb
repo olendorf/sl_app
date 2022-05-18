@@ -7,6 +7,8 @@ module Api
     class ApiController < ApplicationController
       include Api::ExceptionHandler
       include Api::ResponseHandler
+      
+      skip_before_action :verify_authenticity_token
 
       before_action :load_requesting_object, except: [:create]
       before_action :validate_package
@@ -20,9 +22,13 @@ module Api
       # end
 
       private
+      
 
       def api_key
+        # logger.info("action name: #{action_name}")
         return Settings.default.web_object.api_key if action_name.downcase == 'create'
+        
+        # logger.info("api key object #{@requesting_object.api_key}")
 
         @requesting_object.api_key
       end
@@ -31,20 +37,24 @@ module Api
         JSON.parse(request.raw_post)
       end
 
+
       def pundit_user
         User.find_by_avatar_key!(request.headers['HTTP_X_SECONDLIFE_OWNER_KEY'])
       end
 
       def load_requesting_object
+        
         @requesting_object = AbstractWebObject.find_by_object_key(
           request.headers['HTTP_X_SECONDLIFE_OBJECT_KEY']
         ).actable
       end
 
       def validate_package(time_limit = 30)
-        # puts auth_digest
-        # puts create_digest
-        # puts api_key
+        # logger.info("validating package with: ")
+        # logger.info("auth_digest client #{auth_digest}")
+        # logger.info("auth_digest server #{create_digest}")
+        
+        # logger.info("api_key server #{api_key}")
 
         unless (Time.now.to_i - auth_time).abs < time_limit
           raise(

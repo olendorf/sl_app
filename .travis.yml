@@ -2,8 +2,6 @@ language: ruby
 sudo: required
 rvm:
   - 3.0.0
-env:
-  - API_KEY=change_me
 services:
   - postgresql
   - redis-server

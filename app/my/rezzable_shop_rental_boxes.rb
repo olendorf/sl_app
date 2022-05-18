@@ -8,6 +8,8 @@ ActiveAdmin.register Rezzable::ShopRentalBox, as: 'ShopRentalBox', namespace: :m
   actions :all, except: %i[new create]
 
   decorate_with Rezzable::ShopRentalBoxDecorator
+  
+  scope_to :current_user, association_method: :servers
 
   scope :all, default: true
   scope :for_rent

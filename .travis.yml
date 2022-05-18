@@ -2,6 +2,8 @@ language: ruby
 sudo: required
 rvm:
   - 3.0.0
+env:
+  - API_KEY=change_me
 services:
   - postgresql
   - redis-server
@@ -14,7 +16,6 @@ env:
   
 before_script:
   - bundle exec rake db:create db:migrate RAILS_ENV=test
-  - echo "export API_KEY=change_me" >> /home/ubuntu/.profile
 
 cache:
   bundler: true

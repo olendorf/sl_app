@@ -35,7 +35,7 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
 
   let(:give_regex) do
     %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/
-    inventory/give/[a-zA-Z\s%0-9]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+}x
+    services/inventories/[a-zA-Z\s%0-9]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+}x
   end
 
   before(:each) do
@@ -44,7 +44,7 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
   end
 
   scenario 'User deletes an inventory from the inventory show page' do
-    stub = stub_request(:delete, uri_regex)
+    stub = stub_request(:delete, give_regex)
     server
     visit(send("#{namespace}_inventory_path", server.inventories.first))
 
@@ -54,7 +54,7 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
   end
 
   scenario 'There is an error when the user tries do delete the inventory' do
-    stub_request(:delete, uri_regex).to_return(body: 'foo', status: 400)
+    stub_request(:delete, give_regex).to_return(body: 'foo', status: 400)
     server
     visit(send("#{namespace}_inventory_path", server.inventories.first))
 
@@ -65,7 +65,7 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
   scenario 'User moves inventory to a different server' do
     server
 
-    stub = stub_request(:put, uri_regex).with(
+    stub = stub_request(:put, give_regex).with(
       body: "{\"server_key\":\"#{server_two.object_key}\"}"
     )
 
@@ -78,7 +78,7 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
   scenario 'User moves inventory but there is an error' do
     server
 
-    stub_request(:put, uri_regex).with(
+    stub_request(:put, give_regex).with(
       body: "{\"server_key\":\"#{server_two.object_key}\"}"
     ).to_return(body: 'foo', status: 400)
 
@@ -89,7 +89,7 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
   end
 
   scenario 'User deletes inventory from server show page' do
-    stub = stub_request(:delete, uri_regex)
+    stub = stub_request(:delete, give_regex)
     server
     visit(send("#{namespace}_server_path", server))
     first('.delete_link').click
@@ -97,7 +97,7 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
   end
 
   scenario 'Deletes inventories from server edit page' do
-    stub = stub_request(:delete, uri_regex)
+    stub = stub_request(:delete, give_regex)
     stub_request(:put, server_regex)
     server
     visit(send("edit_#{namespace}_server_path", server))

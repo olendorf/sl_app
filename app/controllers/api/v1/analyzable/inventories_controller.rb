@@ -45,12 +45,14 @@ module Api
         def destroy
           authorize [:api, :v1, @requesting_object]
           if params['id'] == 'all'
+            msg = "all inventories cleared."
             @requesting_object.inventories.destroy_all
           else
             @inventory = ::Analyzable::Inventory.find_by_inventory_name!(params['id'])
             @inventory.destroy!
+            msg = "#{@inventory.inventory_name} deleted"
           end
-          render json: { message: 'OK' }, status: :ok
+          render json: { message: msg }, status: :ok
         end
 
         private

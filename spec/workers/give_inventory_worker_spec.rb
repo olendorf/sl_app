@@ -15,7 +15,7 @@ RSpec.describe GiveInventoryWorker, type: :worker do
   let(:avatar) { FactoryBot.create :avatar }
 
   let(:uri_regex) do
-    %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/inventory/give/#{url_encode(inventory.inventory_name)}\?
+    %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/give_inventory/#{url_encode(inventory.inventory_name)}\?
        auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
 

@@ -13,17 +13,21 @@ RSpec.describe InventorySlRequest do
 
   let(:uri_regex) do
     %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/
-    inventory/[a-zA-Z\s%0-9]+\?auth_digest=[-a-f0-9]+&auth_time=[0-9]+}x
+    services/inventories/[a-zA-Z\s%0-9]+\?auth_digest=[-a-f0-9]+&auth_time=[0-9]+}x
   end
   let(:give_regex) do
     %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/
-    inventories/[a-zA-Z\s%0-9]+\?auth_digest=[-a-f0-9]+&auth_time=[0-9]+}x
+    give_inventory/[a-zA-Z\s%0-9]+\?auth_digest=[-a-f0-9]+&auth_time=[0-9]+}x
+  end
+  let(:move_regex) do
+    %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/
+    move_inventory/[a-zA-Z\s%0-9]+\?auth_digest=[-a-f0-9]+&auth_time=[0-9]+}x
   end
 
   describe '.delete_inventory' do
     context 'deleting one inventory' do
       it 'should make the request to the object' do
-        stub = stub_request(:delete, give_regex)
+        stub = stub_request(:delete, uri_regex)
         InventorySlRequest.delete_inventory(server.inventories.sample)
         expect(stub).to have_been_requested
       end
@@ -31,7 +35,7 @@ RSpec.describe InventorySlRequest do
 
     context 'error occurs' do
       it 'should raise an error' do
-        stub_request(:delete, give_regex).to_return(body: 'abc', status: 400)
+        stub_request(:delete, uri_regex).to_return(body: 'abc', status: 400)
         expect {
           InventorySlRequest.delete_inventory(server.inventories.sample)
         }.to raise_error(RestClient::ExceptionWithResponse)
@@ -41,7 +45,7 @@ RSpec.describe InventorySlRequest do
 
   describe '.batch_destroy' do
     it 'should make the request for each item' do
-      stub = stub_request(:delete, give_regex)
+      stub = stub_request(:delete, uri_regex)
       ids = server.inventories.sample(3).collect(&:id)
       InventorySlRequest.batch_destroy(ids)
       expect(stub).to have_been_requested.times(3)
@@ -52,14 +56,14 @@ RSpec.describe InventorySlRequest do
     let(:server_two) { FactoryBot.create :server }
     it 'should send the request ' do
       body_regex = /{"server_key":"[-a-f0-9]+"}/
-      stub = stub_request(:put, give_regex).with(body: body_regex)
+      stub = stub_request(:put, move_regex).with(body: body_regex)
       InventorySlRequest.move_inventory(server.inventories.sample, server_two.id)
       expect(stub).to have_been_requested
     end
 
     context 'error occurs' do
       it 'should raise an error' do
-        stub_request(:put, give_regex).to_return(body: 'abc', status: 400)
+        stub_request(:put, move_regex).to_return(body: 'abc', status: 400)
         expect {
           InventorySlRequest.move_inventory(server.inventories.sample, server_two.id)
         }.to raise_error(RestClient::ExceptionWithResponse)

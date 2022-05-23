@@ -81,6 +81,8 @@ RSpec.describe InventorySlRequest do
       )
       expect(stub).to have_been_requested
     end
+    
+    
 
     context 'error occurs' do
       it 'should raise an error' do

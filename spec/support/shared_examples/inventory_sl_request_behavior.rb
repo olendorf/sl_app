@@ -118,13 +118,13 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
                             Analyzable::Inventory::PERMS[:copy]
     inventory.save
     stub = stub_request(:post, give_regex)
-           .with(body: "{\"avatar_key\":\"#{avatar.avatar_key}\"}")
+           .with(body: "{\"avatar_name\":\"#{avatar.avatar_name}\"}")
     server
 
     visit(send("#{namespace}_inventory_path", inventory))
-    fill_in('give_inventory-avatar_key', with: avatar.avatar_key)
+    fill_in('give_inventory-avatar_name', with: avatar.avatar_name)
     click_on 'Give Inventory'
-    expect(page).to have_text("Inventory given to #{avatar.avatar_key}")
+    expect(page).to have_text("Inventory given to #{avatar.avatar_name}")
     expect(stub).to have_been_requested
 
     expect(Analyzable::Inventory.find(inventory.id)).to_not be_nil
@@ -136,12 +136,12 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     inventory.save
 
     stub = stub_request(:post, give_regex)
-           .with(body: "{\"avatar_key\":\"#{avatar.avatar_key}\"}")
+           .with(body: "{\"avatar_name\":\"#{avatar.avatar_name}\"}")
 
     visit(send("#{namespace}_inventory_path", inventory))
-    fill_in('give_inventory-avatar_key', with: avatar.avatar_key)
+    fill_in('give_inventory-avatar_name', with: avatar.avatar_name)
     click_on 'Give Inventory'
-    expect(page).to have_text("Inventory given to #{avatar.avatar_key}")
+    expect(page).to have_text("Inventory given to #{avatar.avatar_name}")
     expect(stub).to have_been_requested
 
     expect(Analyzable::Inventory.where(id: inventory.id)).to_not exist
@@ -153,11 +153,11 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     inventory.save
 
     stub_request(:post, give_regex)
-      .with(body: "{\"avatar_key\":\"#{avatar.avatar_key}\"}")
+      .with(body: "{\"avatar_name\":\"#{avatar.avatar_name}\"}")
       .to_return(body: 'foo', status: 400)
 
     visit(send("#{namespace}_inventory_path", inventory))
-    fill_in('give_inventory-avatar_key', with: avatar.avatar_key)
+    fill_in('give_inventory-avatar_name', with: avatar.avatar_name)
     click_on 'Give Inventory'
     expect(page).to have_text('Unable to give inventory: foo')
 

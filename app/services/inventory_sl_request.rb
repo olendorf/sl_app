@@ -38,7 +38,7 @@ class InventorySlRequest
     ) unless Rails.env.development?
   end
 
-  def self.give_inventory(inventory_id, avatar_key)
+  def self.give_inventory(inventory_id, avatar_name)
     inventory = Analyzable::Inventory.find(inventory_id)
     server = inventory.server
 
@@ -47,7 +47,7 @@ class InventorySlRequest
       method: :post,
       content_type: :json,
       accept: :json,
-      payload: { avatar_key: avatar_key }.to_json,
+      payload: { avatar_name: avatar_name }.to_json,
       verify_ssl: false,
       headers: request_headers(server)
     ) unless Rails.env.development?

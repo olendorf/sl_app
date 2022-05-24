@@ -63,6 +63,10 @@ ActiveAdmin.register_page 'Dashboard', namespace: :my do
       end
     end
   end
+  
+  sidebar :give_money, partial: 'give_money_form', 
+                       only: %i[index], 
+                       if: proc{current_user.servers.size > 0}
   # total = 0
   # dl class: 'row' do
   #   current_user.splits.each do |split|

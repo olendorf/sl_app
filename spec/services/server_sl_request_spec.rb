@@ -9,7 +9,7 @@ RSpec.describe ServerSlRequest do
 
   describe '.send_money' do
     let(:uri_regex) do
-      %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/give_money\?
+      %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/give_money\?
          auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
     end
     it 'should make a request' do

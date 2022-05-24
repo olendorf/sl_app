@@ -1,3 +1,4 @@
+<% resource = current_user.servers.sample %>
 <%= form_tag("/my/servers/#{resource.id}/give_money", html: {class: 'give_money'}) do %>
   <%= content_tag :fieldset, class: 'inputs' do %>
     <%= content_tag :ol do %>

@@ -103,7 +103,7 @@ ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
               #{link_to('Delete', my_inventory_path(inventory),
                         class: 'delete_link member_link',
                         method: :delete,
-                        confirm: 'Are you sure you want to delete this?')}".html_safe
+                        data: {confirm: 'Are you sure you want to delete this?'})}".html_safe
             end
           end
         end
@@ -135,7 +135,7 @@ ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
 
   member_action :give_money, method: :post do
     begin
-      response = ServerSlRequest.send_money(resource, params['avatar_name'], params['amount'])
+      response = ServerSlRequest.send_money(resource.id, params['avatar_name'], params['amount'])
       resource.user.transactions << Analyzable::Transaction.new(
         description: 'Payment from web interface',
         amount: params['amount'],

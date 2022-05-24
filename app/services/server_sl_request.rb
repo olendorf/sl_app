@@ -7,8 +7,9 @@ class ServerSlRequest
   extend ActionView::Helpers::DateHelper
 
   def self.send_money(server, avatar_name, amount)
+    server = Rezzable::Server.find(server) if server.is_a? Integer
     RestClient::Request.execute(
-      url: "#{server.url}/give_money",
+      url: "#{server.url}/services/give_money",
       method: :post,
       payload: { avatar_name: avatar_name, amount: amount }.to_json,
       content_type: :json,

@@ -172,6 +172,8 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
                           message: e.response)
       end
       super
+      # resource.destroy
+      # redirect_back(fallback_location: my_inventories_path)
     end
 
     def update

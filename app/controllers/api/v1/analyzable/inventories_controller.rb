@@ -10,7 +10,7 @@ module Api
 
           begin
             @inventory = @requesting_object.actable.inventories
-                                           .find_by_inventory_name!(atts['inventory_name'])
+                            .find_by_inventory_name!(atts['inventory_name'])
             update
           rescue ActiveRecord::RecordNotFound
             @requesting_object.inventories << ::Analyzable::Inventory.new(atts)
@@ -37,8 +37,10 @@ module Api
 
         def show
           authorize [:api, :v1, @requesting_object]
-          @inventory = ::Analyzable::Inventory.find_by_inventory_name!(params['id'])
-          data = @inventory.attributes.except(:id, :user_id, :server_id, :created_at, :updated_at)
+          @inventory = ::Analyzable::Inventory.find_by_inventory_name!(
+            params['id'])
+          data = @inventory.attributes.except(:id, :user_id, 
+                                  :server_id, :created_at, :updated_at)
           render json: { message: 'OK', data: data }, status: :ok
         end
 
@@ -48,7 +50,8 @@ module Api
             msg = "all inventories cleared."
             @requesting_object.inventories.destroy_all
           else
-            @inventory = ::Analyzable::Inventory.find_by_inventory_name!(params['id'])
+            @inventory = ::Analyzable::Inventory.find_by_inventory_name!(
+              params['id'])
             @inventory.destroy!
             msg = "#{@inventory.inventory_name} deleted"
           end

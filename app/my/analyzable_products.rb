@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Analyzable::Product, namespace: :my, as: 'Product' do
-  menu parent: 'Sales', label: 'Products'
+  menu parent: 'Sales', label: 'Products', if: proc { current_user.products.size.positive? }
   
-  scope_to :current_user, association_method: :servers
+  scope_to :current_user
 
   index titles: 'Products' do
     selectable_column

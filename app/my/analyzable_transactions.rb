@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Analyzable::Transaction, as: 'Transaction', namespace: :my do
-  menu label: 'Transactions', priority: 1, if: proc { current_user.transactions.size.positive? }
+  menu label: 'Transactions', priority: 1
 
   actions :all, except: %i[destroy]
 
@@ -10,6 +10,7 @@ ActiveAdmin.register Analyzable::Transaction, as: 'Transaction', namespace: :my 
   scope_to :current_user, association_method: :transactions
 
   index title: 'Transactions' do
+    id_column
     column :created_at
     # column 'Payer/Payee' do |transaction|
     #   avatar = Avatar.find_by_avatar_key(transaction.target_key)

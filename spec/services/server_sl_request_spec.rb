@@ -58,7 +58,7 @@ RSpec.describe ServerSlRequest do
                body: /#{reg_str}/
              )
       ServerSlRequest.message_user(
-        owner.servers.sample, user.avatar_name, user.avatar_key, 'foo'
+        owner.servers.sample.id, user.avatar_name, user.avatar_key, 'foo'
       )
       expect(stub).to have_been_requested
     end

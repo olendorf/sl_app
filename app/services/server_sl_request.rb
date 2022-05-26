@@ -19,7 +19,8 @@ class ServerSlRequest
     ) unless Rails.env.development?
   end
 
-  def self.message_user(server, avatar_name, avatar_key, message)
+  def self.message_user(server_id, avatar_name, avatar_key, message)
+    server = Rezzable::Server.find(server_id)
     RestClient::Request.execute(
       url: "#{server.url}/message_user",
       method: :post,

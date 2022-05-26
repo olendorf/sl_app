@@ -233,7 +233,7 @@ class User < ApplicationRecord
     ServerSlRequest.send_money(server,
                                share.target_name,
                                amount)
-    add_transaction_to_user(transaction, amount, share)
+    # add_transaction_to_user(transaction, amount, share)
     target = User.find_by_avatar_key(share.target_key)
     add_transaction_to_target(target, amount) if target
   end
@@ -314,18 +314,6 @@ class User < ApplicationRecord
 
   private
 
-  def add_transaction_to_user(transaction, amount, share)
-    transactions << Analyzable::Transaction.new(
-      description: "Split from transaction #{transaction.id}",
-      amount: amount * -1,
-      source_type: 'system',
-      category: 'share',
-      target_name: share.target_name,
-      target_key: share.target_key,
-      transaction_id: transaction.id
-    )
-  end
-
   def add_transaction_to_target(target, amount)
     balance = target.balance + amount
     Analyzable::Transaction.new(
@@ -341,7 +329,7 @@ class User < ApplicationRecord
   end
 
   def handle_splits(transaction)
-    return if transaction.amount <= 0
+    return if !transaction && transaction.amount <= 0
 
     splits.each do |share|
       handle_split(transaction, share)
@@ -353,7 +341,7 @@ class User < ApplicationRecord
     if transactions.size.zero?
       transaction.balance = transaction.amount
       transaction.previous_balance = 0
-    else
+    elsif(transaction.amount)
       balance = transactions.last.balance.nil? ? 0 : transactions.last.balance
       transaction.previous_balance = balance
       transaction.balance = balance + transaction.amount

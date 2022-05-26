@@ -77,6 +77,9 @@ en:
       give_money: 
         success:  '%{amount} lindens given to %{avatar}'
         failure:  'Unable to send money to %{avatar}: %{message}'
+      send_message:
+        success: "Message sent to %{avatar}."
+        failure: 'Unable to send message to %{avatar}. %{message}'
         
     inventory:
       delete:

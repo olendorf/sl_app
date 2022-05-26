@@ -17,7 +17,8 @@ module Analyzable
       return if product_links.find_by_link_name(product_name)
 
       product_links << Analyzable::ProductLink.create(
-        link_name: product_name
+        link_name: product_name,
+        user_id: user_id
       )
     end
 

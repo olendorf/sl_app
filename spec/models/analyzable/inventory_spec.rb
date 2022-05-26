@@ -36,6 +36,15 @@ RSpec.describe Analyzable::Inventory, type: :model do
     server
   }
   let(:inventory) { FactoryBot.create :inventory, server_id: server.id }
+  
+  describe '#product' do 
+    context 'inventory has a product' do 
+      
+    end 
+    
+    context 'inventory has no product' do 
+    end
+  end
 
   describe 'perm masks' do
     %w[owner next].each do |who|

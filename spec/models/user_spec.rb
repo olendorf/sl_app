@@ -458,7 +458,9 @@ RSpec.describe User, type: :model do
                                                 target_name: target_two.avatar_name,
                                                 target_key: target_two.avatar_key)
         user.transactions << FactoryBot.build(:transaction, amount: 100)
-        expect(user.transactions.size).to eq 3
+        # the other two splits will be requested from server when linden 
+        # transfer is successful
+        expect(user.transactions.size).to eq 1  
       end
 
       it 'should send the requests to send money' do

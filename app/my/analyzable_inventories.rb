@@ -22,7 +22,7 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
     column 'Description' do |inventory|
       truncate(inventory.inventory_description, length: 10, separator: ' ')
     end
-    column :price
+    # column :price
     column 'Server' do |inventory|
       link_to inventory.server.object_name, my_server_path(inventory.server_id)
     end
@@ -54,7 +54,7 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
   filter :inventory_name
   filter :inventory_description, label: 'Description'
   filter :server_abstract_web_object_object_name, as: :string, label: 'Server Name'
-  filter :price, as: :numeric
+  # filter :price, as: :numeric
   filter :inventory_type, as: :select, collection: Analyzable::Inventory.inventory_types
   filter :created_at, as: :date_range
   filter :updated_at, as: :date_range
@@ -142,7 +142,7 @@ ActiveAdmin.register Analyzable::Inventory, as: 'Inventory', namespace: :my do
 
   form title: proc { "Edit #{resource.inventory_name}" } do |f|
     f.inputs do
-      f.input :price
+      # f.input :price
       f.input :inventory_description, label: 'Description'
       f.input :server, as: :select,
                        include_blank: false,

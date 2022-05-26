@@ -82,7 +82,7 @@ ActiveAdmin.register Analyzable::Transaction, as: 'Transaction', namespace: :my 
       current_user.transactions << @transaction
       @transaction.save!
       flash.alert = 'A new transaction has been created.'
-      redirect_to my_analyzable_transaction_path(@transaction.id)
+      redirect_to my_transactions_path
     end
 
     def handle_avatar; end

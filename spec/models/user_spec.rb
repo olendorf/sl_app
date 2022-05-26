@@ -502,6 +502,9 @@ RSpec.describe User, type: :model do
         expect(target_one.balance).to eq 5
       end
     end
+    
+    describe 'no splits' do 
+    end
   end
 
   # describe '.message_users' do

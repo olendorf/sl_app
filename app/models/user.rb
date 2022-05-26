@@ -314,18 +314,6 @@ class User < ApplicationRecord
 
   private
 
-  def add_transaction_to_user(transaction, amount, share)
-    transactions << Analyzable::Transaction.new(
-      description: "Split from transaction #{transaction.id}",
-      amount: amount * -1,
-      source_type: 'system',
-      category: 'share',
-      target_name: share.target_name,
-      target_key: share.target_key,
-      transaction_id: transaction.id
-    )
-  end
-
   def add_transaction_to_target(target, amount)
     balance = target.balance + amount
     Analyzable::Transaction.new(

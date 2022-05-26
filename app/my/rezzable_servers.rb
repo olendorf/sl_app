@@ -135,13 +135,13 @@ ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
 
   member_action :give_money, method: :post do
     begin
-      response = ServerSlRequest.send_money(resource.id, params['avatar_name'], params['amount'])
-      resource.user.transactions << Analyzable::Transaction.new(
-        description: 'Payment from web interface',
-        amount: params['amount'],
-        target_name: params['avatar_name'],
-        target_key: JSON.parse(response)['avatar_key']
-      )
+      ServerSlRequest.send_money(resource.id, params['avatar_name'], params['amount'])
+      # resource.user.transactions << Analyzable::Transaction.new(
+      #   description: 'Payment from web interface',
+      #   amount: params['amount'],
+      #   target_name: params['avatar_name'],
+      #   target_key: JSON.parse(response)['avatar_key']
+      # )
       flash.notice = t('active_admin.server.give_money.success',
                        amount: params['amount'],
                        avatar: params['avatar_name'])

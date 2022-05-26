@@ -33,7 +33,9 @@ RSpec.feature 'Server management', type: :feature do
 
       expect(page).to have_text('200 lindens given to Random Citizen')
       expect(stub).to have_been_requested
-      expect(user.reload.transactions.size).to eq 1
+      # Request for this is sent from server on successful money transfer
+      # so don't test here
+      # expect(user.reload.transactions.size).to eq 1 
     end
 
     scenario 'User gives money with error' do

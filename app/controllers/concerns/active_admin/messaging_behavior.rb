@@ -15,7 +15,7 @@ module ActiveAdmin
                         params['avatar_name'],
                         params['message'])
          flash.notice = t('active_admin.server.send_message.success', 
-                                avatar: params[avatar_name\])
+                                avatar: params[avatar_name])
           # flash.notice = "Inventory given to #{params['avatar_name']}"
         rescue RestClient::ExceptionWithResponse => e
           flash[:error] = t('active_admin.server.send_message.failure',

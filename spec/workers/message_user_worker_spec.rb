@@ -11,7 +11,7 @@ RSpec.describe MessageUserWorker, type: :worker do
   end
 
   let(:uri_regex) do
-    %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/message_user\?
+    %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/message_user\?
        auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
   let(:uuid) { SecureRandom.uuid }
@@ -20,7 +20,7 @@ RSpec.describe MessageUserWorker, type: :worker do
     it 'job in correct queue' do
       stub_request(:post, uri_regex)
         .with(body:
-        "{\"avatar_name\":\"Random Citizen\",\"avatar_key\":\"#{uuid}\",\"message\":\"foo\"}")
+        "{\"avatar_name\":\"Random Citizen\",\"message\":\"foo\"}")
       described_class.perform_async(owner.servers.sample.id, 'Random Citizen', uuid, 'foo')
       assert_equal 'default', described_class.queue
     end
@@ -28,11 +28,11 @@ RSpec.describe MessageUserWorker, type: :worker do
     it 'goes into the jobs array for testing environment' do
       stub_request(:post, uri_regex)
         .with(body:
-        "{\"avatar_name\":\"Random Citizen\",\"avatar_key\":\"#{uuid}\",\"message\":\"foo\"}")
+        "{\"avatar_name\":\"Random Citizen\",\"message\":\"foo\"}")
       expect {
-        described_class.perform_async(owner.servers.sample.id, 'Random Citizen', uuid, 'foo')
+        described_class.perform_async(owner.servers.sample.id, 'Random Citizen', 'foo')
       }.to change { described_class.jobs.size }.by(1)
-      described_class.new.perform(owner.servers.sample.id, 'Random Citizen', uuid, 'foo')
+      described_class.new.perform(owner.servers.sample.id, 'Random Citizen', 'foo')
     end
   end
 end

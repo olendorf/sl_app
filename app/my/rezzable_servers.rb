@@ -2,6 +2,8 @@
 
 ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
   include ActiveAdmin::ServerBehavior
+  include ActiveAdmin::MessagingBehavior
+  
 
   menu parent: 'Objects', label: 'Servers', if: proc { current_user.servers.size.positive? }
 
@@ -133,25 +135,25 @@ ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
     f.actions
   end
 
-  member_action :give_money, method: :post do
-    begin
-      ServerSlRequest.send_money(resource.id, params['avatar_name'], params['amount'])
-      # resource.user.transactions << Analyzable::Transaction.new(
-      #   description: 'Payment from web interface',
-      #   amount: params['amount'],
-      #   target_name: params['avatar_name'],
-      #   target_key: JSON.parse(response)['avatar_key']
-      # )
-      flash.notice = t('active_admin.server.give_money.success',
-                       amount: params['amount'],
-                       avatar: params['avatar_name'])
-    rescue RestClient::ExceptionWithResponse => e
-      flash[:error] = t('active_admin.server.give_money.failure',
-                        avatar: params['avatar_name'],
-                        message: e.response)
-    end
-    redirect_back(fallback_location: my_servers_path)
-  end
+  # member_action :give_money, method: :post do
+  #   begin
+  #     ServerSlRequest.send_money(resource.id, params['avatar_name'], params['amount'])
+  #     # resource.user.transactions << Analyzable::Transaction.new(
+  #     #   description: 'Payment from web interface',
+  #     #   amount: params['amount'],
+  #     #   target_name: params['avatar_name'],
+  #     #   target_key: JSON.parse(response)['avatar_key']
+  #     # )
+  #     flash.notice = t('active_admin.server.give_money.success',
+  #                     amount: params['amount'],
+  #                     avatar: params['avatar_name'])
+  #   rescue RestClient::ExceptionWithResponse => e
+  #     flash[:error] = t('active_admin.server.give_money.failure',
+  #                       avatar: params['avatar_name'],
+  #                       message: e.response)
+  #   end
+  #   redirect_back(fallback_location: my_servers_path)
+  # end
 
   controller do
     # def scoped_collection

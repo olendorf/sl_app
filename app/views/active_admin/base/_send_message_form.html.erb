@@ -1,21 +1,21 @@
 <% resource = current_user.servers.sample %>
-<%= form_tag("/my/servers/#{resource.id}/give_money", html: {class: 'give_money'}) do %>
+<%= form_tag("/my/servers/#{resource.id}/send_message", html: {class: 'give_money'}) do %>
   <%= content_tag :fieldset, class: 'inputs' do %>
     <%= content_tag :ol do %>
       <%= content_tag :li, class: 'string input required stringish', id: 'avatar_name_input' do %>
         <%= label_tag(:avatar_name, "Avatar Name:", class: 'label') %>
-        <%= text_field_tag(:avatar_name, nil, placeholder: 'Random Resident', class: 'string input required stringish', id: 'give_money-avatar_name') %>
+        <%= text_field_tag(:avatar_name, nil, placeholder: 'Random Resident', class: 'string input required stringish', id: 'send_message-avatar_name') %>
       <% end %>
-      <%= content_tag :li, class: 'integer input required', id: 'amount_input' do %>
-        <%= label_tag(:avatar_name, "Amount:", class: 'label') %>
-        <%= text_field_tag(:amount, nil, class: 'integer input required', id: 'give_money-amount') %>
+      <%= content_tag :li, class: 'string input required', id: 'message_input' do %>
+        <%= label_tag(:message, "Message:", class: 'label') %>
+        <%= text_field_tag(:message, nil, class: 'string input required', id: 'send_message-message') %>
       <% end %>
     <%end%>
   <%end%>
   <%= content_tag :fieldset, class: 'actions' do %>
     <%= content_tag :ol do %>
       <%= content_tag :br %>
-      <%= submit_tag("Give Money") %>
+      <%= submit_tag("Send Message") %>
     <% end %>
   <% end %>
 <% end %>

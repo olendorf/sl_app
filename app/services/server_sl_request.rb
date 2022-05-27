@@ -19,14 +19,13 @@ class ServerSlRequest
     ) unless Rails.env.development?
   end
 
-  def self.message_user(server_id, avatar_name, avatar_key, message)
+  def self.message_user(server_id, avatar_name, message)
     server = Rezzable::Server.find(server_id)
     RestClient::Request.execute(
-      url: "#{server.url}/message_user",
+      url: "#{server.url}/services/message_user",
       method: :post,
       payload: {
         avatar_name: avatar_name,
-        avatar_key: avatar_key,
         message: message
       }.to_json,
       content_type: :json,

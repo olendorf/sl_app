@@ -167,6 +167,19 @@ class User < ApplicationRecord
 
     transactions.last.balance
   end
+  
+  def payment_schedule
+    payment_schedule = {}
+    Settings.default.account.discount_schedule.each do |months, discount|
+      
+      payment_schedule[
+        (Settings.default.account.monthly_cost - (
+          Settings.default.account.monthly_cost * discount
+        )).to_i * months.to_s.to_i * self.account_level
+      ] = months.to_s.to_i
+    end
+    payment_schedule
+  end
 
   def active?
     return true if can_be_owner?
@@ -272,7 +285,6 @@ class User < ApplicationRecord
         MessageUserWorker.perform_async(
           server.id,
           user.avatar_name,
-          user.avatar_key,
           I18n.t('background.account.reminder',
                  avatar_name: user.avatar_name,
                  expiration_date: distance_of_time_in_words(
@@ -284,7 +296,6 @@ class User < ApplicationRecord
         MessageUserWorker.perform_async(
           server.id,
           user.avatar_name,
-          user.avatar_key,
           I18n.t('background.account.warning',
                  avatar_name: user.avatar_name,
                  expiration_date: distance_of_time_in_words(
@@ -297,7 +308,6 @@ class User < ApplicationRecord
         MessageUserWorker.perform_async(
           server.id,
           user.avatar_name,
-          user.avatar_key,
           I18n.t('background.account.termination',
                  avatar_name: user.avatar_name,
                  slurl: Settings.default.visit_us_slurl)

@@ -384,6 +384,16 @@ RSpec.describe User, type: :model do
       expect(prime.can_be_admin?).to be_falsey
     end
   end
+  
+  describe 'payment_schedule' do 
+    it 'should return the correct hash' do
+      puts Settings.default.account.discount_schedule
+      puts user.account_level
+      expect(user.payment_schedule).to include(
+        300 => 1
+      )
+    end
+  end
 
   describe 'split_percent' do
     it 'should return the total user splits' do
@@ -632,7 +642,7 @@ RSpec.describe User, type: :model do
 
     let(:uri_regex) do
       %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/
-        [-a-f0-9]{36}/message_user\?
+        [-a-f0-9]{36}/services/message_user\?
         auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
     end
 

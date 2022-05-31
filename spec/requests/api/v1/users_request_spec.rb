@@ -98,7 +98,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
                        avatar_key: SecureRandom.uuid
                      )
           expect(JSON.parse(response.body)['data'].with_indifferent_access).to include(
-            monthly_cost: Settings.default.account.monthly_cost,
+            'payment_schedule',
             avatar_name: atts[:avatar_name],
             avatar_key: atts[:avatar_key],
             time_left: User.last.time_left,
@@ -487,7 +487,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
       it 'should return the correct data' do
         get path, headers: headers(terminal)
         expect(JSON.parse(response.body)['data'].with_indifferent_access).to include(
-          monthly_cost: Settings.default.account.monthly_cost,
+          'payment_schedule',
           avatar_name: active_user.avatar_name,
           avatar_key: active_user.avatar_key,
           time_left: active_user.time_left,
@@ -507,7 +507,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
       it 'should return the correct data' do
         get path, headers: headers(terminal)
         expect(JSON.parse(response.body)['data'].with_indifferent_access).to include(
-          monthly_cost: Settings.default.account.monthly_cost,
+          'payment_schedule',
           avatar_name: inactive_user.avatar_name,
           avatar_key: inactive_user.avatar_key,
           time_left: 0,
@@ -559,7 +559,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
           it 'returns the correct data' do
             put path, params: atts.to_json, headers: headers(terminal)
             expect(JSON.parse(response.body)['data'].with_indifferent_access).to include(
-              monthly_cost: Settings.default.account.monthly_cost,
+              'payment_schedule',
               avatar_name: existing_user.avatar_name,
               avatar_key: existing_user.avatar_key,
               time_left: existing_user.time_left,

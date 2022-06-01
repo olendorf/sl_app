@@ -26,9 +26,15 @@ module Api
 
       def show
         authorize [:api, :v1, @requesting_object]
-        render json: {
-          data: user_data
-        }, status: :ok
+        if @user
+          render json: {
+            data: user_data
+          }, status: :ok
+        else
+          render json: {
+            message: 'User not found'
+          }, status: :not_found
+        end
       end
 
       def update

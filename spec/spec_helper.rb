@@ -33,6 +33,7 @@ SimpleCov.start do
   add_filter 'app/models/rezzable.rb'
   add_filter 'app/controllers/concerns/api/exception_handler.rb'
   add_filter 'app/services'
+  add_filter 'app/workers/message_user_worker.rb'
 end
 
 WebMock.disable_net_connect!(allow_localhost: true)

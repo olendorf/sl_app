@@ -64,6 +64,7 @@ module Api
           payment_schedule: @user.payment_schedule,
           avatar_name: @user.avatar_name,
           avatar_key: @user.avatar_key,
+          role: @user.role,
           time_left: @user.time_left,
           account_level: @user.account_level
         }

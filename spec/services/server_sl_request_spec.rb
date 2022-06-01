@@ -46,7 +46,7 @@ RSpec.describe ServerSlRequest do
     let(:user) { FactoryBot.build :avatar }
 
     let(:uri_regex) do
-      %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/message_user\?
+      %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/message_user\?
          auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
     end
 
@@ -58,7 +58,7 @@ RSpec.describe ServerSlRequest do
                body: /#{reg_str}/
              )
       ServerSlRequest.message_user(
-        owner.servers.sample, user.avatar_name, user.avatar_key, 'foo'
+        owner.servers.sample.id, user.avatar_name, 'foo'
       )
       expect(stub).to have_been_requested
     end

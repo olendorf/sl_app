@@ -2,6 +2,7 @@
 
 ActiveAdmin.register_page 'Dashboard', namespace: :my do
   menu priority: 1, label: proc { I18n.t('active_admin.dashboard') }
+  # include ActiveAdmin::MessagingBehavior
 
   content title: proc { I18n.t('active_admin.dashboard') } do
     div class: 'blank_slate_container', id: 'dashboard_default_message' do
@@ -67,6 +68,12 @@ ActiveAdmin.register_page 'Dashboard', namespace: :my do
   sidebar :give_money, partial: 'give_money_form', 
                        only: %i[index], 
                        if: proc{current_user.servers.size > 0}
+                         
+  sidebar :send_message, partial: 'send_message_form', 
+                       only: %i[index], 
+                       if: proc{current_user.servers.size > 0}
+                         
+      
   # total = 0
   # dl class: 'row' do
   #   current_user.splits.each do |split|

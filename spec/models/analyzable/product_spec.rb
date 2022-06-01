@@ -22,7 +22,7 @@ RSpec.describe Analyzable::Product, type: :model do
 
   describe 'updating' do
     it 'should add a new link when the name is changed' do
-      product.update(product_name: 'new name')
+      product.update(product_name: 'new name', user_id: user.id)
       expect(product.reload.product_links.last.link_name).to eq 'new name'
     end
   end

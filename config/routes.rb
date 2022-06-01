@@ -60,6 +60,7 @@ Rails.application.routes.draw do
       namespace :analyzable do
         resources :inventories, except: %i[new edit]
         resources :parcels, except: %i[new edit destroy]
+        resources :transactions, only: %i[create]
         resources :employees, except: %i[new edit] do
           member do
             put 'pay'

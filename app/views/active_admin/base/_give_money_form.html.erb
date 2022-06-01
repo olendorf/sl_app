@@ -7,7 +7,7 @@
         <%= text_field_tag(:avatar_name, nil, placeholder: 'Random Resident', class: 'string input required stringish', id: 'give_money-avatar_name') %>
       <% end %>
       <%= content_tag :li, class: 'integer input required', id: 'amount_input' do %>
-        <%= label_tag(:avatar_name, "Amount:", class: 'label') %>
+        <%= label_tag(:amount, "Amount:", class: 'label') %>
         <%= text_field_tag(:amount, nil, class: 'integer input required', id: 'give_money-amount') %>
       <% end %>
     <%end%>

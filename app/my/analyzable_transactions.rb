@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Analyzable::Transaction, as: 'Transaction', namespace: :my do
-  menu label: 'Transactions', priority: 1, if: proc { current_user.transactions.size.positive? }
+  menu label: 'Transactions', priority: 1
 
   actions :all, except: %i[destroy]
 
@@ -10,6 +10,7 @@ ActiveAdmin.register Analyzable::Transaction, as: 'Transaction', namespace: :my 
   scope_to :current_user, association_method: :transactions
 
   index title: 'Transactions' do
+    id_column
     column :created_at
     # column 'Payer/Payee' do |transaction|
     #   avatar = Avatar.find_by_avatar_key(transaction.target_key)
@@ -81,7 +82,7 @@ ActiveAdmin.register Analyzable::Transaction, as: 'Transaction', namespace: :my 
       current_user.transactions << @transaction
       @transaction.save!
       flash.alert = 'A new transaction has been created.'
-      redirect_to my_analyzable_transaction_path(@transaction.id)
+      redirect_to my_transactions_path
     end
 
     def handle_avatar; end

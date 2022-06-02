@@ -5,7 +5,7 @@ module Api
     # Controller for API requests from SL
     class UsersController < Api::V1::ApiController
       include Api::TransactionHandler
-      include DateHelper
+      include ActionView::Helpers::DateHelper
 
       before_action :load_user, except: %i[index create]
 

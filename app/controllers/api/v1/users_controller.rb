@@ -5,6 +5,7 @@ module Api
     # Controller for API requests from SL
     class UsersController < Api::V1::ApiController
       include Api::TransactionHandler
+      include DateHelper
 
       before_action :load_user, except: %i[index create]
 
@@ -71,7 +72,7 @@ module Api
           avatar_name: @user.avatar_name,
           avatar_key: @user.avatar_key,
           role: @user.role,
-          time_left: @user.time_left,
+          time_left: distance_of_time_in_words(Time.now, @user.expiration_date),
           account_level: @user.account_level
         }
       end

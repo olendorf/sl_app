@@ -33,7 +33,7 @@ module Api
           }, status: :ok
         else
           render json: {
-            message: 'User not found'
+            message: 'User not found.'
           }, status: :not_found
         end
       end
@@ -65,14 +65,17 @@ module Api
       end
 
       def user_data
-        return { monthly_cost: Settings.default.account.monthly_cost } unless @user
+        time_left = @user.expiration_date.nil? ? "Inactive" : 
+              distance_of_time_in_words(Time.now, @user.expiration_date)
+        return { 
+          monthly_cost: Settings.default.account.monthly_cost } unless @user
 
         {
           payment_schedule: @user.payment_schedule,
           avatar_name: @user.avatar_name,
           avatar_key: @user.avatar_key,
           role: @user.role,
-          time_left: distance_of_time_in_words(Time.now, @user.expiration_date),
+          time_left: time_left,
           account_level: @user.account_level
         }
       end

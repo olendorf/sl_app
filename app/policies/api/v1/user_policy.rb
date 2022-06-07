@@ -9,7 +9,7 @@ module Api
       end
 
       def show?
-        @user.active?
+        @user.can_be_owner?
       end
 
       def update?

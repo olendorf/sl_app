@@ -168,6 +168,20 @@ class User < ApplicationRecord
     transactions.last.balance
   end
   
+  def self.default_payment_schedule
+    payment_schedule = {}
+    Settings.default.account.discount_schedule.each do |months, discount|
+      
+      payment_schedule[
+        (Settings.default.account.monthly_cost - (
+          Settings.default.account.monthly_cost * discount
+        )).to_i * months.to_s.to_i
+      ] = months.to_s.to_i
+    end
+    payment_schedule
+    
+  end
+  
   def payment_schedule
     payment_schedule = {}
     Settings.default.account.discount_schedule.each do |months, discount|
@@ -271,7 +285,7 @@ class User < ApplicationRecord
   end
 
   # rubocop:disable Metrics/BlockLength, Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/AbcSi
   def self.process_users
     owner_ids = User.where(role: :owner).collect(&:id)
     server = AbstractWebObject.where(

@@ -294,6 +294,14 @@ RSpec.describe User, type: :model do
       end
     end
   end
+  
+  describe '.default_payment_schedule' do 
+    it 'should return the correct data' do 
+      expect(User.default_payment_schedule).to include(
+        1620 => 6, 300 => 1, 3060 => 12, 855 => 3
+        )
+    end
+  end
 
   describe 'updating the account_level' do
     context 'account level is greater than zero' do
@@ -387,8 +395,6 @@ RSpec.describe User, type: :model do
   
   describe 'payment_schedule' do 
     it 'should return the correct hash' do
-      puts Settings.default.account.discount_schedule
-      puts user.account_level
       expect(user.payment_schedule).to include(
         300 => 1
       )

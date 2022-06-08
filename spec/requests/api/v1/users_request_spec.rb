@@ -530,10 +530,10 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
       it 'should return the correct data' do
         get path, headers: headers(terminal)
-        puts response.body
         expect(JSON.parse(
-          response.body)['message']).to include(
-          "User not found."
+          response.body)).to include(
+          "message" =>"User not found.", 
+          "data" => {"payment_schedule" => {"1620" => 6, "300" => 1, "3060" => 12, "855" => 3}}
         )
       end
     end

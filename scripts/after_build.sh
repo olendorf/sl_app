@@ -68,12 +68,13 @@ sudo apt install -y libpq-dev
 
 yarn add active_material
 
-bundle install
 
 exec bash
 
 
 EDITOR="vim --wait" rails credentials:edit
+
+bundle install
 
 rails webpacker:install
 

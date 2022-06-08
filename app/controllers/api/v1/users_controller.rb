@@ -33,7 +33,8 @@ module Api
           }, status: :ok
         else
           render json: {
-            message: 'User not found.'
+            message: 'User not found.',
+            data: {payment_schedule: User.default_payment_schedule}
           }, status: :not_found
         end
       end

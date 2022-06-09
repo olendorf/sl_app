@@ -17,7 +17,7 @@ module Api
         )
         
         
-        logger.info("server params #{parsed_parms}")
+        logger.info("server params #{parsed_params}")
         @user.save!
 
         handle_transactions if parsed_params['account_payment'].positive?

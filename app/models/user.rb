@@ -130,7 +130,7 @@ class User < ApplicationRecord
   end
 
   def time_left
-    expiration_date.nil? ? 0 : Time.diff(expiration_date, Time.now)
+    expiration_date.nil? ? "Account Inactive" : Time.diff(expiration_date, Time.now)
   end
 
   def will_save_change_to_email?
@@ -166,6 +166,20 @@ class User < ApplicationRecord
     return 0 if transactions.size.zero?
 
     transactions.last.balance
+  end
+  
+  def self.default_payment_schedule
+    payment_schedule = {}
+    Settings.default.account.discount_schedule.each do |months, discount|
+      
+      payment_schedule[
+        (Settings.default.account.monthly_cost - (
+          Settings.default.account.monthly_cost * discount
+        )).to_i * months.to_s.to_i
+      ] = months.to_s.to_i
+    end
+    payment_schedule
+    
   end
   
   def payment_schedule
@@ -271,7 +285,7 @@ class User < ApplicationRecord
   end
 
   # rubocop:disable Metrics/BlockLength, Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/AbcSi
   def self.process_users
     owner_ids = User.where(role: :owner).collect(&:id)
     server = AbstractWebObject.where(

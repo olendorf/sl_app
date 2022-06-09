@@ -15,6 +15,9 @@ module Api
         @user = User.new(
           parsed_params.except('account_payment')
         )
+        
+        
+        logger.info("server params #{parsed_parms}")
         @user.save!
 
         handle_transactions if parsed_params['account_payment'].positive?

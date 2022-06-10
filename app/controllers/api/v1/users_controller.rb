@@ -11,7 +11,7 @@ module Api
 
       def create
         authorize [:api, :v1, User]
-
+        load_requesting_object
         @user = User.new(
           parsed_params.except('account_payment')
         )

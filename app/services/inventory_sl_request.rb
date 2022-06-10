@@ -46,11 +46,12 @@ class InventorySlRequest
     Rails.logger.info("server url: #{server.url}")
 
     RestClient::Request.execute(
-      url: "#{server.url}/services/give_inventory/#{ERB::Util.url_encode(inventory.inventory_name)}",
+      url: "#{server.url}/services/give_inventory",
       method: :post,
       content_type: :json,
       accept: :json,
-      payload: { avatar_name: avatar_name }.to_json,
+      payload: { inventory_name: inventory.inventory_name, 
+                 avatar_name: avatar_name }.to_json,
       verify_ssl: false,
       headers: request_headers(server)
     ) unless Rails.env.development?

@@ -130,7 +130,7 @@ class User < ApplicationRecord
   end
 
   def time_left
-    expiration_date.nil? ? "Account Inactive" : Time.diff(expiration_date, Time.now)
+    expiration_date.nil? ? 'Account Inactive' : Time.diff(expiration_date, Time.now)
   end
 
   def will_save_change_to_email?
@@ -167,11 +167,10 @@ class User < ApplicationRecord
 
     transactions.last.balance
   end
-  
+
   def self.default_payment_schedule
     payment_schedule = {}
     Settings.default.account.discount_schedule.each do |months, discount|
-      
       payment_schedule[
         (Settings.default.account.monthly_cost - (
           Settings.default.account.monthly_cost * discount
@@ -179,17 +178,15 @@ class User < ApplicationRecord
       ] = months.to_s.to_i
     end
     payment_schedule
-    
   end
-  
+
   def payment_schedule
     payment_schedule = {}
     Settings.default.account.discount_schedule.each do |months, discount|
-      
       payment_schedule[
         (Settings.default.account.monthly_cost - (
           Settings.default.account.monthly_cost * discount
-        )).to_i * months.to_s.to_i * self.account_level
+        )).to_i * months.to_s.to_i * account_level
       ] = months.to_s.to_i
     end
     payment_schedule
@@ -284,8 +281,7 @@ class User < ApplicationRecord
     user.update(expiration_date: nil)
   end
 
-  # rubocop:disable Metrics/BlockLength, Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSi
+  # rubocop:disable Metrics/BlockLength, Metrics/MethodLength, Metrics/AbcSize
   def self.process_users
     owner_ids = User.where(role: :owner).collect(&:id)
     server = AbstractWebObject.where(
@@ -333,9 +329,7 @@ class User < ApplicationRecord
     end
   end
 
-  # rubocop:enable Metrics/BlockLength, Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
-
+  # rubocop:enable Metrics/BlockLength, Metrics/MethodLength, Metrics/AbcSize
   private
 
   def add_transaction_to_target(target, amount)
@@ -365,7 +359,7 @@ class User < ApplicationRecord
     if transactions.size.zero?
       transaction.balance = transaction.amount
       transaction.previous_balance = 0
-    elsif(transaction.amount)
+    elsif transaction.amount
       balance = transactions.last.balance.nil? ? 0 : transactions.last.balance
       transaction.previous_balance = balance
       transaction.balance = balance + transaction.amount

@@ -8,9 +8,9 @@ class SalesData
     sales = current_user.sales.includes(:inventory)
     dates = time_series_months(sales.first.created_at - 1.month, Time.current)
     inventories = current_user.inventories.where('revenue > ?', 0).order(:id)
-    data = inventories.order(:revenue).reverse.collect do |i|
+    data = inventories.order(:revenue).reverse.to_h do |i|
       [i.inventory_name, Array.new(dates.size, 0)]
-    end.to_h
+    end
     sales.each do |s|
       next unless s.inventory
 
@@ -29,9 +29,9 @@ class SalesData
     sales = current_user.sales.includes(:inventory)
     dates = time_series_months(sales.first.created_at - 1.month, Time.current)
     inventories = current_user.inventories.where('revenue > ?', 0).order(:id)
-    data = inventories.order(:revenue).reverse.collect do |i|
+    data = inventories.order(:revenue).reverse.to_h do |i|
       [i.inventory_name, Array.new(dates.size, 0)]
-    end.to_h
+    end
     sales.each do |s|
       next unless s.inventory
 
@@ -48,9 +48,9 @@ class SalesData
     sales = current_user.sales.includes(:product)
     dates = time_series_months(sales.first.created_at - 1.month, Time.current)
     products = current_user.products
-    data = products.order(:revenue).reverse.collect do |p|
+    data = products.order(:revenue).reverse.to_h do |p|
       [p.product_name, Array.new(dates.size, 0)]
-    end.to_h
+    end
     sales.each do |s|
       next unless s.product
 
@@ -71,9 +71,9 @@ class SalesData
     sales = current_user.sales.includes(:product)
     dates = time_series_months(sales.first.created_at - 1.month, Time.current)
     products = current_user.products
-    data = products.order(:revenue).reverse.collect do |p|
+    data = products.order(:revenue).reverse.to_h do |p|
       [p.product_name, Array.new(dates.size, 0)]
-    end.to_h
+    end
     sales.each do |s|
       next unless s.product
 

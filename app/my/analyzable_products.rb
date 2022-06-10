@@ -2,7 +2,7 @@
 
 ActiveAdmin.register Analyzable::Product, namespace: :my, as: 'Product' do
   menu parent: 'Sales', label: 'Products'
-  
+
   scope_to :current_user
 
   index titles: 'Products' do
@@ -133,7 +133,8 @@ ActiveAdmin.register Analyzable::Product, namespace: :my, as: 'Product' do
     end
   end
 
-  permit_params :product_name, :image_key, product_links_attributes: %i[id link_name user_id _destroy]
+  permit_params :product_name, :image_key,
+                product_links_attributes: %i[id link_name user_id _destroy]
 
   form do |f|
     f.inputs do
@@ -144,7 +145,7 @@ ActiveAdmin.register Analyzable::Product, namespace: :my, as: 'Product' do
                  new_record: true,
                  allow_destroy: true do |pl|
         pl.input :link_name
-        pl.input :user_id, input_html: { value: current_user.id}, as: :hidden
+        pl.input :user_id, input_html: { value: current_user.id }, as: :hidden
       end
     end
     f.actions

@@ -4,7 +4,6 @@ ActiveAdmin.register_page 'Donations', namespace: :my do
   menu parent: 'Data', label: 'Donations',
        priority: 1,
        if: proc { current_user.donations.size.positive? }
-         
 
   content title: proc { I18n.t('active_admin.donations') } do
     panel '' do

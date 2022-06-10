@@ -20,7 +20,7 @@ RSpec.describe MessageUserWorker, type: :worker do
     it 'job in correct queue' do
       stub_request(:post, uri_regex)
         .with(body:
-        "{\"avatar_name\":\"Random Citizen\",\"message\":\"foo\"}")
+        '{"avatar_name":"Random Citizen","message":"foo"}')
       described_class.perform_async(owner.servers.sample.id, 'Random Citizen', uuid, 'foo')
       assert_equal 'default', described_class.queue
     end
@@ -28,7 +28,7 @@ RSpec.describe MessageUserWorker, type: :worker do
     it 'goes into the jobs array for testing environment' do
       stub_request(:post, uri_regex)
         .with(body:
-        "{\"avatar_name\":\"Random Citizen\",\"message\":\"foo\"}")
+        '{"avatar_name":"Random Citizen","message":"foo"}')
       expect {
         described_class.perform_async(owner.servers.sample.id, 'Random Citizen', 'foo')
       }.to change { described_class.jobs.size }.by(1)

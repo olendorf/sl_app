@@ -2,11 +2,11 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::Rezzable::WebObjects', type: :request do 
+RSpec.describe 'Api::V1::Rezzable::WebObjects', type: :request do
   let(:user) { FactoryBot.create :active_user }
 
   let(:web_object) {
-      FactoryBot.create :web_object, user_id: user.id
+    FactoryBot.create :web_object, user_id: user.id
   }
   let(:path) { api_rezzable_web_object_path(web_object.object_key) }
   before(:each) { get path, headers: headers(web_object) }

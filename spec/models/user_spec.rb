@@ -294,12 +294,12 @@ RSpec.describe User, type: :model do
       end
     end
   end
-  
-  describe '.default_payment_schedule' do 
-    it 'should return the correct data' do 
+
+  describe '.default_payment_schedule' do
+    it 'should return the correct data' do
       expect(User.default_payment_schedule).to include(
         1620 => 6, 300 => 1, 3060 => 12, 855 => 3
-        )
+      )
     end
   end
 
@@ -392,8 +392,8 @@ RSpec.describe User, type: :model do
       expect(prime.can_be_admin?).to be_falsey
     end
   end
-  
-  describe 'payment_schedule' do 
+
+  describe 'payment_schedule' do
     it 'should return the correct hash' do
       expect(user.payment_schedule).to include(
         300 => 1
@@ -474,9 +474,9 @@ RSpec.describe User, type: :model do
                                                 target_name: target_two.avatar_name,
                                                 target_key: target_two.avatar_key)
         user.transactions << FactoryBot.build(:transaction, amount: 100)
-        # the other two splits will be requested from server when linden 
+        # the other two splits will be requested from server when linden
         # transfer is successful
-        expect(user.transactions.size).to eq 1  
+        expect(user.transactions.size).to eq 1
       end
 
       it 'should send the requests to send money' do
@@ -518,25 +518,7 @@ RSpec.describe User, type: :model do
         expect(target_one.balance).to eq 5
       end
     end
-    
-    describe 'no splits' do 
-    end
   end
-
-  # describe '.message_users' do
-  #   let(:uri_regex) do
-  #     %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/message_user\?
-  #       auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
-  #   end
-
-  #   it 'should queue the background process' do
-  #     stub_request(:post, uri_regex)
-  #     FactoryBot.create :active_user, expiration_date: 2.days.from_now
-  #     owner = FactoryBot.create :owner
-  #     owner.web_objects << FactoryBot.create(:server)
-  #     expect(User.message_users).to be_processed_in ""
-  #   end
-  # end
 
   describe '.cleanup_users' do
     before(:each) do

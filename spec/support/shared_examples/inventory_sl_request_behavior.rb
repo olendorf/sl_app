@@ -35,9 +35,9 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
 
   let(:give_regex) do
     %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/
-    services/give_inventory/[a-zA-Z\s%0-9]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+}x
+    services/give_inventory\?auth_digest=[a-f0-9]+&auth_time=[0-9]+}x
   end
-  
+
   let(:move_regex) do
     %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/
     services/move_inventory/[a-zA-Z\s%0-9]+\?auth_digest=[a-f0-9]+&auth_time=[0-9]+}x
@@ -118,7 +118,9 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
                             Analyzable::Inventory::PERMS[:copy]
     inventory.save
     stub = stub_request(:post, give_regex)
-           .with(body: "{\"avatar_name\":\"#{avatar.avatar_name}\"}")
+           .with(body: "{\"inventory_name\":\"#{
+                inventory.inventory_name}\",\"avatar_name\":\"#{
+                    avatar.avatar_name}\"}")
     server
 
     visit(send("#{namespace}_inventory_path", inventory))
@@ -136,7 +138,9 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     inventory.save
 
     stub = stub_request(:post, give_regex)
-           .with(body: "{\"avatar_name\":\"#{avatar.avatar_name}\"}")
+           .with(body: "{\"inventory_name\":\"#{
+                inventory.inventory_name}\",\"avatar_name\":\"#{
+                    avatar.avatar_name}\"}")
 
     visit(send("#{namespace}_inventory_path", inventory))
     fill_in('give_inventory-avatar_name', with: avatar.avatar_name)
@@ -153,7 +157,9 @@ RSpec.shared_examples 'it has inventory request behavior' do |namespace|
     inventory.save
 
     stub_request(:post, give_regex)
-      .with(body: "{\"avatar_name\":\"#{avatar.avatar_name}\"}")
+      .with(body: "{\"inventory_name\":\"#{
+            inventory.inventory_name}\",\"avatar_name\":\"#{
+                avatar.avatar_name}\"}")
       .to_return(body: 'foo', status: 400)
 
     visit(send("#{namespace}_inventory_path", inventory))

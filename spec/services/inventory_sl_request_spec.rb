@@ -17,7 +17,7 @@ RSpec.describe InventorySlRequest do
   end
   let(:give_regex) do
     %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/
-    give_inventory/[a-zA-Z\s%0-9]+\?auth_digest=[-a-f0-9]+&auth_time=[0-9]+}x
+    give_inventory\?auth_digest=[-a-f0-9]+&auth_time=[0-9]+}x
   end
   let(:move_regex) do
     %r{https://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/
@@ -74,15 +74,15 @@ RSpec.describe InventorySlRequest do
   describe '.give' do
     let(:avatar_key) { SecureRandom.uuid }
     it 'should make the request' do
+      inventory = server.inventories.sample
       stub = stub_request(:post, give_regex)
-             .with(body: "{\"avatar_name\":\"#{avatar_key}\"}")
+             .with(body: "{\"inventory_name\":\"#{
+              inventory.inventory_name}\",\"avatar_name\":\"#{avatar_key}\"}")
       InventorySlRequest.give_inventory(
-        server.inventories.sample.id, avatar_key
+        inventory.id, avatar_key
       )
       expect(stub).to have_been_requested
     end
-    
-    
 
     context 'error occurs' do
       it 'should raise an error' do

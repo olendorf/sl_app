@@ -39,7 +39,7 @@ module ActiveAdmin
                              avatar: params['avatar_name'])
           rescue RestClient::ExceptionWithResponse => e
             flash[:error] = t('active_admin.server.send_message.failure',
-                              message: e.response)
+                              avatar: params['avatar_name'], message: e.response)
           end
 
           redirect_back(fallback_location:

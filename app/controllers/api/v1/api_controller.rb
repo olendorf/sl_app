@@ -50,11 +50,11 @@ module Api
       end
 
       def validate_package(time_limit = 30)
-        logger.info("validating package with: ")
-        logger.info("auth_digest client #{auth_digest}")
-        logger.info("auth_digest server #{create_digest}")
+        # logger.info("validating package with: ")
+        # logger.info("auth_digest client #{auth_digest}")
+        # logger.info("auth_digest server #{create_digest}")
         
-        logger.info("api_key server #{api_key}")
+        # logger.info("api_key server #{api_key}")
 
         unless (Time.now.to_i - auth_time).abs < time_limit
           raise(

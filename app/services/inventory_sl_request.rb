@@ -42,8 +42,8 @@ class InventorySlRequest
     inventory = Analyzable::Inventory.find(inventory_id)
     server = inventory.server
     
-    logger.info("request inventory: #{inventory.inspect}")
-    logger.info("server url: #{server.url}")
+    Rails.logger.info("request inventory: #{inventory.inspect}")
+    Rails.logger.info("server url: #{server.url}")
 
     RestClient::Request.execute(
       url: "#{server.url}/services/give_inventory/#{ERB::Util.url_encode(inventory.inventory_name)}",

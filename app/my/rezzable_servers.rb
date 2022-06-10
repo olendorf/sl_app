@@ -3,7 +3,6 @@
 ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
   include ActiveAdmin::ServerBehavior
   include ActiveAdmin::MessagingBehavior
-  
 
   menu parent: 'Objects', label: 'Servers', if: proc { current_user.servers.size.positive? }
 
@@ -105,7 +104,7 @@ ActiveAdmin.register Rezzable::Server, as: 'Server', namespace: :my do
               #{link_to('Delete', my_inventory_path(inventory),
                         class: 'delete_link member_link',
                         method: :delete,
-                        data: {confirm: 'Are you sure you want to delete this?'})}".html_safe
+                        data: { confirm: 'Are you sure you want to delete this?' })}".html_safe
             end
           end
         end

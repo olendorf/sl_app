@@ -27,21 +27,21 @@ module ActiveAdmin
           end
           redirect_back(fallback_location: my_servers_path)
         end
-        
-        
+
         member_action :send_message, method: :post do
           begin
             ServerSlRequest.message_user(
-                        current_user.servers.sample.id,
-                        params['avatar_name'],
-                        params['message'])
-            flash.notice = t('active_admin.server.send_message.success', 
-                                avatar: params['avatar_name'])
+              current_user.servers.sample.id,
+              params['avatar_name'],
+              params['message']
+            )
+            flash.notice = t('active_admin.server.send_message.success',
+                             avatar: params['avatar_name'])
           rescue RestClient::ExceptionWithResponse => e
             flash[:error] = t('active_admin.server.send_message.failure',
-                            message: e.response)
+                              message: e.response)
           end
-          
+
           redirect_back(fallback_location:
                           send(
                             "#{self.class.module_parent.name.downcase}_dashboard_path"

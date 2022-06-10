@@ -8,7 +8,8 @@ class InventorySlRequest
     server = inventory.server
 
     RestClient::Request.execute(
-      url: "#{server.url}/services/inventories/#{ERB::Util.url_encode(inventory.inventory_name)}",
+      url: "#{server.url}/services/inventories/#{
+                ERB::Util.url_encode(inventory.inventory_name)}",
       method: :delete,
       content_type: :json,
       accept: :json,
@@ -28,7 +29,8 @@ class InventorySlRequest
     target_server = Rezzable::Server.find(server_id)
 
     RestClient::Request.execute(
-      url: "#{server.url}/services/move_inventory/#{ERB::Util.url_encode(inventory.inventory_name)}",
+      url: "#{server.url}/services/move_inventory/#{
+                ERB::Util.url_encode(inventory.inventory_name)}",
       method: :put,
       content_type: :json,
       accept: :json,
@@ -41,7 +43,7 @@ class InventorySlRequest
   def self.give_inventory(inventory_id, avatar_name)
     inventory = Analyzable::Inventory.find(inventory_id)
     server = inventory.server
-    
+
     Rails.logger.info("request inventory: #{inventory.inspect}")
     Rails.logger.info("server url: #{server.url}")
 
@@ -50,7 +52,7 @@ class InventorySlRequest
       method: :post,
       content_type: :json,
       accept: :json,
-      payload: { inventory_name: inventory.inventory_name, 
+      payload: { inventory_name: inventory.inventory_name,
                  avatar_name: avatar_name }.to_json,
       verify_ssl: false,
       headers: request_headers(server)

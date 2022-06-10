@@ -7,7 +7,6 @@ module Api
       before_action :process_atts, only: %i[create update]
 
       def create
-        
         if AbstractWebObject.find_by_object_key(@atts[:object_key])
           load_requesting_object
           update

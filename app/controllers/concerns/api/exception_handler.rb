@@ -25,8 +25,7 @@ module Api
       end
 
       rescue_from ActionController::BadRequest do |e|
-        
-        logger.info("handling bad request")
+        logger.info('handling bad request')
         json_response({ message: e.message }, :bad_request)
       end
 

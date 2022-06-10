@@ -16,34 +16,34 @@ RSpec.shared_examples 'a user object API' do |model_name|
 
       it 'should return created status' do
         post path, params: atts.to_json,
-                  headers: headers(
-                    web_object, api_key: Settings.default.web_object.api_key
-                  )
+                   headers: headers(
+                     web_object, api_key: Settings.default.web_object.api_key
+                   )
         expect(response.status).to eq 201
       end
 
       it "should create a #{model_name}" do
         expect do
           post path, params: atts.to_json,
-                    headers: headers(
-                      web_object, api_key: Settings.default.web_object.api_key
-                    )
+                     headers: headers(
+                       web_object, api_key: Settings.default.web_object.api_key
+                     )
         end.to change(klass, :count).by(1)
       end
 
       it 'should add the owner' do
         post path, params: atts.to_json,
-                  headers: headers(
-                    web_object, api_key: Settings.default.web_object.api_key
-                  )
+                   headers: headers(
+                     web_object, api_key: Settings.default.web_object.api_key
+                   )
         expect(AbstractWebObject.last.user.id).to eq owner.id
       end
 
       it 'returns a nice message do ' do
         post path, params: atts.to_json,
-                  headers: headers(
-                    web_object, api_key: Settings.default.web_object.api_key
-                  )
+                   headers: headers(
+                     web_object, api_key: Settings.default.web_object.api_key
+                   )
         expect(
           JSON.parse(response.body)['message']
         ).to eq('This object has been registered in the database.')
@@ -51,7 +51,7 @@ RSpec.shared_examples 'a user object API' do |model_name|
 
       it 'returns the data' do
         post path, params: atts.to_json,
-                  headers: headers(web_object,
+                   headers: headers(web_object,
                                     api_key: Settings.default.web_object.api_key)
         expect(JSON.parse(response.body)['data']).to include(
           'api_key' => klass.last.api_key
@@ -67,7 +67,7 @@ RSpec.shared_examples 'a user object API' do |model_name|
 
       it 'should return the correct status status' do
         post path, params: atts.to_json,
-                  headers: headers(web_object,
+                   headers: headers(web_object,
                                     api_key: Settings.default.web_object.api_key)
         expect(response.status).to eq 201
       end
@@ -82,14 +82,14 @@ RSpec.shared_examples 'a user object API' do |model_name|
 
       let(:new_object) do
         FactoryBot.build model_name, user_id: user.id,
-                                    object_name: existing_object.object_name,
-                                    object_key: existing_object.object_key
+                                     object_name: existing_object.object_name,
+                                     object_key: existing_object.object_key
       end
       let(:atts) { { url: new_object.url } }
 
       it 'should return ok status' do
         post path, params: atts.to_json,
-                  headers: headers(new_object,
+                   headers: headers(new_object,
                                     api_key: Settings.default.web_object.api_key)
 
         expect(response.status).to eq 200
@@ -104,10 +104,10 @@ RSpec.shared_examples 'a user object API' do |model_name|
 
       it 'should return not found status' do
         post path, params: atts.to_json,
-                  headers: headers(
-                    web_object, avatar_key: SecureRandom.uuid,
-                                api_key: Settings.default.web_object.api_key
-                  )
+                   headers: headers(
+                     web_object, avatar_key: SecureRandom.uuid,
+                                 api_key: Settings.default.web_object.api_key
+                   )
         expect(response.status).to eq 404
       end
     end

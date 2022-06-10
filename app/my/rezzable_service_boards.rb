@@ -6,7 +6,7 @@ ActiveAdmin.register Rezzable::ServiceBoard, as: 'Service Board', namespace: :my
   menu parent: 'Rentals', label: 'Service Boards'
 
   actions :all, except: %i[new create]
-  
+
   scope_to :current_user, association_method: :servers
 
   decorate_with Rezzable::ServiceBoardDecorator

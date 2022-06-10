@@ -15,7 +15,7 @@ RSpec.feature 'Server management', type: :feature do
     %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/give_money\?
        auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
-  
+
   let(:message_regex) do
     %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/message_user\?
        auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
@@ -40,7 +40,7 @@ RSpec.feature 'Server management', type: :feature do
       expect(stub).to have_been_requested
       # Request for this is sent from server on successful money transfer
       # so don't test here
-      # expect(user.reload.transactions.size).to eq 1 
+      # expect(user.reload.transactions.size).to eq 1
     end
 
     scenario 'User gives money with error' do
@@ -59,12 +59,12 @@ RSpec.feature 'Server management', type: :feature do
       expect(user.transactions.size).to eq 0
     end
   end
-  
-  feature 'send message to an avatar' do 
+
+  feature 'send message to an avatar' do
     let(:user) { FactoryBot.create :active_user }
     let(:server) { FactoryBot.create :server, user_id: user.id }
-    
-    scenario 'User sends message' do 
+
+    scenario 'User sends message' do
       server
       stub = stub_request(:post, message_regex)
              .with(body: '{"avatar_name":"Random Citizen","message":"foo"}')

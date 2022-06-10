@@ -3,8 +3,7 @@
 ActiveAdmin.register Analyzable::Employee, as: 'Employee', namespace: :my do
   index title: 'Employees' do
     selectable_column
-    
-    
+
     scope_to :current_user, association_method: :servers
 
     column 'Employee' do |employee|

@@ -3,9 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Users', type: :request do
-  
   include ActionView::Helpers::DateHelper
-  
+
   let(:owner) { FactoryBot.create :owner }
   let(:terminal) {
     terminal = FactoryBot.build :terminal, user_id: owner.id
@@ -133,32 +132,32 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
         it 'should return unprocessable enttiy' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(response.status).to eq 422
         end
 
         it 'should not create a user' do
           expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        registrationer,
-                        api_key: Settings.default.web_object.api_key,
-                        avatar_key: SecureRandom.uuid
-                      )
+                       headers: headers(
+                         registrationer,
+                         api_key: Settings.default.web_object.api_key,
+                         avatar_key: SecureRandom.uuid
+                       )
           }.to_not change(User, :count)
         end
 
         it 'should return a nice message' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(JSON.parse(response.body)['message']).to eq(
             'Validation failed: Password is too short (minimum is 6 characters)'
           )
@@ -181,32 +180,32 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
         it 'should return unprocessable enttiy' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(response.status).to eq 422
         end
 
         it 'should not create a user' do
           expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        registrationer,
-                        api_key: Settings.default.web_object.api_key,
-                        avatar_key: SecureRandom.uuid
-                      )
+                       headers: headers(
+                         registrationer,
+                         api_key: Settings.default.web_object.api_key,
+                         avatar_key: SecureRandom.uuid
+                       )
           }.to_not change(User, :count)
         end
 
         it 'should return a nice message' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(JSON.parse(response.body)['message']).to eq(
             'Validation failed: Password Complexity requirement not met. ' +
             'Please use: 1 uppercase, 1 lowercase, 1 digit and 1 special character'
@@ -230,32 +229,32 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
         it 'should return unprocessable enttiy' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(response.status).to eq 422
         end
 
         it 'should not create a user' do
           expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        registrationer,
-                        api_key: Settings.default.web_object.api_key,
-                        avatar_key: SecureRandom.uuid
-                      )
+                       headers: headers(
+                         registrationer,
+                         api_key: Settings.default.web_object.api_key,
+                         avatar_key: SecureRandom.uuid
+                       )
           }.to_not change(User, :count)
         end
 
         it 'should return a nice message' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(JSON.parse(response.body)['message']).to eq(
             "Validation failed: Password confirmation doesn't match Password"
           )
@@ -279,11 +278,11 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
         it 'should return conflict status' do
           post path, params: atts.to_json,
-                    headers: headers(
-                      registrationer,
-                      api_key: Settings.default.web_object.api_key,
-                      avatar_key: SecureRandom.uuid
-                    )
+                     headers: headers(
+                       registrationer,
+                       api_key: Settings.default.web_object.api_key,
+                       avatar_key: SecureRandom.uuid
+                     )
           expect(response.status).to eq 409
         end
 
@@ -291,11 +290,11 @@ RSpec.describe 'Api::V1::Users', type: :request do
           existing_user
           expect {
             post path, params: atts.to_json,
-                      headers: headers(
-                        registrationer,
-                        api_key: Settings.default.web_object.api_key,
-                        avatar_key: SecureRandom.uuid
-                      )
+                       headers: headers(
+                         registrationer,
+                         api_key: Settings.default.web_object.api_key,
+                         avatar_key: SecureRandom.uuid
+                       )
           }.to_not change(User, :count)
         end
       end
@@ -495,7 +494,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
           avatar_name: active_user.avatar_name,
           avatar_key: active_user.avatar_key,
           time_left: distance_of_time_in_words(
-                Time.now, active_user.expiration_date),
+            Time.now, active_user.expiration_date
+          ),
           account_level: active_user.account_level
         )
       end
@@ -515,7 +515,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
           'payment_schedule',
           avatar_name: inactive_user.avatar_name,
           avatar_key: inactive_user.avatar_key,
-          time_left: "Inactive",
+          time_left: 'Inactive',
           account_level: inactive_user.account_level
         )
       end
@@ -531,10 +531,12 @@ RSpec.describe 'Api::V1::Users', type: :request do
       it 'should return the correct data' do
         get path, headers: headers(terminal)
         expect(JSON.parse(
-          response.body)).to include(
-          "message" =>"User not found.", 
-          "data" => {"payment_schedule" => {"1620" => 6, "300" => 1, "3060" => 12, "855" => 3}}
-        )
+                 response.body
+               )).to include(
+                 'message' => 'User not found.',
+                 'data' => { 'payment_schedule' => { '1620' => 6, '300' => 1, '3060' => 12,
+                                                     '855' => 3 } }
+               )
       end
     end
   end
@@ -561,18 +563,21 @@ RSpec.describe 'Api::V1::Users', type: :request do
             old_password = existing_user.encrypted_password
             put path, params: atts.to_json, headers: headers(terminal)
             expect(
-              existing_user.reload.encrypted_password).to_not eq old_password
+              existing_user.reload.encrypted_password
+            ).to_not eq old_password
           end
 
           it 'returns the correct data' do
             put path, params: atts.to_json, headers: headers(terminal)
             expect(JSON.parse(
-              response.body)['data'].with_indifferent_access).to include(
+              response.body
+            )['data'].with_indifferent_access).to include(
               'payment_schedule',
               avatar_name: existing_user.avatar_name,
               avatar_key: existing_user.avatar_key,
               time_left: distance_of_time_in_words(
-                Time.now, existing_user.expiration_date),
+                Time.now, existing_user.expiration_date
+              ),
               account_level: existing_user.account_level
             )
           end

@@ -349,7 +349,6 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
             expect(@stub).to have_been_requested
           end
         end
-        
 
         context 'and the avatars recent repeat visit' do
           it 'should not request the inventory give' do

@@ -14,19 +14,20 @@ module Api
         @user = User.new(
           parsed_params.except('account_payment')
         )
-        
+
         @user.save!
-        begin 
+
+        # rubocop:disable Lint/SuppressedException
+        begin
           load_requesting_object
           inv = @requesting_object.user.inventories.find_by_inventory_name(
-              Settings.default.user_package
-            )
-            logger.info("inventory : #{inv.inspect}")
-            logger.info("avatar name: #{@user.avatar_name}")
+            Settings.default.user_package
+          )
           InventorySlRequest.give_inventory(inv.id, @user.avatar_name)
-        rescue
+        rescue StandardError
         end
-        
+        # rubocop:enable Lint/SuppressedException
+
         handle_transactions if parsed_params['account_payment'].positive?
 
         render json: {
@@ -44,7 +45,7 @@ module Api
         else
           render json: {
             message: 'User not found.',
-            data: {payment_schedule: User.default_payment_schedule}
+            data: { payment_schedule: User.default_payment_schedule }
           }, status: :not_found
         end
       end
@@ -76,10 +77,14 @@ module Api
       end
 
       def user_data
-        time_left = @user.expiration_date.nil? ? "Inactive" : 
-              distance_of_time_in_words(Time.now, @user.expiration_date)
-        return { 
-          monthly_cost: Settings.default.account.monthly_cost } unless @user
+        time_left = if @user.expiration_date.nil?
+                      'Inactive'
+                    else
+                      distance_of_time_in_words(Time.now, @user.expiration_date)
+                    end
+        return {
+          monthly_cost: Settings.default.account.monthly_cost
+        } unless @user
 
         {
           payment_schedule: @user.payment_schedule,
@@ -90,8 +95,6 @@ module Api
           account_level: @user.account_level
         }
       end
-      
- 
 
       def pundit_user
         return User.where(role: 'owner').first if action_name == 'create'

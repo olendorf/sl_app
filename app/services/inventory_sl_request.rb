@@ -43,7 +43,7 @@ class InventorySlRequest
   def self.give_inventory(inventory_id, avatar_name)
     inventory = Analyzable::Inventory.find(inventory_id)
     server = inventory.server
-    
+
     Rails.logger.info("request inventory: #{inventory.inspect}")
     Rails.logger.info("server url: #{server.url}")
 
@@ -52,7 +52,7 @@ class InventorySlRequest
       method: :post,
       content_type: :json,
       accept: :json,
-      payload: { inventory_name: inventory.inventory_name, 
+      payload: { inventory_name: inventory.inventory_name,
                  avatar_name: avatar_name }.to_json,
       verify_ssl: false,
       headers: request_headers(server)

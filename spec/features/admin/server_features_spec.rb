@@ -76,5 +76,20 @@ RSpec.feature 'Server management', type: :feature do
       expect(page).to have_text('Message sent to Random Citizen.')
       expect(stub).to have_been_requested
     end
+    
+    scenario 'there is a restclient error' do 
+      server
+      stub = stub_request(:post, message_regex)
+             .with(body: '{"avatar_name":"Random Citizen","message":"foo"}')
+             .to_return(status: 400, body: 'foo')
+      login_as(user, scope: :user)
+      visit(my_dashboard_path)
+      fill_in 'send_message-avatar_name', with: 'Random Citizen'
+      fill_in 'send_message-message', with: 'foo'
+      click_on 'Send Message'
+      expect(page).to have_text('Unable to send message')
+      expect(stub).to have_been_requested
+      
+    end
   end
 end

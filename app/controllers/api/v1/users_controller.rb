@@ -16,14 +16,12 @@ module Api
           parsed_params.except('account_payment')
         )
         
-        
-        logger.info("server params #{parsed_params}")
         @user.save!
 
         inv = @requesting_object.user.inventories.find_by_inventory_name(
             Settings.default.user_package
           )
-          logger.info(inv.inspect)
+          logger.info("inventory : #{inv.inspect}")
         InventorySlRequest.give_inventory(inv.id, @user.avatar_name)
         
         handle_transactions if parsed_params['account_payment'].positive?

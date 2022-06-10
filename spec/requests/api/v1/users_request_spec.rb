@@ -24,93 +24,93 @@ RSpec.describe 'Api::V1::Users', type: :request do
     # with a purchased package OR from a terminal. Registrationers
     # always assume that the avatar has paid and therefore gets
     # a one month account of level 1.
-    context 'from a registrationer' do
-      let(:registrationer) { FactoryBot.build :web_object }
+    # context 'from a registrationer' do
+    #   let(:registrationer) { FactoryBot.build :web_object }
 
-      let(:new_user) { FactoryBot.build :inactive_user }
+    #   let(:new_user) { FactoryBot.build :inactive_user }
 
-      let(:path) { api_users_path }
+    #   let(:path) { api_users_path }
 
-      context 'valid params' do
-        let(:atts) {
-          {
-            avatar_name: new_user.avatar_name,
-            avatar_key: new_user.avatar_key,
-            password: 'Pa$sW0rd!',
-            password_confirmation: 'Pa$sW0rd!',
-            account_payment: 0,
-            # expiration_date: Time.now + 1.month.to_i,
-            added_time: 1,
-            account_level: 1
-          }
-        }
-        it 'should return created status' do
-          post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
-          expect(response.status).to eq 201
-        end
+    #   context 'valid params' do
+    #     let(:atts) {
+    #       {
+    #         avatar_name: new_user.avatar_name,
+    #         avatar_key: new_user.avatar_key,
+    #         password: 'Pa$sW0rd!',
+    #         password_confirmation: 'Pa$sW0rd!',
+    #         account_payment: 0,
+    #         # expiration_date: Time.now + 1.month.to_i,
+    #         added_time: 1,
+    #         account_level: 1
+    #       }
+    #     }
+    #     it 'should return created status' do
+    #       post path, params: atts.to_json,
+    #                 headers: headers(
+    #                   registrationer,
+    #                   api_key: Settings.default.web_object.api_key,
+    #                   avatar_key: SecureRandom.uuid
+    #                 )
+    #       expect(response.status).to eq 201
+    #     end
 
-        it 'should create a user' do
-          expect {
-            post path, params: atts.to_json,
-                       headers: headers(
-                         registrationer,
-                         api_key: Settings.default.web_object.api_key,
-                         avatar_key: SecureRandom.uuid
-                       )
-          }.to change(User, :count).by(1)
-        end
+    #     it 'should create a user' do
+    #       expect {
+    #         post path, params: atts.to_json,
+    #                   headers: headers(
+    #                     registrationer,
+    #                     api_key: Settings.default.web_object.api_key,
+    #                     avatar_key: SecureRandom.uuid
+    #                   )
+    #       }.to change(User, :count).by(1)
+    #     end
 
-        it 'should set the parameters correctly' do
-          post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
-          expect(User.last.attributes.with_indifferent_access).to include(
-            avatar_name: atts[:avatar_name],
-            avatar_key: atts[:avatar_key],
-            account_level: atts[:account_level]
-          )
-          expect(User.last.expiration_date).to be_within(30).of(Time.now + 1.month.to_i)
-        end
+    #     it 'should set the parameters correctly' do
+    #       post path, params: atts.to_json,
+    #                 headers: headers(
+    #                   registrationer,
+    #                   api_key: Settings.default.web_object.api_key,
+    #                   avatar_key: SecureRandom.uuid
+    #                 )
+    #       expect(User.last.attributes.with_indifferent_access).to include(
+    #         avatar_name: atts[:avatar_name],
+    #         avatar_key: atts[:avatar_key],
+    #         account_level: atts[:account_level]
+    #       )
+    #       expect(User.last.expiration_date).to be_within(30).of(Time.now + 1.month.to_i)
+    #     end
 
-        it 'should return a nice message' do
-          post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
-          expect(JSON.parse(response.body)['message']).to eq(
-            'Your account has been created. Please ' +
-            "visit #{Settings.default.site_url} to " +
-            'view your account.'
-          )
-        end
-        it 'should return the correct data' do
-          post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
-          expect(JSON.parse(response.body)['data'].with_indifferent_access).to include(
-            'payment_schedule',
-            avatar_name: atts[:avatar_name],
-            avatar_key: atts[:avatar_key],
-            time_left: distance_of_time_in_words(
-                Time.now, User.last.expiration_date),
-            account_level: atts[:account_level]
-          )
-        end
-      end
-    end
+    #     it 'should return a nice message' do
+    #       post path, params: atts.to_json,
+    #                 headers: headers(
+    #                   registrationer,
+    #                   api_key: Settings.default.web_object.api_key,
+    #                   avatar_key: SecureRandom.uuid
+    #                 )
+    #       expect(JSON.parse(response.body)['message']).to eq(
+    #         'Your account has been created. Please ' +
+    #         "visit #{Settings.default.site_url} to " +
+    #         'view your account.'
+    #       )
+    #     end
+    #     it 'should return the correct data' do
+    #       post path, params: atts.to_json,
+    #                 headers: headers(
+    #                   registrationer,
+    #                   api_key: Settings.default.web_object.api_key,
+    #                   avatar_key: SecureRandom.uuid
+    #                 )
+    #       expect(JSON.parse(response.body)['data'].with_indifferent_access).to include(
+    #         'payment_schedule',
+    #         avatar_name: atts[:avatar_name],
+    #         avatar_key: atts[:avatar_key],
+    #         time_left: distance_of_time_in_words(
+    #             Time.now, User.last.expiration_date),
+    #         account_level: atts[:account_level]
+    #       )
+    #     end
+    #   end
+    # end
 
     describe 'invalid params' do
       let(:registrationer) { FactoryBot.build :web_object }
@@ -133,32 +133,32 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
         it 'should return unprocessable enttiy' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
+                    headers: headers(
+                      registrationer,
+                      api_key: Settings.default.web_object.api_key,
+                      avatar_key: SecureRandom.uuid
+                    )
           expect(response.status).to eq 422
         end
 
         it 'should not create a user' do
           expect {
             post path, params: atts.to_json,
-                       headers: headers(
-                         registrationer,
-                         api_key: Settings.default.web_object.api_key,
-                         avatar_key: SecureRandom.uuid
-                       )
+                      headers: headers(
+                        registrationer,
+                        api_key: Settings.default.web_object.api_key,
+                        avatar_key: SecureRandom.uuid
+                      )
           }.to_not change(User, :count)
         end
 
         it 'should return a nice message' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
+                    headers: headers(
+                      registrationer,
+                      api_key: Settings.default.web_object.api_key,
+                      avatar_key: SecureRandom.uuid
+                    )
           expect(JSON.parse(response.body)['message']).to eq(
             'Validation failed: Password is too short (minimum is 6 characters)'
           )
@@ -181,32 +181,32 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
         it 'should return unprocessable enttiy' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
+                    headers: headers(
+                      registrationer,
+                      api_key: Settings.default.web_object.api_key,
+                      avatar_key: SecureRandom.uuid
+                    )
           expect(response.status).to eq 422
         end
 
         it 'should not create a user' do
           expect {
             post path, params: atts.to_json,
-                       headers: headers(
-                         registrationer,
-                         api_key: Settings.default.web_object.api_key,
-                         avatar_key: SecureRandom.uuid
-                       )
+                      headers: headers(
+                        registrationer,
+                        api_key: Settings.default.web_object.api_key,
+                        avatar_key: SecureRandom.uuid
+                      )
           }.to_not change(User, :count)
         end
 
         it 'should return a nice message' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
+                    headers: headers(
+                      registrationer,
+                      api_key: Settings.default.web_object.api_key,
+                      avatar_key: SecureRandom.uuid
+                    )
           expect(JSON.parse(response.body)['message']).to eq(
             'Validation failed: Password Complexity requirement not met. ' +
             'Please use: 1 uppercase, 1 lowercase, 1 digit and 1 special character'
@@ -230,32 +230,32 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
         it 'should return unprocessable enttiy' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
+                    headers: headers(
+                      registrationer,
+                      api_key: Settings.default.web_object.api_key,
+                      avatar_key: SecureRandom.uuid
+                    )
           expect(response.status).to eq 422
         end
 
         it 'should not create a user' do
           expect {
             post path, params: atts.to_json,
-                       headers: headers(
-                         registrationer,
-                         api_key: Settings.default.web_object.api_key,
-                         avatar_key: SecureRandom.uuid
-                       )
+                      headers: headers(
+                        registrationer,
+                        api_key: Settings.default.web_object.api_key,
+                        avatar_key: SecureRandom.uuid
+                      )
           }.to_not change(User, :count)
         end
 
         it 'should return a nice message' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
+                    headers: headers(
+                      registrationer,
+                      api_key: Settings.default.web_object.api_key,
+                      avatar_key: SecureRandom.uuid
+                    )
           expect(JSON.parse(response.body)['message']).to eq(
             "Validation failed: Password confirmation doesn't match Password"
           )
@@ -279,11 +279,11 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
         it 'should return conflict status' do
           post path, params: atts.to_json,
-                     headers: headers(
-                       registrationer,
-                       api_key: Settings.default.web_object.api_key,
-                       avatar_key: SecureRandom.uuid
-                     )
+                    headers: headers(
+                      registrationer,
+                      api_key: Settings.default.web_object.api_key,
+                      avatar_key: SecureRandom.uuid
+                    )
           expect(response.status).to eq 409
         end
 
@@ -291,11 +291,11 @@ RSpec.describe 'Api::V1::Users', type: :request do
           existing_user
           expect {
             post path, params: atts.to_json,
-                       headers: headers(
-                         registrationer,
-                         api_key: Settings.default.web_object.api_key,
-                         avatar_key: SecureRandom.uuid
-                       )
+                      headers: headers(
+                        registrationer,
+                        api_key: Settings.default.web_object.api_key,
+                        avatar_key: SecureRandom.uuid
+                      )
           }.to_not change(User, :count)
         end
       end

@@ -314,7 +314,7 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
 
     context 'sending inventory' do
       let(:uri_regex) {
-        %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/give_inventory/foo\?
+        %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/give_inventory\?
                             auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
       }
       before(:each) do
@@ -349,6 +349,7 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
             expect(@stub).to have_been_requested
           end
         end
+        
 
         context 'and the avatars recent repeat visit' do
           it 'should not request the inventory give' do

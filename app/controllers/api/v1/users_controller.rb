@@ -11,13 +11,13 @@ module Api
 
       def create
         authorize [:api, :v1, User]
-        load_requesting_object
         @user = User.new(
           parsed_params.except('account_payment')
         )
         
         @user.save!
         begin 
+          load_requesting_object
           inv = @requesting_object.user.inventories.find_by_inventory_name(
               Settings.default.user_package
             )

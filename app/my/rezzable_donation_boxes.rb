@@ -72,7 +72,7 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
                 my_server_path(donation_box.server) if donation_box.server
       end
       row :total_donations
-        row 'Largest Donation' do |db|
+      row 'Largest Donation' do |db|
         donation = db.largest_donation
         if donation['amount']
           "#{donation['target_name']}: L$ #{donation['amount']} (#{donation['created_at']}})"
@@ -87,6 +87,21 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
         else
           'NA'
         end
+      end
+      row 'Default Donation' do |donation_box|
+        donation_box.decorate.format_pay_hint(donation_box.default_price)
+      end
+      row 'Quick Pay 1' do |donation_box|
+        donation_box.decorate.format_pay_hint(donation_box.quick_pay_1)
+      end
+      row 'Quick Pay 2' do |donation_box|
+        donation_box.decorate.format_pay_hint(donation_box.quick_pay_2)
+      end
+      row 'Quick Pay 3' do |donation_box|
+        donation_box.decorate.format_pay_hint(donation_box.quick_pay_3)
+      end
+      row 'Quick Pay 4' do |donation_box|
+        donation_box.decorate.format_pay_hint(donation_box.quick_pay_4)
       end
       row :goal
       row :dead_line

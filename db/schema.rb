@@ -249,7 +249,7 @@ ActiveRecord::Schema.define(version: 2022_06_22_180512) do
     t.string "response"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "price", default: -1
+    t.integer "default_price", default: -1
     t.integer "quick_pay_1", default: -2
     t.integer "quick_pay_2", default: -2
     t.integer "quick_pay_3", default: -2

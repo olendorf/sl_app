@@ -8,6 +8,12 @@ module Rezzable
 
     include RezzableBehavior
     include TransactableBehavior
+    
+    store :pay_fields, accessors: [:price, :quick_pays]
+    attr_accessor :quick_1, :quick_2, :quick_3, :quick_4
+    
+    
+    # store :my_jsonb_field_name, accessors: [:property1, :property2]
 
     OBJECT_WEIGHT = 1
 

@@ -88,12 +88,22 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
       row :total_donations
       row 'Largest Donation' do |db|
         donation = db.largest_donation
-        "#{donation['target_name']}: L$ #{donation['amount']} (#{donation['created_at']}})"
+        if donation['amount']
+          "#{donation['target_name']}: L$ #{donation['amount']} (#{donation['created_at']}})"
+        else
+          'NA'
+        end
       end
       row 'Biggest Donor' do |db|
         donor = db.biggest_donor
-        "#{donor[:avatar_name]}: L$ #{donor[:amount]}"
+        if donor[:amount]
+          "#{donor[:avatar_name]}: L$ #{donor[:amount]}"
+        else
+          'NA'
+        end
       end
+      row :goal
+      row :dead_line
       row :created_at
       row :updated_at
       row :pinged_at
@@ -143,6 +153,11 @@ ActiveAdmin.register Rezzable::DonationBox, as: 'Donation Box' do
         f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
           [s.object_name, s.actable.id]
         }
+        f.input :price
+        f.input :quick_pay_1
+        f.input :quick_pay_2
+        f.input :quick_pay_3
+        f.input :quick_pay_4
         f.input :show_largest_donation
         f.input :show_last_donor
         f.input :show_total

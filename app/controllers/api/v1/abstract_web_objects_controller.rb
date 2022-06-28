@@ -28,7 +28,7 @@ module Api
         
         logger.info "attributes: #{@atts}"
 
-        @requesting_object.update! @atts
+        @requesting_object.update! @atts.with_indifferent_access
 
         render json: {
           message: @message,

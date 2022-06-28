@@ -74,12 +74,37 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
       row :total_donations
       row 'Largest Donation' do |db|
         donation = db.largest_donation
-        "#{donation['target_name']}: L$ #{donation['amount']} (#{donation['created_at']}})"
+        if donation['amount']
+          "#{donation['target_name']}: L$ #{donation['amount']} (#{donation['created_at']}})"
+        else
+          'NA'
+        end
       end
       row 'Biggest Donor' do |db|
         donor = db.biggest_donor
-        "#{donor[:avatar_name]}: L$ #{donor[:amount]}"
+        if donor[:amount]
+          "#{donor[:avatar_name]}: L$ #{donor[:amount]}"
+        else
+          'NA'
+        end
       end
+      row 'Default Donation' do |donation_box|
+        donation_box.decorate.format_pay_hint(donation_box.default_price)
+      end
+      row 'Quick Pay 1' do |donation_box|
+        donation_box.decorate.format_pay_hint(donation_box.quick_pay_1)
+      end
+      row 'Quick Pay 2' do |donation_box|
+        donation_box.decorate.format_pay_hint(donation_box.quick_pay_2)
+      end
+      row 'Quick Pay 3' do |donation_box|
+        donation_box.decorate.format_pay_hint(donation_box.quick_pay_3)
+      end
+      row 'Quick Pay 4' do |donation_box|
+        donation_box.decorate.format_pay_hint(donation_box.quick_pay_4)
+      end
+      row :goal
+      row :dead_line
       row :created_at
       row :updated_at
       row :pinged_at
@@ -127,7 +152,8 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
 
   permit_params :object_name, :description, :show_last_donation, :show_last_donor,
                 :show_total, :show_largest_donation, :show_biggest_donor, :goal,
-                :dead_line, :response, :server_id
+                :dead_line, :response, :server_id, :price, :quick_pay_1,
+                :quick_pay_2, :quick_pay_3, :quick_pay_4
 
   form title: proc { "Edit #{resource.object_name}" } do |f|
     f.inputs do
@@ -137,6 +163,11 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
         f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
           [s.object_name, s.actable.id]
         }
+        f.input :price
+        f.input :quick_pay_1
+        f.input :quick_pay_2
+        f.input :quick_pay_3
+        f.input :quick_pay_4
         f.input :show_largest_donation
         f.input :show_last_donor
         f.input :show_total

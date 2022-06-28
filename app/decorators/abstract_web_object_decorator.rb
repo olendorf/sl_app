@@ -25,6 +25,12 @@ class AbstractWebObjectDecorator < Draper::Decorator
   def semantic_version
     "#{major_version}.#{minor_version}.#{patch_version}"
   end
+  
+  def format_pay_hint(value)
+    return "Hidden" if value == -1
+    return "Default" if value == -2
+    "L$ #{value}"
+  end
 
   def pretty_active
     return 'active' if active?

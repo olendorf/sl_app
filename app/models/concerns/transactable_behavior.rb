@@ -65,7 +65,8 @@ module TransactableBehavior
       target_name: split.target_name,
       target_key: split.target_key,
       transaction_id: transaction.id,
-      balance: current_balance + amount
+      balance: current_balance + amount,
+      previous_balance: user.transactions.last.balance
     )
   end
 
@@ -79,7 +80,8 @@ module TransactableBehavior
       category: 'share',
       target_name: user.avatar_name,
       target_key: user.avatar_key,
-      balance: balance
+      balance: balance,
+      previous_balance: target.transactions.last.balance
     ).save
   end
 

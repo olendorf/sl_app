@@ -17,6 +17,18 @@ RSpec.describe AbstractWebObjectDecorator do
       )
     end
   end
+  
+  describe :format_pay_hint do 
+    it 'should return hidden if the value is -1' do 
+      expect(web_object.decorate.format_pay_hint(-1)).to eq 'Hidden'
+    end
+    it 'should return default if the value is -2' do 
+      expect(web_object.decorate.format_pay_hint(-2)).to eq 'Default'
+    end
+    it 'should return formtted string if the value is 0 or greater' do 
+      expect(web_object.decorate.format_pay_hint(100)).to eq 'L$ 100'
+    end
+  end
 
   describe :semantic_version do
     it 'should generate the correct patch version' do

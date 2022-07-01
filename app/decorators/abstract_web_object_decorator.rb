@@ -31,6 +31,10 @@ class AbstractWebObjectDecorator < Draper::Decorator
     return "Default" if value == -2
     "L$ #{value}"
   end
+  
+  def color_box
+    "<p style=\"background-color:#{self.hover_text_color}\">&nbsp;</p>".html_safe
+  end
 
   def pretty_active
     return 'active' if active?

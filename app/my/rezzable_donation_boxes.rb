@@ -40,6 +40,9 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
               my_server_path(donation_box.server) if donation_box.server
     end
     column 'Total Donations', &:total_donations
+    column 'Hover Text Color' do |db|
+      db.color_box
+    end
     column :goal
     column :dead_line
     column 'Version', &:semantic_version
@@ -70,6 +73,9 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
       row 'Server' do |donation_box|
         link_to donation_box.server.object_name,
                 my_server_path(donation_box.server) if donation_box.server
+      end
+      row 'Hover Text Color' do |db|
+        "<div style=\"width:50px\">#{db.color_box}</div>".html_safe
       end
       row :total_donations
       row 'Largest Donation' do |db|
@@ -153,7 +159,7 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
   permit_params :object_name, :description, :show_last_donation, :show_last_donor,
                 :show_total, :show_largest_donation, :show_biggest_donor, :goal,
                 :dead_line, :response, :server_id, :price, :quick_pay_1,
-                :quick_pay_2, :quick_pay_3, :quick_pay_4
+                :quick_pay_2, :quick_pay_3, :quick_pay_4, :hover_text_color
 
   form title: proc { "Edit #{resource.object_name}" } do |f|
     f.inputs do
@@ -163,7 +169,8 @@ ActiveAdmin.register Rezzable::DonationBox, namespace: :my, as: 'Donation Box' d
         f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
           [s.object_name, s.actable.id]
         }
-        f.input :price
+        f.input :hover_text_color, as: :color
+        f.input :price, label: 'Suggested Donation'
         f.input :quick_pay_1
         f.input :quick_pay_2
         f.input :quick_pay_3

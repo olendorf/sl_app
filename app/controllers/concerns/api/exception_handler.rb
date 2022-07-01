@@ -15,6 +15,10 @@ module Api
       rescue_from ActiveRecord::RecordNotFound do |e|
         json_response({ message: e.message }, :not_found)
       end
+      
+      rescue_from ActionController::RoutingError do |e|
+        json_response({message: e.message}, :not_found)
+      end
 
       # rescue_from Pundit::NotAuthorizedError do |_e|
       #   json_response({ message: 'You are unauthorized to do that' }, :unauthorized)

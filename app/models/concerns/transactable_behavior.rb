@@ -23,7 +23,11 @@ module TransactableBehavior
     transaction.source_key = object_key if respond_to?(:object_key)
     transaction.source_name = object_name if respond_to?(:object_name)
     transaction.balance = compute_balance(transaction)
-    transaction.previous_balance = user.transactions.last.balance
+    if user.transactions.last
+      transaction.previous_balance = user.transactions.last.balance
+    else
+      transaction.previous_balance = 0
+    end
     transaction.save
   end
 
@@ -55,34 +59,34 @@ module TransactableBehavior
     transaction.balance = current_balance + transaction.amount
   end
 
-  # def add_transaction_to_user(transaction, split, amount)
-  #   current_balance = user.transactions.last.nil? ? 0 : user.balance
-  #   Analyzable::Transaction.create(
-  #     description: "Split from transaction #{transaction.id}",
-  #     amount: amount,
-  #     # source_type: 'system',
-  #     category: 'share',
-  #     user_id: user.id,
-  #     target_name: split.target_name,
-  #     target_key: split.target_key,
-  #     transaction_id: transaction.id,
-  #     balance: current_balance + amount
-  #   )
-  # end
+  def add_transaction_to_user(transaction, split, amount)
+    current_balance = user.transactions.last.nil? ? 0 : user.balance
+    Analyzable::Transaction.create(
+      description: "Split from transaction #{transaction.id}",
+      amount: amount,
+      # source_type: 'system',
+      category: 'share',
+      user_id: user.id,
+      target_name: split.target_name,
+      target_key: split.target_key,
+      transaction_id: transaction.id,
+      balance: current_balance + amount
+    )
+  end
 
-  # def add_transaction_to_target(target, amount)
-  #   balance = target.balance + (amount * -1)
-  #   Analyzable::Transaction.new(
-  #     user_id: target.id,
-  #     description: "Split from transaction with #{user.avatar_name}",
-  #     amount: amount,
-  #     source_type: 'system',
-  #     category: 'share',
-  #     target_name: user.avatar_name,
-  #     target_key: user.avatar_key,
-  #     balance: balance
-  #   ).save
-  # end
+  def add_transaction_to_target(target, amount)
+    balance = target.balance + (amount * -1)
+    Analyzable::Transaction.new(
+      user_id: target.id,
+      description: "Split from transaction with #{user.avatar_name}",
+      amount: amount,
+      source_type: 'system',
+      category: 'share',
+      target_name: user.avatar_name,
+      target_key: user.avatar_key,
+      balance: balance
+    ).save
+  end
 
   def self.included(base); end
 end

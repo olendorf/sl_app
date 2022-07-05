@@ -23,6 +23,11 @@ module TransactableBehavior
     transaction.source_key = object_key if respond_to?(:object_key)
     transaction.source_name = object_name if respond_to?(:object_name)
     transaction.balance = compute_balance(transaction)
+    if user.transactions.last
+      transaction.previous_balance = user.transactions.last.balance
+    else
+      transaction.previous_balance = 0
+    end
     transaction.save
   end
 

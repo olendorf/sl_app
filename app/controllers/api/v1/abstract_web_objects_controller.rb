@@ -25,8 +25,10 @@ module Api
         @message ||= I18n.t('api.rezzable.update.success')
         load_requesting_object
         authorize [:api, :v1, @requesting_object]
+        
+        logger.info "attributes: #{@atts}"
 
-        @requesting_object.update! @atts
+        @requesting_object.update! @atts.with_indifferent_access
 
         render json: {
           message: @message,

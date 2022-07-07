@@ -23,6 +23,7 @@ module Api
 
       def update
         @message ||= I18n.t('api.rezzable.update.success')
+        logger.info("Message: #{@message}")
         load_requesting_object
         authorize [:api, :v1, @requesting_object]
         

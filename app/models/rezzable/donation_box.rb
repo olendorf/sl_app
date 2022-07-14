@@ -51,7 +51,8 @@ module Rezzable
           show_largest_donation: show_largest_donation,
           show_biggest_donor: show_biggest_donor,
           goal: goal,
-          dead_line: dead_line
+          dead_line: dead_line,
+          response: self.response
         },
         data: {
           last_donation: last_donation,

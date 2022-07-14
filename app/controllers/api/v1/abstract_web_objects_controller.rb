@@ -22,7 +22,6 @@ module Api
       end
 
       def update
-        logger.info("Message: #{@message}")
         load_requesting_object
         authorize [:api, :v1, @requesting_object]
         

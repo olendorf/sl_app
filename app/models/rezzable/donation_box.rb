@@ -52,7 +52,14 @@ module Rezzable
           show_biggest_donor: show_biggest_donor,
           goal: goal,
           dead_line: dead_line,
-          response: self.response
+          response: self.response,
+          pay_hints: {
+            default_price: default_price,
+            quick_pay_1: quick_pay_1,
+            quick_pay_2: quick_pay_2,
+            quick_pay_3: quick_pay_3,
+            quick_pay_4: quick_pay_4,
+          }
         },
         data: {
           last_donation: last_donation,

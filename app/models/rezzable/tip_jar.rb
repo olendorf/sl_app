@@ -5,6 +5,7 @@ module Rezzable
   class TipJar < ApplicationRecord
     include RezzableBehavior
     include TransactableBehavior
+    include ActionView::Helpers::DateHelper
 
     acts_as :abstract_web_object
 
@@ -24,7 +25,31 @@ module Rezzable
       access_mode_group: 1,
       access_mode_list: 2
     }
-
+    
+    def response_data
+      curr_session = current_session
+      self.abstract_web_object.response_data.merge(
+        settings: {
+          show_last_tip: show_last_tip,
+          show_last_tipper: show_last_tipper,
+          show_total: show_total,
+          show_duration: show_duration
+        },
+        session: 
+          if(!current_session.nil?)
+            curr_session.attributes.except("id", "sessionable_id", "sessionable_type", "user_id").merge(
+              duration: distance_of_time_in_words(Time.current, curr_session.created_at),
+              total: curr_session.transactions.sum(:amount),
+              last_tip: curr_session.transactions.last ? curr_session.transactions.last.amount : nil,
+              last_tipper: curr_session.transactions.last ? curr_session.target_name : nil,
+              last_tipper_key: curr_session.transactions.last ? curr_session.target_key : nil
+              )
+          else
+            nil
+          end
+      )
+    end
+    
     def allowed_list
       listable_avatars.where(list_name: 'allowed')
     end

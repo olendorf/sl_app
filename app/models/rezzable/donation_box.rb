@@ -42,8 +42,7 @@ module Rezzable
 
     # rubocop:disable Style/RedundantSelf
     def response_data
-      {
-        api_key: self.reload.api_key,
+      self.abstract_web_object.response_data.merge(
         settings: {
           show_last_donation: show_last_donation,
           show_last_donor: show_last_donor,
@@ -67,7 +66,7 @@ module Rezzable
           largest_donation: largest_donation,
           biggest_donor: biggest_donor
         }
-      }
+      )
     end
     # rubocop:enable Style/RedundantSelf
 

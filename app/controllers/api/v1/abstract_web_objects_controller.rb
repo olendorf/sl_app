@@ -22,7 +22,6 @@ module Api
       end
 
       def update
-        @message ||= I18n.t('api.rezzable.update.success')
         load_requesting_object
         authorize [:api, :v1, @requesting_object]
         
@@ -31,7 +30,7 @@ module Api
         @requesting_object.update! @atts.with_indifferent_access
 
         render json: {
-          message: @message,
+          message: I18n.t('api.rezzable.update.success'),
           data: @requesting_object.response_data
         }, status: :ok
       end

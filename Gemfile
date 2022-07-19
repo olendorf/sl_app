@@ -56,6 +56,9 @@ gem 'activeadmin'
 # Nice and relatively simple charts and graphs
 gem "highcharts-rails"
 
+# Nice icons
+gem 'font_awesome5_rails'
+
 # Theme for active admin
 # gem 'active_admin_flat_skin'
 # gem "active_material", github: "vigetlabs/active_material"

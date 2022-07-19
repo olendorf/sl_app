@@ -72,7 +72,7 @@ RSpec.describe 'Api::V1::Rezzable::DonationBoxes', type: :request do
 
       it 'should say the response' do
         put path, params: atts.to_json, headers: headers(donation_box)
-        expect(JSON.parse(response.body)['message']).to eq 'Thank you'
+        expect(JSON.parse(response.body)['data']['settings']['response']).to eq 'Thank you'
       end
     end
 

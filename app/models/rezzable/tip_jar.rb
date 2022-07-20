@@ -33,7 +33,10 @@ module Rezzable
           show_last_tip: show_last_tip,
           show_last_tipper: show_last_tipper,
           show_total: show_total,
-          show_duration: show_duration
+          show_duration: show_duration,
+          split_percent: split_percent,
+          thank_you_message: thank_you_message,
+          sensor_mode: sensor_mode
         },
         session: 
           if(!current_session.nil?)

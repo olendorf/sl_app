@@ -123,28 +123,8 @@ module Rezzable
         transaction_id: transaction.id,
         balance: calculate_balance(split_amount * -1)
       )
-      update_tippee_balance(transaction)
     end
-    # rubocop:enable Metrics/AbcSize
-
-    def update_tippee_balance(transaction)
-      session_user = User.find_by_avatar_key(current_session.avatar_key)
-      return if session_user.nil?
-
-      split_amount = ((split_percent / 100.0) * transaction.amount).round
-      session_user.transactions << Analyzable::Transaction.create(
-        amount: split_amount,
-        source_key: user.avatar_key,
-        source_name: user.avatar_name,
-        category: 'share',
-        description: "Tip split from #{transaction.target_name} from #{user.avatar_name}",
-        target_name: user.avatar_name,
-        target_key: user.avatar_key,
-        balance: calculate_balance(split_amount)
-      )
-    end
-
-    # rubocop:disable Metrics/AbcSize
+    
     def handle_tip
       data = tip.with_indifferent_access
       self.tip = nil

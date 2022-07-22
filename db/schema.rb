@@ -306,7 +306,7 @@ ActiveRecord::Schema.define(version: 2022_07_19_132228) do
   end
 
   create_table "rezzable_tip_jars", force: :cascade do |t|
-    t.integer "split_percent"
+    t.integer "split_percent", default: 100
     t.integer "access_mode", default: 0
     t.string "logged_in_key"
     t.string "logged_in_name"
@@ -316,9 +316,10 @@ ActiveRecord::Schema.define(version: 2022_07_19_132228) do
     t.boolean "show_last_tip", default: true
     t.boolean "show_last_tipper", default: true
     t.boolean "show_total", default: true
-    t.integer "sensor_node", default: 0
+    t.integer "sensor_mode", default: 0
     t.integer "inactive_time"
     t.boolean "show_duration", default: false
+    t.boolean "show_hover_text", default: true
   end
 
   create_table "rezzable_traffic_cops", force: :cascade do |t|

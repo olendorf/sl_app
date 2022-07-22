@@ -36,7 +36,8 @@ module Rezzable
           show_duration: show_duration,
           split_percent: split_percent,
           thank_you_message: thank_you_message,
-          sensor_mode: sensor_mode
+          sensor_mode: sensor_mode,
+          show_hover_text: show_hover_text
         },
         session: 
           if(!current_session.nil?)

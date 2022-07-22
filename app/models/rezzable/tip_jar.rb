@@ -27,7 +27,7 @@ module Rezzable
     }
     
     def response_data
-      curr_session = current_session
+      curr_session = current_session.reload
       self.abstract_web_object.response_data.merge(
         settings: {
           show_last_tip: show_last_tip,
@@ -144,6 +144,7 @@ module Rezzable
         target_key: data['target_key'],
         balance: calculate_balance(data['amount'].to_i)
       )
+      current_session.transactions << transaction
       give_percent(transaction)
     end
     # rubocop:enable Metrics/AbcSize

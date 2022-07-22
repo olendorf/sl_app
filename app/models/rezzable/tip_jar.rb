@@ -108,6 +108,7 @@ module Rezzable
     # rubocop:disable Metrics/AbcSize
     def give_percent(transaction)
       user.reload
+      split_percent ||= 100;
       split_amount = ((split_percent / 100.0) * transaction.amount).round
       RezzableSlRequest.send_money(self, current_session.avatar_name, split_amount)
       Analyzable::Transaction.create(

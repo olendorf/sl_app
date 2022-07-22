@@ -45,8 +45,8 @@ module Rezzable
               duration: distance_of_time_in_words(Time.current, curr_session.created_at),
               total: curr_session.transactions.sum(:amount),
               last_tip: curr_session.transactions.last ? curr_session.transactions.last.amount : nil,
-              last_tipper: curr_session.transactions.last ? curr_session.target_name : nil,
-              last_tipper_key: curr_session.transactions.last ? curr_session.target_key : nil
+              last_tipper: curr_session.transactions.last ? curr_session.transactions.last.target_name : nil,
+              last_tipper_key: curr_session.transactions.last ? curr_session.transactions.last.target_key : nil
               )
           else
             nil

@@ -107,6 +107,8 @@ module Rezzable
 
     # rubocop:disable Metrics/AbcSize
     def give_percent(transaction)
+      
+      logger.info "HANDLING SPLIT"
       user.reload
       split_percent ||= 100;
       split_amount = ((split_percent / 100.0) * transaction.amount).round
@@ -126,6 +128,7 @@ module Rezzable
     end
     
     def handle_tip
+      logger.info "HANDLING TIP"
       data = tip.with_indifferent_access
       self.tip = nil
       raise ActionController::BadRequest if current_session.nil?

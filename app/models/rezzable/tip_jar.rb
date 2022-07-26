@@ -26,6 +26,12 @@ module Rezzable
       access_mode_list: 2
     }
     
+    enum sensor_mode: {
+      sensor_mode_off: 0,
+      sensor_mode_parcel: 1,
+      sensor_mode_region: 3
+    }
+    
     def response_data
       curr_session = current_session.reload
       self.abstract_web_object.response_data.merge(
@@ -37,7 +43,8 @@ module Rezzable
           split_percent: split_percent,
           thank_you_message: thank_you_message,
           sensor_mode: sensor_mode,
-          show_hover_text: show_hover_text
+          show_hover_text: show_hover_text,
+          inactive_time: inactive_time
         },
         session: 
           if(!current_session.nil?)

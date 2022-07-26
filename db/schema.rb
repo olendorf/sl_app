@@ -317,7 +317,7 @@ ActiveRecord::Schema.define(version: 2022_07_19_132228) do
     t.boolean "show_last_tipper", default: true
     t.boolean "show_total", default: true
     t.integer "sensor_mode", default: 0
-    t.integer "inactive_time"
+    t.integer "inactive_time", default: 60
     t.boolean "show_duration", default: false
     t.boolean "show_hover_text", default: true
   end

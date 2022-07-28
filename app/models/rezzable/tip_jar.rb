@@ -33,7 +33,7 @@ module Rezzable
     }
     
     def response_data
-      curr_session = current_session.reload
+      curr_session = current_session
       self.abstract_web_object.response_data.merge(
         settings: {
           show_last_tip: show_last_tip,

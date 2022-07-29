@@ -320,6 +320,11 @@ ActiveRecord::Schema.define(version: 2022_07_19_132228) do
     t.integer "inactive_time", default: 60
     t.boolean "show_duration", default: false
     t.boolean "show_hover_text", default: true
+    t.integer "default_tip", default: 50
+    t.integer "quick_pay_1", default: 100
+    t.integer "quick_pay_2", default: 200
+    t.integer "quick_pay_3", default: 300
+    t.integer "quick_pay_4", default: 400
   end
 
   create_table "rezzable_traffic_cops", force: :cascade do |t|

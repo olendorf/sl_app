@@ -36,6 +36,7 @@ module Rezzable
       curr_session = current_session
       self.abstract_web_object.response_data.merge(
         settings: {
+          api_key: api_key,
           show_last_tip: show_last_tip,
           show_last_tipper: show_last_tipper,
           show_total: show_total,
@@ -92,6 +93,10 @@ module Rezzable
       data['user_id'] = user.id
       self.session = nil
       close_session and return if data['avatar_key'].nil?
+      
+      if current_session
+        current_session.update(stopped_at: Time.current)
+      end
 
       sessions << Analyzable::Session.new(data)
     end

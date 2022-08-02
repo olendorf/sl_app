@@ -16,14 +16,11 @@ module Rezzable
 
     has_many :sessions, as: :sessionable, class_name: 'Analyzable::Session', dependent: :nullify
 
-    has_many :listable_avatars, as: :listable
-
     OBJECT_WEIGHT = 1
 
     enum access_mode: {
       access_mode_all: 0,
-      access_mode_group: 1,
-      access_mode_list: 2
+      access_mode_group: 1
     }
     
     enum sensor_mode: {
@@ -63,9 +60,6 @@ module Rezzable
       )
     end
     
-    def allowed_list
-      listable_avatars.where(list_name: 'allowed')
-    end
 
     def transaction_category
       'tip'
@@ -120,9 +114,8 @@ module Rezzable
 
     # rubocop:disable Metrics/AbcSize
     def give_percent(transaction)
-      
-      logger.info "HANDLING SPLIT"
       user.reload
+      logger.info "current split percent: #{split_percent}"
       split_percent ||= 100;
       split_amount = ((split_percent / 100.0) * transaction.amount).round
       RezzableSlRequest.send_money(self, current_session.avatar_name, split_amount)
@@ -141,7 +134,6 @@ module Rezzable
     end
     
     def handle_tip
-      logger.info "HANDLING TIP"
       data = tip.with_indifferent_access
       self.tip = nil
       raise ActionController::BadRequest if current_session.nil?

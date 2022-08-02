@@ -117,7 +117,9 @@ module Rezzable
       user.reload
       logger.info "current split percent: #{split_percent}"
       split_percent ||= 100;
+      logger.info "current split percent 2: #{split_percent}"
       split_amount = ((split_percent / 100.0) * transaction.amount).round
+      logger.info "current split amount: #{split_amount}"
       RezzableSlRequest.send_money(self, current_session.avatar_name, split_amount)
       Analyzable::Transaction.create(
         amount: split_amount * -1,

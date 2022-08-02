@@ -45,7 +45,8 @@ module Rezzable
           thank_you_message: thank_you_message,
           sensor_mode: sensor_mode,
           show_hover_text: show_hover_text,
-          inactive_time: inactive_time
+          inactive_time: inactive_time,
+          access_mode: access_mode
         },
         session: 
           if(!current_session.nil?)

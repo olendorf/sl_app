@@ -83,7 +83,7 @@ module Rezzable
     end
 
     def handle_session
-      check_access
+      # check_access
       data = session
       data['user_id'] = user.id
       self.session = nil
@@ -96,11 +96,11 @@ module Rezzable
       sessions << Analyzable::Session.new(data)
     end
 
-    def check_access
-      return true unless access_mode_list?
-      raise Pundit::NotAuthorizedError if allowed_list
-                                          .where(avatar_key: session['avatar_key']).size.zero?
-    end
+    # def check_access
+    #   return true unless access_mode_list?
+    #   raise Pundit::NotAuthorizedError if allowed_list
+    #                                       .where(avatar_key: session['avatar_key']).size.zero?
+    # end
 
     def close_session
       curr_session = current_session

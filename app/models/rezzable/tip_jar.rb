@@ -116,7 +116,7 @@ module Rezzable
     def give_percent(transaction)
       user.reload
       logger.info "current split percent: #{split_percent}"
-      split_percent ||= 100;
+      split_percent = split_percent.nil? ? 100 : split_percent;
       logger.info "current split percent 2: #{split_percent}"
       split_amount = ((split_percent / 100.0) * transaction.amount).round
       logger.info "current split amount: #{split_amount}"

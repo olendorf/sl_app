@@ -87,7 +87,9 @@ RSpec.describe 'Api::V1::Rezzable::TrafficCops', type: :request do
       end
 
       it 'should return the appropriate response' do
-        expect(JSON.parse(response.body)['data']['response']).to eq 'foo'
+        expect(
+          JSON.parse(response.body)['data']['response']['first_visit_message']
+          ).to eq ['test']
       end
     end
 
@@ -123,7 +125,9 @@ RSpec.describe 'Api::V1::Rezzable::TrafficCops', type: :request do
       end
 
       it 'should return the appropriate response' do
-        expect(JSON.parse(response.body)['data']['response']).to eq 'bar'
+        expect(
+          JSON.parse(response.body)['data']['response']['second_visit_message']
+          ).to eq ['bar']
       end
     end
 

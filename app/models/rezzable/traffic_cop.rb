@@ -91,11 +91,15 @@ module Rezzable
     end
 
     def handle_detections
-      
+      self.outgoing_response = {
+                                  first_visit_message: [], 
+                                  second_visit_message: [],
+                                  banned: []
+                               }
       detections.each do |detection|
         detection = detection.with_indifferent_access
         determine_access(detection)
-        return unless has_access
+        self.outgoing_response[:banned] << detection[:avatar_key] unless has_access
 
         previous_visit = visits.where(avatar_key: detection[:avatar_key])
                                .order(start_time: :desc).limit(1).first
@@ -118,7 +122,6 @@ module Rezzable
     end
 
     def add_visit(detection, previous_visit)
-      self.outgoing_response = previous_visit.nil? ? first_visit_message : repeat_visit_message
       visit = Analyzable::Visit.new(
         avatar_key: detection[:avatar_key],
         avatar_name: detection[:avatar_name],
@@ -135,10 +138,10 @@ module Rezzable
     end
 
     def determine_message(detection, previous_visit)
-      self.outgoing_response = nil
-      self.outgoing_response = first_visit_message and return unless previous_visit
+      self.outgoing_response[:first_visit_message] << 
+              detection[:avatar_key] and return unless previous_visit
 
-      self.outgoing_response = repeat_visit_message if
+      self.outgoing_response[:second_visit_message] << repeat_visit_message if
                 previous_visit.stop_time < Time.now -
                                            Settings.default.traffic_cop
                                                    .return_message_delay.days

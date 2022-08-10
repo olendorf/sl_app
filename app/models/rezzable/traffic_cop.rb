@@ -131,7 +131,7 @@ module Rezzable
       visits << visit
     end
 
-    def add_detection(previous_visit)
+    def add_detection(detection, previous_visit)
       previous_visit.detections << Analyzable::Detection.new(
         position: detection[:position].to_json
       )

@@ -67,12 +67,12 @@ RSpec.describe 'Api::V1::Rezzable::TrafficCops', type: :request do
       let(:avatar) { FactoryBot.build :avatar }
       let(:atts) {
         {
-          detection: {
+          detections: [{
             avatar_name: 'test',
             avatar_key: 'test',
             position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
               .transform_values { |v| v.round(4) }
-          }
+          }]
         }
       }
 
@@ -95,12 +95,12 @@ RSpec.describe 'Api::V1::Rezzable::TrafficCops', type: :request do
       let(:avatar) { FactoryBot.build :avatar }
       let(:atts) {
         {
-          detection: {
+          detections: [{
             avatar_name: 'test',
             avatar_key: 'test',
             position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
               .transform_values { |v| v.round(4) }
-          }
+          }]
         }
       }
 
@@ -130,12 +130,12 @@ RSpec.describe 'Api::V1::Rezzable::TrafficCops', type: :request do
     context 'visitor is allowed' do
       let(:atts) {
         {
-          detection: {
+          detections: [{
             avatar_name: 'test',
             avatar_key: 'test',
             position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
               .transform_values { |v| v.round(4) }
-          }
+          }]
         }
       }
 
@@ -151,12 +151,12 @@ RSpec.describe 'Api::V1::Rezzable::TrafficCops', type: :request do
     context 'visitor is not allowed' do
       let(:atts) {
         {
-          detection: {
+          detections: [{
             avatar_name: 'test',
             avatar_key: 'test',
             position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
               .transform_values { |v| v.round(4) }
-          }
+          }]
         }
       }
 

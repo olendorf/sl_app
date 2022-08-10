@@ -107,8 +107,8 @@ RSpec.describe 'Api::V1::Rezzable::TipJars', type: :request do
         @stub = stub_request(:post, uri_regex)
       end
       let(:tipper) { FactoryBot.build :avatar }
-      let(:atts) {
-        { tip: { target_name: tipper.avatar_name, target_key: tipper.avatar_key, amount: 100 } }
+      let(:atts) {        { tip: { target_name: tipper.avatar_name, target_key: tipper.avatar_key, amount: 100 } }
+
       }
       it 'should return ok status' do
         put path, params: atts.to_json, headers: headers(tip_jar)

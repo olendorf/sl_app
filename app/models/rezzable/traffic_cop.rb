@@ -7,9 +7,9 @@ module Rezzable
 
     include RezzableBehavior
 
-    attr_accessor :detection, :outgoing_response, :has_access
+    attr_accessor :detections, :outgoing_response, :has_access
 
-    before_update :handle_detection, if: :detection?
+    before_update :handle_detections, if: :detections?
 
     has_many :visits, class_name: 'Analyzable::Visit',
                       dependent: :nullify,
@@ -86,25 +86,29 @@ module Rezzable
 
     private
 
-    def detection?
-      !detection.nil?
+    def detections?
+      !detections.nil?
     end
 
-    def handle_detection
-      self.detection = detection.with_indifferent_access
-      determine_access
-      return unless has_access
+    def handle_detections
+      
+      detections.each do |detection|
+        detection = detection.with_indifferent_access
+        determine_access(detection)
+        return unless has_access
 
-      previous_visit = visits.where(avatar_key: detection[:avatar_key])
-                             .order(start_time: :desc).limit(1).first
-      add_detection(previous_visit) and return if previous_visit&.active?
+        previous_visit = visits.where(avatar_key: detection[:avatar_key])
+                               .order(start_time: :desc).limit(1).first
+        add_detection(previous_visit) and return if previous_visit&.active?
 
-      send_inventory(previous_visit)
-      add_visit(previous_visit)
-      determine_message(previous_visit)
+        send_inventory(previous_visit)
+        add_visit(detection, previous_visit)
+        determine_message(detection, previous_visit)
+      end
+      self.detections = nil
     end
 
-    def determine_access
+    def determine_access(detection)
       self.has_access = true
       self.has_access = banned_list.where(avatar_key: detection[:avatar_key]).size.zero?
       if access_mode_allowed? && has_access
@@ -113,7 +117,7 @@ module Rezzable
       has_access
     end
 
-    def add_visit(previous_visit)
+    def add_visit(detection, previous_visit)
       self.outgoing_response = previous_visit.nil? ? first_visit_message : repeat_visit_message
       visit = Analyzable::Visit.new(
         avatar_key: detection[:avatar_key],
@@ -121,7 +125,6 @@ module Rezzable
         region: region
       )
       visit.detections << Analyzable::Detection.new(position: detection[:position].to_json)
-      self.detection = nil
       visits << visit
     end
 
@@ -131,7 +134,7 @@ module Rezzable
       )
     end
 
-    def determine_message(previous_visit)
+    def determine_message(detection, previous_visit)
       self.outgoing_response = nil
       self.outgoing_response = first_visit_message and return unless previous_visit
 

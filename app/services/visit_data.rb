@@ -31,8 +31,8 @@ class VisitData
     visits.each do |v|
       index = dates.index(v.start_time.strftime('%F'))
       counts[index] += 1
-      durations[index] += v.duration
-      visitors[index] = visitor_data[v.start_time.strftime('%F')].size
+      durations[index] += v.duration.to_f/60.0
+      visitors[index] = visitor_data[v.start_time.strftime('%F')].uniq.size
     end
     { dates: dates, counts: counts, durations: durations, visitors: visitors }
   end

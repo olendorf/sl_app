@@ -138,13 +138,14 @@ module Rezzable
     end
 
     def determine_message(detection, previous_visit)
-      self.outgoing_response[:first_visit_message] << 
-              detection[:avatar_key] and return unless previous_visit
-
-      self.outgoing_response[:second_visit_message] << repeat_visit_message if
-                previous_visit.stop_time < Time.now -
+      if(previous_visit.nil?)
+        self.outgoing_response[:first_visit_message] << detection[:avatar_key]
+      elsif(previous_visit.stop_time < Time.now -
                                            Settings.default.traffic_cop
-                                                   .return_message_delay.days
+                                                   .return_message_delay.days)
+        self.outgoing_response[:second_visit_message] << repeat_visit_message
+                
+      end
     end
 
     def send_inventory(previous_visit)

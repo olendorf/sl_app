@@ -100,6 +100,8 @@ module Rezzable
                         
       Rails.logger.info "detections: #{detections.inspect}"     
       detections.each do |detection|
+        
+        Rails.logger.info "detection first: #{detection.inspect}"
         detection = detection.with_indifferent_access
         determine_access(detection)
         self.outgoing_response[:banned] << detection[:avatar_key] unless has_access

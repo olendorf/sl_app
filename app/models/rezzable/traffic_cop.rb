@@ -112,12 +112,15 @@ module Rezzable
 
         previous_visit = visits.where(avatar_key: detection[:avatar_key])
                                .order(start_time: :desc).limit(1).first
-        add_detection(detection, previous_visit) and return if previous_visit&.active?
         
-        Rails.logger.info "will visit?: #{detection.inspect}"
-        send_inventory(previous_visit)
-        add_visit(detection, previous_visit)
-        determine_message(detection, previous_visit)
+        if previous_visit.active?
+          add_detection(detection, previous_visit)
+        else
+          Rails.logger.info "will visit?: #{detection.inspect}"
+          send_inventory(previous_visit)
+          add_visit(detection, previous_visit)
+          determine_message(detection, previous_visit)
+        end
       end
       self.detections = nil
     end

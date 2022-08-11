@@ -81,7 +81,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
         column :avatar_name
         column :start_time
         column 'Duration' do |visit|
-          "#{visit.duration / 60.0} mins"
+          "#{(visit.duration / 60.0).round(2)} mins"
         end
       end
     end
@@ -151,7 +151,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
           column :start_time
           column :stop_time
           column 'Duration (mins)' do |visit|
-            visit.duration / 60.0
+            (visit.duration / 60.0).round(2)
           end
         end
       end
@@ -166,7 +166,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
           column :avatar_key
           column :visits
           column 'Time Spent (mins)' do |visitor|
-            visitor[:time_spent] / 60.0
+            (visitor[:time_spent] / 60.0).round(2)
           end
         end
         div id: 'visitors-footer' do

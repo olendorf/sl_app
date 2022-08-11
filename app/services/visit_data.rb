@@ -30,7 +30,7 @@ class VisitData
     visitors = Array.new(dates.size, 0)
     visits.each do |v|
       index = dates.index(v.start_time.strftime('%F'))
-      counts[index] += 1 unless counts.index.nil?
+      counts[index] += 1 unless counts[index].nil?
       durations[index] += v.duration.to_f/60.0
       visitors[index] = visitor_data[v.start_time.strftime('%F')].uniq.size
     end

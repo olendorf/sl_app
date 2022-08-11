@@ -50,6 +50,7 @@ module Rezzable
           show_largest_donation: show_largest_donation,
           show_biggest_donor: show_biggest_donor,
           goal: goal,
+          hover_text_color: hover_text_color,
           dead_line: dead_line,
           response: self.response,
           pay_hints: {

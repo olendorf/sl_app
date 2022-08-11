@@ -19,7 +19,7 @@ class VisitData
 
   def self.visits_timeline(ids)
     visits = Analyzable::Visit.where(web_object_id: ids).order(:start_time)
-    dates = time_series_dates(visits.first.start_time - 3.days, Time.current + 1.day)
+    dates = time_series_dates(visits.first.start_time - 3.days, Time.current)
     visitor_data = visits.collect do |d|
       { date: d.start_time.strftime('%F'),
         avatar_name: d.avatar_name }
@@ -30,9 +30,11 @@ class VisitData
     visitors = Array.new(dates.size, 0)
     visits.each do |v|
       index = dates.index(v.start_time.strftime('%F'))
-      counts[index] += 1 unless counts[index].nil?
-      durations[index] += v.duration.to_f/60.0
-      visitors[index] = visitor_data[v.start_time.strftime('%F')].uniq.size
+      unless index.nil?
+        counts[index] += 1 unless counts[index].nil?
+        durations[index] += v.duration.to_f/60.0
+        visitors[index] = visitor_data[v.start_time.strftime('%F')].uniq.size
+      end
     end
     { dates: dates, counts: counts, durations: durations, visitors: visitors }
   end

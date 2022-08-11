@@ -30,13 +30,6 @@ class VisitData
     visitors = Array.new(dates.size, 0)
     visits.each do |v|
       index = dates.index(v.start_time.strftime('%F'))
-      
-      Rails.logger.info "dates: #{dates}"
-      Rails.logger.info "date: #{v.start_time.strftime('%F')}"
-      Rails.logger.info "counts: #{counts}"
-      Rails.logger.info "count size: #{counts.size}"
-      Rails.logger.info "index: #{index}"
-      Rails.logger.info "value: #{counts[index]}"
       counts[index] += 1 unless counts[index].nil?
       durations[index] += v.duration.to_f/60.0
       visitors[index] = visitor_data[v.start_time.strftime('%F')].uniq.size
@@ -47,7 +40,7 @@ class VisitData
   def self.visits_heatmap(ids)
     visits = Analyzable::Visit.where(web_object_id: ids).order(:start_time)
     data = []
-    (0..23).each { |h| (0..6).each { |d| data << [d, h, 0] } }
+    (0..6).each { |h| (0..23).each { |d| data << [d, h, 0] } }
     visits.each do |visit|
       h = visit.start_time.strftime('%k').to_i
       d = visit.start_time.strftime('%w').to_i

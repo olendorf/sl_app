@@ -101,13 +101,13 @@ module Rezzable
         determine_access(detection)
         self.outgoing_response[:banned] << detection[:avatar_key] unless has_access
         
-        Rails.logger "detection: #{detection.inspect}"
+        Rails.logger.info "detection: #{detection.inspect}"
 
         previous_visit = visits.where(avatar_key: detection[:avatar_key])
                                .order(start_time: :desc).limit(1).first
         add_detection(detection, previous_visit) and return if previous_visit&.active?
         
-        Rails.logger "will visit?: #{detection.inspect}"
+        Rails.logger.info "will visit?: #{detection.inspect}"
         send_inventory(previous_visit)
         add_visit(detection, previous_visit)
         determine_message(detection, previous_visit)
@@ -125,7 +125,7 @@ module Rezzable
     end
 
     def add_visit(detection, previous_visit)
-        Rails.logger "adding visit: #{detection.inspect}"
+        Rails.logger.info "adding visit: #{detection.inspect}"
       visit = Analyzable::Visit.new(
         avatar_key: detection[:avatar_key],
         avatar_name: detection[:avatar_name],

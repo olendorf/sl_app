@@ -40,7 +40,7 @@ class VisitData
   def self.visits_heatmap(ids)
     visits = Analyzable::Visit.where(web_object_id: ids).order(:start_time)
     data = []
-    (0..6).each { |h| (0..23).each { |d| data << [d, h, 0] } }
+    (0..23).each { |h| (0..6).each { |d| data << [d, h, 0] } }
     visits.each do |visit|
       h = visit.start_time.strftime('%k').to_i
       d = visit.start_time.strftime('%w').to_i

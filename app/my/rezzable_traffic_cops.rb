@@ -127,8 +127,7 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
 
   show title: :object_name do
     attributes_table do
-      row :server_name, &:object_name
-      row :server_key, &:object_key
+      row :object_name, &:object_name
       row :description
       row :location, &:slurl
       row 'Recent Visitors' do
@@ -147,7 +146,6 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
       ) do
         table_for collection do
           column :avatar_name
-          column :avatar_key
           column :start_time
           column :stop_time
           column 'Duration (mins)' do |visit|
@@ -163,7 +161,6 @@ ActiveAdmin.register Rezzable::TrafficCop, as: 'Traffic Cop', namespace: :my do
       div class: 'paginated_collection' do
         table_for paginated_data do
           column :avatar_name
-          column :avatar_key
           column :visits
           column 'Time Spent (mins)' do |visitor|
             (visitor[:time_spent] / 60.0).round(2)

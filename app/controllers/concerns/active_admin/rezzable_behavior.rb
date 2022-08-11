@@ -11,7 +11,7 @@ module ActiveAdmin
         def update
           RezzableSlRequest.update_web_object!(
             resource,
-            params[resource.class.name.underscore.gsub('/', '_')]
+            resource.response_data
           )
           super
         rescue RestClient::ExceptionWithResponse => e

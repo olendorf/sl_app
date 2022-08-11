@@ -12,7 +12,7 @@ module Analyzable
     accepts_nested_attributes_for :detections, allow_destroy: true
 
     def active?
-      stop_time >= Time.now - (2 * Settings.default.traffic_cop.sensor_time)
+      stop_time >= Time.current - 5.minutes
     end
 
     private

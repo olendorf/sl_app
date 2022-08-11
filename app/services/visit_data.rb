@@ -30,6 +30,9 @@ class VisitData
     visitors = Array.new(dates.size, 0)
     visits.each do |v|
       index = dates.index(v.start_time.strftime('%F'))
+      
+      Rails.logger.info "dates: #{dates}"
+      Rails.logger.info "date: #{v.start_time.strftime('%F')}"
       Rails.logger.info "counts: #{counts}"
       Rails.logger.info "count size: #{counts.size}"
       Rails.logger.info "index: #{index}"

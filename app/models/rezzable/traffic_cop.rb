@@ -96,6 +96,9 @@ module Rezzable
                                   second_visit_message: [],
                                   banned: []
                                }
+                        
+                        
+      Rails.logger.info "detections: #{detections.inspect}"     
       detections.each do |detection|
         detection = detection.with_indifferent_access
         determine_access(detection)

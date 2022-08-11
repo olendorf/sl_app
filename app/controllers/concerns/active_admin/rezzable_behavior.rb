@@ -9,11 +9,12 @@ module ActiveAdmin
     def self.included(base)
       base.controller do
         def update
+          super
+          resource.reload
           RezzableSlRequest.update_web_object!(
             resource,
             resource.response_data
           )
-          super
         rescue RestClient::ExceptionWithResponse => e
           flash[:error] = t('active_admin.web_object.update.failure',
                             message: e.response)

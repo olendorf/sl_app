@@ -30,10 +30,10 @@ class VisitData
     visitors = Array.new(dates.size, 0)
     visits.each do |v|
       index = dates.index(v.start_time.strftime('%F'))
-      logger.info "counts: #{counts}"
-      logger.info "count size: #{counts.size}"
-      logger.info "index: #{index}"
-      logger.info "value: #{counts[index]}"
+      Rails.logger.info "counts: #{counts}"
+      Rails.logger.info "count size: #{counts.size}"
+      Rails.logger.info "index: #{index}"
+      Rails.logger.info "value: #{counts[index]}"
       counts[index] += 1 unless counts[index].nil?
       durations[index] += v.duration.to_f/60.0
       visitors[index] = visitor_data[v.start_time.strftime('%F')].uniq.size

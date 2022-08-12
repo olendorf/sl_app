@@ -19,7 +19,7 @@ class VisitData
 
   def self.visits_timeline(ids)
     visits = Analyzable::Visit.where(web_object_id: ids).order(:start_time)
-    dates = time_series_dates(visits.first.start_time - 3.days, Time.current)
+    dates = time_series_dates(visits.first.start_time - 3.days, Time.current + 1)
     visitor_data = visits.collect do |d|
       { date: d.start_time.strftime('%F'),
         avatar_name: d.avatar_name }

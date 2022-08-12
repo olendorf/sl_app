@@ -98,25 +98,21 @@ module Rezzable
                                }
                         
                         
-      Rails.logger.info "detections: #{detections.inspect}"   
       index = 0;
       detections.each do |detection|
         
-        Rails.logger.info "detection #{index}: #{detection.inspect}"
         index = index + 1
         detection = detection.with_indifferent_access
         determine_access(detection)
         self.outgoing_response[:banned] << detection[:avatar_key] unless has_access
         
-        Rails.logger.info "detection: #{detection.inspect}"
 
         previous_visit = visits.where(avatar_key: detection[:avatar_key])
                                .order(start_time: :desc).limit(1).first
         
-        if previous_visit.active?
+        if !previous_visit.nil? && previous_visit.active?
           add_detection(detection, previous_visit)
         else
-          Rails.logger.info "will visit?: #{detection.inspect}"
           send_inventory(previous_visit)
           add_visit(detection, previous_visit)
           determine_message(detection, previous_visit)
@@ -135,7 +131,6 @@ module Rezzable
     end
 
     def add_visit(detection, previous_visit)
-        Rails.logger.info "adding visit: #{detection.inspect}"
       visit = Analyzable::Visit.new(
         avatar_key: detection[:avatar_key],
         avatar_name: detection[:avatar_name],

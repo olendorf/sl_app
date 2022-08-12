@@ -75,7 +75,6 @@ ActiveAdmin.register Rezzable::TipJar, namespace: :my, as: 'Tip Jar' do
       row :show_hover_text
       row :show_total
       row :show_last_tip
-      row :show_last_tipper
       row :show_duration
     end
   end
@@ -164,7 +163,6 @@ ActiveAdmin.register Rezzable::TipJar, namespace: :my, as: 'Tip Jar' do
         f.input :show_hover_text
         f.input :show_total
         f.input :show_last_tip
-        f.input :show_last_tipper
         f.input :show_duration
       end
       f.actions

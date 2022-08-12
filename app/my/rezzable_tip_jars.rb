@@ -44,6 +44,10 @@ ActiveAdmin.register Rezzable::TipJar, namespace: :my, as: 'Tip Jar' do
         'Empty'
       end
     end
+    
+    column 'Hover Text Color' do |tip_jar|
+      tip_jar.color_box
+    end
 
     # column 'Total Donations', &:total_donations
     # column :goal
@@ -55,27 +59,32 @@ ActiveAdmin.register Rezzable::TipJar, namespace: :my, as: 'Tip Jar' do
     actions
   end
 
-  # sidebar :settings, only: %i[edit show] do
-  #   attributes_table do
-  #     row :show_last_donation
-  #     row :show_last_donor
-  #     row :show_total
-  #     row :show_largest_donation
-  #     row :show_biggest_donor
-  #     row :goal
-  #     row :dead_line
-  #   end
-  # end
+  sidebar :settings, only: %i[edit show] do
+    attributes_table do
+      row :thank_you_message
+      row :split_percent
+      row 'Sensor Mode' do |tip_jar|
+        tip_jar.sensor_mode.split('_').last.humanize
+      end
+      row 'Access Mode' do |tip_jar|
+        tip_jar.access_mode.split('_').last.humanize
+      end
+      row 'Hover Text Color'  do |tip_jar|
+        tip_jar.color_box
+      end
+      row :show_hover_text
+      row :show_total
+      row :show_last_tip
+      row :show_last_tipper
+      row :show_duration
+    end
+  end
 
   show title: :object_name do
     attributes_table do
       row :object_name, &:object_name
       row :object_key, &:object_key
       row :description
-      row 'Access Mode' do |tip_jar|
-        tip_jar.access_mode.split('_').last.titleize
-      end
-      row :thank_you_message
       row 'Server' do |tip_jar|
         if tip_jar.server
           link_to tip_jar.server.object_name, my_server_path(tip_jar.server)
@@ -91,16 +100,6 @@ ActiveAdmin.register Rezzable::TipJar, namespace: :my, as: 'Tip Jar' do
         end
       end
       row :location, &:slurl
-
-      # row :total_donations
-      # row 'Largest Donation' do |db|
-      #   donation = db.largest_donation
-      #   "#{donation['target_name']}: L$ #{donation['amount']} (#{donation['created_at']}})"
-      # end
-      # row 'Biggest Donor' do |db|
-      #   donor = db.biggest_donor
-      #   "#{donor[:avatar_name]}: L$ #{donor[:amount]}"
-      # end
       row :created_at
       row :updated_at
       row :pinged_at
@@ -146,6 +145,7 @@ ActiveAdmin.register Rezzable::TipJar, namespace: :my, as: 'Tip Jar' do
       if resource.user
         f.input :object_name, label: 'Donation Box name'
         f.input :description
+        f.input :split_percent
         f.input :server_id, as: :select, collection: resource.user.servers.map { |s|
           [s.object_name, s.actable.id]
         }
@@ -154,7 +154,18 @@ ActiveAdmin.register Rezzable::TipJar, namespace: :my, as: 'Tip Jar' do
                               collection: Rezzable::TipJar.access_modes.collect { |k, _v|
                                             [k.split('_').last.titleize, k]
                                           }
+        f.input :sensor_mode, as: :select,
+                              include_blank: false,
+                              collection: Rezzable::TipJar.sensor_modes.collect { |k, _v|
+                                            [k.split('_').last.titleize, k]
+                                          }
         f.input :thank_you_message
+        f.input :hover_text_color, as: :color
+        f.input :show_hover_text
+        f.input :show_total
+        f.input :show_last_tip
+        f.input :show_last_tipper
+        f.input :show_duration
       end
       f.actions
     end

@@ -87,7 +87,8 @@ module Rezzable
       data = session
       data['user_id'] = user.id
       self.session = nil
-      close_session and return if data['avatar_key'].nil?
+      close_session and return if 
+          data['avatar_key'] == "00000000-0000-0000-0000-000000000000"
       
       if current_session
         current_session.update(stopped_at: Time.current)

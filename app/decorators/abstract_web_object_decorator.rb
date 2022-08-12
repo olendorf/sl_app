@@ -33,7 +33,7 @@ class AbstractWebObjectDecorator < Draper::Decorator
   end
   
   def color_box
-    "<p class=\"color_box\" style=\"background-color:#{self.hover_text_color}\">&nbsp;</p>".html_safe
+    "<p width=\"50\" class=\"color_box\" style=\"background-color:#{self.hover_text_color}\">&nbsp;</p>".html_safe
   end
 
   def pretty_active

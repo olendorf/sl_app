@@ -70,7 +70,7 @@ ActiveAdmin.register Rezzable::TipJar, namespace: :my, as: 'Tip Jar' do
         tip_jar.access_mode.split('_').last.humanize
       end
       row 'Hover Text Color'  do |tip_jar|
-        tip_jar.color_box
+        tip_jar.decorate.color_box
       end
       row :show_hover_text
       row :show_total

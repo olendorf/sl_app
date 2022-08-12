@@ -137,7 +137,9 @@ ActiveAdmin.register Rezzable::TipJar, namespace: :my, as: 'Tip Jar' do
   #   end
   # end
 
-  permit_params :object_name, :description, :server_id, :access_mode, :thank_you_message
+  permit_params :object_name, :description, :server_id, :access_mode, 
+                :thank_you_message, :hover_text_color, :show_hover_text,
+                :show_total, :shot_last_tip, :show_duration
 
   form title: proc { "Edit #{resource.object_name}" } do |f|
     f.inputs do

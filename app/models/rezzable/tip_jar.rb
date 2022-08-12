@@ -43,7 +43,8 @@ module Rezzable
           sensor_mode: sensor_mode,
           show_hover_text: show_hover_text,
           inactive_time: inactive_time,
-          access_mode: access_mode
+          access_mode: access_mode,
+          hover_text_color: hover_text_color
         },
         session: 
           if(!current_session.nil?)

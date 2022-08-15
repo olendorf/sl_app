@@ -147,7 +147,6 @@ module Rezzable
     end
 
     def determine_message(detection, previous_visit)
-      logger.info "previous visit: #{previous_visit.inspect}"
       if(previous_visit.nil?)
         self.outgoing_response[:first_visit_message] << detection[:avatar_key]
       elsif(previous_visit.stop_time < Time.now -

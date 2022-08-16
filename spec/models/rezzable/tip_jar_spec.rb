@@ -11,13 +11,10 @@ RSpec.describe Rezzable::TipJar, type: :model do
 
   it { should have_many(:sessions) }
 
-  it { should have_many(:listable_avatars) }
-
   it {
     should define_enum_for(:access_mode).with_values(
       access_mode_all: 0,
-      access_mode_group: 1,
-      access_mode_list: 2
+      access_mode_group: 1
     )
   }
 
@@ -32,14 +29,6 @@ RSpec.describe Rezzable::TipJar, type: :model do
        auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
 
-  describe '#allowed_list' do
-    it 'should return the allowed list' do
-      3.times do
-        tip_jar.listable_avatars << FactoryBot.build(:allowed_avatar)
-      end
-      expect(tip_jar.allowed_list.size).to eq 3
-    end
-  end
 
   describe 'handling sessions' do
     it 'should correclty set teh attributes' do
@@ -156,18 +145,6 @@ RSpec.describe Rezzable::TipJar, type: :model do
         expect(user.balance).to eq 10
       end
 
-      it 'should update the session avatar if they have an account' do
-        user_tipper = FactoryBot.create(:active_user,
-                                        avatar_name: tip_jar.current_session.avatar_name,
-                                        avatar_key: tip_jar.current_session.avatar_key)
-        atts = FactoryBot.attributes_for(:tip,
-                                         target_name: tipper.avatar_name,
-                                         target_key: tipper.avatar_key,
-                                         amount: 100)
-
-        tip_jar.update(tip: atts)
-        expect(user_tipper.reload.balance).to eq 90
-      end
     end
   end
 end

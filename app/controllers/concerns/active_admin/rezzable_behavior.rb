@@ -18,8 +18,8 @@ module ActiveAdmin
         rescue RestClient::ExceptionWithResponse => e
           flash[:error] = t('active_admin.web_object.update.failure',
                             message: e.response)
-          parts = request.url.split('/')[3, 2]
-          redirect_back(fallback_location: send("#{parts.first}_#{parts.last}_path"))
+          # parts = request.url.split('/')[3, 2]
+          # redirect_back(fallback_location: send("#{parts.first}_#{parts.last}_path"))
         end
 
         def destroy

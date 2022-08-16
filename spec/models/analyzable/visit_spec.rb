@@ -20,7 +20,7 @@ RSpec.describe Analyzable::Visit, type: :model do
     it 'should return false if the visit is to old' do
       visit = FactoryBot.create :visit
       visit.detections << FactoryBot.build(:detection)
-      visit.stop_time = Time.now - (3 * Settings.default.traffic_cop.sensor_time)
+      visit.stop_time = Time.now - (10.minutes)
       visit.save
       expect(visit.active?).to be_falsey
     end

@@ -33,7 +33,6 @@ module RentableBehavior
     MessageUserWorker.perform_async(
       server.id,
       renter_name,
-      renter_name,
       I18n.t('analyzable.parcel.eviction', region_name: region)
     )
     states << Analyzable::RentalState.new(

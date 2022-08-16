@@ -39,7 +39,6 @@ RSpec.shared_examples 'it has a rezzable SL request behavior' do |model_name, na
 
   scenario 'User updates the object' do
     stub = stub_request(:put, uri_regex)
-           .with(body: /{"object_name":"foo","description":"bar"(,"server_id":"")?.*}/)
            .to_return(status: 200, body: '', headers: {})
 
     visit send("edit_#{namespace}_#{model_name}_path", web_object)
@@ -54,7 +53,6 @@ RSpec.shared_examples 'it has a rezzable SL request behavior' do |model_name, na
 
   scenario 'User updates the object and there is an error' do
     stub_request(:put, uri_regex)
-      .with(body: /{"object_name":"foo","description":"bar"(,"server_id":"")?.*}/)
       .to_return(body: 'foo', status: 400)
 
     visit send("edit_#{namespace}_#{model_name}_path", web_object)

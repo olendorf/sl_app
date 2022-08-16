@@ -117,11 +117,7 @@ module Rezzable
     # rubocop:disable Metrics/AbcSize
     def give_percent(transaction)
       user.reload
-      logger.info "current split percent: #{split_percent}"
-      # split_percent = split_percent.nil? ? 100 : split_percent;
-      logger.info "current split percent 2: #{split_percent}"
       split_amount = ((split_percent / 100.0) * transaction.amount).round
-      logger.info "current split amount: #{split_amount}"
       RezzableSlRequest.send_money(self, current_session.avatar_name, split_amount)
       Analyzable::Transaction.create(
         amount: split_amount * -1,

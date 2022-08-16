@@ -30,7 +30,6 @@ RSpec.shared_examples 'it has an owner rezzable SL request behavior' do |model_n
 
   scenario 'User updates the object' do
     stub = stub_request(:put, uri_regex)
-           .with(body: /{"object_name":"foo","description":"bar"(,"server_id":"")?}/)
            .to_return(status: 200, body: '', headers: {})
 
     visit send("edit_admin_#{model_name}_path", web_object)

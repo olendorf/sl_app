@@ -89,7 +89,7 @@ RSpec.describe 'Async::Visits', type: :request do
         it 'should return the correct data' do
           get path, params: { chart: 'visits_timeline', ids: @traffic_cop.id }
           expect(JSON.parse(response.body)['counts']).to eq  [0, 0, 0, 20]
-          expect(JSON.parse(response.body)['durations']).to eq [0, 0, 0, 12_300]
+          expect(JSON.parse(response.body)['durations']).to eq [0, 0, 0, 205.0]
           expect(JSON.parse(response.body)).to include 'counts', 'durations', 'visitors', 'dates'
         end
       end

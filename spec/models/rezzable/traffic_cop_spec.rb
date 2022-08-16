@@ -112,12 +112,12 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
   describe 'handling detections' do
     context 'first visit' do
       before(:each) do
-        traffic_cop.update(detection: {
+        traffic_cop.update(detections: [{
                              avatar_name: 'Random Citizen',
                              avatar_key: 'foo',
                              position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                           .transform_values { |v| v.round(4) }
-                           })
+                           }])
       end
       it 'should create a new visit' do
         expect(traffic_cop.visits.size).to eq 1
@@ -132,7 +132,7 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
       end
 
       it 'should set the first visit message' do
-        expect(traffic_cop.outgoing_response).to eq('foo')
+        expect(traffic_cop.outgoing_response[:first_visit_message][0]).to eq('foo')
       end
     end
 
@@ -145,12 +145,12 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
                                                        duration: 15)
         FactoryBot.create(:detection, visit_id: traffic_cop.visits.first.id)
 
-        traffic_cop.update(detection: {
+        traffic_cop.update(detections: [{
                              avatar_name: 'test',
                              avatar_key: 'test',
                              position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                           .transform_values { |v| v.round(4) }
-                           })
+                           }])
       end
       it 'should not add a visit' do
         expect(traffic_cop.visits.size).to eq 1
@@ -161,7 +161,7 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
       end
 
       it 'should not set a message' do
-        expect(traffic_cop.outgoing_response).to be_nil
+        expect(traffic_cop.outgoing_response).to include(:banned=>[], :first_visit_message=>[], :second_visit_message=>[])
       end
     end
 
@@ -175,23 +175,23 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
                                                          duration: 120)
           FactoryBot.create(:detection, visit_id: traffic_cop.visits.first.id)
 
-          traffic_cop.update(detection: {
+          traffic_cop.update(detections: [{
                                avatar_name: 'test',
                                avatar_key: 'test',
                                position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                             .transform_values { |v| v.round(4) }
-                             })
+                             }])
         end
         it 'should not add a visit' do
-          expect(traffic_cop.visits.size).to eq 2
+          expect(traffic_cop.visits.size).to eq 1
         end
 
         it 'should update the duration' do
-          expect(traffic_cop.visits.last.duration).to be_within(1).of(15)
+          expect(traffic_cop.visits.last.duration).to be_within(1).of(375)
         end
 
         it 'should not set a message' do
-          expect(traffic_cop.outgoing_response).to be_nil
+          expect(traffic_cop.outgoing_response).to include(:banned=>[], :first_visit_message=>[], :second_visit_message=>[])
         end
       end
 
@@ -204,12 +204,12 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
                                                          duration: 30)
           FactoryBot.create(:detection, visit_id: traffic_cop.visits.first.id)
 
-          traffic_cop.update(detection: {
+          traffic_cop.update(detections: [{
                                avatar_name: 'test',
                                avatar_key: 'test',
                                position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                             .transform_values { |v| v.round(4) }
-                             })
+                             }])
         end
         it 'should not add a visit' do
           expect(traffic_cop.visits.size).to eq 2
@@ -220,7 +220,7 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
         end
 
         it 'should set the correct message' do
-          expect(traffic_cop.outgoing_response).to eq 'bar'
+          expect(traffic_cop.outgoing_response[:second_visit_message][0]).to eq 'bar'
         end
       end
     end
@@ -234,12 +234,12 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
                                                        duration: 120)
         FactoryBot.create(:detection, visit_id: traffic_cop.visits.first.id)
 
-        traffic_cop.update(detection: {
+        traffic_cop.update(detections: [{
                              avatar_name: 'new',
                              avatar_key: 'new',
                              position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                           .transform_values { |v| v.round(4) }
-                           })
+                           }])
       end
       it 'should not add a visit' do
         expect(traffic_cop.visits.size).to eq 2
@@ -257,12 +257,12 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
         traffic_cop.listable_avatars << FactoryBot.build(:banned_avatar, avatar_name: 'test',
                                                                          avatar_key: 'test')
         # traffic_cop.save
-        traffic_cop.update(detection: {
+        traffic_cop.update(detections: [{
                              avatar_name: 'test',
                              avatar_key: 'test',
                              position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                                 .transform_values { |v| v.round(4) }
-                           })
+                           }])
         expect(traffic_cop.has_access).to be_falsey
       end
       it 'should set has_access to true if the avatar is not banned' do
@@ -271,12 +271,12 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
         traffic_cop.listable_avatars << FactoryBot.build(:banned_avatar, avatar_name: 'test',
                                                                          avatar_key: 'test')
 
-        traffic_cop.update(detection: {
+        traffic_cop.update(detections: [{
                              avatar_name: 'not_test',
                              avatar_key: 'not_Test',
                              position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                               .transform_values { |v| v.round(4) }
-                           })
+                           }])
         expect(traffic_cop.has_access).to be_truthy
       end
     end
@@ -288,12 +288,12 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
         traffic_cop.listable_avatars << FactoryBot.build(:allowed_avatar, avatar_name: 'test',
                                                                           avatar_key: 'test')
         # traffic_cop.save
-        traffic_cop.update(detection: {
+        traffic_cop.update(detections: [{
                              avatar_name: 'test',
                              avatar_key: 'test',
                              position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                                 .transform_values { |v| v.round(4) }
-                           })
+                           }])
         expect(traffic_cop.has_access).to be_truthy
       end
       it 'should set has_access to true if the avatar is not banned' do
@@ -302,12 +302,12 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
         traffic_cop.listable_avatars << FactoryBot.build(:allowed_avatar, avatar_name: 'test',
                                                                           avatar_key: 'test')
 
-        traffic_cop.update(detection: {
+        traffic_cop.update(detections: [{
                              avatar_name: 'not_test',
                              avatar_key: 'not_Test',
                              position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                               .transform_values { |v| v.round(4) }
-                           })
+                           }])
         expect(traffic_cop.has_access).to be_falsey
       end
     end
@@ -322,12 +322,12 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
       end
       context 'when inventory is not set' do
         it 'should not send anything' do
-          traffic_cop.update(detection: {
+          traffic_cop.update(detections: [{
                                avatar_name: 'Random Citizen',
                                avatar_key: 'foo',
                                position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                             .transform_values { |v| v.round(4) }
-                             })
+                             }])
           expect(@stub).to_not have_been_requested
         end
       end
@@ -339,12 +339,12 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
         end
         context 'and the avatars first visit' do
           it 'should request the inventory be given' do
-            traffic_cop.update(detection: {
+            traffic_cop.update(detections: [{
                                  avatar_name: 'Random Citizen',
                                  avatar_key: 'foo',
                                  position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                               .transform_values { |v| v.round(4) }
-                               })
+                               }])
 
             expect(@stub).to have_been_requested
           end
@@ -358,12 +358,12 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
                                                            stop_time: 2.day.ago + 1.hour,
                                                            duration: 1.hour.to_i)
 
-            traffic_cop.update(detection: {
+            traffic_cop.update(detections: [{
                                  avatar_name: 'Random Citizen',
                                  avatar_key: 'foo',
                                  position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                               .transform_values { |v| v.round(4) }
-                               })
+                               }])
 
             expect(@stub).to_not have_been_requested
           end
@@ -377,12 +377,12 @@ RSpec.describe Rezzable::TrafficCop, type: :model do
                                                            stop_time: 10.day.ago + 1.hour,
                                                            duration: 1.hour.to_i)
 
-            traffic_cop.update(detection: {
+            traffic_cop.update(detections: [{
                                  avatar_name: 'Random Citizen',
                                  avatar_key: 'foo',
                                  position: { x: (rand * 256), y: (rand * 256), z: (rand * 4096) }
                               .transform_values { |v| v.round(4) }
-                               })
+                               }])
 
             expect(@stub).to have_been_requested
           end

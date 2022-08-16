@@ -6,7 +6,7 @@ RSpec.describe ShopData do
   let(:user) { FactoryBot.create :active_user }
 
   let(:uri_regex) do
-    %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/message_user\?
+    %r{\Ahttps://sim3015.aditi.lindenlab.com:12043/cap/[-a-f0-9]{36}/services/message_user\?
        auth_digest=[a-f0-9]+&auth_time=[0-9]+\z}x
   end
 

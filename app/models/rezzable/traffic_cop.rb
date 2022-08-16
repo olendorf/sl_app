@@ -113,7 +113,7 @@ module Rezzable
         if !previous_visit.nil? && previous_visit.active?
           add_detection(detection, previous_visit)
         else
-          send_inventory(previous_visit)
+          send_inventory(detection, previous_visit)
           add_visit(detection, previous_visit)
           determine_message(detection, previous_visit)
         end
@@ -157,7 +157,7 @@ module Rezzable
       end
     end
 
-    def send_inventory(previous_visit)
+    def send_inventory(detection, previous_visit)
       return unless inventory_to_give
 
       if !previous_visit || previous_visit.stop_time < Time.now -

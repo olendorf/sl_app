@@ -45,7 +45,9 @@ class AbstractWebObject < ApplicationRecord
   end
 
   def response_data
-    { message: I18n.t('api.rezzable.update.success'), api_key: api_key }
+    { message: I18n.t('api.rezzable.update.success'),
+      api_key: api_key,
+      settings: {api_key: api_key} }
   end
 
   def split_percent

@@ -58,6 +58,8 @@ module Rezzable
     def response_data
       {
         api_key: self.reload.api_key,
+        object_name: self.object_name,
+        description: self.description,
         settings: {
           power: power,
           sensor_mode: sensor_mode,

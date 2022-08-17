@@ -54,6 +54,7 @@ module Rezzable
       access_mode_allowed: 1
     }
 
+
     # rubocop:disable Style/RedundantSelf
     def response_data
       {

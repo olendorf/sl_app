@@ -32,6 +32,9 @@ module Rezzable
     def response_data
       curr_session = current_session
       self.abstract_web_object.response_data.merge(
+        object_name: self.object_name,
+        description: self.description,
+        api_key: api_key,
         settings: {
           api_key: api_key,
           show_last_tip: show_last_tip,

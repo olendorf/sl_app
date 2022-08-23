@@ -17,7 +17,12 @@ module Rezzable
       Analyzable::Parcel.open_parcels(user, region).each { |p| open_parcels[p.parcel_name] = p.id }
       {
         api_key: self.reload.api_key,
-        open_parcels: open_parcels
+        open_parcels: open_parcels,
+        settings: {
+          api_key: self.reload.api_key, 
+          object_name: self.object_name,
+          description: self.description
+        }
       }
     end
     # rubocop:enable Style/RedundantSelf

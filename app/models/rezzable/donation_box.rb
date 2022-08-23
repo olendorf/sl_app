@@ -47,6 +47,9 @@ module Rezzable
         description: self.description,
         api_key: api_key,
         settings: {
+          api_key: self.reload.api_key, 
+          object_name: self.object_name,
+          description: self.description,
           show_last_donation: show_last_donation,
           show_last_donor: show_last_donor,
           show_total: show_total,

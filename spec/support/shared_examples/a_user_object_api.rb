@@ -53,7 +53,7 @@ RSpec.shared_examples 'a user object API' do |model_name|
         post path, params: atts.to_json,
                    headers: headers(web_object,
                                     api_key: Settings.default.web_object.api_key)
-        expect(JSON.parse(response.body)['data']).to include(
+        expect(JSON.parse(response.body)['data']['settings']).to include(
           'api_key' => klass.last.api_key
         )
       end
@@ -129,7 +129,7 @@ RSpec.shared_examples 'a user object API' do |model_name|
 
       it 'should return the data' do
         web_object.reload
-        expect(JSON.parse(response.body)['data']).to include(
+        expect(JSON.parse(response.body)['data']['settings']).to include(
           'api_key' => web_object.api_key
         )
       end

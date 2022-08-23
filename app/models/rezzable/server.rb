@@ -20,7 +20,12 @@ module Rezzable
       { 
         api_key: self.reload.api_key, 
         object_name: self.object_name,
-        description: self.description
+        description: self.description,
+        settings: {
+          api_key: self.reload.api_key, 
+          object_name: self.object_name,
+          description: self.description
+        }
       }
     end
     # rubocop:enable Style/RedundantSelf

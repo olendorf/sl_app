@@ -62,6 +62,9 @@ module Rezzable
         object_name: self.object_name,
         description: self.description,
         settings: {
+          api_key: self.reload.api_key,
+          object_name: self.object_name,
+          description: self.description,
           power: power,
           sensor_mode: sensor_mode,
           security_mode: security_mode,

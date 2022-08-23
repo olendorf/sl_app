@@ -31,12 +31,11 @@ module Rezzable
     
     def response_data
       curr_session = current_session
-      self.abstract_web_object.response_data.merge(
-        object_name: self.object_name,
-        description: self.description,
-        api_key: api_key,
+      {
         settings: {
-          api_key: api_key,
+          object_name: self.object_name,
+          description: self.description,
+          api_key: self.reload.api_key,
           show_last_tip: show_last_tip,
           show_last_tipper: show_last_tipper,
           show_total: show_total,
@@ -61,7 +60,7 @@ module Rezzable
           else
             nil
           end
-      )
+      }
     end
     
 
@@ -141,7 +140,6 @@ module Rezzable
       self.tip = nil
       raise ActionController::BadRequest if current_session.nil?
 
-      #   puts self.transactions.inspect
       transaction = Analyzable::Transaction.create(
         amount: data['amount'].to_i,
         source_key: current_session.avatar_key,

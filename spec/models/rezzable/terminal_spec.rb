@@ -18,8 +18,10 @@ RSpec.describe Rezzable::Terminal, type: :model do
   end
 
   it 'should return the correct response data' do
-    expect(terminal.response_data).to eq(
-      { api_key: terminal.api_key }
+    expect(terminal.response_data[:settings]).to include(
+      { api_key: terminal.api_key, 
+        object_name: terminal.object_name, 
+        description: terminal.description}
     )
   end
 end
